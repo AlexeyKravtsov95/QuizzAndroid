@@ -16,14 +16,38 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 
-// DESIGN_TOKENS.md §6.6. shape.none (0 dp) не используется ни одним компонентом продукта
-// и в Material3.Shapes роли не имеет — не переносится.
+/**
+ * DESIGN_TOKENS.md §6.6 — примитивные радиусы шкалы shapes. Единственный источник значений:
+ * [PoPoRyadkuShapes] и [OrderableCardCutCorner] ссылаются на эти константы, не дублируют
+ * литералы. `none` не имеет поля в `Material3.Shapes` (там нет роли `none`) и не используется
+ * ни одним компонентом продукта, но зафиксирован здесь для полноты шкалы токенов.
+ */
+object ShapeRadius {
+    /** shape.none — не используется ни одним компонентом продукта. */
+    val none = 0.dp
+
+    /** shape.extraSmall */
+    val extraSmall = 4.dp
+
+    /** shape.small */
+    val small = 8.dp
+
+    /** shape.medium */
+    val medium = 12.dp
+
+    /** shape.large */
+    val large = 16.dp
+
+    /** shape.extraLarge — резерв. */
+    val extraLarge = 28.dp
+}
+
 val PoPoRyadkuShapes = Shapes(
-    extraSmall = RoundedCornerShape(4.dp),  // shape.extraSmall
-    small = RoundedCornerShape(8.dp),       // shape.small
-    medium = RoundedCornerShape(12.dp),     // shape.medium
-    large = RoundedCornerShape(16.dp),      // shape.large
-    extraLarge = RoundedCornerShape(28.dp), // shape.extraLarge — резерв
+    extraSmall = RoundedCornerShape(ShapeRadius.extraSmall),
+    small = RoundedCornerShape(ShapeRadius.small),
+    medium = RoundedCornerShape(ShapeRadius.medium),
+    large = RoundedCornerShape(ShapeRadius.large),
+    extraLarge = RoundedCornerShape(ShapeRadius.extraLarge),
 )
 
 /**
@@ -67,11 +91,8 @@ class OrderableCardCutCornerShape(
     }
 }
 
-/** shape.medium (12 dp) — примитивное значение, определённое здесь же, в блоке PoPoRyadkuShapes выше. */
-private val ShapeMediumRadius = 12.dp
-
 /** Компонентный токен: OrderableCardCutCorner с размерами, буквально взятыми из токенов. */
 val OrderableCardCutCorner: Shape = OrderableCardCutCornerShape(
-    cornerRadius = ShapeMediumRadius, // shape.medium
-    cutSize = Sizing.cutCorner,       // size.cutCorner
+    cornerRadius = ShapeRadius.medium, // shape.medium — тот же источник, что и PoPoRyadkuShapes.medium
+    cutSize = Sizing.cutCorner,        // size.cutCorner
 )

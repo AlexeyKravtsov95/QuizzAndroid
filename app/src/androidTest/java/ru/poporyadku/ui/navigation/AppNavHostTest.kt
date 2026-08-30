@@ -4,13 +4,11 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -24,8 +22,16 @@ import ru.poporyadku.ui.theme.PoPoRyadkuTheme
  * Пользовательский поток управляется исключительно кликами по реальному UI
  * (`performClick`) и системной кнопкой «назад» (`Espresso.pressBackUnconditionally`).
  * `navController.navigate(...)` вызывается только один раз в `setUp()`, чтобы разместить
- * `TestNavHostController` внутри дерева — это хостинг теста, а не имитация пользователя.
- * Чтение `currentBackStackEntry`/`currentBackStack` используется только для проверок.
+ * `TestNavHostController` внутри дерева — это хостинг теста, а не имитация пользователя;
+ * ни один `@Test` не вызывает `navigate()` напрямую.
+ *
+ * `NavController.currentBackStack` не используется — это `@RestrictTo(LIBRARY_GROUP)` API.
+ * Единственное чтение состояния, которое допускают тесты, — `currentBackStackEntry`
+ * (текущий route и его аргументы), и то только для проверки, а не для того, чтобы
+ * заглянуть во внутренний список записей. Очистка предыдущих экранов из бэкстека
+ * доказывается наблюдаемо: одно нажатие системного «назад» (или экранной кнопки) сразу
+ * приводит к ожидаемому экрану — если бы промежуточные записи оставались в стеке, потребовалось
+ * бы больше одного нажатия или результат отличался бы от ожидаемого.
  */
 @RunWith(AndroidJUnit4::class)
 class AppNavHostTest {
@@ -50,16 +56,13 @@ class AppNavHostTest {
 
     private fun currentRoute(): String? = navController.currentBackStackEntry?.destination?.route
 
-    private fun currentBackStackRoutes(): List<String?> =
-        navController.currentBackStack.value.mapNotNull { it.destination.route }
-
     @Test
     fun startDestinationIsHome() {
         assertEquals(Destinations.HOME, currentRoute())
     }
 
     @Test
-    fun homeToPuzzle0ToResult0ToPuzzle1_leavesOnlyHomeAndCurrentPuzzleInStack() {
+    fun homeToPuzzle0ToResult0ToPuzzle1() {
         composeTestRule.onNodeWithTag("home_play_button").performClick()
         composeTestRule.waitForIdle()
         assertEquals(Destinations.PUZZLE, currentRoute())
@@ -71,26 +74,28 @@ class AppNavHostTest {
         composeTestRule.onNodeWithTag("puzzle_result_next_button").performClick()
         composeTestRule.waitForIdle()
         assertEquals(Destinations.PUZZLE, currentRoute())
-
-        val stack = currentBackStackRoutes()
-        assertEquals(listOf(Destinations.HOME, Destinations.PUZZLE), stack)
     }
 
+    /**
+     * Puzzle следующего задания -> Back -> Home. Если бы Puzzle(0)/PuzzleResult(0) оставались
+     * в стеке под Puzzle(1), одного системного «назад» не хватило бы, чтобы попасть на Home.
+     */
     @Test
-    fun answeredPuzzleIsRemovedFromBackStack() {
+    fun systemBackFromNextPuzzleLandsOnHome() {
         composeTestRule.onNodeWithTag("home_play_button").performClick()
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("puzzle_submit_button").performClick()
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("puzzle_result_next_button").performClick()
         composeTestRule.waitForIdle()
+        assertEquals(Destinations.PUZZLE, currentRoute())
 
-        val stack = currentBackStackRoutes()
-        assertFalse("puzzle/0 must not remain reachable", stack.contains(Destinations.PUZZLE) && stack.size > 2)
-        assertFalse("puzzle/0/result must be gone after moving to the next puzzle", stack.contains(Destinations.PUZZLE_RESULT))
-        assertEquals(2, stack.size)
+        Espresso.pressBackUnconditionally()
+        composeTestRule.waitForIdle()
+        assertEquals(Destinations.HOME, currentRoute())
     }
 
+    /** PuzzleResult -> Back -> Home (UX_FLOW.md §5: «Вернуться в отвеченную головоломку нельзя»). */
     @Test
     fun systemBackFromPuzzleResultLandsOnHome() {
         composeTestRule.onNodeWithTag("home_play_button").performClick()
@@ -104,12 +109,16 @@ class AppNavHostTest {
         assertEquals(Destinations.HOME, currentRoute())
     }
 
+    /**
+     * Полная цепочка до recap/today, затем recap/today -> Back -> Home. Одно нажатие «назад»
+     * доказывает, что весь `dailySession` (Puzzle/PuzzleResult трёх заданий) вычищен из стека —
+     * иначе системный back вернул бы на PuzzleResult(2), а не на Home.
+     */
     @Test
     fun fullDayChainReachesRecapTodayAndSystemBackLandsOnHome() {
         composeTestRule.onNodeWithTag("home_play_button").performClick()
         composeTestRule.waitForIdle()
 
-        // Puzzle(0) -> Result(0) -> Puzzle(1) -> Result(1) -> Puzzle(2) -> Result(2) -> recap/today
         repeat(3) { index ->
             composeTestRule.onNodeWithTag("puzzle_submit_button").performClick()
             composeTestRule.waitForIdle()
@@ -124,7 +133,6 @@ class AppNavHostTest {
         }
 
         assertEquals(Destinations.RECAP, currentRoute())
-        assertEquals(listOf(Destinations.HOME, Destinations.RECAP), currentBackStackRoutes())
 
         Espresso.pressBackUnconditionally()
         composeTestRule.waitForIdle()
@@ -132,7 +140,7 @@ class AppNavHostTest {
     }
 
     @Test
-    fun doneButtonOnTodayRecapReturnsToExistingHomeInstance() {
+    fun doneButtonOnTodayRecapReturnsToHome() {
         composeTestRule.onNodeWithTag("home_play_button").performClick()
         composeTestRule.waitForIdle()
         repeat(3) {
@@ -145,14 +153,11 @@ class AppNavHostTest {
 
         composeTestRule.onNodeWithTag("recap_primary_button").performClick()
         composeTestRule.waitForIdle()
-
         assertEquals(Destinations.HOME, currentRoute())
-        // Ровно один Home в стеке — кнопка "Готово" не создаёт второй экземпляр.
-        assertEquals(1, currentBackStackRoutes().count { it == Destinations.HOME })
     }
 
     @Test
-    fun homeToArchiveToRecapByIsoDate_backReturnsToArchive() {
+    fun homeToArchiveToRecapByIsoDate() {
         composeTestRule.onNodeWithTag("home_archive_button").performClick()
         composeTestRule.waitForIdle()
         assertEquals(Destinations.ARCHIVE, currentRoute())
@@ -165,16 +170,24 @@ class AppNavHostTest {
             ?.arguments
             ?.getString(Destinations.ARG_DATE)
         assertTrue("archive recap date must be ISO yyyy-MM-dd", date != null && ISO_DATE_REGEX.matches(date))
-        assertFalse("archive recap date must not be the today sentinel", date == Destinations.TODAY)
+        assertTrue("archive recap date must not be the today sentinel", date != Destinations.TODAY)
+    }
 
-        assertEquals(listOf(Destinations.HOME, Destinations.ARCHIVE, Destinations.RECAP), currentBackStackRoutes())
+    /** recap архивной даты -> Back (экранная кнопка) -> Archive. */
+    @Test
+    fun onScreenBackFromArchiveRecapReturnsToArchive() {
+        composeTestRule.onNodeWithTag("home_archive_button").performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithTag("archive_open_recap_row").performClick()
+        composeTestRule.waitForIdle()
+        assertEquals(Destinations.RECAP, currentRoute())
 
-        // Экранная кнопка "Назад" возвращает в Archive без пересоздания экземпляра.
         composeTestRule.onNodeWithTag("recap_back_to_archive_button").performClick()
         composeTestRule.waitForIdle()
         assertEquals(Destinations.ARCHIVE, currentRoute())
     }
 
+    /** recap архивной даты -> Back (системная кнопка) -> Archive. */
     @Test
     fun systemBackFromArchiveRecapReturnsToArchive() {
         composeTestRule.onNodeWithTag("home_archive_button").performClick()
