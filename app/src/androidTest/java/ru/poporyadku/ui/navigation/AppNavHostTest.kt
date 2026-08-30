@@ -19,11 +19,12 @@ import ru.poporyadku.ui.theme.PoPoRyadkuTheme
 /**
  * Итерация 1, критерий приёмки: навигационный стек соответствует UX_FLOW.md §1.
  *
- * Пользовательский поток управляется исключительно кликами по реальному UI
- * (`performClick`) и системной кнопкой «назад» (`Espresso.pressBackUnconditionally`).
- * `navController.navigate(...)` вызывается только один раз в `setUp()`, чтобы разместить
- * `TestNavHostController` внутри дерева — это хостинг теста, а не имитация пользователя;
- * ни один `@Test` не вызывает `navigate()` напрямую.
+ * Пользовательский поток управляется исключительно кликами по реальному UI (`performClick`);
+ * возврат — системной (`Espresso.pressBackUnconditionally`) или экранной кнопкой «Назад»
+ * (тоже через `performClick`). Ни один `@Test` не вызывает `navController.navigate(...)`
+ * напрямую — `setUp()` лишь размещает `TestNavHostController` внутри `AppNavHost`
+ * (хостинг теста, а не имитация пользователя) и не вызывает `navigate()`: стартовый экран
+ * `Home` приходит из `startDestination` самого `NavHost`.
  *
  * `NavController.currentBackStack` не используется — это `@RestrictTo(LIBRARY_GROUP)` API.
  * Единственное чтение состояния, которое допускают тесты, — `currentBackStackEntry`
