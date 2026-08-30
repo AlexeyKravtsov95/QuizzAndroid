@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        Единственная роль XML-темы в single-activity Compose-приложении — фон окна
+        до первого кадра Compose (избегает белой вспышки), затем всё управление темой
+        переходит в ui/theme/PoPoRyadkuTheme.kt. Значение — window_background,
+        буквально совпадающее с ролью surface/background в DESIGN_TOKENS.md §6.2.
+    -->
+    <style name="Theme.PoPoRyadku" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/window_background</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+</resources>

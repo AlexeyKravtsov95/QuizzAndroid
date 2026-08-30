@@ -1,6 +1,6 @@
 # DESIGN_PRINCIPLES.md — «По порядку!»
 
-Design Gate, часть B1. Статус: черновик на утверждение. Визуальное направление — концепция D «Альманах исследователя» (`design/concepts/concept-d.svg`, `design/concepts/HYBRID.md`), утверждена пользователем.
+Design Gate, часть B1. Статус: утверждено, 2026-08-30. Визуальное направление — концепция D «Альманах исследователя» (`design/concepts/concept-d.svg`, `design/concepts/HYBRID.md`), утверждена пользователем.
 
 Приоритет источников при любом конфликте: 1) `docs/PRODUCT.md`, `docs/UX_FLOW.md`, `docs/ARCHITECTURE.md`, `docs/CONTENT_MODEL.md`, `docs/IMPLEMENTATION_PLAN.md`; 2) концепция D; 3) настоящий документ и остальные документы `docs/design/`; 4) Material 3; 5) общие рекомендации UI/UX. Этот документ не меняет продукт и UX ради удобства дизайна — он объясняет решения концепции D через их привязку к конкретным значениям в `DESIGN_TOKENS.md`, а не через эпитеты.
 

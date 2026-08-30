@@ -1,0 +1,19 @@
+.DS_Store
+tools/design-b2/.cache/
+__pycache__/
+*.pyc
+
+# Android / Gradle
+*.iml
+.gradle/
+/local.properties
+/.idea/
+.kotlin/
+captures/
+.externalNativeBuild/
+.cxx/
+build/
+app/build/
+app/release/
+*.hprof
+/gradle/wrapper/dists/
