@@ -1,0 +1,148 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1236" height="984.85" viewBox="0 0 1236 984.85">
+<title>DragEducationHint — одноразовая подсказка на первой головоломке</title>
+<defs>
+<clipPath id="clip38"><rect x="40" y="316.85" width="390" height="628"/></clipPath>
+<clipPath id="clip39"><rect x="458" y="316.85" width="390" height="628"/></clipPath>
+<clipPath id="clip40"><rect x="876" y="316.85" width="320" height="628"/></clipPath>
+</defs>
+<rect x="0" y="0" width="1236" height="984.85" fill="#EDE6D4"/>
+<text x="40" y="60.34" font-family="Golos Text SemiBold, Golos Text" font-size="18" font-weight="600" fill="#23241F" letter-spacing="0.17" data-text="DragEducationHint — одноразовая подсказка на первой головоломке">DragEducationHint — одноразовая подсказка на первой головоломке</text>
+<text x="40" y="85.87" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="в потоке контента · 100% и 200% · светлая и тёмная тема">в потоке контента · 100% и 200% · светлая и тёмная тема</text>
+<text x="40" y="120.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Плашка занимает собственную полосу между подписью направления и первой карточкой: она раздвигает соседние элементы, а не накладывается на них, и не перекрывает ни">Плашка занимает собственную полосу между подписью направления и первой карточкой: она раздвигает соседние элементы, а не накладывается на них, и не перекрывает ни</text>
+<text x="40" y="136.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="DragHandle, ни MoveButton. Заливка сплошная (surfaceContainer), не полупрозрачная — контраст текста не зависит от того, что под плашкой.">DragHandle, ни MoveButton. Заливка сплошная (surfaceContainer), не полупрозрачная — контраст текста не зависит от того, что под плашкой.</text>
+<text x="40" y="160.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Точный текст плашки — «Перетащите за ручку или используйте стрелки», без вариаций. TalkBack при этом озвучивает другую формулировку: «Для изменения порядка используйте">Точный текст плашки — «Перетащите за ручку или используйте стрелки», без вариаций. TalkBack при этом озвучивает другую формулировку: «Для изменения порядка используйте</text>
+<text x="40" y="176.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="действия карточки или кнопки перемещения».">действия карточки или кнопки перемещения».</text>
+<text x="40" y="200.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="PrimaryButton «Проверить» — disabled первые dragHint.submitLockDuration (600 мс): прозрачный фон, обводка outline при opacity.disabledContent 38%, текст onSurface при той же">PrimaryButton «Проверить» — disabled первые dragHint.submitLockDuration (600 мс): прозрачный фон, обводка outline при opacity.disabledContent 38%, текст onSurface при той же</text>
+<text x="40" y="216.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="непрозрачности. Покачивание карточки — один раз за dragHint.wobbleDuration (300 мс) с амплитудой 4°; при reduced motion оно обнуляется полностью, а dragHint.autoHideDelay (4">непрозрачности. Покачивание карточки — один раз за dragHint.wobbleDuration (300 мс) с амплитудой 4°; при reduced motion оно обнуляется полностью, а dragHint.autoHideDelay (4</text>
+<text x="40" y="232.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="с) и submitLockDuration не сокращаются.">с) и submitLockDuration не сокращаются.</text>
+<line x1="40" y1="253.62" x2="1196" y2="253.62" stroke="#C9C0A8" stroke-width="1"/>
+<text x="40" y="278.48" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#23241F" letter-spacing="0.18" data-text="Подсказка в потоке контента">Подсказка в потоке контента</text>
+<text x="40" y="305.1" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="Светлая · 390 dp · 100%">Светлая · 390 dp · 100%</text>
+<g clip-path="url(#clip38)">
+<g transform="translate(40,316.85)">
+<rect x="0" y="0" width="390" height="628" fill="#F6F0E2"/>
+<text x="24" y="31.32" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#5B584C" letter-spacing="0.25" data-text="Сверху — самая низкая">Сверху — самая низкая</text>
+<g data-component="DragEducationHint">
+<rect x="24" y="48" width="342" height="56" rx="4" fill="#F5EFE0"/>
+<text x="36" y="71.32" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#5B584C" letter-spacing="0.25" data-text="Перетащите за ручку или используйте">Перетащите за ручку или используйте</text>
+<text x="36" y="91.32" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#5B584C" letter-spacing="0.25" data-text="стрелки">стрелки</text>
+</g>
+<g data-component="OrderableCard" data-state="default">
+<path d="M36,116 H348 L366,134 V216 Q366,228 354,228 H36 Q24,228 24,216 V128 Q24,116 36,116 Z" fill="#FBF7EC"/>
+<path d="M36,116 H348 L366,134 V216 Q366,228 354,228 H36 Q24,228 24,216 V128 Q24,116 36,116 Z" fill="none" stroke="#DCD3BC" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="80" y1="128" x2="80" y2="216" stroke="#DCD3BC" stroke-width="1"/>
+<text x="43.6" y="161.04" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="14" font-weight="700" fill="#5B584C" data-text="№1">№1</text>
+<g data-component="DragHandle">
+<circle cx="48" cy="177.8" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="185" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="192.2" r="1.6" fill="#5B584C"/>
+<circle cx="56" cy="177.8" r="1.6" fill="#5B584C"/>
+<circle cx="56" cy="185" r="1.6" fill="#5B584C"/>
+<circle cx="56" cy="192.2" r="1.6" fill="#5B584C"/>
+</g>
+<text x="96" y="169.76" font-family="Noto Serif SemiBold, Noto Serif" font-size="20" font-weight="600" fill="#23241F" data-text="Килиманджаро">Килиманджаро</text>
+<text x="96" y="190.32" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#5B584C" letter-spacing="0.25" data-text="Танзания">Танзания</text>
+<g data-component="MoveButton" data-state="disabled">
+<rect x="306" y="120" width="48" height="48" rx="8" fill="none" stroke="#8C8672" stroke-opacity="0.38" stroke-width="1"/>
+<path d="M324,147 L330,141 L336,147" fill="none" stroke="#23241F" stroke-opacity="0.38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g data-component="MoveButton" data-state="enabled">
+<rect x="306" y="176" width="48" height="48" rx="8" fill="#E4E9DE" stroke="#2C4A3E" stroke-opacity="0.5" stroke-width="1"/>
+<path d="M324,197 L330,203 L336,197" fill="none" stroke="#2C4A3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+<g data-component="PrimaryButton">
+<rect x="24" y="252" width="342" height="56" rx="8" fill="none" stroke="#8C8672" stroke-opacity="0.38" stroke-width="1"/>
+<text x="195" y="285.7" font-family="Golos Text SemiBold, Golos Text" font-size="15" font-weight="600" fill="#23241F" fill-opacity="0.38" letter-spacing="0.1" text-anchor="middle" data-text="Проверить">Проверить</text>
+</g>
+</g>
+</g>
+<rect x="40" y="316.85" width="390" height="628" fill="none" stroke="#C9C0A8" stroke-width="1"/>
+<text x="458" y="305.1" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="Тёмная · 390 dp · 100%">Тёмная · 390 dp · 100%</text>
+<g clip-path="url(#clip39)">
+<g transform="translate(458,316.85)">
+<rect x="0" y="0" width="390" height="628" fill="#1C1A16"/>
+<text x="24" y="31.32" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#B9B2A0" letter-spacing="0.25" data-text="Сверху — самая низкая">Сверху — самая низкая</text>
+<g data-component="DragEducationHint">
+<rect x="24" y="48" width="342" height="56" rx="4" fill="#2C2820"/>
+<text x="36" y="71.32" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#B9B2A0" letter-spacing="0.25" data-text="Перетащите за ручку или используйте">Перетащите за ручку или используйте</text>
+<text x="36" y="91.32" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#B9B2A0" letter-spacing="0.25" data-text="стрелки">стрелки</text>
+</g>
+<g data-component="OrderableCard" data-state="default">
+<path d="M36,116 H348 L366,134 V216 Q366,228 354,228 H36 Q24,228 24,216 V128 Q24,116 36,116 Z" fill="#262319"/>
+<path d="M36,116 H348 L366,134 V216 Q366,228 354,228 H36 Q24,228 24,216 V128 Q24,116 36,116 Z" fill="none" stroke="#3C382C" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="80" y1="128" x2="80" y2="216" stroke="#3C382C" stroke-width="1"/>
+<text x="43.6" y="161.04" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="14" font-weight="700" fill="#B9B2A0" data-text="№1">№1</text>
+<g data-component="DragHandle">
+<circle cx="48" cy="177.8" r="1.6" fill="#B9B2A0"/>
+<circle cx="48" cy="185" r="1.6" fill="#B9B2A0"/>
+<circle cx="48" cy="192.2" r="1.6" fill="#B9B2A0"/>
+<circle cx="56" cy="177.8" r="1.6" fill="#B9B2A0"/>
+<circle cx="56" cy="185" r="1.6" fill="#B9B2A0"/>
+<circle cx="56" cy="192.2" r="1.6" fill="#B9B2A0"/>
+</g>
+<text x="96" y="169.76" font-family="Noto Serif SemiBold, Noto Serif" font-size="20" font-weight="600" fill="#EDE7D8" data-text="Килиманджаро">Килиманджаро</text>
+<text x="96" y="190.32" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#B9B2A0" letter-spacing="0.25" data-text="Танзания">Танзания</text>
+<g data-component="MoveButton" data-state="disabled">
+<rect x="306" y="120" width="48" height="48" rx="8" fill="none" stroke="#8A8370" stroke-opacity="0.38" stroke-width="1"/>
+<path d="M324,147 L330,141 L336,147" fill="none" stroke="#EDE7D8" stroke-opacity="0.38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g data-component="MoveButton" data-state="enabled">
+<rect x="306" y="176" width="48" height="48" rx="8" fill="#24352C" stroke="#3E6350" stroke-opacity="0.5" stroke-width="1"/>
+<path d="M324,197 L330,203 L336,197" fill="none" stroke="#CFE0D2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+<g data-component="PrimaryButton">
+<rect x="24" y="252" width="342" height="56" rx="8" fill="none" stroke="#8A8370" stroke-opacity="0.38" stroke-width="1"/>
+<text x="195" y="285.7" font-family="Golos Text SemiBold, Golos Text" font-size="15" font-weight="600" fill="#EDE7D8" fill-opacity="0.38" letter-spacing="0.1" text-anchor="middle" data-text="Проверить">Проверить</text>
+</g>
+</g>
+</g>
+<rect x="458" y="316.85" width="390" height="628" fill="none" stroke="#C9C0A8" stroke-width="1"/>
+<text x="876" y="305.1" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="Светлая · 320 dp · 200%">Светлая · 320 dp · 200%</text>
+<g clip-path="url(#clip40)">
+<g transform="translate(876,316.85)">
+<rect x="0" y="0" width="320" height="628" fill="#F6F0E2"/>
+<text x="16" y="46.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Сверху — самая">Сверху — самая</text>
+<text x="16" y="86.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="низкая">низкая</text>
+<g data-component="DragEducationHint">
+<rect x="16" y="108" width="288" height="176" rx="4" fill="#F5EFE0"/>
+<text x="28" y="146.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Перетащите за">Перетащите за</text>
+<text x="28" y="186.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="ручку или">ручку или</text>
+<text x="28" y="226.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="используйте">используйте</text>
+<text x="28" y="266.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="стрелки">стрелки</text>
+</g>
+<g data-component="OrderableCard" data-state="default">
+<path d="M28,296 H286 L304,314 V512 Q304,524 292,524 H28 Q16,524 16,512 V308 Q16,296 28,296 Z" fill="#FBF7EC"/>
+<path d="M28,296 H286 L304,314 V512 Q304,524 292,524 H28 Q16,524 16,512 V308 Q16,296 28,296 Z" fill="none" stroke="#DCD3BC" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="72" y1="308" x2="72" y2="512" stroke="#DCD3BC" stroke-width="1"/>
+<text x="27.2" y="404.08" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="28" font-weight="700" fill="#5B584C" data-text="№1">№1</text>
+<g data-component="DragHandle">
+<circle cx="40" cy="424.8" r="1.6" fill="#5B584C"/>
+<circle cx="40" cy="432" r="1.6" fill="#5B584C"/>
+<circle cx="40" cy="439.2" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="424.8" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="432" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="439.2" r="1.6" fill="#5B584C"/>
+</g>
+<text x="88" y="353.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="Кили‐">Кили‐</text>
+<text x="88" y="405.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="ман‐">ман‐</text>
+<text x="88" y="457.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="джаро">джаро</text>
+<text x="88" y="498.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Танзания">Танзания</text>
+<g data-component="MoveButton" data-state="disabled">
+<rect x="244" y="358" width="48" height="48" rx="8" fill="none" stroke="#8C8672" stroke-opacity="0.38" stroke-width="1"/>
+<path d="M262,385 L268,379 L274,385" fill="none" stroke="#23241F" stroke-opacity="0.38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g data-component="MoveButton" data-state="enabled">
+<rect x="244" y="414" width="48" height="48" rx="8" fill="#E4E9DE" stroke="#2C4A3E" stroke-opacity="0.5" stroke-width="1"/>
+<path d="M262,435 L268,441 L274,435" fill="none" stroke="#2C4A3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+<g data-component="PrimaryButton">
+<rect x="16" y="548" width="288" height="64" rx="8" fill="none" stroke="#8C8672" stroke-opacity="0.38" stroke-width="1"/>
+<text x="160" y="591.4" font-family="Golos Text SemiBold, Golos Text" font-size="30" font-weight="600" fill="#23241F" fill-opacity="0.38" letter-spacing="0.2" text-anchor="middle" data-text="Проверить">Проверить</text>
+</g>
+</g>
+</g>
+<rect x="876" y="316.85" width="320" height="628" fill="none" stroke="#C9C0A8" stroke-width="1"/>
+</svg>

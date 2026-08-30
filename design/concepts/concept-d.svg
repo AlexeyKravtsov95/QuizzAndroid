@@ -1,0 +1,245 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1420" viewBox="0 0 1440 1420" font-family="-apple-system,'Segoe UI',Roboto,'Noto Sans',Arial,sans-serif">
+<title>Концепция D — Альманах исследователя</title>
+<defs>
+  <style>
+    .serif{font-family:Georgia,'PT Serif','Noto Serif',serif}
+    .sans{font-family:-apple-system,'Segoe UI',Roboto,'Noto Sans',Arial,sans-serif}
+    .mono{font-family:'SFMono-Regular','Consolas','Liberation Mono',monospace}
+  </style>
+</defs>
+
+<rect x="0" y="0" width="1440" height="1420" fill="#FAF7F0"/>
+
+<!-- Header -->
+<text x="60" y="50" class="sans" font-size="16" font-weight="700" letter-spacing="2" fill="#2C4A3E">КОНЦЕПЦИЯ D</text>
+<text x="60" y="92" class="serif" font-size="34" font-style="italic" fill="#23241F">Альманах исследователя</text>
+<text x="60" y="114" class="sans" font-size="13" fill="#23241F" opacity="0.55">«По порядку!» · Home (Ready) + Puzzle (Playing) · управляемый гибрид A + ограниченная B, без C</text>
+
+<text x="255" y="142" class="sans" font-size="12" font-weight="700" letter-spacing="2" text-anchor="middle" fill="#2C4A3E">HOME · READY</text>
+<text x="685" y="142" class="sans" font-size="12" font-weight="700" letter-spacing="2" text-anchor="middle" fill="#2C4A3E">PUZZLE · PLAYING</text>
+
+<!-- ============ HOME PHONE ============ -->
+<rect x="60" y="150" width="390" height="844" rx="24" fill="#F6F0E2" stroke="#23241F" stroke-opacity="0.22" stroke-width="1.5"/>
+
+<!-- masthead -->
+<text x="84" y="198" class="serif" font-size="16" letter-spacing="3" fill="#23241F">ПО ПОРЯДКУ</text>
+<!-- settings gear (inline) -->
+<circle cx="414" cy="194" r="6" fill="none" stroke="#23241F" stroke-width="1.6"/>
+<circle cx="414" cy="194" r="1.3" fill="#23241F"/>
+<g stroke="#23241F" stroke-width="1.6" stroke-linecap="round">
+  <line x1="420.5" y1="194" x2="423.5" y2="194"/>
+  <line x1="417.25" y1="199.63" x2="418.75" y2="202.23"/>
+  <line x1="410.75" y1="199.63" x2="409.25" y2="202.23"/>
+  <line x1="407.5" y1="194" x2="404.5" y2="194"/>
+  <line x1="410.75" y1="188.37" x2="409.25" y2="185.77"/>
+  <line x1="417.25" y1="188.37" x2="418.75" y2="185.77"/>
+</g>
+<!-- archive box (inline) -->
+<rect x="374" y="191" width="16" height="10" rx="1.5" fill="none" stroke="#23241F" stroke-width="1.6"/>
+<rect x="378" y="188" width="8" height="4" rx="1" fill="none" stroke="#23241F" stroke-width="1.6"/>
+
+<line x1="84" y1="210" x2="426" y2="210" stroke="#23241F" stroke-opacity="0.3" stroke-width="1"/>
+<text x="84" y="234" class="mono" font-size="13" fill="#5B584C">Суббота, 29 августа 2026</text>
+
+<!-- fused day + stats record block, spine-marked -->
+<rect x="84" y="252" width="3" height="318" fill="#2C4A3E"/>
+<text x="106" y="270" class="mono" font-size="11" font-weight="700" letter-spacing="2" fill="#9C4A2E">ВЫПУСК</text>
+<text x="106" y="326" fill="#23241F"><tspan class="serif" font-size="28">День </tspan><tspan class="mono" font-size="54" font-weight="700">24</tspan></text>
+<line x1="106" y1="352" x2="426" y2="352" stroke="#23241F" stroke-opacity="0.14" stroke-width="1"/>
+
+<text x="106" y="388" class="sans" font-size="12" font-weight="700" letter-spacing="2" fill="#23241F" opacity="0.55">СЕРИЯ</text>
+<text x="106" y="414" class="sans" font-size="21" font-weight="600" fill="#23241F">6 дней</text>
+<line x1="106" y1="426" x2="426" y2="426" stroke="#23241F" stroke-opacity="0.14" stroke-width="1"/>
+
+<text x="106" y="460" class="sans" font-size="12" font-weight="700" letter-spacing="2" fill="#23241F" opacity="0.55">ЛУЧШИЙ ДЕНЬ</text>
+<text x="106" y="486" class="sans" font-size="21" font-weight="600" fill="#23241F">17 из 18</text>
+<line x1="106" y1="498" x2="426" y2="498" stroke="#23241F" stroke-opacity="0.14" stroke-width="1"/>
+
+<text x="106" y="532" class="sans" font-size="12" font-weight="700" letter-spacing="2" fill="#23241F" opacity="0.55">СЫГРАНО ДНЕЙ</text>
+<text x="106" y="558" class="sans" font-size="21" font-weight="600" fill="#23241F">23</text>
+<line x1="106" y1="570" x2="426" y2="570" stroke="#23241F" stroke-opacity="0.14" stroke-width="1"/>
+
+<!-- closing rule before CTA: frames the page instead of leaving a floating button -->
+<line x1="84" y1="890" x2="426" y2="890" stroke="#23241F" stroke-opacity="0.1" stroke-width="1"/>
+
+<rect x="84" y="910" width="342" height="56" rx="8" fill="#2C4A3E"/>
+<text x="255" y="944" class="sans" font-size="17" font-weight="600" text-anchor="middle" fill="#F6F0E2">Играть</text>
+
+<!-- ============ PUZZLE PHONE ============ -->
+<rect x="490" y="150" width="390" height="844" rx="24" fill="#F6F0E2" stroke="#23241F" stroke-opacity="0.22" stroke-width="1.5"/>
+
+<!-- back chevron (inline) -->
+<path d="M529 183 L523 190 L529 197" fill="none" stroke="#23241F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="546" y="197" class="sans" font-size="16" font-weight="600" fill="#23241F">Задание 1 из 3</text>
+
+<!-- category tag (limited catalog touch) -->
+<rect x="752" y="180" width="104" height="26" rx="6" fill="#E4E9DE"/>
+<path d="M762,199 L768,190 L772,195 L776,191 L782,199 Z" fill="#2C4A3E"/>
+<text x="789" y="197" class="sans" font-size="10.5" font-weight="700" letter-spacing="0.4" fill="#2C4A3E">ГЕОГРАФИЯ</text>
+
+<line x1="514" y1="220" x2="856" y2="220" stroke="#23241F" stroke-opacity="0.28" stroke-width="1"/>
+
+<text x="514" class="serif" font-size="23" fill="#23241F">
+  <tspan x="514" y="246">Расположите вершины</tspan>
+  <tspan x="514" y="276">от самой низкой к</tspan>
+  <tspan x="514" y="306">самой высокой</tspan>
+</text>
+<text x="514" y="332" class="sans" font-style="italic" font-size="14" fill="#23241F" opacity="0.7">Сверху — самая низкая</text>
+
+<!-- Card 1: Килиманджаро (up disabled) -->
+<path d="M514,356 L838,356 L856,374 L856,476 L514,476 Z" fill="#FBF7EC" stroke="#23241F" stroke-opacity="0.08" stroke-width="1"/>
+<line x1="570" y1="356" x2="570" y2="476" stroke="#23241F" stroke-opacity="0.1" stroke-width="1"/>
+<text x="542" y="390" class="mono" font-size="13" font-weight="700" text-anchor="middle" fill="#5B584C">№1</text>
+<circle cx="539" cy="426" r="1.6" fill="#5B584C"/><circle cx="545" cy="426" r="1.6" fill="#5B584C"/>
+<circle cx="539" cy="434" r="1.6" fill="#5B584C"/><circle cx="545" cy="434" r="1.6" fill="#5B584C"/>
+<circle cx="539" cy="442" r="1.6" fill="#5B584C"/><circle cx="545" cy="442" r="1.6" fill="#5B584C"/>
+<text x="586" y="402" class="serif" font-size="19" font-weight="600" fill="#23241F">Килиманджаро</text>
+<text x="586" y="426" class="sans" font-size="12" fill="#23241F" opacity="0.6">Танзания</text>
+<rect x="804" y="364" width="48" height="48" rx="8" fill="none" stroke="#23241F" stroke-opacity="0.16"/>
+<path d="M822,391 L828,385 L834,391" fill="none" stroke="#23241F" stroke-opacity="0.3" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="804" y="420" width="48" height="48" rx="8" fill="#2C4A3E" fill-opacity="0.08" stroke="#2C4A3E" stroke-opacity="0.5"/>
+<path d="M822,441 L828,447 L834,441" fill="none" stroke="#2C4A3E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+
+<!-- Card 2: Аконкагуа -->
+<path d="M514,492 L838,492 L856,510 L856,612 L514,612 Z" fill="#FBF7EC" stroke="#23241F" stroke-opacity="0.08" stroke-width="1"/>
+<line x1="570" y1="492" x2="570" y2="612" stroke="#23241F" stroke-opacity="0.1" stroke-width="1"/>
+<text x="542" y="526" class="mono" font-size="13" font-weight="700" text-anchor="middle" fill="#5B584C">№2</text>
+<circle cx="539" cy="562" r="1.6" fill="#5B584C"/><circle cx="545" cy="562" r="1.6" fill="#5B584C"/>
+<circle cx="539" cy="570" r="1.6" fill="#5B584C"/><circle cx="545" cy="570" r="1.6" fill="#5B584C"/>
+<circle cx="539" cy="578" r="1.6" fill="#5B584C"/><circle cx="545" cy="578" r="1.6" fill="#5B584C"/>
+<text x="586" y="538" class="serif" font-size="19" font-weight="600" fill="#23241F">Аконкагуа</text>
+<text x="586" y="562" class="sans" font-size="12" fill="#23241F" opacity="0.6">Анды, Аргентина</text>
+<rect x="804" y="500" width="48" height="48" rx="8" fill="#2C4A3E" fill-opacity="0.08" stroke="#2C4A3E" stroke-opacity="0.5"/>
+<path d="M822,527 L828,521 L834,527" fill="none" stroke="#2C4A3E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="804" y="556" width="48" height="48" rx="8" fill="#2C4A3E" fill-opacity="0.08" stroke="#2C4A3E" stroke-opacity="0.5"/>
+<path d="M822,577 L828,583 L834,577" fill="none" stroke="#2C4A3E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+
+<!-- Card 3: Эльбрус -->
+<path d="M514,628 L838,628 L856,646 L856,748 L514,748 Z" fill="#FBF7EC" stroke="#23241F" stroke-opacity="0.08" stroke-width="1"/>
+<line x1="570" y1="628" x2="570" y2="748" stroke="#23241F" stroke-opacity="0.1" stroke-width="1"/>
+<text x="542" y="662" class="mono" font-size="13" font-weight="700" text-anchor="middle" fill="#5B584C">№3</text>
+<circle cx="539" cy="698" r="1.6" fill="#5B584C"/><circle cx="545" cy="698" r="1.6" fill="#5B584C"/>
+<circle cx="539" cy="706" r="1.6" fill="#5B584C"/><circle cx="545" cy="706" r="1.6" fill="#5B584C"/>
+<circle cx="539" cy="714" r="1.6" fill="#5B584C"/><circle cx="545" cy="714" r="1.6" fill="#5B584C"/>
+<text x="586" y="674" class="serif" font-size="19" font-weight="600" fill="#23241F">Эльбрус</text>
+<text x="586" y="698" class="sans" font-size="12" fill="#23241F" opacity="0.6">Кавказ, Россия</text>
+<rect x="804" y="636" width="48" height="48" rx="8" fill="#2C4A3E" fill-opacity="0.08" stroke="#2C4A3E" stroke-opacity="0.5"/>
+<path d="M822,663 L828,657 L834,663" fill="none" stroke="#2C4A3E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="804" y="692" width="48" height="48" rx="8" fill="#2C4A3E" fill-opacity="0.08" stroke="#2C4A3E" stroke-opacity="0.5"/>
+<path d="M822,713 L828,719 L834,713" fill="none" stroke="#2C4A3E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+
+<!-- Card 4: Монблан (down disabled) -->
+<path d="M514,764 L838,764 L856,782 L856,884 L514,884 Z" fill="#FBF7EC" stroke="#23241F" stroke-opacity="0.08" stroke-width="1"/>
+<line x1="570" y1="764" x2="570" y2="884" stroke="#23241F" stroke-opacity="0.1" stroke-width="1"/>
+<text x="542" y="798" class="mono" font-size="13" font-weight="700" text-anchor="middle" fill="#5B584C">№4</text>
+<circle cx="539" cy="834" r="1.6" fill="#5B584C"/><circle cx="545" cy="834" r="1.6" fill="#5B584C"/>
+<circle cx="539" cy="842" r="1.6" fill="#5B584C"/><circle cx="545" cy="842" r="1.6" fill="#5B584C"/>
+<circle cx="539" cy="850" r="1.6" fill="#5B584C"/><circle cx="545" cy="850" r="1.6" fill="#5B584C"/>
+<text x="586" y="810" class="serif" font-size="19" font-weight="600" fill="#23241F">Монблан</text>
+<text x="586" y="834" class="sans" font-size="12" fill="#23241F" opacity="0.6">Альпы, Франция и Италия</text>
+<rect x="804" y="772" width="48" height="48" rx="8" fill="#2C4A3E" fill-opacity="0.08" stroke="#2C4A3E" stroke-opacity="0.5"/>
+<path d="M822,799 L828,793 L834,799" fill="none" stroke="#2C4A3E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="804" y="828" width="48" height="48" rx="8" fill="none" stroke="#23241F" stroke-opacity="0.16"/>
+<path d="M822,849 L828,855 L834,849" fill="none" stroke="#23241F" stroke-opacity="0.3" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+
+<rect x="514" y="910" width="342" height="56" rx="8" fill="#2C4A3E"/>
+<text x="685" y="944" class="sans" font-size="17" font-weight="600" text-anchor="middle" fill="#F6F0E2">Проверить</text>
+
+<!-- ============ RIGHT COLUMN ============ -->
+<text x="940" y="164" class="sans" font-size="13" font-weight="700" letter-spacing="2" fill="#23241F" opacity="0.6">ПАЛИТРА (СВЕТЛАЯ)</text>
+<rect x="940" y="176" width="70" height="70" rx="8" fill="#F6F0E2" stroke="#23241F" stroke-opacity="0.22"/>
+<text x="975" y="262" class="sans" font-size="10" text-anchor="middle" fill="#23241F" opacity="0.6">#F6F0E2</text>
+<rect x="1022" y="176" width="70" height="70" rx="8" fill="#23241F"/>
+<text x="1057" y="262" class="sans" font-size="10" text-anchor="middle" fill="#23241F" opacity="0.6">#23241F</text>
+<rect x="1104" y="176" width="70" height="70" rx="8" fill="#2C4A3E"/>
+<text x="1139" y="262" class="sans" font-size="10" text-anchor="middle" fill="#23241F" opacity="0.6">#2C4A3E</text>
+<rect x="1186" y="176" width="70" height="70" rx="8" fill="#9C4A2E"/>
+<text x="1221" y="262" class="sans" font-size="10" text-anchor="middle" fill="#23241F" opacity="0.6">#9C4A2E</text>
+<rect x="1268" y="176" width="70" height="70" rx="8" fill="#FBF7EC" stroke="#23241F" stroke-opacity="0.15"/>
+<text x="1303" y="262" class="sans" font-size="10" text-anchor="middle" fill="#23241F" opacity="0.6">#FBF7EC</text>
+
+<text x="940" y="296" class="sans" font-size="13" font-weight="700" letter-spacing="2" fill="#23241F" opacity="0.6">ТИПОГРАФИКА</text>
+<text x="960" y="318" class="sans" font-size="11" letter-spacing="1" fill="#23241F" opacity="0.5">СОДЕРЖАТЕЛЬНЫЙ ЗАГОЛОВОК / SERIF</text>
+<text x="960" y="350" class="serif" font-size="30" fill="#23241F">Килиманджаро</text>
+<text x="960" y="374" class="sans" font-size="11" letter-spacing="1" fill="#23241F" opacity="0.5">СЛУЖЕБНЫЙ НОМЕР / MONO (ограниченно)</text>
+<text x="960" y="400" class="mono" font-size="24" font-weight="700" fill="#23241F">№1 · День 24</text>
+<text x="960" y="424" class="sans" font-size="11" letter-spacing="1" fill="#23241F" opacity="0.5">ТЕКСТ / SANS</text>
+<text x="960" y="446" class="sans" font-size="16" fill="#23241F">Объяснение читается спокойно, без ёрничества.</text>
+<text x="960" y="470" class="sans" font-size="11" letter-spacing="1" fill="#23241F" opacity="0.5">МЕТКА / SANS CAPS</text>
+<text x="960" y="488" class="sans" font-size="12" font-weight="700" letter-spacing="2" fill="#23241F">НАПРАВЛЕНИЕ СОРТИРОВКИ</text>
+
+<text x="940" y="518" class="sans" font-size="13" font-weight="700" letter-spacing="2" fill="#23241F" opacity="0.6">ФОРМЫ</text>
+<text x="960" y="540" class="sans" font-size="11" fill="#23241F" opacity="0.5">Основная кнопка — rx8, зелёная</text>
+<rect x="960" y="550" width="180" height="46" rx="8" fill="#2C4A3E"/>
+<text x="1050" y="579" class="sans" font-size="15" font-weight="600" text-anchor="middle" fill="#F6F0E2">Проверить</text>
+
+<text x="960" y="622" class="sans" font-size="11" fill="#23241F" opacity="0.5">Категорийная метка</text>
+<rect x="960" y="632" width="104" height="26" rx="6" fill="#E4E9DE"/>
+<path d="M970,651 L976,642 L980,647 L984,643 L990,651 Z" fill="#2C4A3E"/>
+<text x="997" y="649" class="sans" font-size="10.5" font-weight="700" letter-spacing="0.4" fill="#2C4A3E">ГЕОГРАФИЯ</text>
+
+<text x="960" y="686" class="sans" font-size="11" fill="#23241F" opacity="0.5">OrderableCard — индексная зона слева, срез 12dp (единственный на весь UI)</text>
+<path d="M960,696 L1350,696 L1362,708 L1362,766 L960,766 Z" fill="#FBF7EC" stroke="#23241F" stroke-opacity="0.1"/>
+<line x1="1004" y1="696" x2="1004" y2="766" stroke="#23241F" stroke-opacity="0.12"/>
+<text x="982" y="726" class="mono" font-size="12" font-weight="700" text-anchor="middle" fill="#5B584C">№1</text>
+<circle cx="979" cy="742" r="1.5" fill="#5B584C"/><circle cx="985" cy="742" r="1.5" fill="#5B584C"/>
+<circle cx="979" cy="748" r="1.5" fill="#5B584C"/><circle cx="985" cy="748" r="1.5" fill="#5B584C"/>
+<text x="1018" y="726" class="serif" font-size="17" font-weight="600" fill="#23241F">Эльбрус</text>
+<text x="1018" y="748" class="sans" font-size="11" fill="#23241F" opacity="0.6">Кавказ, Россия</text>
+<rect x="1286" y="704" width="32" height="26" rx="6" fill="#2C4A3E" fill-opacity="0.08" stroke="#2C4A3E" stroke-opacity="0.5"/>
+<rect x="1286" y="734" width="32" height="26" rx="6" fill="#2C4A3E" fill-opacity="0.08" stroke="#2C4A3E" stroke-opacity="0.5"/>
+<text x="1330" y="722" class="sans" font-size="9" fill="#23241F" opacity="0.45">реальный</text>
+<text x="1330" y="734" class="sans" font-size="9" fill="#23241F" opacity="0.45">размер</text>
+<text x="1330" y="746" class="sans" font-size="9" fill="#23241F" opacity="0.45">кнопок —</text>
+<text x="1330" y="758" class="sans" font-size="9" fill="#23241F" opacity="0.45">48×48dp</text>
+
+<!-- Dark theme fragment -->
+<text x="940" y="800" class="sans" font-size="13" font-weight="700" letter-spacing="2" fill="#23241F" opacity="0.6">ТЁМНАЯ ТЕМА (фрагмент Home)</text>
+<rect x="940" y="812" width="460" height="196" rx="16" fill="#1C1A16"/>
+<text x="964" y="844" class="serif" font-size="14" letter-spacing="3" fill="#EDE7D8">ПО ПОРЯДКУ</text>
+<line x1="964" y1="854" x2="1356" y2="854" stroke="#EDE7D8" stroke-opacity="0.2"/>
+<text x="964" y="876" class="mono" font-size="12" fill="#B9B2A0">Суббота, 29 августа 2026</text>
+<rect x="964" y="892" width="3" height="54" fill="#3E6350"/>
+<text x="984" y="906" class="mono" font-size="10" font-weight="700" letter-spacing="1.5" fill="#D68A63">ВЫПУСК</text>
+<text x="984" y="938" fill="#EDE7D8"><tspan class="serif" font-size="16">День </tspan><tspan class="mono" font-size="26" font-weight="700">24</tspan></text>
+<rect x="964" y="972" width="412" height="30" rx="8" fill="#3E6350"/>
+<text x="1170" y="992" class="sans" font-size="13" font-weight="600" text-anchor="middle" fill="#F5EFE0">Играть</text>
+
+<!-- ============ STRESS EXAMPLE: 320dp + 200% FONT ============ -->
+<text x="60" y="1044" class="sans" font-size="14" font-weight="700" letter-spacing="1.5" fill="#2C4A3E">СТРЕСС-ПРИМЕР: ШИРИНА 320 DP + ШРИФТ 200%</text>
+<text x="60" y="1068" class="sans" font-size="13" fill="#23241F" opacity="0.65">Одна карточка OrderableCard (Килиманджаро / Танзания) в максимально узкой ширине и при удвоенном системном шрифте —</text>
+<text x="60" y="1088" class="sans" font-size="13" fill="#23241F" opacity="0.65">проверка переноса заголовка, устойчивости зоны управления и поведения среза угла.</text>
+
+<text x="290" y="1108" class="mono" font-size="11" font-weight="700" letter-spacing="1.5" text-anchor="middle" fill="#5B584C">320 DP</text>
+<rect x="130" y="1114" width="320" height="210" rx="8" fill="#F6F0E2" stroke="#23241F" stroke-opacity="0.25" stroke-dasharray="4 3"/>
+
+<path d="M146,1130 L416,1130 L434,1148 L434,1308 L146,1308 Z" fill="#FBF7EC" stroke="#23241F" stroke-opacity="0.1"/>
+<line x1="202" y1="1130" x2="202" y2="1308" stroke="#23241F" stroke-opacity="0.12"/>
+<text x="174" y="1170" class="mono" font-size="22" font-weight="700" text-anchor="middle" fill="#5B584C">№1</text>
+<circle cx="171" cy="1214" r="2.2" fill="#5B584C"/><circle cx="177" cy="1214" r="2.2" fill="#5B584C"/>
+<circle cx="171" cy="1224" r="2.2" fill="#5B584C"/><circle cx="177" cy="1224" r="2.2" fill="#5B584C"/>
+<circle cx="171" cy="1234" r="2.2" fill="#5B584C"/><circle cx="177" cy="1234" r="2.2" fill="#5B584C"/>
+<text x="218" class="serif" font-size="30" font-weight="600" fill="#23241F">
+  <tspan x="218" y="1168">Кили-</tspan>
+  <tspan x="218" y="1204">манд-</tspan>
+  <tspan x="218" y="1240">жаро</tspan>
+</text>
+<text x="218" y="1266" class="sans" font-size="18" fill="#23241F" opacity="0.6">Танзания</text>
+<rect x="364" y="1136" width="48" height="48" rx="8" fill="#2C4A3E" fill-opacity="0.08" stroke="#2C4A3E" stroke-opacity="0.5"/>
+<path d="M382,1163 L388,1157 L394,1163" fill="none" stroke="#2C4A3E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="364" y="1240" width="48" height="48" rx="8" fill="#2C4A3E" fill-opacity="0.08" stroke="#2C4A3E" stroke-opacity="0.5"/>
+<path d="M382,1261 L388,1267 L394,1261" fill="none" stroke="#2C4A3E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+
+<text x="500" y="1150" class="sans" font-size="14" font-weight="700" fill="#23241F">Что показывает пример:</text>
+<text x="500" y="1178" class="sans" font-size="14" fill="#23241F">Заголовок «Килиманджаро» переносится на три строки — карточка растёт по</text>
+<text x="500" y="1198" class="sans" font-size="14" fill="#23241F">высоте, а не обрезает и не сжимает текст.</text>
+<text x="500" y="1226" class="sans" font-size="14" fill="#23241F">Кнопки ↑/↓ и индексная зона слева сохраняют физический размер 48×48 dp —</text>
+<text x="500" y="1246" class="sans" font-size="14" fill="#23241F">масштабируется только текст, а не сенсорные цели.</text>
+<text x="500" y="1274" class="sans" font-size="14" fill="#23241F">Срезанный угол остаётся тем же отрезком 12–18 dp независимо от высоты</text>
+<text x="500" y="1294" class="sans" font-size="14" fill="#23241F">карточки — на более высокой карточке он визуально меньше, но не искажается.</text>
+
+<!-- Footer caption -->
+<text x="60" y="1352" class="sans" font-size="13" font-weight="700" letter-spacing="2" fill="#23241F" opacity="0.55">ИДЕЯ КОНЦЕПЦИИ</text>
+<text x="60" y="1378" class="sans" font-size="16" fill="#23241F">Альманах исследователя — редакционная тишина и serif/sans-иерархия A, к которым добавлен один точный каталожный</text>
+<text x="60" y="1398" class="sans" font-size="16" fill="#23241F">штрих B: срез угла карточки, моно-номера и хвойно-зелёный акцент. Никакой игровой эстетики C.</text>
+</svg>

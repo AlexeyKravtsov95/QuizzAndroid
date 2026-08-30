@@ -1,0 +1,215 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1236" height="891.85" viewBox="0 0 1236 891.85">
+<title>NotificationOptInDialog — единственный диалог MVP</title>
+<defs>
+<clipPath id="clip44"><rect x="40" y="284.85" width="390" height="567"/></clipPath>
+<clipPath id="clip45"><rect x="458" y="284.85" width="390" height="567"/></clipPath>
+<clipPath id="clip46"><rect x="876" y="284.85" width="320" height="567"/></clipPath>
+</defs>
+<rect x="0" y="0" width="1236" height="891.85" fill="#EDE6D4"/>
+<text x="40" y="60.34" font-family="Golos Text SemiBold, Golos Text" font-size="18" font-weight="600" fill="#23241F" letter-spacing="0.17" data-text="NotificationOptInDialog — единственный диалог MVP">NotificationOptInDialog — единственный диалог MVP</text>
+<text x="40" y="85.87" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="светлая и тёмная тема · 100% и 200% с вертикальными действиями · scrim">светлая и тёмная тема · 100% и 200% с вертикальными действиями · scrim</text>
+<text x="40" y="120.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Один текстовый узел вопроса (titleMedium), два явных действия: «Да, в 9:00» (PrimaryButton) и «Не нужно» (SecondaryButton). Касание вне диалога не закрывает его —">Один текстовый узел вопроса (titleMedium), два явных действия: «Да, в 9:00» (PrimaryButton) и «Не нужно» (SecondaryButton). Касание вне диалога не закрывает его —</text>
+<text x="40" y="136.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="dismissOnClickOutside = false.">dismissOnClickOutside = false.</text>
+<text x="40" y="160.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Единственное место продукта, где одновременно применяются shape.large, surfaceContainerHigh, elevation.dialog и opacity.scrim (32%). Ни форма, ни тень диалога не">Единственное место продукта, где одновременно применяются shape.large, surfaceContainerHigh, elevation.dialog и opacity.scrim (32%). Ни форма, ни тень диалога не</text>
+<text x="40" y="176.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="распространяются на обычные контейнеры.">распространяются на обычные контейнеры.</text>
+<text x="40" y="200.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="При 200% действия складываются вертикально, обе кнопки сохраняют size.button.height и size.touchTarget.min — они не сжимаются ради ширины.">При 200% действия складываются вертикально, обе кнопки сохраняют size.button.height и size.touchTarget.min — они не сжимаются ради ширины.</text>
+<line x1="40" y1="221.62" x2="1196" y2="221.62" stroke="#C9C0A8" stroke-width="1"/>
+<text x="40" y="246.48" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#23241F" letter-spacing="0.18" data-text="Диалог поверх DayRecap">Диалог поверх DayRecap</text>
+<text x="40" y="273.1" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="Светлая · 390 dp · 100% · действия в ряд">Светлая · 390 dp · 100% · действия в ряд</text>
+<g clip-path="url(#clip44)">
+<g transform="translate(40,284.85)">
+<rect x="0" y="0" width="390" height="567" fill="#F6F0E2"/>
+<g data-component="AppTopBar">
+<text x="24" y="50.08" font-family="Golos Text SemiBold, Golos Text" font-size="16" font-weight="600" fill="#23241F" letter-spacing="0.15" data-text="Сегодня">Сегодня</text>
+</g>
+<g data-component="ScoreBadge">
+<text x="24" y="120.31" font-family="Noto Serif Medium, Noto Serif" font-size="24" font-weight="500" fill="#23241F" data-text="15 из 18">15 из 18</text>
+</g>
+<g data-component="DayResultRow" data-layout="inline">
+<g data-component="CategoryLabel">
+<rect x="24" y="162" width="111.34" height="26" rx="4" fill="#E4E9DE"/>
+<path d="M12.03 22.08Q9.94 22.08 8.11 21.3Q6.27 20.51 4.89 19.13Q3.5 17.74 2.72 15.91Q1.93 14.07 1.93 11.99Q1.93 9.9 2.72 8.08Q3.5 6.26 4.89 4.87Q6.27 3.49 8.11 2.7Q9.94 1.92 12.03 1.92Q14.11 1.92 15.93 2.7Q17.74 3.49 19.13 4.87Q20.51 6.26 21.3 8.08Q22.08 9.9 22.08 11.99Q22.08 14.07 21.3 15.91Q20.51 17.74 19.13 19.13Q17.74 20.51 15.93 21.3Q14.11 22.08 12.03 22.08ZM10.83 19.53V17.84Q10.34 17.84 10.01 17.51Q9.67 17.17 9.67 16.69V15.52L4.56 10.4Q4.46 10.86 4.42 11.25Q4.38 11.64 4.38 11.98Q4.38 14.8 6.2 16.96Q8.02 19.12 10.83 19.53ZM17.89 16.86Q18.76 15.84 19.19 14.58Q19.63 13.33 19.63 11.97Q19.63 9.66 18.37 7.75Q17.12 5.85 14.96 4.96V5.53Q14.96 6.26 14.43 6.77Q13.91 7.28 13.18 7.28H10.83V8.44Q10.83 8.93 10.48 9.28Q10.13 9.63 9.64 9.63H8.48V11.97H14.37Q14.86 11.97 15.21 12.32Q15.56 12.67 15.56 13.16V15.49H16.54Q17.12 15.49 17.5 15.89Q17.89 16.29 17.89 16.86Z" fill="#2C4A3E" transform="translate(32,167) scale(0.67)"/>
+<text x="56" y="179.94" font-family="Golos Text SemiBold, Golos Text" font-size="13" font-weight="600" fill="#2C4A3E" letter-spacing="0.2" data-text="География">География</text>
+</g>
+<text x="366" y="181.08" font-family="Golos Text Regular, Golos Text" font-size="16" font-weight="400" fill="#23241F" letter-spacing="0.5" text-anchor="end" data-text="5 из 6">5 из 6</text>
+<line x1="24" y1="200" x2="366" y2="200" stroke="#DCD3BC" stroke-width="1"/>
+</g>
+<g data-component="DayResultRow" data-layout="inline">
+<g data-component="CategoryLabel">
+<rect x="24" y="213" width="96.49" height="26" rx="4" fill="#E4E9DE"/>
+<path d="M4.36 17.56V9.76H6.6V17.56ZM10.89 17.56V9.76H13.11V17.56ZM1.92 20.77V18.32H22.08V20.77ZM17.4 17.56V9.76H19.64V17.56ZM1.92 8.98V5.8L12 0.76L22.08 5.8V8.98ZM5.96 6.53H12H18.04ZM5.96 6.53H18.04L12 3.52Z" fill="#2C4A3E" transform="translate(32,218) scale(0.67)"/>
+<text x="56" y="230.94" font-family="Golos Text SemiBold, Golos Text" font-size="13" font-weight="600" fill="#2C4A3E" letter-spacing="0.2" data-text="История">История</text>
+</g>
+<text x="366" y="232.08" font-family="Golos Text Regular, Golos Text" font-size="16" font-weight="400" fill="#23241F" letter-spacing="0.5" text-anchor="end" data-text="6 из 6">6 из 6</text>
+<line x1="24" y1="251" x2="366" y2="251" stroke="#DCD3BC" stroke-width="1"/>
+</g>
+<g data-component="DayResultRow" data-layout="inline">
+<g data-component="CategoryLabel">
+<rect x="24" y="264" width="80.84" height="26" rx="4" fill="#E4E9DE"/>
+<path d="M5.4 20.88Q3.95 20.88 3.32 19.59Q2.68 18.3 3.61 17.2L8.52 11.23V5.73H8.06Q7.56 5.73 7.19 5.37Q6.83 5.01 6.83 4.51Q6.83 4 7.19 3.64Q7.55 3.27 8.06 3.27H15.94Q16.45 3.27 16.81 3.63Q17.17 3.99 17.17 4.49Q17.17 5 16.81 5.36Q16.45 5.73 15.94 5.73H15.48V11.23L20.39 17.2Q21.29 18.3 20.66 19.59Q20.02 20.88 18.6 20.88ZM5.77 18.43H18.23L13.03 12.07V5.73H10.97V12.07ZM12.03 12.07Z" fill="#2C4A3E" transform="translate(32,269) scale(0.67)"/>
+<text x="56" y="281.94" font-family="Golos Text SemiBold, Golos Text" font-size="13" font-weight="600" fill="#2C4A3E" letter-spacing="0.2" data-text="Наука">Наука</text>
+</g>
+<text x="366" y="283.08" font-family="Golos Text Regular, Golos Text" font-size="16" font-weight="400" fill="#23241F" letter-spacing="0.5" text-anchor="end" data-text="4 из 6">4 из 6</text>
+<line x1="24" y1="302" x2="366" y2="302" stroke="#DCD3BC" stroke-width="1"/>
+</g>
+<rect x="0" y="0" width="390" height="567" fill="#000000" fill-opacity="0.32"/>
+<g data-component="NotificationOptInDialog" data-actions="row">
+<g transform="translate(0,5.4)">
+<rect x="24" y="207.5" width="342" height="152" rx="16" fill="#000000" fill-opacity="0.05"/>
+</g>
+<g transform="translate(0,3.6)">
+<rect x="24" y="207.5" width="342" height="152" rx="16" fill="#000000" fill-opacity="0.06"/>
+</g>
+<g transform="translate(0,2.1)">
+<rect x="24" y="207.5" width="342" height="152" rx="16" fill="#000000" fill-opacity="0.07"/>
+</g>
+<g transform="translate(0,0.9)">
+<rect x="24" y="207.5" width="342" height="152" rx="16" fill="#000000" fill-opacity="0.08"/>
+</g>
+<rect x="24" y="207.5" width="342" height="152" rx="16" fill="#EFE6CE"/>
+<text x="48" y="249.58" font-family="Golos Text SemiBold, Golos Text" font-size="16" font-weight="600" fill="#23241F" letter-spacing="0.15" data-text="Напоминать о новом задании?">Напоминать о новом задании?</text>
+<g data-component="PrimaryButton">
+<rect x="48" y="279.5" width="141" height="56" rx="8" fill="#2C4A3E"/>
+<text x="118.5" y="313.2" font-family="Golos Text SemiBold, Golos Text" font-size="15" font-weight="600" fill="#F6F0E2" letter-spacing="0.1" text-anchor="middle" data-text="Да, в 9:00">Да, в 9:00</text>
+</g>
+<g data-component="SecondaryButton">
+<rect x="201" y="279.5" width="141" height="56" rx="8" fill="none" stroke="#8C8672" stroke-width="1"/>
+<text x="271.5" y="313.2" font-family="Golos Text SemiBold, Golos Text" font-size="15" font-weight="600" fill="#23241F" letter-spacing="0.1" text-anchor="middle" data-text="Не нужно">Не нужно</text>
+</g>
+</g>
+</g>
+</g>
+<rect x="40" y="284.85" width="390" height="567" fill="none" stroke="#C9C0A8" stroke-width="1"/>
+<text x="458" y="273.1" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="Тёмная · 390 dp · 100% · действия в ряд">Тёмная · 390 dp · 100% · действия в ряд</text>
+<g clip-path="url(#clip45)">
+<g transform="translate(458,284.85)">
+<rect x="0" y="0" width="390" height="567" fill="#1C1A16"/>
+<g data-component="AppTopBar">
+<text x="24" y="50.08" font-family="Golos Text SemiBold, Golos Text" font-size="16" font-weight="600" fill="#EDE7D8" letter-spacing="0.15" data-text="Сегодня">Сегодня</text>
+</g>
+<g data-component="ScoreBadge">
+<text x="24" y="120.31" font-family="Noto Serif Medium, Noto Serif" font-size="24" font-weight="500" fill="#EDE7D8" data-text="15 из 18">15 из 18</text>
+</g>
+<g data-component="DayResultRow" data-layout="inline">
+<g data-component="CategoryLabel">
+<rect x="24" y="162" width="111.34" height="26" rx="4" fill="#24352C"/>
+<path d="M12.03 22.08Q9.94 22.08 8.11 21.3Q6.27 20.51 4.89 19.13Q3.5 17.74 2.72 15.91Q1.93 14.07 1.93 11.99Q1.93 9.9 2.72 8.08Q3.5 6.26 4.89 4.87Q6.27 3.49 8.11 2.7Q9.94 1.92 12.03 1.92Q14.11 1.92 15.93 2.7Q17.74 3.49 19.13 4.87Q20.51 6.26 21.3 8.08Q22.08 9.9 22.08 11.99Q22.08 14.07 21.3 15.91Q20.51 17.74 19.13 19.13Q17.74 20.51 15.93 21.3Q14.11 22.08 12.03 22.08ZM10.83 19.53V17.84Q10.34 17.84 10.01 17.51Q9.67 17.17 9.67 16.69V15.52L4.56 10.4Q4.46 10.86 4.42 11.25Q4.38 11.64 4.38 11.98Q4.38 14.8 6.2 16.96Q8.02 19.12 10.83 19.53ZM17.89 16.86Q18.76 15.84 19.19 14.58Q19.63 13.33 19.63 11.97Q19.63 9.66 18.37 7.75Q17.12 5.85 14.96 4.96V5.53Q14.96 6.26 14.43 6.77Q13.91 7.28 13.18 7.28H10.83V8.44Q10.83 8.93 10.48 9.28Q10.13 9.63 9.64 9.63H8.48V11.97H14.37Q14.86 11.97 15.21 12.32Q15.56 12.67 15.56 13.16V15.49H16.54Q17.12 15.49 17.5 15.89Q17.89 16.29 17.89 16.86Z" fill="#CFE0D2" transform="translate(32,167) scale(0.67)"/>
+<text x="56" y="179.94" font-family="Golos Text SemiBold, Golos Text" font-size="13" font-weight="600" fill="#CFE0D2" letter-spacing="0.2" data-text="География">География</text>
+</g>
+<text x="366" y="181.08" font-family="Golos Text Regular, Golos Text" font-size="16" font-weight="400" fill="#EDE7D8" letter-spacing="0.5" text-anchor="end" data-text="5 из 6">5 из 6</text>
+<line x1="24" y1="200" x2="366" y2="200" stroke="#3C382C" stroke-width="1"/>
+</g>
+<g data-component="DayResultRow" data-layout="inline">
+<g data-component="CategoryLabel">
+<rect x="24" y="213" width="96.49" height="26" rx="4" fill="#24352C"/>
+<path d="M4.36 17.56V9.76H6.6V17.56ZM10.89 17.56V9.76H13.11V17.56ZM1.92 20.77V18.32H22.08V20.77ZM17.4 17.56V9.76H19.64V17.56ZM1.92 8.98V5.8L12 0.76L22.08 5.8V8.98ZM5.96 6.53H12H18.04ZM5.96 6.53H18.04L12 3.52Z" fill="#CFE0D2" transform="translate(32,218) scale(0.67)"/>
+<text x="56" y="230.94" font-family="Golos Text SemiBold, Golos Text" font-size="13" font-weight="600" fill="#CFE0D2" letter-spacing="0.2" data-text="История">История</text>
+</g>
+<text x="366" y="232.08" font-family="Golos Text Regular, Golos Text" font-size="16" font-weight="400" fill="#EDE7D8" letter-spacing="0.5" text-anchor="end" data-text="6 из 6">6 из 6</text>
+<line x1="24" y1="251" x2="366" y2="251" stroke="#3C382C" stroke-width="1"/>
+</g>
+<g data-component="DayResultRow" data-layout="inline">
+<g data-component="CategoryLabel">
+<rect x="24" y="264" width="80.84" height="26" rx="4" fill="#24352C"/>
+<path d="M5.4 20.88Q3.95 20.88 3.32 19.59Q2.68 18.3 3.61 17.2L8.52 11.23V5.73H8.06Q7.56 5.73 7.19 5.37Q6.83 5.01 6.83 4.51Q6.83 4 7.19 3.64Q7.55 3.27 8.06 3.27H15.94Q16.45 3.27 16.81 3.63Q17.17 3.99 17.17 4.49Q17.17 5 16.81 5.36Q16.45 5.73 15.94 5.73H15.48V11.23L20.39 17.2Q21.29 18.3 20.66 19.59Q20.02 20.88 18.6 20.88ZM5.77 18.43H18.23L13.03 12.07V5.73H10.97V12.07ZM12.03 12.07Z" fill="#CFE0D2" transform="translate(32,269) scale(0.67)"/>
+<text x="56" y="281.94" font-family="Golos Text SemiBold, Golos Text" font-size="13" font-weight="600" fill="#CFE0D2" letter-spacing="0.2" data-text="Наука">Наука</text>
+</g>
+<text x="366" y="283.08" font-family="Golos Text Regular, Golos Text" font-size="16" font-weight="400" fill="#EDE7D8" letter-spacing="0.5" text-anchor="end" data-text="4 из 6">4 из 6</text>
+<line x1="24" y1="302" x2="366" y2="302" stroke="#3C382C" stroke-width="1"/>
+</g>
+<rect x="0" y="0" width="390" height="567" fill="#000000" fill-opacity="0.32"/>
+<g data-component="NotificationOptInDialog" data-actions="row">
+<g transform="translate(0,5.4)">
+<rect x="24" y="207.5" width="342" height="152" rx="16" fill="#000000" fill-opacity="0.05"/>
+</g>
+<g transform="translate(0,3.6)">
+<rect x="24" y="207.5" width="342" height="152" rx="16" fill="#000000" fill-opacity="0.06"/>
+</g>
+<g transform="translate(0,2.1)">
+<rect x="24" y="207.5" width="342" height="152" rx="16" fill="#000000" fill-opacity="0.07"/>
+</g>
+<g transform="translate(0,0.9)">
+<rect x="24" y="207.5" width="342" height="152" rx="16" fill="#000000" fill-opacity="0.08"/>
+</g>
+<rect x="24" y="207.5" width="342" height="152" rx="16" fill="#332E24"/>
+<text x="48" y="249.58" font-family="Golos Text SemiBold, Golos Text" font-size="16" font-weight="600" fill="#EDE7D8" letter-spacing="0.15" data-text="Напоминать о новом задании?">Напоминать о новом задании?</text>
+<g data-component="PrimaryButton">
+<rect x="48" y="279.5" width="141" height="56" rx="8" fill="#3E6350"/>
+<text x="118.5" y="313.2" font-family="Golos Text SemiBold, Golos Text" font-size="15" font-weight="600" fill="#F5EFE0" letter-spacing="0.1" text-anchor="middle" data-text="Да, в 9:00">Да, в 9:00</text>
+</g>
+<g data-component="SecondaryButton">
+<rect x="201" y="279.5" width="141" height="56" rx="8" fill="none" stroke="#8A8370" stroke-width="1"/>
+<text x="271.5" y="313.2" font-family="Golos Text SemiBold, Golos Text" font-size="15" font-weight="600" fill="#EDE7D8" letter-spacing="0.1" text-anchor="middle" data-text="Не нужно">Не нужно</text>
+</g>
+</g>
+</g>
+</g>
+<rect x="458" y="284.85" width="390" height="567" fill="none" stroke="#C9C0A8" stroke-width="1"/>
+<text x="876" y="273.1" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="Светлая · 320 dp · 200% · действия вертикально">Светлая · 320 dp · 200% · действия вертикально</text>
+<g clip-path="url(#clip46)">
+<g transform="translate(876,284.85)">
+<rect x="0" y="0" width="320" height="567" fill="#F6F0E2"/>
+<g data-component="AppTopBar">
+<text x="16" y="60.16" font-family="Golos Text SemiBold, Golos Text" font-size="32" font-weight="600" fill="#23241F" letter-spacing="0.3" data-text="Сегодня">Сегодня</text>
+</g>
+<g data-component="ScoreBadge">
+<text x="16" y="152.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="15 из 18">15 из 18</text>
+</g>
+<g data-component="DayResultRow" data-layout="stacked">
+<g data-component="CategoryLabel">
+<rect x="16" y="196" width="182.67" height="44" rx="4" fill="#E4E9DE"/>
+<path d="M12.03 22.08Q9.94 22.08 8.11 21.3Q6.27 20.51 4.89 19.13Q3.5 17.74 2.72 15.91Q1.93 14.07 1.93 11.99Q1.93 9.9 2.72 8.08Q3.5 6.26 4.89 4.87Q6.27 3.49 8.11 2.7Q9.94 1.92 12.03 1.92Q14.11 1.92 15.93 2.7Q17.74 3.49 19.13 4.87Q20.51 6.26 21.3 8.08Q22.08 9.9 22.08 11.99Q22.08 14.07 21.3 15.91Q20.51 17.74 19.13 19.13Q17.74 20.51 15.93 21.3Q14.11 22.08 12.03 22.08ZM10.83 19.53V17.84Q10.34 17.84 10.01 17.51Q9.67 17.17 9.67 16.69V15.52L4.56 10.4Q4.46 10.86 4.42 11.25Q4.38 11.64 4.38 11.98Q4.38 14.8 6.2 16.96Q8.02 19.12 10.83 19.53ZM17.89 16.86Q18.76 15.84 19.19 14.58Q19.63 13.33 19.63 11.97Q19.63 9.66 18.37 7.75Q17.12 5.85 14.96 4.96V5.53Q14.96 6.26 14.43 6.77Q13.91 7.28 13.18 7.28H10.83V8.44Q10.83 8.93 10.48 9.28Q10.13 9.63 9.64 9.63H8.48V11.97H14.37Q14.86 11.97 15.21 12.32Q15.56 12.67 15.56 13.16V15.49H16.54Q17.12 15.49 17.5 15.89Q17.89 16.29 17.89 16.86Z" fill="#2C4A3E" transform="translate(24,210) scale(0.67)"/>
+<text x="48" y="227.88" font-family="Golos Text SemiBold, Golos Text" font-size="26" font-weight="600" fill="#2C4A3E" letter-spacing="0.4" data-text="География">География</text>
+</g>
+<text x="16" y="288.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="5 из 6">5 из 6</text>
+<line x1="16" y1="308" x2="304" y2="308" stroke="#DCD3BC" stroke-width="1"/>
+</g>
+<g data-component="DayResultRow" data-layout="stacked">
+<g data-component="CategoryLabel">
+<rect x="16" y="317" width="152.99" height="44" rx="4" fill="#E4E9DE"/>
+<path d="M4.36 17.56V9.76H6.6V17.56ZM10.89 17.56V9.76H13.11V17.56ZM1.92 20.77V18.32H22.08V20.77ZM17.4 17.56V9.76H19.64V17.56ZM1.92 8.98V5.8L12 0.76L22.08 5.8V8.98ZM5.96 6.53H12H18.04ZM5.96 6.53H18.04L12 3.52Z" fill="#2C4A3E" transform="translate(24,331) scale(0.67)"/>
+<text x="48" y="348.88" font-family="Golos Text SemiBold, Golos Text" font-size="26" font-weight="600" fill="#2C4A3E" letter-spacing="0.4" data-text="История">История</text>
+</g>
+<text x="16" y="409.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="6 из 6">6 из 6</text>
+<line x1="16" y1="429" x2="304" y2="429" stroke="#DCD3BC" stroke-width="1"/>
+</g>
+<g data-component="DayResultRow" data-layout="stacked">
+<g data-component="CategoryLabel">
+<rect x="16" y="438" width="121.69" height="44" rx="4" fill="#E4E9DE"/>
+<path d="M5.4 20.88Q3.95 20.88 3.32 19.59Q2.68 18.3 3.61 17.2L8.52 11.23V5.73H8.06Q7.56 5.73 7.19 5.37Q6.83 5.01 6.83 4.51Q6.83 4 7.19 3.64Q7.55 3.27 8.06 3.27H15.94Q16.45 3.27 16.81 3.63Q17.17 3.99 17.17 4.49Q17.17 5 16.81 5.36Q16.45 5.73 15.94 5.73H15.48V11.23L20.39 17.2Q21.29 18.3 20.66 19.59Q20.02 20.88 18.6 20.88ZM5.77 18.43H18.23L13.03 12.07V5.73H10.97V12.07ZM12.03 12.07Z" fill="#2C4A3E" transform="translate(24,452) scale(0.67)"/>
+<text x="48" y="469.88" font-family="Golos Text SemiBold, Golos Text" font-size="26" font-weight="600" fill="#2C4A3E" letter-spacing="0.4" data-text="Наука">Наука</text>
+</g>
+<text x="16" y="530.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="4 из 6">4 из 6</text>
+<line x1="16" y1="550" x2="304" y2="550" stroke="#DCD3BC" stroke-width="1"/>
+</g>
+<rect x="0" y="0" width="320" height="567" fill="#000000" fill-opacity="0.32"/>
+<g data-component="NotificationOptInDialog" data-actions="stacked">
+<g transform="translate(0,5.4)">
+<rect x="24" y="105.5" width="272" height="356" rx="16" fill="#000000" fill-opacity="0.05"/>
+</g>
+<g transform="translate(0,3.6)">
+<rect x="24" y="105.5" width="272" height="356" rx="16" fill="#000000" fill-opacity="0.06"/>
+</g>
+<g transform="translate(0,2.1)">
+<rect x="24" y="105.5" width="272" height="356" rx="16" fill="#000000" fill-opacity="0.07"/>
+</g>
+<g transform="translate(0,0.9)">
+<rect x="24" y="105.5" width="272" height="356" rx="16" fill="#000000" fill-opacity="0.08"/>
+</g>
+<rect x="24" y="105.5" width="272" height="356" rx="16" fill="#EFE6CE"/>
+<text x="48" y="165.66" font-family="Golos Text SemiBold, Golos Text" font-size="32" font-weight="600" fill="#23241F" letter-spacing="0.3" data-text="Напоминать">Напоминать</text>
+<text x="48" y="213.66" font-family="Golos Text SemiBold, Golos Text" font-size="32" font-weight="600" fill="#23241F" letter-spacing="0.3" data-text="о новом">о новом</text>
+<text x="48" y="261.66" font-family="Golos Text SemiBold, Golos Text" font-size="32" font-weight="600" fill="#23241F" letter-spacing="0.3" data-text="задании?">задании?</text>
+<g data-component="PrimaryButton">
+<rect x="48" y="297.5" width="224" height="64" rx="8" fill="#2C4A3E"/>
+<text x="160" y="340.9" font-family="Golos Text SemiBold, Golos Text" font-size="30" font-weight="600" fill="#F6F0E2" letter-spacing="0.2" text-anchor="middle" data-text="Да, в 9:00">Да, в 9:00</text>
+</g>
+<g data-component="SecondaryButton">
+<rect x="48" y="373.5" width="224" height="64" rx="8" fill="none" stroke="#8C8672" stroke-width="1"/>
+<text x="160" y="416.9" font-family="Golos Text SemiBold, Golos Text" font-size="30" font-weight="600" fill="#23241F" letter-spacing="0.2" text-anchor="middle" data-text="Не нужно">Не нужно</text>
+</g>
+</g>
+</g>
+</g>
+<rect x="876" y="284.85" width="320" height="567" fill="none" stroke="#C9C0A8" stroke-width="1"/>
+</svg>

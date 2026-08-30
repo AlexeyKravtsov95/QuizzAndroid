@@ -1,0 +1,342 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1112" height="1190.85" viewBox="0 0 1112 1190.85">
+<title>PuzzleResult</title>
+<defs>
+<clipPath id="clip30"><rect x="40" y="263.62" width="320" height="844" rx="32"/></clipPath>
+<clipPath id="clip27"><rect x="0" y="104" width="320" height="612"/></clipPath>
+<clipPath id="clip31"><rect x="396" y="263.62" width="320" height="844" rx="32"/></clipPath>
+<clipPath id="clip28"><rect x="0" y="104" width="320" height="612"/></clipPath>
+<clipPath id="clip32"><rect x="752" y="263.62" width="320" height="844" rx="32"/></clipPath>
+<clipPath id="clip29"><rect x="0" y="104" width="320" height="612"/></clipPath>
+</defs>
+<rect x="0" y="0" width="1112" height="1190.85" fill="#EDE6D4"/>
+<text x="40" y="60.34" font-family="Golos Text SemiBold, Golos Text" font-size="18" font-weight="600" fill="#23241F" letter-spacing="0.17" data-text="PuzzleResult">PuzzleResult</text>
+<text x="40" y="85.87" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="Тема: светлая · viewport 320×844 dp · font scale 200%">Тема: светлая · viewport 320×844 dp · font scale 200%</text>
+<text x="40" y="104.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Компоненты: AppTopBar, 4 × OrderableCard в read-only форме (DragHandle и обе MoveButton отсутствуют в дереве, добавлен displayValue), объяснение">Компоненты: AppTopBar, 4 × OrderableCard в read-only форме (DragHandle и обе MoveButton отсутствуют в дереве, добавлен displayValue), объяснение</text>
+<text x="40" y="122.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="(bodyLarge), ScoreBadge, ScoringHint (первый показ), InvertedPairRow, SourcesBlock (collapsed), ReportInaccuracyAction, PrimaryButton «Дальше».">(bodyLarge), ScoreBadge, ScoringHint (первый показ), InvertedPairRow, SourcesBlock (collapsed), ReportInaccuracyAction, PrimaryButton «Дальше».</text>
+<text x="40" y="140.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Экран прокручиваемый, поэтому артборд показывает 3 среза одного и того же экрана: слева основной viewport, дальше — продолжения того же">Экран прокручиваемый, поэтому артборд показывает 3 среза одного и того же экрана: слева основной viewport, дальше — продолжения того же</text>
+<text x="40" y="158.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="scroll-контейнера ниже сгиба. Это один артборд, а не 3.">scroll-контейнера ниже сгиба. Это один артборд, а не 3.</text>
+<text x="40" y="176.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Нижний padding scroll-контейнера равен высоте закреплённой PrimaryButton плюс два spacing.section, поэтому кнопка «Дальше» не перекрывает">Нижний padding scroll-контейнера равен высоте закреплённой PrimaryButton плюс два spacing.section, поэтому кнопка «Дальше» не перекрывает</text>
+<text x="40" y="194.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="ReportInaccuracyAction в конце прокрутки.">ReportInaccuracyAction в конце прокрутки.</text>
+<text x="40" y="212.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="При 320 dp / 200% хвост документа не помещается в один continuation, поэтому показан ещё и нижний срез прокрутки: SourcesBlock в свёрнутом виде,">При 320 dp / 200% хвост документа не помещается в один continuation, поэтому показан ещё и нижний срез прокрутки: SourcesBlock в свёрнутом виде,</text>
+<text x="40" y="230.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="ReportInaccuracyAction и нижний padding контейнера. Всё читаемо в том же кегле — ничего не обрезано эллипсисом и не уменьшено ради размещения.">ReportInaccuracyAction и нижний padding контейнера. Всё читаемо в том же кегле — ничего не обрезано эллипсисом и не уменьшено ради размещения.</text>
+<rect x="38" y="261.62" width="324" height="848" rx="34" fill="#000000" fill-opacity="0.08"/>
+<g data-component="DeviceSurface" clip-path="url(#clip30)">
+<g transform="translate(40,263.62)">
+<rect x="0" y="0" width="320" height="844" fill="#F6F0E2"/>
+<g data-component="AppTopBar">
+<path d="M43,50 L37,56 L43,62" fill="none" stroke="#23241F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="16" y="32" width="48" height="48" fill="none"/>
+<text x="72" y="68.16" font-family="Golos Text SemiBold, Golos Text" font-size="32" font-weight="600" fill="#23241F" letter-spacing="0.3" data-text="Задание 1 из 3">Задание 1 из 3</text>
+</g>
+<g data-component="PuzzleResultScroll" clip-path="url(#clip27)">
+<g transform="translate(0,104)">
+<text x="16" y="48.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="Правиль‐">Правиль‐</text>
+<text x="16" y="108.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="ный">ный</text>
+<text x="16" y="168.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="порядок">порядок</text>
+<g data-component="OrderableCard" data-state="readonly">
+<path d="M28,192 H286 L304,210 V424 Q304,436 292,436 H28 Q16,436 16,424 V204 Q16,192 28,192 Z" fill="#FBF7EC"/>
+<path d="M28,192 H286 L304,210 V424 Q304,436 292,436 H28 Q16,436 16,424 V204 Q16,192 28,192 Z" fill="none" stroke="#DCD3BC" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="72" y1="204" x2="72" y2="424" stroke="#DCD3BC" stroke-width="1"/>
+<text x="35.6" y="324.08" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="28" font-weight="700" fill="#5B584C" data-text="1">1</text>
+<text x="88" y="249.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="Монблан">Монблан</text>
+<text x="88" y="290.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Альпы,">Альпы,</text>
+<text x="88" y="330.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Франция и">Франция и</text>
+<text x="88" y="370.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Италия">Италия</text>
+<text x="88" y="410.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#23241F" letter-spacing="0.5" data-text="4808 м">4808 м</text>
+</g>
+<g data-component="OrderableCard" data-state="readonly">
+<path d="M28,448 H286 L304,466 V640 Q304,652 292,652 H28 Q16,652 16,640 V460 Q16,448 28,448 Z" fill="#FBF7EC"/>
+<path d="M28,448 H286 L304,466 V640 Q304,652 292,652 H28 Q16,652 16,640 V460 Q16,448 28,448 Z" fill="none" stroke="#DCD3BC" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="72" y1="460" x2="72" y2="640" stroke="#DCD3BC" stroke-width="1"/>
+<text x="35.6" y="560.08" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="28" font-weight="700" fill="#5B584C" data-text="2">2</text>
+<text x="88" y="505.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="Эльбрус">Эльбрус</text>
+<text x="88" y="546.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Кавказ,">Кавказ,</text>
+<text x="88" y="586.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Россия">Россия</text>
+<text x="88" y="626.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#23241F" letter-spacing="0.5" data-text="5642 м">5642 м</text>
+</g>
+<g data-component="OrderableCard" data-state="readonly">
+<path d="M28,664 H286 L304,682 V920 Q304,932 292,932 H28 Q16,932 16,920 V676 Q16,664 28,664 Z" fill="#FBF7EC"/>
+<path d="M28,664 H286 L304,682 V920 Q304,932 292,932 H28 Q16,932 16,920 V676 Q16,664 28,664 Z" fill="none" stroke="#DCD3BC" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="72" y1="676" x2="72" y2="920" stroke="#DCD3BC" stroke-width="1"/>
+<text x="35.6" y="808.08" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="28" font-weight="700" fill="#5B584C" data-text="3">3</text>
+<text x="88" y="721.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="Кили‐">Кили‐</text>
+<text x="88" y="773.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="манджа‐">манджа‐</text>
+<text x="88" y="825.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="ро">ро</text>
+<text x="88" y="866.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Танзания">Танзания</text>
+<text x="88" y="906.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#23241F" letter-spacing="0.5" data-text="5895 м">5895 м</text>
+</g>
+<g data-component="OrderableCard" data-state="readonly">
+<path d="M28,944 H286 L304,962 V1188 Q304,1200 292,1200 H28 Q16,1200 16,1188 V956 Q16,944 28,944 Z" fill="#FBF7EC"/>
+<path d="M28,944 H286 L304,962 V1188 Q304,1200 292,1200 H28 Q16,1200 16,1188 V956 Q16,944 28,944 Z" fill="none" stroke="#DCD3BC" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="72" y1="956" x2="72" y2="1188" stroke="#DCD3BC" stroke-width="1"/>
+<text x="35.6" y="1082.08" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="28" font-weight="700" fill="#5B584C" data-text="4">4</text>
+<text x="88" y="1001.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="Аконка‐">Аконка‐</text>
+<text x="88" y="1053.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="гуа">гуа</text>
+<text x="88" y="1094.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Анды,">Анды,</text>
+<text x="88" y="1134.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Аргентина">Аргентина</text>
+<text x="88" y="1174.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#23241F" letter-spacing="0.5" data-text="6961 м">6961 м</text>
+</g>
+<text x="16" y="1260.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="Монблан —">Монблан —</text>
+<text x="16" y="1308.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="высшая точка">высшая точка</text>
+<text x="16" y="1356.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="Альп, но">Альп, но</text>
+<text x="16" y="1404.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="уступает">уступает</text>
+<text x="16" y="1452.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="Эльбрусу.">Эльбрусу.</text>
+<text x="16" y="1500.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="Килиманджаро">Килиманджаро</text>
+<text x="16" y="1548.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="выше обоих, а">выше обоих, а</text>
+<text x="16" y="1596.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="рекорд среди">рекорд среди</text>
+<text x="16" y="1644.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="четырёх держит">четырёх держит</text>
+<text x="16" y="1692.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="Аконкагуа: это">Аконкагуа: это</text>
+<text x="16" y="1740.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="высочайшая">высочайшая</text>
+<text x="16" y="1788.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="вершина за">вершина за</text>
+<text x="16" y="1836.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="пределами Азии.">пределами Азии.</text>
+<g data-component="ScoreBadge">
+<text x="16" y="1920.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="5 из 6">5 из 6</text>
+</g>
+<g data-component="ScoringHint">
+<text x="16" y="1970.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Баллы даются за">Баллы даются за</text>
+<text x="16" y="2010.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="каждую пару">каждую пару</text>
+<text x="16" y="2050.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="карточек в">карточек в</text>
+<text x="16" y="2090.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="правильном">правильном</text>
+<text x="16" y="2130.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="порядке. У четырёх">порядке. У четырёх</text>
+<text x="16" y="2170.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="карточек шесть пар">карточек шесть пар</text>
+</g>
+<g data-component="InvertedPairRow">
+<text x="16" y="2234.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#9C4A2E" letter-spacing="0.5" data-text="Карточка">Карточка</text>
+<text x="16" y="2274.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#9C4A2E" letter-spacing="0.5" data-text="«Эльбрус» должна">«Эльбрус» должна</text>
+<text x="16" y="2314.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#9C4A2E" letter-spacing="0.5" data-text="располагаться">располагаться</text>
+<text x="16" y="2354.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#9C4A2E" letter-spacing="0.5" data-text="после карточки">после карточки</text>
+<text x="16" y="2394.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#9C4A2E" letter-spacing="0.5" data-text="«Монблан»">«Монблан»</text>
+</g>
+<g data-component="SourcesBlock" data-state="collapsed">
+<text x="16" y="2471.4" font-family="Golos Text SemiBold, Golos Text" font-size="30" font-weight="600" fill="#23241F" letter-spacing="0.2" data-text="Источники">Источники</text>
+<path d="M286,2457 L292,2463 L298,2457" fill="none" stroke="#23241F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="16" y1="2492" x2="304" y2="2492" stroke="#DCD3BC" stroke-width="1"/>
+</g>
+<g data-component="ReportInaccuracyAction">
+<text x="16" y="2529.36" font-family="Golos Text Bold, Golos Text" font-size="22" font-weight="700" fill="#5B584C" letter-spacing="0.6" data-text="Сообщить о неточности">Сообщить о неточности</text>
+</g>
+</g>
+</g>
+<g data-component="PrimaryButton">
+<rect x="16" y="740" width="288" height="64" rx="8" fill="#2C4A3E"/>
+<text x="160" y="783.4" font-family="Golos Text SemiBold, Golos Text" font-size="30" font-weight="600" fill="#F6F0E2" letter-spacing="0.2" text-anchor="middle" data-text="Дальше">Дальше</text>
+</g>
+</g>
+</g>
+<rect x="40" y="263.62" width="320" height="844" rx="32" fill="none" stroke="#23241F" stroke-width="2"/>
+<text x="40" y="1130.48" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="Основной viewport (начало экрана)">Основной viewport (начало экрана)</text>
+<rect x="394" y="261.62" width="324" height="848" rx="34" fill="#000000" fill-opacity="0.08"/>
+<g data-component="DeviceSurface" clip-path="url(#clip31)">
+<g transform="translate(396,263.62)">
+<rect x="0" y="0" width="320" height="844" fill="#F6F0E2"/>
+<g data-component="AppTopBar">
+<path d="M43,50 L37,56 L43,62" fill="none" stroke="#23241F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="16" y="32" width="48" height="48" fill="none"/>
+<text x="72" y="68.16" font-family="Golos Text SemiBold, Golos Text" font-size="32" font-weight="600" fill="#23241F" letter-spacing="0.3" data-text="Задание 1 из 3">Задание 1 из 3</text>
+</g>
+<g data-component="PuzzleResultScroll" clip-path="url(#clip28)">
+<g transform="translate(0,-1752)">
+<text x="16" y="48.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="Правиль‐">Правиль‐</text>
+<text x="16" y="108.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="ный">ный</text>
+<text x="16" y="168.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="порядок">порядок</text>
+<g data-component="OrderableCard" data-state="readonly">
+<path d="M28,192 H286 L304,210 V424 Q304,436 292,436 H28 Q16,436 16,424 V204 Q16,192 28,192 Z" fill="#FBF7EC"/>
+<path d="M28,192 H286 L304,210 V424 Q304,436 292,436 H28 Q16,436 16,424 V204 Q16,192 28,192 Z" fill="none" stroke="#DCD3BC" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="72" y1="204" x2="72" y2="424" stroke="#DCD3BC" stroke-width="1"/>
+<text x="35.6" y="324.08" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="28" font-weight="700" fill="#5B584C" data-text="1">1</text>
+<text x="88" y="249.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="Монблан">Монблан</text>
+<text x="88" y="290.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Альпы,">Альпы,</text>
+<text x="88" y="330.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Франция и">Франция и</text>
+<text x="88" y="370.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Италия">Италия</text>
+<text x="88" y="410.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#23241F" letter-spacing="0.5" data-text="4808 м">4808 м</text>
+</g>
+<g data-component="OrderableCard" data-state="readonly">
+<path d="M28,448 H286 L304,466 V640 Q304,652 292,652 H28 Q16,652 16,640 V460 Q16,448 28,448 Z" fill="#FBF7EC"/>
+<path d="M28,448 H286 L304,466 V640 Q304,652 292,652 H28 Q16,652 16,640 V460 Q16,448 28,448 Z" fill="none" stroke="#DCD3BC" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="72" y1="460" x2="72" y2="640" stroke="#DCD3BC" stroke-width="1"/>
+<text x="35.6" y="560.08" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="28" font-weight="700" fill="#5B584C" data-text="2">2</text>
+<text x="88" y="505.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="Эльбрус">Эльбрус</text>
+<text x="88" y="546.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Кавказ,">Кавказ,</text>
+<text x="88" y="586.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Россия">Россия</text>
+<text x="88" y="626.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#23241F" letter-spacing="0.5" data-text="5642 м">5642 м</text>
+</g>
+<g data-component="OrderableCard" data-state="readonly">
+<path d="M28,664 H286 L304,682 V920 Q304,932 292,932 H28 Q16,932 16,920 V676 Q16,664 28,664 Z" fill="#FBF7EC"/>
+<path d="M28,664 H286 L304,682 V920 Q304,932 292,932 H28 Q16,932 16,920 V676 Q16,664 28,664 Z" fill="none" stroke="#DCD3BC" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="72" y1="676" x2="72" y2="920" stroke="#DCD3BC" stroke-width="1"/>
+<text x="35.6" y="808.08" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="28" font-weight="700" fill="#5B584C" data-text="3">3</text>
+<text x="88" y="721.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="Кили‐">Кили‐</text>
+<text x="88" y="773.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="манджа‐">манджа‐</text>
+<text x="88" y="825.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="ро">ро</text>
+<text x="88" y="866.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Танзания">Танзания</text>
+<text x="88" y="906.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#23241F" letter-spacing="0.5" data-text="5895 м">5895 м</text>
+</g>
+<g data-component="OrderableCard" data-state="readonly">
+<path d="M28,944 H286 L304,962 V1188 Q304,1200 292,1200 H28 Q16,1200 16,1188 V956 Q16,944 28,944 Z" fill="#FBF7EC"/>
+<path d="M28,944 H286 L304,962 V1188 Q304,1200 292,1200 H28 Q16,1200 16,1188 V956 Q16,944 28,944 Z" fill="none" stroke="#DCD3BC" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="72" y1="956" x2="72" y2="1188" stroke="#DCD3BC" stroke-width="1"/>
+<text x="35.6" y="1082.08" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="28" font-weight="700" fill="#5B584C" data-text="4">4</text>
+<text x="88" y="1001.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="Аконка‐">Аконка‐</text>
+<text x="88" y="1053.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="гуа">гуа</text>
+<text x="88" y="1094.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Анды,">Анды,</text>
+<text x="88" y="1134.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Аргентина">Аргентина</text>
+<text x="88" y="1174.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#23241F" letter-spacing="0.5" data-text="6961 м">6961 м</text>
+</g>
+<text x="16" y="1260.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="Монблан —">Монблан —</text>
+<text x="16" y="1308.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="высшая точка">высшая точка</text>
+<text x="16" y="1356.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="Альп, но">Альп, но</text>
+<text x="16" y="1404.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="уступает">уступает</text>
+<text x="16" y="1452.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="Эльбрусу.">Эльбрусу.</text>
+<text x="16" y="1500.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="Килиманджаро">Килиманджаро</text>
+<text x="16" y="1548.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="выше обоих, а">выше обоих, а</text>
+<text x="16" y="1596.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="рекорд среди">рекорд среди</text>
+<text x="16" y="1644.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="четырёх держит">четырёх держит</text>
+<text x="16" y="1692.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="Аконкагуа: это">Аконкагуа: это</text>
+<text x="16" y="1740.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="высочайшая">высочайшая</text>
+<text x="16" y="1788.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="вершина за">вершина за</text>
+<text x="16" y="1836.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="пределами Азии.">пределами Азии.</text>
+<g data-component="ScoreBadge">
+<text x="16" y="1920.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="5 из 6">5 из 6</text>
+</g>
+<g data-component="ScoringHint">
+<text x="16" y="1970.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Баллы даются за">Баллы даются за</text>
+<text x="16" y="2010.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="каждую пару">каждую пару</text>
+<text x="16" y="2050.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="карточек в">карточек в</text>
+<text x="16" y="2090.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="правильном">правильном</text>
+<text x="16" y="2130.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="порядке. У четырёх">порядке. У четырёх</text>
+<text x="16" y="2170.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="карточек шесть пар">карточек шесть пар</text>
+</g>
+<g data-component="InvertedPairRow">
+<text x="16" y="2234.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#9C4A2E" letter-spacing="0.5" data-text="Карточка">Карточка</text>
+<text x="16" y="2274.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#9C4A2E" letter-spacing="0.5" data-text="«Эльбрус» должна">«Эльбрус» должна</text>
+<text x="16" y="2314.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#9C4A2E" letter-spacing="0.5" data-text="располагаться">располагаться</text>
+<text x="16" y="2354.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#9C4A2E" letter-spacing="0.5" data-text="после карточки">после карточки</text>
+<text x="16" y="2394.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#9C4A2E" letter-spacing="0.5" data-text="«Монблан»">«Монблан»</text>
+</g>
+<g data-component="SourcesBlock" data-state="collapsed">
+<text x="16" y="2471.4" font-family="Golos Text SemiBold, Golos Text" font-size="30" font-weight="600" fill="#23241F" letter-spacing="0.2" data-text="Источники">Источники</text>
+<path d="M286,2457 L292,2463 L298,2457" fill="none" stroke="#23241F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="16" y1="2492" x2="304" y2="2492" stroke="#DCD3BC" stroke-width="1"/>
+</g>
+<g data-component="ReportInaccuracyAction">
+<text x="16" y="2529.36" font-family="Golos Text Bold, Golos Text" font-size="22" font-weight="700" fill="#5B584C" letter-spacing="0.6" data-text="Сообщить о неточности">Сообщить о неточности</text>
+</g>
+</g>
+</g>
+<g data-component="PrimaryButton">
+<rect x="16" y="740" width="288" height="64" rx="8" fill="#2C4A3E"/>
+<text x="160" y="783.4" font-family="Golos Text SemiBold, Golos Text" font-size="30" font-weight="600" fill="#F6F0E2" letter-spacing="0.2" text-anchor="middle" data-text="Дальше">Дальше</text>
+</g>
+</g>
+</g>
+<rect x="396" y="263.62" width="320" height="844" rx="32" fill="none" stroke="#23241F" stroke-width="2"/>
+<text x="396" y="1130.48" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="Прокручено вниз: счёт, подсказка, перепутанная">Прокручено вниз: счёт, подсказка, перепутанная</text>
+<text x="396" y="1147.1" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="пара">пара</text>
+<rect x="750" y="261.62" width="324" height="848" rx="34" fill="#000000" fill-opacity="0.08"/>
+<g data-component="DeviceSurface" clip-path="url(#clip32)">
+<g transform="translate(752,263.62)">
+<rect x="0" y="0" width="320" height="844" fill="#F6F0E2"/>
+<g data-component="AppTopBar">
+<path d="M43,50 L37,56 L43,62" fill="none" stroke="#23241F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="16" y="32" width="48" height="48" fill="none"/>
+<text x="72" y="68.16" font-family="Golos Text SemiBold, Golos Text" font-size="32" font-weight="600" fill="#23241F" letter-spacing="0.3" data-text="Задание 1 из 3">Задание 1 из 3</text>
+</g>
+<g data-component="PuzzleResultScroll" clip-path="url(#clip29)">
+<g transform="translate(0,-1961)">
+<text x="16" y="48.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="Правиль‐">Правиль‐</text>
+<text x="16" y="108.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="ный">ный</text>
+<text x="16" y="168.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="порядок">порядок</text>
+<g data-component="OrderableCard" data-state="readonly">
+<path d="M28,192 H286 L304,210 V424 Q304,436 292,436 H28 Q16,436 16,424 V204 Q16,192 28,192 Z" fill="#FBF7EC"/>
+<path d="M28,192 H286 L304,210 V424 Q304,436 292,436 H28 Q16,436 16,424 V204 Q16,192 28,192 Z" fill="none" stroke="#DCD3BC" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="72" y1="204" x2="72" y2="424" stroke="#DCD3BC" stroke-width="1"/>
+<text x="35.6" y="324.08" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="28" font-weight="700" fill="#5B584C" data-text="1">1</text>
+<text x="88" y="249.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="Монблан">Монблан</text>
+<text x="88" y="290.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Альпы,">Альпы,</text>
+<text x="88" y="330.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Франция и">Франция и</text>
+<text x="88" y="370.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Италия">Италия</text>
+<text x="88" y="410.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#23241F" letter-spacing="0.5" data-text="4808 м">4808 м</text>
+</g>
+<g data-component="OrderableCard" data-state="readonly">
+<path d="M28,448 H286 L304,466 V640 Q304,652 292,652 H28 Q16,652 16,640 V460 Q16,448 28,448 Z" fill="#FBF7EC"/>
+<path d="M28,448 H286 L304,466 V640 Q304,652 292,652 H28 Q16,652 16,640 V460 Q16,448 28,448 Z" fill="none" stroke="#DCD3BC" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="72" y1="460" x2="72" y2="640" stroke="#DCD3BC" stroke-width="1"/>
+<text x="35.6" y="560.08" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="28" font-weight="700" fill="#5B584C" data-text="2">2</text>
+<text x="88" y="505.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="Эльбрус">Эльбрус</text>
+<text x="88" y="546.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Кавказ,">Кавказ,</text>
+<text x="88" y="586.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Россия">Россия</text>
+<text x="88" y="626.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#23241F" letter-spacing="0.5" data-text="5642 м">5642 м</text>
+</g>
+<g data-component="OrderableCard" data-state="readonly">
+<path d="M28,664 H286 L304,682 V920 Q304,932 292,932 H28 Q16,932 16,920 V676 Q16,664 28,664 Z" fill="#FBF7EC"/>
+<path d="M28,664 H286 L304,682 V920 Q304,932 292,932 H28 Q16,932 16,920 V676 Q16,664 28,664 Z" fill="none" stroke="#DCD3BC" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="72" y1="676" x2="72" y2="920" stroke="#DCD3BC" stroke-width="1"/>
+<text x="35.6" y="808.08" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="28" font-weight="700" fill="#5B584C" data-text="3">3</text>
+<text x="88" y="721.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="Кили‐">Кили‐</text>
+<text x="88" y="773.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="манджа‐">манджа‐</text>
+<text x="88" y="825.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="ро">ро</text>
+<text x="88" y="866.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Танзания">Танзания</text>
+<text x="88" y="906.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#23241F" letter-spacing="0.5" data-text="5895 м">5895 м</text>
+</g>
+<g data-component="OrderableCard" data-state="readonly">
+<path d="M28,944 H286 L304,962 V1188 Q304,1200 292,1200 H28 Q16,1200 16,1188 V956 Q16,944 28,944 Z" fill="#FBF7EC"/>
+<path d="M28,944 H286 L304,962 V1188 Q304,1200 292,1200 H28 Q16,1200 16,1188 V956 Q16,944 28,944 Z" fill="none" stroke="#DCD3BC" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="72" y1="956" x2="72" y2="1188" stroke="#DCD3BC" stroke-width="1"/>
+<text x="35.6" y="1082.08" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="28" font-weight="700" fill="#5B584C" data-text="4">4</text>
+<text x="88" y="1001.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="Аконка‐">Аконка‐</text>
+<text x="88" y="1053.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="гуа">гуа</text>
+<text x="88" y="1094.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Анды,">Анды,</text>
+<text x="88" y="1134.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Аргентина">Аргентина</text>
+<text x="88" y="1174.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#23241F" letter-spacing="0.5" data-text="6961 м">6961 м</text>
+</g>
+<text x="16" y="1260.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="Монблан —">Монблан —</text>
+<text x="16" y="1308.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="высшая точка">высшая точка</text>
+<text x="16" y="1356.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="Альп, но">Альп, но</text>
+<text x="16" y="1404.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="уступает">уступает</text>
+<text x="16" y="1452.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="Эльбрусу.">Эльбрусу.</text>
+<text x="16" y="1500.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="Килиманджаро">Килиманджаро</text>
+<text x="16" y="1548.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="выше обоих, а">выше обоих, а</text>
+<text x="16" y="1596.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="рекорд среди">рекорд среди</text>
+<text x="16" y="1644.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="четырёх держит">четырёх держит</text>
+<text x="16" y="1692.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="Аконкагуа: это">Аконкагуа: это</text>
+<text x="16" y="1740.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="высочайшая">высочайшая</text>
+<text x="16" y="1788.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="вершина за">вершина за</text>
+<text x="16" y="1836.16" font-family="Golos Text Regular, Golos Text" font-size="32" font-weight="400" fill="#23241F" letter-spacing="1" data-text="пределами Азии.">пределами Азии.</text>
+<g data-component="ScoreBadge">
+<text x="16" y="1920.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="5 из 6">5 из 6</text>
+</g>
+<g data-component="ScoringHint">
+<text x="16" y="1970.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Баллы даются за">Баллы даются за</text>
+<text x="16" y="2010.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="каждую пару">каждую пару</text>
+<text x="16" y="2050.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="карточек в">карточек в</text>
+<text x="16" y="2090.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="правильном">правильном</text>
+<text x="16" y="2130.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="порядке. У четырёх">порядке. У четырёх</text>
+<text x="16" y="2170.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="карточек шесть пар">карточек шесть пар</text>
+</g>
+<g data-component="InvertedPairRow">
+<text x="16" y="2234.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#9C4A2E" letter-spacing="0.5" data-text="Карточка">Карточка</text>
+<text x="16" y="2274.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#9C4A2E" letter-spacing="0.5" data-text="«Эльбрус» должна">«Эльбрус» должна</text>
+<text x="16" y="2314.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#9C4A2E" letter-spacing="0.5" data-text="располагаться">располагаться</text>
+<text x="16" y="2354.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#9C4A2E" letter-spacing="0.5" data-text="после карточки">после карточки</text>
+<text x="16" y="2394.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#9C4A2E" letter-spacing="0.5" data-text="«Монблан»">«Монблан»</text>
+</g>
+<g data-component="SourcesBlock" data-state="collapsed">
+<text x="16" y="2471.4" font-family="Golos Text SemiBold, Golos Text" font-size="30" font-weight="600" fill="#23241F" letter-spacing="0.2" data-text="Источники">Источники</text>
+<path d="M286,2457 L292,2463 L298,2457" fill="none" stroke="#23241F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="16" y1="2492" x2="304" y2="2492" stroke="#DCD3BC" stroke-width="1"/>
+</g>
+<g data-component="ReportInaccuracyAction">
+<text x="16" y="2529.36" font-family="Golos Text Bold, Golos Text" font-size="22" font-weight="700" fill="#5B584C" letter-spacing="0.6" data-text="Сообщить о неточности">Сообщить о неточности</text>
+</g>
+</g>
+</g>
+<g data-component="PrimaryButton">
+<rect x="16" y="740" width="288" height="64" rx="8" fill="#2C4A3E"/>
+<text x="160" y="783.4" font-family="Golos Text SemiBold, Golos Text" font-size="30" font-weight="600" fill="#F6F0E2" letter-spacing="0.2" text-anchor="middle" data-text="Дальше">Дальше</text>
+</g>
+</g>
+</g>
+<rect x="752" y="263.62" width="320" height="844" rx="32" fill="none" stroke="#23241F" stroke-width="2"/>
+<text x="752" y="1130.48" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="Конец прокрутки: источники, «Сообщить о">Конец прокрутки: источники, «Сообщить о</text>
+<text x="752" y="1147.1" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="неточности», нижний padding">неточности», нижний padding</text>
+</svg>

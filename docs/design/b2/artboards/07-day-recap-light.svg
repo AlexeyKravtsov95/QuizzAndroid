@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="1129.62" viewBox="0 0 640 1129.62">
+<title>DayRecap · Сегодня</title>
+<defs>
+<clipPath id="clip18"><rect x="40" y="245.62" width="390" height="844" rx="32"/></clipPath>
+<clipPath id="clip17"><rect x="0" y="104" width="390" height="544"/></clipPath>
+</defs>
+<rect x="0" y="0" width="640" height="1129.62" fill="#EDE6D4"/>
+<text x="40" y="60.34" font-family="Golos Text SemiBold, Golos Text" font-size="18" font-weight="600" fill="#23241F" letter-spacing="0.17" data-text="DayRecap · Сегодня">DayRecap · Сегодня</text>
+<text x="40" y="85.87" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="Тема: светлая · viewport 390×844 dp · font scale 100%">Тема: светлая · viewport 390×844 dp · font scale 100%</text>
+<text x="40" y="104.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Компоненты: AppTopBar с заголовком «Сегодня» и без кнопки «Назад» (выход —">Компоненты: AppTopBar с заголовком «Сегодня» и без кнопки «Назад» (выход —</text>
+<text x="40" y="122.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="PrimaryButton «Готово» или системная кнопка назад), ScoreBadge «15 из 18», 3 ×">PrimaryButton «Готово» или системная кнопка назад), ScoreBadge «15 из 18», 3 ×</text>
+<text x="40" y="140.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="DayResultRow, StreakRow, SecondaryButton «Поделиться», PrimaryButton «Готово».">DayResultRow, StreakRow, SecondaryButton «Поделиться», PrimaryButton «Готово».</text>
+<text x="40" y="158.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Иконка категории у каждой строки — своя: глобус для географии, портик для истории,">Иконка категории у каждой строки — своя: глобус для географии, портик для истории,</text>
+<text x="40" y="176.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="колба для науки. Одна и та же пиктограмма на разных категориях — дефект.">колба для науки. Одна и та же пиктограмма на разных категориях — дефект.</text>
+<text x="40" y="194.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Все три DayResultRow помещаются в одну строку, поэтому весь список остаётся в">Все три DayResultRow помещаются в одну строку, поэтому весь список остаётся в</text>
+<text x="40" y="212.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="inline-режиме.">inline-режиме.</text>
+<rect x="38" y="243.62" width="394" height="848" rx="34" fill="#000000" fill-opacity="0.08"/>
+<g data-component="DeviceSurface" clip-path="url(#clip18)">
+<g transform="translate(40,245.62)">
+<rect x="0" y="0" width="390" height="844" fill="#F6F0E2"/>
+<g data-component="AppTopBar">
+<text x="24" y="58.08" font-family="Golos Text SemiBold, Golos Text" font-size="16" font-weight="600" fill="#23241F" letter-spacing="0.15" data-text="Сегодня">Сегодня</text>
+</g>
+<g data-component="DayRecapContent" clip-path="url(#clip17)">
+<g transform="translate(0,104)">
+<g data-component="ScoreBadge">
+<text x="24" y="24.31" font-family="Noto Serif Medium, Noto Serif" font-size="24" font-weight="500" fill="#23241F" data-text="15 из 18">15 из 18</text>
+</g>
+<g data-component="DayResultRow" data-layout="inline">
+<g data-component="CategoryLabel">
+<rect x="24" y="66" width="111.34" height="26" rx="4" fill="#E4E9DE"/>
+<path d="M12.03 22.08Q9.94 22.08 8.11 21.3Q6.27 20.51 4.89 19.13Q3.5 17.74 2.72 15.91Q1.93 14.07 1.93 11.99Q1.93 9.9 2.72 8.08Q3.5 6.26 4.89 4.87Q6.27 3.49 8.11 2.7Q9.94 1.92 12.03 1.92Q14.11 1.92 15.93 2.7Q17.74 3.49 19.13 4.87Q20.51 6.26 21.3 8.08Q22.08 9.9 22.08 11.99Q22.08 14.07 21.3 15.91Q20.51 17.74 19.13 19.13Q17.74 20.51 15.93 21.3Q14.11 22.08 12.03 22.08ZM10.83 19.53V17.84Q10.34 17.84 10.01 17.51Q9.67 17.17 9.67 16.69V15.52L4.56 10.4Q4.46 10.86 4.42 11.25Q4.38 11.64 4.38 11.98Q4.38 14.8 6.2 16.96Q8.02 19.12 10.83 19.53ZM17.89 16.86Q18.76 15.84 19.19 14.58Q19.63 13.33 19.63 11.97Q19.63 9.66 18.37 7.75Q17.12 5.85 14.96 4.96V5.53Q14.96 6.26 14.43 6.77Q13.91 7.28 13.18 7.28H10.83V8.44Q10.83 8.93 10.48 9.28Q10.13 9.63 9.64 9.63H8.48V11.97H14.37Q14.86 11.97 15.21 12.32Q15.56 12.67 15.56 13.16V15.49H16.54Q17.12 15.49 17.5 15.89Q17.89 16.29 17.89 16.86Z" fill="#2C4A3E" transform="translate(32,71) scale(0.67)"/>
+<text x="56" y="83.94" font-family="Golos Text SemiBold, Golos Text" font-size="13" font-weight="600" fill="#2C4A3E" letter-spacing="0.2" data-text="География">География</text>
+</g>
+<text x="366" y="85.08" font-family="Golos Text Regular, Golos Text" font-size="16" font-weight="400" fill="#23241F" letter-spacing="0.5" text-anchor="end" data-text="5 из 6">5 из 6</text>
+<line x1="24" y1="104" x2="366" y2="104" stroke="#DCD3BC" stroke-width="1"/>
+</g>
+<g data-component="DayResultRow" data-layout="inline">
+<g data-component="CategoryLabel">
+<rect x="24" y="117" width="96.49" height="26" rx="4" fill="#E4E9DE"/>
+<path d="M4.36 17.56V9.76H6.6V17.56ZM10.89 17.56V9.76H13.11V17.56ZM1.92 20.77V18.32H22.08V20.77ZM17.4 17.56V9.76H19.64V17.56ZM1.92 8.98V5.8L12 0.76L22.08 5.8V8.98ZM5.96 6.53H12H18.04ZM5.96 6.53H18.04L12 3.52Z" fill="#2C4A3E" transform="translate(32,122) scale(0.67)"/>
+<text x="56" y="134.94" font-family="Golos Text SemiBold, Golos Text" font-size="13" font-weight="600" fill="#2C4A3E" letter-spacing="0.2" data-text="История">История</text>
+</g>
+<text x="366" y="136.08" font-family="Golos Text Regular, Golos Text" font-size="16" font-weight="400" fill="#23241F" letter-spacing="0.5" text-anchor="end" data-text="6 из 6">6 из 6</text>
+<line x1="24" y1="155" x2="366" y2="155" stroke="#DCD3BC" stroke-width="1"/>
+</g>
+<g data-component="DayResultRow" data-layout="inline">
+<g data-component="CategoryLabel">
+<rect x="24" y="168" width="80.84" height="26" rx="4" fill="#E4E9DE"/>
+<path d="M5.4 20.88Q3.95 20.88 3.32 19.59Q2.68 18.3 3.61 17.2L8.52 11.23V5.73H8.06Q7.56 5.73 7.19 5.37Q6.83 5.01 6.83 4.51Q6.83 4 7.19 3.64Q7.55 3.27 8.06 3.27H15.94Q16.45 3.27 16.81 3.63Q17.17 3.99 17.17 4.49Q17.17 5 16.81 5.36Q16.45 5.73 15.94 5.73H15.48V11.23L20.39 17.2Q21.29 18.3 20.66 19.59Q20.02 20.88 18.6 20.88ZM5.77 18.43H18.23L13.03 12.07V5.73H10.97V12.07ZM12.03 12.07Z" fill="#2C4A3E" transform="translate(32,173) scale(0.67)"/>
+<text x="56" y="185.94" font-family="Golos Text SemiBold, Golos Text" font-size="13" font-weight="600" fill="#2C4A3E" letter-spacing="0.2" data-text="Наука">Наука</text>
+</g>
+<text x="366" y="187.08" font-family="Golos Text Regular, Golos Text" font-size="16" font-weight="400" fill="#23241F" letter-spacing="0.5" text-anchor="end" data-text="4 из 6">4 из 6</text>
+<line x1="24" y1="206" x2="366" y2="206" stroke="#DCD3BC" stroke-width="1"/>
+</g>
+<g data-component="StreakRow">
+<text x="24" y="231.18" font-family="Golos Text Bold, Golos Text" font-size="11" font-weight="700" fill="#5B584C" letter-spacing="1.5" data-text="Серия">СЕРИЯ</text>
+<text x="24" y="252.94" font-family="Golos Text SemiBold, Golos Text" font-size="13" font-weight="600" fill="#23241F" letter-spacing="0.2" data-text="6 дней">6 дней</text>
+</g>
+</g>
+</g>
+<g data-component="SecondaryButton">
+<rect x="24" y="672" width="342" height="56" rx="8" fill="none" stroke="#8C8672" stroke-width="1"/>
+<text x="195" y="705.7" font-family="Golos Text SemiBold, Golos Text" font-size="15" font-weight="600" fill="#23241F" letter-spacing="0.1" text-anchor="middle" data-text="Поделиться">Поделиться</text>
+</g>
+<g data-component="PrimaryButton">
+<rect x="24" y="740" width="342" height="56" rx="8" fill="#2C4A3E"/>
+<text x="195" y="773.7" font-family="Golos Text SemiBold, Golos Text" font-size="15" font-weight="600" fill="#F6F0E2" letter-spacing="0.1" text-anchor="middle" data-text="Готово">Готово</text>
+</g>
+</g>
+</g>
+<rect x="40" y="245.62" width="390" height="844" rx="32" fill="none" stroke="#23241F" stroke-width="2"/>
+</svg>

@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1236" height="1609.46" viewBox="0 0 1236 1609.46">
+<title>SourcesBlock.expanded — три состояния SourceRow</title>
+<defs>
+<clipPath id="clip1"><rect x="40" y="332.85" width="390" height="316"/></clipPath>
+<clipPath id="clip2"><rect x="458" y="332.85" width="390" height="316"/></clipPath>
+<clipPath id="clip3"><rect x="876" y="332.85" width="320" height="1036"/></clipPath>
+</defs>
+<rect x="0" y="0" width="1236" height="1609.46" fill="#EDE6D4"/>
+<text x="40" y="60.34" font-family="Golos Text SemiBold, Golos Text" font-size="18" font-weight="600" fill="#23241F" letter-spacing="0.17" data-text="SourcesBlock.expanded — три состояния SourceRow">SourcesBlock.expanded — три состояния SourceRow</text>
+<text x="40" y="85.87" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="источники s1 / s3 / s4 головоломки geo-vysota-gor-007 · светлая и тёмная тема · 100% и 200%">источники s1 / s3 / s4 головоломки geo-vysota-gor-007 · светлая и тёмная тема · 100% и 200%</text>
+<text x="40" y="120.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Состояний ровно три, не два. link — есть url и на устройстве найден обработчик ACTION_VIEW: строка кликабельна целиком, справа иконка внешнего перехода, высота не меньше 48">Состояний ровно три, не два. link — есть url и на устройстве найден обработчик ACTION_VIEW: строка кликабельна целиком, справа иконка внешнего перехода, высота не меньше 48</text>
+<text x="40" y="136.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="dp. urlPlainText — url есть, обработчика нет: строка некликабельна, без иконки, сам url показан как обычный читаемый текст. referenceOnly — url отсутствует, показывается">dp. urlPlainText — url есть, обработчика нет: строка некликабельна, без иконки, сам url показан как обычный читаемый текст. referenceOnly — url отсутствует, показывается</text>
+<text x="40" y="152.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="обязательный reference.">обязательный reference.</text>
+<text x="40" y="176.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Название, вид источника и дата обращения показаны во всех трёх состояниях без исключений. Состояние s3 здесь — иллюстративное допущение «обработчика нет»: оно зависит от">Название, вид источника и дата обращения показаны во всех трёх состояниях без исключений. Состояние s3 здесь — иллюстративное допущение «обработчика нет»: оно зависит от</text>
+<text x="40" y="192.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="устройства, а не от данных источника.">устройства, а не от данных источника.</text>
+<text x="40" y="216.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Русские подписи вида источника зафиксированы в COMPONENTS.md → SourceRow как строковые ресурсы: «Официальный источник», «Энциклопедия», «Научный источник»,">Русские подписи вида источника зафиксированы в COMPONENTS.md → SourceRow как строковые ресурсы: «Официальный источник», «Энциклопедия», «Научный источник»,</text>
+<text x="40" y="232.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="«Дополнительный источник». Raw-значения enum (official / encyclopedia / academic / other) нигде не показываются пользователю; «Дополнительный источник» — только подпись,">«Дополнительный источник». Raw-значения enum (official / encyclopedia / academic / other) нигде не показываются пользователю; «Дополнительный источник» — только подпись,</text>
+<text x="40" y="248.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="признаком авторитетности не является (правила авторитетности не меняются, см. CONTENT_MODEL.md).">признаком авторитетности не является (правила авторитетности не меняются, см. CONTENT_MODEL.md).</text>
+<line x1="40" y1="269.62" x2="1196" y2="269.62" stroke="#C9C0A8" stroke-width="1"/>
+<text x="40" y="294.48" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#23241F" letter-spacing="0.18" data-text="Раскрытый блок">Раскрытый блок</text>
+<text x="40" y="321.1" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="Светлая · 390 dp · 100%">Светлая · 390 dp · 100%</text>
+<g clip-path="url(#clip1)">
+<g transform="translate(40,332.85)">
+<rect x="0" y="0" width="390" height="316" fill="#F6F0E2"/>
+<g data-component="SourcesBlock" data-state="expanded">
+<text x="24" y="45.7" font-family="Golos Text SemiBold, Golos Text" font-size="15" font-weight="600" fill="#23241F" letter-spacing="0.1" data-text="Источники">Источники</text>
+<path d="M348,43 L354,37 L360,43" fill="none" stroke="#23241F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="24" y1="64" x2="366" y2="64" stroke="#DCD3BC" stroke-width="1"/>
+<g data-component="SourceRow" data-state="link">
+<text x="24" y="89.56" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#23241F" letter-spacing="0.4" data-text="Encyclopaedia Britannica: Mount Elbrus">Encyclopaedia Britannica: Mount Elbrus</text>
+<text x="24" y="105.56" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Энциклопедия · обращение 2026-08-20">Энциклопедия · обращение 2026-08-20</text>
+<path d="M359.92,78.6 H364.72 V83.4" fill="none" stroke="#23241F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="356.4" y1="86.92" x2="364.72" y2="78.6" stroke="#23241F" stroke-width="1.6"/>
+<path d="M358.8,78.92 H351.28 V91.72 H364.08 V84.68" fill="none" stroke="#23241F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="24" y1="121" x2="366" y2="121" stroke="#DCD3BC" stroke-width="1"/>
+</g>
+<g data-component="SourceRow" data-state="urlPlainText">
+<text x="24" y="146.56" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#23241F" letter-spacing="0.4" data-text="Encyclopaedia Britannica: Mont Blanc">Encyclopaedia Britannica: Mont Blanc</text>
+<text x="24" y="162.56" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Энциклопедия · обращение 2026-08-20">Энциклопедия · обращение 2026-08-20</text>
+<text x="24" y="178.56" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="https://www.britannica.com/place/Mont-Blanc">https://www.britannica.com/place/Mont-Blanc</text>
+<line x1="24" y1="194" x2="366" y2="194" stroke="#DCD3BC" stroke-width="1"/>
+</g>
+<g data-component="SourceRow" data-state="referenceOnly">
+<text x="24" y="219.56" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#23241F" letter-spacing="0.4" data-text="Institut géographique national: результаты">Institut géographique national: результаты</text>
+<text x="24" y="235.56" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#23241F" letter-spacing="0.4" data-text="измерений высоты Монблана">измерений высоты Монблана</text>
+<text x="24" y="251.56" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Официальный источник · обращение 2026-08-20">Официальный источник · обращение 2026-08-20</text>
+<text x="24" y="267.56" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="IGN, отчёт о геодезическом измерении вершины">IGN, отчёт о геодезическом измерении вершины</text>
+<text x="24" y="283.56" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Монблан">Монблан</text>
+<line x1="24" y1="299" x2="366" y2="299" stroke="#DCD3BC" stroke-width="1"/>
+</g>
+</g>
+</g>
+</g>
+<rect x="40" y="332.85" width="390" height="316" fill="none" stroke="#C9C0A8" stroke-width="1"/>
+<text x="458" y="321.1" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="Тёмная · 390 dp · 100%">Тёмная · 390 dp · 100%</text>
+<g clip-path="url(#clip2)">
+<g transform="translate(458,332.85)">
+<rect x="0" y="0" width="390" height="316" fill="#1C1A16"/>
+<g data-component="SourcesBlock" data-state="expanded">
+<text x="24" y="45.7" font-family="Golos Text SemiBold, Golos Text" font-size="15" font-weight="600" fill="#EDE7D8" letter-spacing="0.1" data-text="Источники">Источники</text>
+<path d="M348,43 L354,37 L360,43" fill="none" stroke="#EDE7D8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="24" y1="64" x2="366" y2="64" stroke="#3C382C" stroke-width="1"/>
+<g data-component="SourceRow" data-state="link">
+<text x="24" y="89.56" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#EDE7D8" letter-spacing="0.4" data-text="Encyclopaedia Britannica: Mount Elbrus">Encyclopaedia Britannica: Mount Elbrus</text>
+<text x="24" y="105.56" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#B9B2A0" letter-spacing="0.4" data-text="Энциклопедия · обращение 2026-08-20">Энциклопедия · обращение 2026-08-20</text>
+<path d="M359.92,78.6 H364.72 V83.4" fill="none" stroke="#EDE7D8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="356.4" y1="86.92" x2="364.72" y2="78.6" stroke="#EDE7D8" stroke-width="1.6"/>
+<path d="M358.8,78.92 H351.28 V91.72 H364.08 V84.68" fill="none" stroke="#EDE7D8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="24" y1="121" x2="366" y2="121" stroke="#3C382C" stroke-width="1"/>
+</g>
+<g data-component="SourceRow" data-state="urlPlainText">
+<text x="24" y="146.56" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#EDE7D8" letter-spacing="0.4" data-text="Encyclopaedia Britannica: Mont Blanc">Encyclopaedia Britannica: Mont Blanc</text>
+<text x="24" y="162.56" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#B9B2A0" letter-spacing="0.4" data-text="Энциклопедия · обращение 2026-08-20">Энциклопедия · обращение 2026-08-20</text>
+<text x="24" y="178.56" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#B9B2A0" letter-spacing="0.4" data-text="https://www.britannica.com/place/Mont-Blanc">https://www.britannica.com/place/Mont-Blanc</text>
+<line x1="24" y1="194" x2="366" y2="194" stroke="#3C382C" stroke-width="1"/>
+</g>
+<g data-component="SourceRow" data-state="referenceOnly">
+<text x="24" y="219.56" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#EDE7D8" letter-spacing="0.4" data-text="Institut géographique national: результаты">Institut géographique national: результаты</text>
+<text x="24" y="235.56" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#EDE7D8" letter-spacing="0.4" data-text="измерений высоты Монблана">измерений высоты Монблана</text>
+<text x="24" y="251.56" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#B9B2A0" letter-spacing="0.4" data-text="Официальный источник · обращение 2026-08-20">Официальный источник · обращение 2026-08-20</text>
+<text x="24" y="267.56" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#B9B2A0" letter-spacing="0.4" data-text="IGN, отчёт о геодезическом измерении вершины">IGN, отчёт о геодезическом измерении вершины</text>
+<text x="24" y="283.56" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#B9B2A0" letter-spacing="0.4" data-text="Монблан">Монблан</text>
+<line x1="24" y1="299" x2="366" y2="299" stroke="#3C382C" stroke-width="1"/>
+</g>
+</g>
+</g>
+</g>
+<rect x="458" y="332.85" width="390" height="316" fill="none" stroke="#C9C0A8" stroke-width="1"/>
+<text x="876" y="321.1" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="Светлая · 320 dp · 200%">Светлая · 320 dp · 200%</text>
+<g clip-path="url(#clip3)">
+<g transform="translate(876,332.85)">
+<rect x="0" y="0" width="320" height="1036" fill="#F6F0E2"/>
+<g data-component="SourcesBlock" data-state="expanded">
+<text x="16" y="59.4" font-family="Golos Text SemiBold, Golos Text" font-size="30" font-weight="600" fill="#23241F" letter-spacing="0.2" data-text="Источники">Источники</text>
+<path d="M286,51 L292,45 L298,51" fill="none" stroke="#23241F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="16" y1="80" x2="304" y2="80" stroke="#DCD3BC" stroke-width="1"/>
+<g data-component="SourceRow" data-state="link">
+<text x="16" y="118.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#23241F" letter-spacing="0.8" data-text="Encyclopaedia">Encyclopaedia</text>
+<text x="16" y="150.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#23241F" letter-spacing="0.8" data-text="Britannica: Mount">Britannica: Mount</text>
+<text x="16" y="182.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#23241F" letter-spacing="0.8" data-text="Elbrus">Elbrus</text>
+<text x="16" y="214.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#5B584C" letter-spacing="0.8" data-text="Энциклопедия ·">Энциклопедия ·</text>
+<text x="16" y="246.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#5B584C" letter-spacing="0.8" data-text="обращение">обращение</text>
+<text x="16" y="278.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#5B584C" letter-spacing="0.8" data-text="2026-08-20">2026-08-20</text>
+<path d="M297.92,94.6 H302.72 V99.4" fill="none" stroke="#23241F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="294.4" y1="102.92" x2="302.72" y2="94.6" stroke="#23241F" stroke-width="1.6"/>
+<path d="M296.8,94.92 H289.28 V107.72 H302.08 V100.68" fill="none" stroke="#23241F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="16" y1="297" x2="304" y2="297" stroke="#DCD3BC" stroke-width="1"/>
+</g>
+<g data-component="SourceRow" data-state="urlPlainText">
+<text x="16" y="335.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#23241F" letter-spacing="0.8" data-text="Encyclopaedia">Encyclopaedia</text>
+<text x="16" y="367.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#23241F" letter-spacing="0.8" data-text="Britannica: Mont">Britannica: Mont</text>
+<text x="16" y="399.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#23241F" letter-spacing="0.8" data-text="Blanc">Blanc</text>
+<text x="16" y="431.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#5B584C" letter-spacing="0.8" data-text="Энциклопедия ·">Энциклопедия ·</text>
+<text x="16" y="463.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#5B584C" letter-spacing="0.8" data-text="обращение">обращение</text>
+<text x="16" y="495.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#5B584C" letter-spacing="0.8" data-text="2026-08-20">2026-08-20</text>
+<text x="16" y="527.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#5B584C" letter-spacing="0.8" data-text="https://www.">https://www.</text>
+<text x="16" y="559.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#5B584C" letter-spacing="0.8" data-text="britannica.com/">britannica.com/</text>
+<text x="16" y="591.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#5B584C" letter-spacing="0.8" data-text="place/Mont-Blanc">place/Mont-Blanc</text>
+<line x1="16" y1="610" x2="304" y2="610" stroke="#DCD3BC" stroke-width="1"/>
+</g>
+<g data-component="SourceRow" data-state="referenceOnly">
+<text x="16" y="648.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#23241F" letter-spacing="0.8" data-text="Institut géographique">Institut géographique</text>
+<text x="16" y="680.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#23241F" letter-spacing="0.8" data-text="national: результаты">national: результаты</text>
+<text x="16" y="712.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#23241F" letter-spacing="0.8" data-text="измерений высоты">измерений высоты</text>
+<text x="16" y="744.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#23241F" letter-spacing="0.8" data-text="Монблана">Монблана</text>
+<text x="16" y="776.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#5B584C" letter-spacing="0.8" data-text="Официальный">Официальный</text>
+<text x="16" y="808.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#5B584C" letter-spacing="0.8" data-text="источник ·">источник ·</text>
+<text x="16" y="840.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#5B584C" letter-spacing="0.8" data-text="обращение">обращение</text>
+<text x="16" y="872.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#5B584C" letter-spacing="0.8" data-text="2026-08-20">2026-08-20</text>
+<text x="16" y="904.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#5B584C" letter-spacing="0.8" data-text="IGN, отчёт о">IGN, отчёт о</text>
+<text x="16" y="936.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#5B584C" letter-spacing="0.8" data-text="геодезическом">геодезическом</text>
+<text x="16" y="968.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#5B584C" letter-spacing="0.8" data-text="измерении вершины">измерении вершины</text>
+<text x="16" y="1000.12" font-family="Golos Text Regular, Golos Text" font-size="24" font-weight="400" fill="#5B584C" letter-spacing="0.8" data-text="Монблан">Монблан</text>
+<line x1="16" y1="1019" x2="304" y2="1019" stroke="#DCD3BC" stroke-width="1"/>
+</g>
+</g>
+</g>
+</g>
+<rect x="876" y="332.85" width="320" height="1036" fill="none" stroke="#C9C0A8" stroke-width="1"/>
+<line x1="40" y1="1378.85" x2="1196" y2="1378.85" stroke="#C9C0A8" stroke-width="1"/>
+<text x="40" y="1403.71" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#23241F" letter-spacing="0.18" data-text="Легенда: все четыре подписи Source.kind (справочно, вне экранного viewport)">Легенда: все четыре подписи Source.kind (справочно, вне экранного viewport)</text>
+<text x="40" y="1430.02" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Не четвёртая SourceRow и не пятое состояние — компактный список вне экранного viewport, для сверки enum → строковый ресурс. Три состояния SourceRow выше остаются">Не четвёртая SourceRow и не пятое состояние — компактный список вне экранного viewport, для сверки enum → строковый ресурс. Три состояния SourceRow выше остаются</text>
+<text x="40" y="1446.02" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="link/urlPlainText/referenceOnly без изменений; среди трёх иллюстративных источников нет kind = other, поэтому его подпись проверяется только здесь.">link/urlPlainText/referenceOnly без изменений; среди трёх иллюстративных источников нет kind = other, поэтому его подпись проверяется только здесь.</text>
+<text x="40" y="1471.14" font-family="JetBrains Mono Medium, JetBrains Mono" font-size="13" font-weight="500" fill="#5B584C" letter-spacing="0.2" data-text="official">official</text>
+<text x="260" y="1472.78" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#23241F" letter-spacing="0.25" data-text="→ «Официальный источник»">→ «Официальный источник»</text>
+<text x="40" y="1499.14" font-family="JetBrains Mono Medium, JetBrains Mono" font-size="13" font-weight="500" fill="#5B584C" letter-spacing="0.2" data-text="encyclopedia">encyclopedia</text>
+<text x="260" y="1500.78" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#23241F" letter-spacing="0.25" data-text="→ «Энциклопедия»">→ «Энциклопедия»</text>
+<text x="40" y="1527.14" font-family="JetBrains Mono Medium, JetBrains Mono" font-size="13" font-weight="500" fill="#5B584C" letter-spacing="0.2" data-text="academic">academic</text>
+<text x="260" y="1528.78" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#23241F" letter-spacing="0.25" data-text="→ «Научный источник»">→ «Научный источник»</text>
+<text x="40" y="1555.14" font-family="JetBrains Mono Medium, JetBrains Mono" font-size="13" font-weight="500" fill="#5B584C" letter-spacing="0.2" data-text="other">other</text>
+<text x="260" y="1556.78" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#23241F" letter-spacing="0.25" data-text="→ «Дополнительный источник»">→ «Дополнительный источник»</text>
+</svg>

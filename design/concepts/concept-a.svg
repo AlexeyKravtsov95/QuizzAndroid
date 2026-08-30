@@ -1,0 +1,212 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1120" viewBox="0 0 1440 1120" font-family="-apple-system,'Segoe UI',Roboto,'Noto Sans',Arial,sans-serif">
+<title>Концепция A — Редакционный альманах</title>
+<defs>
+  <style>
+    .serif{font-family:Georgia,'PT Serif','Noto Serif',serif}
+    .sans{font-family:-apple-system,'Segoe UI',Roboto,'Noto Sans',Arial,sans-serif}
+    .ink{fill:#22262B}
+    .cream{fill:#F6F1E7}
+    .accent{fill:#B5502F}
+    .forest{fill:#3E5C50}
+  </style>
+  <clipPath id="a-home-clip"><rect x="60" y="150" width="390" height="844" rx="40"/></clipPath>
+  <clipPath id="a-puzzle-clip"><rect x="490" y="150" width="390" height="844" rx="40"/></clipPath>
+  <g id="a-icon-gear">
+    <circle cx="12" cy="12" r="6" fill="none" stroke="#22262B" stroke-width="1.6"/>
+    <circle cx="12" cy="12" r="1.4" fill="#22262B"/>
+    <g stroke="#22262B" stroke-width="1.6" stroke-linecap="round">
+      <line x1="18.5" y1="12" x2="21.5" y2="12"/>
+      <line x1="15.25" y1="17.63" x2="16.75" y2="20.23"/>
+      <line x1="8.75" y1="17.63" x2="7.25" y2="20.23"/>
+      <line x1="5.5" y1="12" x2="2.5" y2="12"/>
+      <line x1="8.75" y1="6.37" x2="7.25" y2="3.77"/>
+      <line x1="15.25" y1="6.37" x2="16.75" y2="3.77"/>
+    </g>
+  </g>
+  <g id="a-icon-archive">
+    <rect x="4" y="10" width="16" height="9" rx="1.2" fill="none" stroke="#22262B" stroke-width="1.6"/>
+    <rect x="8" y="6.5" width="8" height="3.6" rx="1" fill="none" stroke="#22262B" stroke-width="1.6"/>
+  </g>
+  <g id="a-icon-back"><path d="M15 5 L9 12 L15 19" fill="none" stroke="#22262B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <g id="a-icon-chev-up"><path d="M6 15 L12 9 L18 15" fill="none" stroke="#22262B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <g id="a-icon-chev-down"><path d="M6 9 L12 15 L18 9" fill="none" stroke="#22262B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <g id="a-icon-grip">
+    <circle cx="-3" cy="-8" r="1.6" fill="#22262B"/><circle cx="3" cy="-8" r="1.6" fill="#22262B"/>
+    <circle cx="-3" cy="0" r="1.6" fill="#22262B"/><circle cx="3" cy="0" r="1.6" fill="#22262B"/>
+    <circle cx="-3" cy="8" r="1.6" fill="#22262B"/><circle cx="3" cy="8" r="1.6" fill="#22262B"/>
+  </g>
+  <g id="a-icon-mountain"><path d="M2 17 L8 7 L11.5 12.5 L15 8 L20 17 Z" fill="#B5502F"/></g>
+</defs>
+
+<rect x="0" y="0" width="1440" height="1120" fill="#FBF9F4"/>
+
+<!-- Header -->
+<text x="60" y="50" class="sans" font-size="16" font-weight="700" letter-spacing="2" fill="#8A6A55">КОНЦЕПЦИЯ A</text>
+<text x="60" y="92" class="serif" font-size="34" font-style="italic" fill="#22262B">Редакционный альманах</text>
+<text x="60" y="114" class="sans" font-size="13" fill="#22262B" opacity="0.55">«По порядку!» · Home (Ready) + Puzzle (Playing) · дизайн-борд, светлая тема + фрагмент тёмной</text>
+
+<!-- Phone labels -->
+<text x="255" y="142" class="sans" font-size="12" font-weight="700" letter-spacing="2" text-anchor="middle" fill="#8A6A55">HOME · READY</text>
+<text x="685" y="142" class="sans" font-size="12" font-weight="700" letter-spacing="2" text-anchor="middle" fill="#8A6A55">PUZZLE · PLAYING</text>
+
+<!-- ============ HOME PHONE ============ -->
+<rect x="60" y="150" width="390" height="844" rx="40" fill="#F6F1E7" stroke="#22262B" stroke-opacity="0.25" stroke-width="1.5"/>
+<g clip-path="url(#a-home-clip)">
+  <!-- ghost folio watermark -->
+  <text x="448" y="800" class="serif" font-size="240" font-weight="700" text-anchor="end" fill="#22262B" opacity="0.05">1</text>
+
+  <!-- masthead -->
+  <text x="84" y="198" class="serif" font-size="16" letter-spacing="3" fill="#22262B">ПО ПОРЯДКУ</text>
+  <use href="#a-icon-gear" x="402" y="184"/>
+  <use href="#a-icon-archive" x="370" y="184"/>
+  <line x1="84" y1="210" x2="426" y2="210" stroke="#22262B" stroke-opacity="0.3" stroke-width="1"/>
+
+  <text x="84" y="234" class="sans" font-size="14" fill="#22262B" opacity="0.7">Суббота, 29 августа 2026</text>
+
+  <text x="84" y="270" class="sans" font-size="11" font-weight="700" letter-spacing="2" fill="#B5502F">ВЫПУСК</text>
+  <text x="84" y="326" class="serif" fill="#22262B">
+    <tspan font-size="28">День </tspan><tspan font-size="58" font-weight="700">1</tspan>
+  </text>
+  <line x1="84" y1="342" x2="220" y2="342" stroke="#B5502F" stroke-width="2"/>
+
+  <!-- stats: editorial masthead rows -->
+  <text x="84" y="406" class="sans" font-size="12" font-weight="700" letter-spacing="2" fill="#22262B" opacity="0.55">СЕРИЯ</text>
+  <text x="84" y="432" class="sans" font-size="22" font-weight="600" fill="#22262B">6 дней</text>
+  <line x1="84" y1="444" x2="426" y2="444" stroke="#22262B" stroke-opacity="0.14" stroke-width="1"/>
+
+  <text x="84" y="474" class="sans" font-size="12" font-weight="700" letter-spacing="2" fill="#22262B" opacity="0.55">ЛУЧШИЙ ДЕНЬ</text>
+  <text x="84" y="500" class="sans" font-size="22" font-weight="600" fill="#22262B">17 из 18</text>
+  <line x1="84" y1="512" x2="426" y2="512" stroke="#22262B" stroke-opacity="0.14" stroke-width="1"/>
+
+  <text x="84" y="542" class="sans" font-size="12" font-weight="700" letter-spacing="2" fill="#22262B" opacity="0.55">СЫГРАНО ДНЕЙ</text>
+  <text x="84" y="568" class="sans" font-size="22" font-weight="600" fill="#22262B">23</text>
+  <line x1="84" y1="580" x2="426" y2="580" stroke="#22262B" stroke-opacity="0.14" stroke-width="1"/>
+
+  <!-- CTA -->
+  <rect x="84" y="910" width="342" height="56" rx="8" fill="#22262B"/>
+  <text x="255" y="944" class="sans" font-size="17" font-weight="600" text-anchor="middle" fill="#F6F1E7">Играть</text>
+</g>
+
+<!-- ============ PUZZLE PHONE ============ -->
+<rect x="490" y="150" width="390" height="844" rx="40" fill="#F6F1E7" stroke="#22262B" stroke-opacity="0.25" stroke-width="1.5"/>
+<g clip-path="url(#a-puzzle-clip)">
+  <use href="#a-icon-back" x="514" y="178"/>
+  <text x="546" y="197" class="sans" font-size="16" font-weight="600" fill="#22262B">Задание 1 из 3</text>
+  <use href="#a-icon-mountain" x="736" y="184"/>
+  <text x="856" y="197" class="sans" font-size="12" font-weight="700" letter-spacing="1.5" text-anchor="end" fill="#B5502F">ГЕОГРАФИЯ</text>
+  <line x1="514" y1="210" x2="856" y2="210" stroke="#22262B" stroke-opacity="0.3" stroke-width="1"/>
+
+  <text x="514" class="serif" font-size="23" fill="#22262B">
+    <tspan x="514" y="236">Расположите вершины</tspan>
+    <tspan x="514" y="266">от самой низкой к</tspan>
+    <tspan x="514" y="296">самой высокой</tspan>
+  </text>
+
+  <text x="514" y="326" class="sans" font-style="italic" font-size="14" fill="#22262B" opacity="0.7">Сверху — самая низкая</text>
+
+  <!-- card list, editorial rows -->
+  <line x1="514" y1="356" x2="856" y2="356" stroke="#22262B" stroke-opacity="0.3" stroke-width="1"/>
+
+  <!-- Card 1: Килиманджаро -->
+  <text x="527" y="426" class="serif" font-size="18" text-anchor="middle" fill="#22262B" opacity="0.4">1</text>
+  <text x="550" y="402" class="serif" font-size="20" fill="#22262B">Килиманджаро</text>
+  <text x="550" y="426" class="sans" font-size="12" letter-spacing="1" fill="#22262B" opacity="0.55">ТАНЗАНИЯ</text>
+  <rect x="764" y="362" width="48" height="48" rx="6" fill="#22262B" fill-opacity="0" stroke="#22262B" stroke-opacity="0.18"/>
+  <use href="#a-icon-chev-up" x="776" y="374" opacity="0.3"/>
+  <rect x="764" y="422" width="48" height="48" rx="6" fill="#22262B" fill-opacity="0.06" stroke="#22262B" stroke-opacity="0.3"/>
+  <use href="#a-icon-chev-down" x="776" y="434" opacity="0.85"/>
+  <use href="#a-icon-grip" x="838" y="416"/>
+  <line x1="514" y1="476" x2="856" y2="476" stroke="#22262B" stroke-opacity="0.14" stroke-width="1"/>
+
+  <!-- Card 2: Аконкагуа -->
+  <text x="527" y="562" class="serif" font-size="18" text-anchor="middle" fill="#22262B" opacity="0.4">2</text>
+  <text x="550" y="538" class="serif" font-size="20" fill="#22262B">Аконкагуа</text>
+  <text x="550" y="562" class="sans" font-size="12" letter-spacing="1" fill="#22262B" opacity="0.55">АНДЫ, АРГЕНТИНА</text>
+  <rect x="764" y="498" width="48" height="48" rx="6" fill="#22262B" fill-opacity="0.06" stroke="#22262B" stroke-opacity="0.3"/>
+  <use href="#a-icon-chev-up" x="776" y="510" opacity="0.85"/>
+  <rect x="764" y="558" width="48" height="48" rx="6" fill="#22262B" fill-opacity="0.06" stroke="#22262B" stroke-opacity="0.3"/>
+  <use href="#a-icon-chev-down" x="776" y="570" opacity="0.85"/>
+  <use href="#a-icon-grip" x="838" y="552"/>
+  <line x1="514" y1="612" x2="856" y2="612" stroke="#22262B" stroke-opacity="0.14" stroke-width="1"/>
+
+  <!-- Card 3: Эльбрус -->
+  <text x="527" y="698" class="serif" font-size="18" text-anchor="middle" fill="#22262B" opacity="0.4">3</text>
+  <text x="550" y="674" class="serif" font-size="20" fill="#22262B">Эльбрус</text>
+  <text x="550" y="698" class="sans" font-size="12" letter-spacing="1" fill="#22262B" opacity="0.55">КАВКАЗ, РОССИЯ</text>
+  <rect x="764" y="634" width="48" height="48" rx="6" fill="#22262B" fill-opacity="0.06" stroke="#22262B" stroke-opacity="0.3"/>
+  <use href="#a-icon-chev-up" x="776" y="646" opacity="0.85"/>
+  <rect x="764" y="694" width="48" height="48" rx="6" fill="#22262B" fill-opacity="0.06" stroke="#22262B" stroke-opacity="0.3"/>
+  <use href="#a-icon-chev-down" x="776" y="706" opacity="0.85"/>
+  <use href="#a-icon-grip" x="838" y="688"/>
+  <line x1="514" y1="748" x2="856" y2="748" stroke="#22262B" stroke-opacity="0.14" stroke-width="1"/>
+
+  <!-- Card 4: Монблан -->
+  <text x="527" y="834" class="serif" font-size="18" text-anchor="middle" fill="#22262B" opacity="0.4">4</text>
+  <text x="550" y="810" class="serif" font-size="20" fill="#22262B">Монблан</text>
+  <text x="550" y="834" class="sans" font-size="12" letter-spacing="1" fill="#22262B" opacity="0.55">АЛЬПЫ, ФРАНЦИЯ И ИТАЛИЯ</text>
+  <rect x="764" y="770" width="48" height="48" rx="6" fill="#22262B" fill-opacity="0.06" stroke="#22262B" stroke-opacity="0.3"/>
+  <use href="#a-icon-chev-up" x="776" y="782" opacity="0.85"/>
+  <rect x="764" y="830" width="48" height="48" rx="6" fill="#22262B" fill-opacity="0" stroke="#22262B" stroke-opacity="0.18"/>
+  <use href="#a-icon-chev-down" x="776" y="842" opacity="0.3"/>
+  <use href="#a-icon-grip" x="838" y="824"/>
+  <line x1="514" y1="884" x2="856" y2="884" stroke="#22262B" stroke-opacity="0.14" stroke-width="1"/>
+
+  <!-- CTA -->
+  <rect x="514" y="910" width="342" height="56" rx="8" fill="#22262B"/>
+  <text x="685" y="944" class="sans" font-size="17" font-weight="600" text-anchor="middle" fill="#F6F1E7">Проверить</text>
+</g>
+
+<!-- ============ RIGHT COLUMN: system notes ============ -->
+<text x="940" y="164" class="sans" font-size="13" font-weight="700" letter-spacing="2" fill="#22262B" opacity="0.6">ПАЛИТРА</text>
+<g font-family="-apple-system,'Segoe UI',Roboto,'Noto Sans',Arial,sans-serif">
+  <rect x="940" y="176" width="70" height="70" rx="8" fill="#F6F1E7" stroke="#22262B" stroke-opacity="0.25"/>
+  <text x="975" y="262" font-size="10" text-anchor="middle" fill="#22262B" opacity="0.6">#F6F1E7</text>
+  <rect x="1022" y="176" width="70" height="70" rx="8" fill="#22262B"/>
+  <text x="1057" y="262" font-size="10" text-anchor="middle" fill="#22262B" opacity="0.6">#22262B</text>
+  <rect x="1104" y="176" width="70" height="70" rx="8" fill="#B5502F"/>
+  <text x="1139" y="262" font-size="10" text-anchor="middle" fill="#22262B" opacity="0.6">#B5502F</text>
+  <rect x="1186" y="176" width="70" height="70" rx="8" fill="#3E5C50"/>
+  <text x="1221" y="262" font-size="10" text-anchor="middle" fill="#22262B" opacity="0.6">#3E5C50</text>
+  <rect x="1268" y="176" width="70" height="70" rx="8" fill="#C9BFA9"/>
+  <text x="1303" y="262" font-size="10" text-anchor="middle" fill="#22262B" opacity="0.6">#C9BFA9</text>
+</g>
+
+<text x="940" y="296" class="sans" font-size="13" font-weight="700" letter-spacing="2" fill="#22262B" opacity="0.6">ТИПОГРАФИКА</text>
+<text x="960" y="318" class="sans" font-size="11" letter-spacing="1" fill="#22262B" opacity="0.5">DISPLAY / SERIF</text>
+<text x="960" y="352" class="serif" font-size="32" fill="#22262B">Килиманджаро</text>
+<text x="960" y="376" class="sans" font-size="11" letter-spacing="1" fill="#22262B" opacity="0.5">ЗАГОЛОВОК</text>
+<text x="960" y="400" class="serif" font-size="22" fill="#22262B">Расположите по высоте</text>
+<text x="960" y="424" class="sans" font-size="11" letter-spacing="1" fill="#22262B" opacity="0.5">ТЕКСТ</text>
+<text x="960" y="446" class="sans" font-size="16" fill="#22262B">Объяснение читается спокойно, без ёрничества.</text>
+<text x="960" y="470" class="sans" font-size="11" letter-spacing="1" fill="#22262B" opacity="0.5">МЕТКА</text>
+<text x="960" y="488" class="sans" font-size="12" font-weight="700" letter-spacing="2" fill="#22262B">НАПРАВЛЕНИЕ СОРТИРОВКИ</text>
+
+<text x="940" y="518" class="sans" font-size="13" font-weight="700" letter-spacing="2" fill="#22262B" opacity="0.6">ФОРМЫ</text>
+<text x="960" y="540" class="sans" font-size="11" fill="#22262B" opacity="0.5">Кнопка — прямоугольник rx8, без pill</text>
+<rect x="960" y="550" width="200" height="48" rx="8" fill="#22262B"/>
+<text x="1060" y="580" class="sans" font-size="15" font-weight="600" text-anchor="middle" fill="#F6F1E7">Проверить</text>
+<text x="960" y="626" class="sans" font-size="11" fill="#22262B" opacity="0.5">Строка списка — без рамки, только линия</text>
+<text x="962" y="650" class="serif" font-size="16" text-anchor="start" fill="#22262B" opacity="0.4">1</text>
+<text x="984" y="650" class="serif" font-size="18" fill="#22262B">Эльбрус</text>
+<text x="1150" y="650" class="sans" font-size="11" letter-spacing="1" fill="#22262B" opacity="0.5">КАВКАЗ, РОССИЯ</text>
+<line x1="960" y1="662" x2="1380" y2="662" stroke="#22262B" stroke-opacity="0.14"/>
+
+<!-- Dark theme fragment -->
+<text x="940" y="700" class="sans" font-size="13" font-weight="700" letter-spacing="2" fill="#22262B" opacity="0.6">ТЁМНАЯ ТЕМА (фрагмент Home)</text>
+<rect x="940" y="712" width="460" height="282" rx="16" fill="#1B1A17"/>
+<text x="964" y="746" class="serif" font-size="14" letter-spacing="3" fill="#EDE6D8">ПО ПОРЯДКУ</text>
+<line x1="964" y1="756" x2="1356" y2="756" stroke="#EDE6D8" stroke-opacity="0.2"/>
+<text x="964" y="780" class="sans" font-size="12" fill="#EDE6D8" opacity="0.7">Суббота, 29 августа 2026</text>
+<text x="964" y="828" class="serif" fill="#EDE6D8"><tspan font-size="20">День </tspan><tspan font-size="38" font-weight="700">1</tspan></text>
+<line x1="964" y1="840" x2="1050" y2="840" stroke="#D98A63" stroke-width="2"/>
+<text x="964" y="870" class="sans" font-size="10" font-weight="700" letter-spacing="1.5" fill="#EDE6D8" opacity="0.55">СЕРИЯ</text>
+<text x="964" y="892" class="sans" font-size="16" font-weight="600" fill="#EDE6D8">6 дней</text>
+<line x1="964" y1="902" x2="1356" y2="902" stroke="#EDE6D8" stroke-opacity="0.15"/>
+<rect x="964" y="944" width="412" height="40" rx="8" fill="#D98A63"/>
+<text x="1170" y="969" class="sans" font-size="15" font-weight="600" text-anchor="middle" fill="#1B1A17">Играть</text>
+
+<!-- Footer caption -->
+<text x="60" y="1032" class="sans" font-size="13" font-weight="700" letter-spacing="2" fill="#22262B" opacity="0.55">ИДЕЯ КОНЦЕПЦИИ</text>
+<text x="60" y="1058" class="sans" font-size="16" fill="#22262B">Редакционный альманах — головоломка подана как разворот воскресного журнала: тонкие линии вместо рамок,</text>
+<text x="60" y="1084" class="sans" font-size="16" fill="#22262B">спокойная связка serif/sans и много воздуха. Факты выглядят как редакционный материал, а не игровой экран.</text>
+</svg>

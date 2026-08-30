@@ -1,0 +1,304 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="756" height="1246.23" viewBox="0 0 756 1246.23">
+<title>Puzzle · Playing</title>
+<defs>
+<clipPath id="clip24"><rect x="40" y="335.62" width="320" height="844" rx="32"/></clipPath>
+<clipPath id="clip22"><rect x="0" y="172" width="320" height="544"/></clipPath>
+<clipPath id="clip25"><rect x="396" y="335.62" width="320" height="844" rx="32"/></clipPath>
+<clipPath id="clip23"><rect x="0" y="172" width="320" height="544"/></clipPath>
+</defs>
+<rect x="0" y="0" width="756" height="1246.23" fill="#EDE6D4"/>
+<text x="40" y="60.34" font-family="Golos Text SemiBold, Golos Text" font-size="18" font-weight="600" fill="#23241F" letter-spacing="0.17" data-text="Puzzle · Playing">Puzzle · Playing</text>
+<text x="40" y="85.87" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="Тема: светлая · viewport 320×844 dp · font scale 200%">Тема: светлая · viewport 320×844 dp · font scale 200%</text>
+<text x="40" y="104.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Компоненты: AppTopBar (кнопка «Назад», «Задание 1 из 3», CategoryLabel в правом слоте), EditorialTitle">Компоненты: AppTopBar (кнопка «Назад», «Задание 1 из 3», CategoryLabel в правом слоте), EditorialTitle</text>
+<text x="40" y="122.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="(формулировка), подпись направления (bodyMedium, без курсива), 4 × OrderableCard, MoveButton">(формулировка), подпись направления (bodyMedium, без курсива), 4 × OrderableCard, MoveButton</text>
+<text x="40" y="140.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="(disabled на первой и последней), DragHandle, PrimaryButton «Проверить».">(disabled на первой и последней), DragHandle, PrimaryButton «Проверить».</text>
+<text x="40" y="158.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="DragEducationHint намеренно отсутствует: это базовое состояние Playing, подсказка проверяется">DragEducationHint намеренно отсутствует: это базовое состояние Playing, подсказка проверяется</text>
+<text x="40" y="176.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="отдельным state sheet.">отдельным state sheet.</text>
+<text x="40" y="194.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="При 320 dp / 200% CategoryLabel не помещается рядом с заголовком и переносится на вторую строку">При 320 dp / 200% CategoryLabel не помещается рядом с заголовком и переносится на вторую строку</text>
+<text x="40" y="212.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="AppTopBar; кнопка «Назад» сохраняет 48 × 48 dp, метка не уменьшается.">AppTopBar; кнопка «Назад» сохраняет 48 × 48 dp, метка не уменьшается.</text>
+<text x="40" y="230.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Контент не помещается в экран, поэтому формулировка, подпись направления и список карточек">Контент не помещается в экран, поэтому формулировка, подпись направления и список карточек</text>
+<text x="40" y="248.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="прокручиваются одним контейнером (UX_FLOW.md, раздел 4) — формулировка не выталкивает список за">прокручиваются одним контейнером (UX_FLOW.md, раздел 4) — формулировка не выталкивает список за</text>
+<text x="40" y="266.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="пределы экрана. Второй срез показывает тот же экран, прокрученный к списку. Нижний padding">пределы экрана. Второй срез показывает тот же экран, прокрученный к списку. Нижний padding</text>
+<text x="40" y="284.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="контейнера равен высоте закреплённой кнопки плюс два spacing.section, поэтому «Проверить» не">контейнера равен высоте закреплённой кнопки плюс два spacing.section, поэтому «Проверить» не</text>
+<text x="40" y="302.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="ложится на карточку.">ложится на карточку.</text>
+<rect x="38" y="333.62" width="324" height="848" rx="34" fill="#000000" fill-opacity="0.08"/>
+<g data-component="DeviceSurface" clip-path="url(#clip24)">
+<g transform="translate(40,335.62)">
+<rect x="0" y="0" width="320" height="844" fill="#F6F0E2"/>
+<g data-component="AppTopBar">
+<path d="M43,50 L37,56 L43,62" fill="none" stroke="#23241F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="16" y="32" width="48" height="48" fill="none"/>
+<text x="72" y="68.16" font-family="Golos Text SemiBold, Golos Text" font-size="32" font-weight="600" fill="#23241F" letter-spacing="0.3" data-text="Задание 1 из 3">Задание 1 из 3</text>
+<g data-component="CategoryLabel">
+<rect x="72" y="96" width="182.67" height="44" rx="4" fill="#E4E9DE"/>
+<path d="M12.03 22.08Q9.94 22.08 8.11 21.3Q6.27 20.51 4.89 19.13Q3.5 17.74 2.72 15.91Q1.93 14.07 1.93 11.99Q1.93 9.9 2.72 8.08Q3.5 6.26 4.89 4.87Q6.27 3.49 8.11 2.7Q9.94 1.92 12.03 1.92Q14.11 1.92 15.93 2.7Q17.74 3.49 19.13 4.87Q20.51 6.26 21.3 8.08Q22.08 9.9 22.08 11.99Q22.08 14.07 21.3 15.91Q20.51 17.74 19.13 19.13Q17.74 20.51 15.93 21.3Q14.11 22.08 12.03 22.08ZM10.83 19.53V17.84Q10.34 17.84 10.01 17.51Q9.67 17.17 9.67 16.69V15.52L4.56 10.4Q4.46 10.86 4.42 11.25Q4.38 11.64 4.38 11.98Q4.38 14.8 6.2 16.96Q8.02 19.12 10.83 19.53ZM17.89 16.86Q18.76 15.84 19.19 14.58Q19.63 13.33 19.63 11.97Q19.63 9.66 18.37 7.75Q17.12 5.85 14.96 4.96V5.53Q14.96 6.26 14.43 6.77Q13.91 7.28 13.18 7.28H10.83V8.44Q10.83 8.93 10.48 9.28Q10.13 9.63 9.64 9.63H8.48V11.97H14.37Q14.86 11.97 15.21 12.32Q15.56 12.67 15.56 13.16V15.49H16.54Q17.12 15.49 17.5 15.89Q17.89 16.29 17.89 16.86Z" fill="#2C4A3E" transform="translate(80,110) scale(0.67)"/>
+<text x="104" y="127.88" font-family="Golos Text SemiBold, Golos Text" font-size="26" font-weight="600" fill="#2C4A3E" letter-spacing="0.4" data-text="География">География</text>
+</g>
+</g>
+<g data-component="PuzzleContent" clip-path="url(#clip22)">
+<g transform="translate(0,172)">
+<text x="16" y="48.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="Расположи‐">Расположи‐</text>
+<text x="16" y="108.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="те">те</text>
+<text x="16" y="168.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="вершины">вершины</text>
+<text x="16" y="228.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="от самой">от самой</text>
+<text x="16" y="288.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="низкой к">низкой к</text>
+<text x="16" y="348.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="самой">самой</text>
+<text x="16" y="408.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="высокой">высокой</text>
+<text x="16" y="450.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Сверху — самая">Сверху — самая</text>
+<text x="16" y="490.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="низкая">низкая</text>
+<g data-component="OrderableCard" data-state="default">
+<path d="M28,512 H286 L304,530 V728 Q304,740 292,740 H28 Q16,740 16,728 V524 Q16,512 28,512 Z" fill="#FBF7EC"/>
+<path d="M28,512 H286 L304,530 V728 Q304,740 292,740 H28 Q16,740 16,728 V524 Q16,512 28,512 Z" fill="none" stroke="#DCD3BC" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="72" y1="524" x2="72" y2="728" stroke="#DCD3BC" stroke-width="1"/>
+<text x="27.2" y="620.08" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="28" font-weight="700" fill="#5B584C" data-text="№1">№1</text>
+<g data-component="DragHandle">
+<circle cx="40" cy="640.8" r="1.6" fill="#5B584C"/>
+<circle cx="40" cy="648" r="1.6" fill="#5B584C"/>
+<circle cx="40" cy="655.2" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="640.8" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="648" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="655.2" r="1.6" fill="#5B584C"/>
+</g>
+<text x="88" y="569.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="Кили‐">Кили‐</text>
+<text x="88" y="621.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="ман‐">ман‐</text>
+<text x="88" y="673.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="джаро">джаро</text>
+<text x="88" y="714.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Танзания">Танзания</text>
+<g data-component="MoveButton" data-state="disabled">
+<rect x="244" y="574" width="48" height="48" rx="8" fill="none" stroke="#8C8672" stroke-opacity="0.38" stroke-width="1"/>
+<path d="M262,601 L268,595 L274,601" fill="none" stroke="#23241F" stroke-opacity="0.38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g data-component="MoveButton" data-state="enabled">
+<rect x="244" y="630" width="48" height="48" rx="8" fill="#E4E9DE" stroke="#2C4A3E" stroke-opacity="0.5" stroke-width="1"/>
+<path d="M262,651 L268,657 L274,651" fill="none" stroke="#2C4A3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+<g data-component="OrderableCard" data-state="default">
+<path d="M28,752 H286 L304,770 V956 Q304,968 292,968 H28 Q16,968 16,956 V764 Q16,752 28,752 Z" fill="#FBF7EC"/>
+<path d="M28,752 H286 L304,770 V956 Q304,968 292,968 H28 Q16,968 16,956 V764 Q16,752 28,752 Z" fill="none" stroke="#DCD3BC" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="72" y1="764" x2="72" y2="956" stroke="#DCD3BC" stroke-width="1"/>
+<text x="27.2" y="854.08" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="28" font-weight="700" fill="#5B584C" data-text="№2">№2</text>
+<g data-component="DragHandle">
+<circle cx="40" cy="874.8" r="1.6" fill="#5B584C"/>
+<circle cx="40" cy="882" r="1.6" fill="#5B584C"/>
+<circle cx="40" cy="889.2" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="874.8" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="882" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="889.2" r="1.6" fill="#5B584C"/>
+</g>
+<text x="88" y="809.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="Акон‐">Акон‐</text>
+<text x="88" y="861.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="кагуа">кагуа</text>
+<text x="88" y="902.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Анды, Ар‐">Анды, Ар‐</text>
+<text x="88" y="942.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="гентина">гентина</text>
+<g data-component="MoveButton" data-state="enabled">
+<rect x="244" y="808" width="48" height="48" rx="8" fill="#E4E9DE" stroke="#2C4A3E" stroke-opacity="0.5" stroke-width="1"/>
+<path d="M262,835 L268,829 L274,835" fill="none" stroke="#2C4A3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g data-component="MoveButton" data-state="enabled">
+<rect x="244" y="864" width="48" height="48" rx="8" fill="#E4E9DE" stroke="#2C4A3E" stroke-opacity="0.5" stroke-width="1"/>
+<path d="M262,885 L268,891 L274,885" fill="none" stroke="#2C4A3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+<g data-component="OrderableCard" data-state="default">
+<path d="M28,980 H286 L304,998 V1184 Q304,1196 292,1196 H28 Q16,1196 16,1184 V992 Q16,980 28,980 Z" fill="#FBF7EC"/>
+<path d="M28,980 H286 L304,998 V1184 Q304,1196 292,1196 H28 Q16,1196 16,1184 V992 Q16,980 28,980 Z" fill="none" stroke="#DCD3BC" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="72" y1="992" x2="72" y2="1184" stroke="#DCD3BC" stroke-width="1"/>
+<text x="27.2" y="1082.08" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="28" font-weight="700" fill="#5B584C" data-text="№3">№3</text>
+<g data-component="DragHandle">
+<circle cx="40" cy="1102.8" r="1.6" fill="#5B584C"/>
+<circle cx="40" cy="1110" r="1.6" fill="#5B584C"/>
+<circle cx="40" cy="1117.2" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="1102.8" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="1110" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="1117.2" r="1.6" fill="#5B584C"/>
+</g>
+<text x="88" y="1037.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="Эль‐">Эль‐</text>
+<text x="88" y="1089.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="брус">брус</text>
+<text x="88" y="1130.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Кавказ,">Кавказ,</text>
+<text x="88" y="1170.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Россия">Россия</text>
+<g data-component="MoveButton" data-state="enabled">
+<rect x="244" y="1036" width="48" height="48" rx="8" fill="#E4E9DE" stroke="#2C4A3E" stroke-opacity="0.5" stroke-width="1"/>
+<path d="M262,1063 L268,1057 L274,1063" fill="none" stroke="#2C4A3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g data-component="MoveButton" data-state="enabled">
+<rect x="244" y="1092" width="48" height="48" rx="8" fill="#E4E9DE" stroke="#2C4A3E" stroke-opacity="0.5" stroke-width="1"/>
+<path d="M262,1113 L268,1119 L274,1113" fill="none" stroke="#2C4A3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+<g data-component="OrderableCard" data-state="default">
+<path d="M28,1208 H286 L304,1226 V1452 Q304,1464 292,1464 H28 Q16,1464 16,1452 V1220 Q16,1208 28,1208 Z" fill="#FBF7EC"/>
+<path d="M28,1208 H286 L304,1226 V1452 Q304,1464 292,1464 H28 Q16,1464 16,1452 V1220 Q16,1208 28,1208 Z" fill="none" stroke="#DCD3BC" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="72" y1="1220" x2="72" y2="1452" stroke="#DCD3BC" stroke-width="1"/>
+<text x="27.2" y="1330.08" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="28" font-weight="700" fill="#5B584C" data-text="№4">№4</text>
+<g data-component="DragHandle">
+<circle cx="40" cy="1350.8" r="1.6" fill="#5B584C"/>
+<circle cx="40" cy="1358" r="1.6" fill="#5B584C"/>
+<circle cx="40" cy="1365.2" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="1350.8" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="1358" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="1365.2" r="1.6" fill="#5B584C"/>
+</g>
+<text x="88" y="1265.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="Мон‐">Мон‐</text>
+<text x="88" y="1317.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="блан">блан</text>
+<text x="88" y="1358.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Альпы,">Альпы,</text>
+<text x="88" y="1398.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Франция">Франция</text>
+<text x="88" y="1438.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="и Италия">и Италия</text>
+<g data-component="MoveButton" data-state="enabled">
+<rect x="244" y="1284" width="48" height="48" rx="8" fill="#E4E9DE" stroke="#2C4A3E" stroke-opacity="0.5" stroke-width="1"/>
+<path d="M262,1311 L268,1305 L274,1311" fill="none" stroke="#2C4A3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g data-component="MoveButton" data-state="disabled">
+<rect x="244" y="1340" width="48" height="48" rx="8" fill="none" stroke="#8C8672" stroke-opacity="0.38" stroke-width="1"/>
+<path d="M262,1361 L268,1367 L274,1361" fill="none" stroke="#23241F" stroke-opacity="0.38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+</g>
+</g>
+<g data-component="PrimaryButton">
+<rect x="16" y="740" width="288" height="64" rx="8" fill="#2C4A3E"/>
+<text x="160" y="783.4" font-family="Golos Text SemiBold, Golos Text" font-size="30" font-weight="600" fill="#F6F0E2" letter-spacing="0.2" text-anchor="middle" data-text="Проверить">Проверить</text>
+</g>
+</g>
+</g>
+<rect x="40" y="335.62" width="320" height="844" rx="32" fill="none" stroke="#23241F" stroke-width="2"/>
+<text x="40" y="1202.48" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="Основной viewport (начало экрана)">Основной viewport (начало экрана)</text>
+<rect x="394" y="333.62" width="324" height="848" rx="34" fill="#000000" fill-opacity="0.08"/>
+<g data-component="DeviceSurface" clip-path="url(#clip25)">
+<g transform="translate(396,335.62)">
+<rect x="0" y="0" width="320" height="844" fill="#F6F0E2"/>
+<g data-component="AppTopBar">
+<path d="M43,50 L37,56 L43,62" fill="none" stroke="#23241F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="16" y="32" width="48" height="48" fill="none"/>
+<text x="72" y="68.16" font-family="Golos Text SemiBold, Golos Text" font-size="32" font-weight="600" fill="#23241F" letter-spacing="0.3" data-text="Задание 1 из 3">Задание 1 из 3</text>
+<g data-component="CategoryLabel">
+<rect x="72" y="96" width="182.67" height="44" rx="4" fill="#E4E9DE"/>
+<path d="M12.03 22.08Q9.94 22.08 8.11 21.3Q6.27 20.51 4.89 19.13Q3.5 17.74 2.72 15.91Q1.93 14.07 1.93 11.99Q1.93 9.9 2.72 8.08Q3.5 6.26 4.89 4.87Q6.27 3.49 8.11 2.7Q9.94 1.92 12.03 1.92Q14.11 1.92 15.93 2.7Q17.74 3.49 19.13 4.87Q20.51 6.26 21.3 8.08Q22.08 9.9 22.08 11.99Q22.08 14.07 21.3 15.91Q20.51 17.74 19.13 19.13Q17.74 20.51 15.93 21.3Q14.11 22.08 12.03 22.08ZM10.83 19.53V17.84Q10.34 17.84 10.01 17.51Q9.67 17.17 9.67 16.69V15.52L4.56 10.4Q4.46 10.86 4.42 11.25Q4.38 11.64 4.38 11.98Q4.38 14.8 6.2 16.96Q8.02 19.12 10.83 19.53ZM17.89 16.86Q18.76 15.84 19.19 14.58Q19.63 13.33 19.63 11.97Q19.63 9.66 18.37 7.75Q17.12 5.85 14.96 4.96V5.53Q14.96 6.26 14.43 6.77Q13.91 7.28 13.18 7.28H10.83V8.44Q10.83 8.93 10.48 9.28Q10.13 9.63 9.64 9.63H8.48V11.97H14.37Q14.86 11.97 15.21 12.32Q15.56 12.67 15.56 13.16V15.49H16.54Q17.12 15.49 17.5 15.89Q17.89 16.29 17.89 16.86Z" fill="#2C4A3E" transform="translate(80,110) scale(0.67)"/>
+<text x="104" y="127.88" font-family="Golos Text SemiBold, Golos Text" font-size="26" font-weight="600" fill="#2C4A3E" letter-spacing="0.4" data-text="География">География</text>
+</g>
+</g>
+<g data-component="PuzzleContent" clip-path="url(#clip23)">
+<g transform="translate(0,-340)">
+<text x="16" y="48.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="Расположи‐">Расположи‐</text>
+<text x="16" y="108.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="те">те</text>
+<text x="16" y="168.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="вершины">вершины</text>
+<text x="16" y="228.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="от самой">от самой</text>
+<text x="16" y="288.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="низкой к">низкой к</text>
+<text x="16" y="348.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="самой">самой</text>
+<text x="16" y="408.62" font-family="Noto Serif Medium, Noto Serif" font-size="48" font-weight="500" fill="#23241F" data-text="высокой">высокой</text>
+<text x="16" y="450.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Сверху — самая">Сверху — самая</text>
+<text x="16" y="490.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="низкая">низкая</text>
+<g data-component="OrderableCard" data-state="default">
+<path d="M28,512 H286 L304,530 V728 Q304,740 292,740 H28 Q16,740 16,728 V524 Q16,512 28,512 Z" fill="#FBF7EC"/>
+<path d="M28,512 H286 L304,530 V728 Q304,740 292,740 H28 Q16,740 16,728 V524 Q16,512 28,512 Z" fill="none" stroke="#DCD3BC" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="72" y1="524" x2="72" y2="728" stroke="#DCD3BC" stroke-width="1"/>
+<text x="27.2" y="620.08" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="28" font-weight="700" fill="#5B584C" data-text="№1">№1</text>
+<g data-component="DragHandle">
+<circle cx="40" cy="640.8" r="1.6" fill="#5B584C"/>
+<circle cx="40" cy="648" r="1.6" fill="#5B584C"/>
+<circle cx="40" cy="655.2" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="640.8" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="648" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="655.2" r="1.6" fill="#5B584C"/>
+</g>
+<text x="88" y="569.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="Кили‐">Кили‐</text>
+<text x="88" y="621.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="ман‐">ман‐</text>
+<text x="88" y="673.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="джаро">джаро</text>
+<text x="88" y="714.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Танзания">Танзания</text>
+<g data-component="MoveButton" data-state="disabled">
+<rect x="244" y="574" width="48" height="48" rx="8" fill="none" stroke="#8C8672" stroke-opacity="0.38" stroke-width="1"/>
+<path d="M262,601 L268,595 L274,601" fill="none" stroke="#23241F" stroke-opacity="0.38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g data-component="MoveButton" data-state="enabled">
+<rect x="244" y="630" width="48" height="48" rx="8" fill="#E4E9DE" stroke="#2C4A3E" stroke-opacity="0.5" stroke-width="1"/>
+<path d="M262,651 L268,657 L274,651" fill="none" stroke="#2C4A3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+<g data-component="OrderableCard" data-state="default">
+<path d="M28,752 H286 L304,770 V956 Q304,968 292,968 H28 Q16,968 16,956 V764 Q16,752 28,752 Z" fill="#FBF7EC"/>
+<path d="M28,752 H286 L304,770 V956 Q304,968 292,968 H28 Q16,968 16,956 V764 Q16,752 28,752 Z" fill="none" stroke="#DCD3BC" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="72" y1="764" x2="72" y2="956" stroke="#DCD3BC" stroke-width="1"/>
+<text x="27.2" y="854.08" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="28" font-weight="700" fill="#5B584C" data-text="№2">№2</text>
+<g data-component="DragHandle">
+<circle cx="40" cy="874.8" r="1.6" fill="#5B584C"/>
+<circle cx="40" cy="882" r="1.6" fill="#5B584C"/>
+<circle cx="40" cy="889.2" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="874.8" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="882" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="889.2" r="1.6" fill="#5B584C"/>
+</g>
+<text x="88" y="809.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="Акон‐">Акон‐</text>
+<text x="88" y="861.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="кагуа">кагуа</text>
+<text x="88" y="902.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Анды, Ар‐">Анды, Ар‐</text>
+<text x="88" y="942.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="гентина">гентина</text>
+<g data-component="MoveButton" data-state="enabled">
+<rect x="244" y="808" width="48" height="48" rx="8" fill="#E4E9DE" stroke="#2C4A3E" stroke-opacity="0.5" stroke-width="1"/>
+<path d="M262,835 L268,829 L274,835" fill="none" stroke="#2C4A3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g data-component="MoveButton" data-state="enabled">
+<rect x="244" y="864" width="48" height="48" rx="8" fill="#E4E9DE" stroke="#2C4A3E" stroke-opacity="0.5" stroke-width="1"/>
+<path d="M262,885 L268,891 L274,885" fill="none" stroke="#2C4A3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+<g data-component="OrderableCard" data-state="default">
+<path d="M28,980 H286 L304,998 V1184 Q304,1196 292,1196 H28 Q16,1196 16,1184 V992 Q16,980 28,980 Z" fill="#FBF7EC"/>
+<path d="M28,980 H286 L304,998 V1184 Q304,1196 292,1196 H28 Q16,1196 16,1184 V992 Q16,980 28,980 Z" fill="none" stroke="#DCD3BC" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="72" y1="992" x2="72" y2="1184" stroke="#DCD3BC" stroke-width="1"/>
+<text x="27.2" y="1082.08" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="28" font-weight="700" fill="#5B584C" data-text="№3">№3</text>
+<g data-component="DragHandle">
+<circle cx="40" cy="1102.8" r="1.6" fill="#5B584C"/>
+<circle cx="40" cy="1110" r="1.6" fill="#5B584C"/>
+<circle cx="40" cy="1117.2" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="1102.8" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="1110" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="1117.2" r="1.6" fill="#5B584C"/>
+</g>
+<text x="88" y="1037.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="Эль‐">Эль‐</text>
+<text x="88" y="1089.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="брус">брус</text>
+<text x="88" y="1130.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Кавказ,">Кавказ,</text>
+<text x="88" y="1170.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Россия">Россия</text>
+<g data-component="MoveButton" data-state="enabled">
+<rect x="244" y="1036" width="48" height="48" rx="8" fill="#E4E9DE" stroke="#2C4A3E" stroke-opacity="0.5" stroke-width="1"/>
+<path d="M262,1063 L268,1057 L274,1063" fill="none" stroke="#2C4A3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g data-component="MoveButton" data-state="enabled">
+<rect x="244" y="1092" width="48" height="48" rx="8" fill="#E4E9DE" stroke="#2C4A3E" stroke-opacity="0.5" stroke-width="1"/>
+<path d="M262,1113 L268,1119 L274,1113" fill="none" stroke="#2C4A3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+<g data-component="OrderableCard" data-state="default">
+<path d="M28,1208 H286 L304,1226 V1452 Q304,1464 292,1464 H28 Q16,1464 16,1452 V1220 Q16,1208 28,1208 Z" fill="#FBF7EC"/>
+<path d="M28,1208 H286 L304,1226 V1452 Q304,1464 292,1464 H28 Q16,1464 16,1452 V1220 Q16,1208 28,1208 Z" fill="none" stroke="#DCD3BC" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="72" y1="1220" x2="72" y2="1452" stroke="#DCD3BC" stroke-width="1"/>
+<text x="27.2" y="1330.08" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="28" font-weight="700" fill="#5B584C" data-text="№4">№4</text>
+<g data-component="DragHandle">
+<circle cx="40" cy="1350.8" r="1.6" fill="#5B584C"/>
+<circle cx="40" cy="1358" r="1.6" fill="#5B584C"/>
+<circle cx="40" cy="1365.2" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="1350.8" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="1358" r="1.6" fill="#5B584C"/>
+<circle cx="48" cy="1365.2" r="1.6" fill="#5B584C"/>
+</g>
+<text x="88" y="1265.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="Мон‐">Мон‐</text>
+<text x="88" y="1317.52" font-family="Noto Serif SemiBold, Noto Serif" font-size="40" font-weight="600" fill="#23241F" data-text="блан">блан</text>
+<text x="88" y="1358.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Альпы,">Альпы,</text>
+<text x="88" y="1398.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="Франция">Франция</text>
+<text x="88" y="1438.64" font-family="Golos Text Regular, Golos Text" font-size="28" font-weight="400" fill="#5B584C" letter-spacing="0.5" data-text="и Италия">и Италия</text>
+<g data-component="MoveButton" data-state="enabled">
+<rect x="244" y="1284" width="48" height="48" rx="8" fill="#E4E9DE" stroke="#2C4A3E" stroke-opacity="0.5" stroke-width="1"/>
+<path d="M262,1311 L268,1305 L274,1311" fill="none" stroke="#2C4A3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g data-component="MoveButton" data-state="disabled">
+<rect x="244" y="1340" width="48" height="48" rx="8" fill="none" stroke="#8C8672" stroke-opacity="0.38" stroke-width="1"/>
+<path d="M262,1361 L268,1367 L274,1361" fill="none" stroke="#23241F" stroke-opacity="0.38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+</g>
+</g>
+<g data-component="PrimaryButton">
+<rect x="16" y="740" width="288" height="64" rx="8" fill="#2C4A3E"/>
+<text x="160" y="783.4" font-family="Golos Text SemiBold, Golos Text" font-size="30" font-weight="600" fill="#F6F0E2" letter-spacing="0.2" text-anchor="middle" data-text="Проверить">Проверить</text>
+</g>
+</g>
+</g>
+<rect x="396" y="335.62" width="320" height="844" rx="32" fill="none" stroke="#23241F" stroke-width="2"/>
+<text x="396" y="1202.48" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="Тот же экран, прокручено к списку карточек">Тот же экран, прокручено к списку карточек</text>
+</svg>

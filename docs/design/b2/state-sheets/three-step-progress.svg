@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="1189.46" viewBox="0 0 1180 1189.46">
+<title>ThreeStepProgress — все семь валидных комбинаций</title>
+<defs>
+<clipPath id="clip35"><rect x="40" y="236.23" width="1100" height="346"/></clipPath>
+<clipPath id="clip36"><rect x="40" y="646.85" width="1100" height="346"/></clipPath>
+<clipPath id="clip37"><rect x="40" y="1057.46" width="1100" height="92"/></clipPath>
+</defs>
+<rect x="0" y="0" width="1180" height="1189.46" fill="#EDE6D4"/>
+<text x="40" y="60.34" font-family="Golos Text SemiBold, Golos Text" font-size="18" font-weight="600" fill="#23241F" letter-spacing="0.17" data-text="ThreeStepProgress — все семь валидных комбинаций">ThreeStepProgress — все семь валидных комбинаций</text>
+<text x="40" y="85.87" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="mode × completedCount · светлая и тёмная тема · font scale 100%">mode × completedCount · светлая и тёмная тема · font scale 100%</text>
+<text x="40" y="120.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Модель — два независимых поля. mode = ActiveDay живёт только на Home.InProgress и допускает completedCount 0–2, где точка сразу после последней пройденной">Модель — два независимых поля. mode = ActiveDay живёт только на Home.InProgress и допускает completedCount 0–2, где точка сразу после последней пройденной</text>
+<text x="40" y="136.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="находится в состоянии current. mode = ClosedDay живёт только в Archive row, допускает 0–3 и состояния current не имеет ни при каком значении. Одно и то же">находится в состоянии current. mode = ClosedDay живёт только в Archive row, допускает 0–3 и состояния current не имеет ни при каком значении. Одно и то же</text>
+<text x="40" y="152.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="completedCount = 2 рендерится по-разному в двух режимах — сравнение вынесено отдельной секцией ниже.">completedCount = 2 рендерится по-разному в двух режимах — сравнение вынесено отдельной секцией ниже.</text>
+<text x="40" y="176.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Точки никогда не единственный носитель состояния: рядом всегда стоит текст, и именно он озвучивается TalkBack (точки — clearAndSetSemantics).">Точки никогда не единственный носитель состояния: рядом всегда стоит текст, и именно он озвучивается TalkBack (точки — clearAndSetSemantics).</text>
+<line x1="40" y1="197.62" x2="1140" y2="197.62" stroke="#C9C0A8" stroke-width="1"/>
+<text x="40" y="222.48" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#23241F" letter-spacing="0.18" data-text="Тема: светлая">Тема: светлая</text>
+<g clip-path="url(#clip35)">
+<g transform="translate(40,236.23)">
+<rect x="0" y="0" width="1100" height="346" fill="#F6F0E2"/>
+<text x="16" y="39.68" font-family="JetBrains Mono Medium, JetBrains Mono" font-size="13" font-weight="500" fill="#5B584C" letter-spacing="0.2" data-text="ActiveDay · 0">ActiveDay · 0</text>
+<g data-component="ThreeStepProgress" data-mode="ActiveDay" data-completed="0">
+<circle cx="234" cy="35" r="3.5" fill="#E4E9DE" stroke="#2C4A3E" stroke-width="1"/>
+<circle cx="246" cy="35" r="4" fill="#DCD3BC"/>
+<circle cx="258" cy="35" r="4" fill="#DCD3BC"/>
+</g>
+<text x="300" y="40.32" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#23241F" letter-spacing="0.25" data-text="Задание 1 из 3">Задание 1 из 3</text>
+<text x="16" y="85.68" font-family="JetBrains Mono Medium, JetBrains Mono" font-size="13" font-weight="500" fill="#5B584C" letter-spacing="0.2" data-text="ActiveDay · 1">ActiveDay · 1</text>
+<g data-component="ThreeStepProgress" data-mode="ActiveDay" data-completed="1">
+<circle cx="234" cy="81" r="4" fill="#2C4A3E"/>
+<circle cx="246" cy="81" r="3.5" fill="#E4E9DE" stroke="#2C4A3E" stroke-width="1"/>
+<circle cx="258" cy="81" r="4" fill="#DCD3BC"/>
+</g>
+<text x="300" y="86.32" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#23241F" letter-spacing="0.25" data-text="Задание 2 из 3">Задание 2 из 3</text>
+<text x="16" y="131.68" font-family="JetBrains Mono Medium, JetBrains Mono" font-size="13" font-weight="500" fill="#5B584C" letter-spacing="0.2" data-text="ActiveDay · 2">ActiveDay · 2</text>
+<g data-component="ThreeStepProgress" data-mode="ActiveDay" data-completed="2">
+<circle cx="234" cy="127" r="4" fill="#2C4A3E"/>
+<circle cx="246" cy="127" r="4" fill="#2C4A3E"/>
+<circle cx="258" cy="127" r="3.5" fill="#E4E9DE" stroke="#2C4A3E" stroke-width="1"/>
+</g>
+<text x="300" y="132.32" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#23241F" letter-spacing="0.25" data-text="Задание 3 из 3">Задание 3 из 3</text>
+<text x="16" y="177.68" font-family="JetBrains Mono Medium, JetBrains Mono" font-size="13" font-weight="500" fill="#5B584C" letter-spacing="0.2" data-text="ClosedDay · 0">ClosedDay · 0</text>
+<g data-component="ThreeStepProgress" data-mode="ClosedDay" data-completed="0">
+<circle cx="234" cy="173" r="4" fill="#DCD3BC"/>
+<circle cx="246" cy="173" r="4" fill="#DCD3BC"/>
+<circle cx="258" cy="173" r="4" fill="#DCD3BC"/>
+</g>
+<text x="300" y="178.32" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#23241F" letter-spacing="0.25" data-text="29 августа · День 24 · не завершён · 0 из 18">29 августа · День 24 · не завершён · 0 из 18</text>
+<text x="16" y="223.68" font-family="JetBrains Mono Medium, JetBrains Mono" font-size="13" font-weight="500" fill="#5B584C" letter-spacing="0.2" data-text="ClosedDay · 1">ClosedDay · 1</text>
+<g data-component="ThreeStepProgress" data-mode="ClosedDay" data-completed="1">
+<circle cx="234" cy="219" r="4" fill="#2C4A3E"/>
+<circle cx="246" cy="219" r="4" fill="#DCD3BC"/>
+<circle cx="258" cy="219" r="4" fill="#DCD3BC"/>
+</g>
+<text x="300" y="224.32" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#23241F" letter-spacing="0.25" data-text="28 августа · День 23 · не завершён · 4 из 18">28 августа · День 23 · не завершён · 4 из 18</text>
+<text x="16" y="269.68" font-family="JetBrains Mono Medium, JetBrains Mono" font-size="13" font-weight="500" fill="#5B584C" letter-spacing="0.2" data-text="ClosedDay · 2">ClosedDay · 2</text>
+<g data-component="ThreeStepProgress" data-mode="ClosedDay" data-completed="2">
+<circle cx="234" cy="265" r="4" fill="#2C4A3E"/>
+<circle cx="246" cy="265" r="4" fill="#2C4A3E"/>
+<circle cx="258" cy="265" r="4" fill="#DCD3BC"/>
+</g>
+<text x="300" y="270.32" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#23241F" letter-spacing="0.25" data-text="27 августа · День 22 · не завершён · 9 из 18">27 августа · День 22 · не завершён · 9 из 18</text>
+<text x="16" y="315.68" font-family="JetBrains Mono Medium, JetBrains Mono" font-size="13" font-weight="500" fill="#5B584C" letter-spacing="0.2" data-text="ClosedDay · 3">ClosedDay · 3</text>
+<g data-component="ThreeStepProgress" data-mode="ClosedDay" data-completed="3">
+<circle cx="234" cy="311" r="4" fill="#2C4A3E"/>
+<circle cx="246" cy="311" r="4" fill="#2C4A3E"/>
+<circle cx="258" cy="311" r="4" fill="#2C4A3E"/>
+</g>
+<text x="300" y="316.32" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#23241F" letter-spacing="0.25" data-text="26 августа · День 21 · 15 из 18">26 августа · День 21 · 15 из 18</text>
+</g>
+</g>
+<rect x="40" y="236.23" width="1100" height="346" fill="none" stroke="#C9C0A8" stroke-width="1"/>
+<line x1="40" y1="608.23" x2="1140" y2="608.23" stroke="#C9C0A8" stroke-width="1"/>
+<text x="40" y="633.1" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#23241F" letter-spacing="0.18" data-text="Тема: тёмная">Тема: тёмная</text>
+<g clip-path="url(#clip36)">
+<g transform="translate(40,646.85)">
+<rect x="0" y="0" width="1100" height="346" fill="#1C1A16"/>
+<text x="16" y="39.68" font-family="JetBrains Mono Medium, JetBrains Mono" font-size="13" font-weight="500" fill="#B9B2A0" letter-spacing="0.2" data-text="ActiveDay · 0">ActiveDay · 0</text>
+<g data-component="ThreeStepProgress" data-mode="ActiveDay" data-completed="0">
+<circle cx="234" cy="35" r="3.5" fill="#24352C" stroke="#3E6350" stroke-width="1"/>
+<circle cx="246" cy="35" r="4" fill="#3C382C"/>
+<circle cx="258" cy="35" r="4" fill="#3C382C"/>
+</g>
+<text x="300" y="40.32" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#EDE7D8" letter-spacing="0.25" data-text="Задание 1 из 3">Задание 1 из 3</text>
+<text x="16" y="85.68" font-family="JetBrains Mono Medium, JetBrains Mono" font-size="13" font-weight="500" fill="#B9B2A0" letter-spacing="0.2" data-text="ActiveDay · 1">ActiveDay · 1</text>
+<g data-component="ThreeStepProgress" data-mode="ActiveDay" data-completed="1">
+<circle cx="234" cy="81" r="4" fill="#3E6350"/>
+<circle cx="246" cy="81" r="3.5" fill="#24352C" stroke="#3E6350" stroke-width="1"/>
+<circle cx="258" cy="81" r="4" fill="#3C382C"/>
+</g>
+<text x="300" y="86.32" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#EDE7D8" letter-spacing="0.25" data-text="Задание 2 из 3">Задание 2 из 3</text>
+<text x="16" y="131.68" font-family="JetBrains Mono Medium, JetBrains Mono" font-size="13" font-weight="500" fill="#B9B2A0" letter-spacing="0.2" data-text="ActiveDay · 2">ActiveDay · 2</text>
+<g data-component="ThreeStepProgress" data-mode="ActiveDay" data-completed="2">
+<circle cx="234" cy="127" r="4" fill="#3E6350"/>
+<circle cx="246" cy="127" r="4" fill="#3E6350"/>
+<circle cx="258" cy="127" r="3.5" fill="#24352C" stroke="#3E6350" stroke-width="1"/>
+</g>
+<text x="300" y="132.32" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#EDE7D8" letter-spacing="0.25" data-text="Задание 3 из 3">Задание 3 из 3</text>
+<text x="16" y="177.68" font-family="JetBrains Mono Medium, JetBrains Mono" font-size="13" font-weight="500" fill="#B9B2A0" letter-spacing="0.2" data-text="ClosedDay · 0">ClosedDay · 0</text>
+<g data-component="ThreeStepProgress" data-mode="ClosedDay" data-completed="0">
+<circle cx="234" cy="173" r="4" fill="#3C382C"/>
+<circle cx="246" cy="173" r="4" fill="#3C382C"/>
+<circle cx="258" cy="173" r="4" fill="#3C382C"/>
+</g>
+<text x="300" y="178.32" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#EDE7D8" letter-spacing="0.25" data-text="29 августа · День 24 · не завершён · 0 из 18">29 августа · День 24 · не завершён · 0 из 18</text>
+<text x="16" y="223.68" font-family="JetBrains Mono Medium, JetBrains Mono" font-size="13" font-weight="500" fill="#B9B2A0" letter-spacing="0.2" data-text="ClosedDay · 1">ClosedDay · 1</text>
+<g data-component="ThreeStepProgress" data-mode="ClosedDay" data-completed="1">
+<circle cx="234" cy="219" r="4" fill="#3E6350"/>
+<circle cx="246" cy="219" r="4" fill="#3C382C"/>
+<circle cx="258" cy="219" r="4" fill="#3C382C"/>
+</g>
+<text x="300" y="224.32" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#EDE7D8" letter-spacing="0.25" data-text="28 августа · День 23 · не завершён · 4 из 18">28 августа · День 23 · не завершён · 4 из 18</text>
+<text x="16" y="269.68" font-family="JetBrains Mono Medium, JetBrains Mono" font-size="13" font-weight="500" fill="#B9B2A0" letter-spacing="0.2" data-text="ClosedDay · 2">ClosedDay · 2</text>
+<g data-component="ThreeStepProgress" data-mode="ClosedDay" data-completed="2">
+<circle cx="234" cy="265" r="4" fill="#3E6350"/>
+<circle cx="246" cy="265" r="4" fill="#3E6350"/>
+<circle cx="258" cy="265" r="4" fill="#3C382C"/>
+</g>
+<text x="300" y="270.32" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#EDE7D8" letter-spacing="0.25" data-text="27 августа · День 22 · не завершён · 9 из 18">27 августа · День 22 · не завершён · 9 из 18</text>
+<text x="16" y="315.68" font-family="JetBrains Mono Medium, JetBrains Mono" font-size="13" font-weight="500" fill="#B9B2A0" letter-spacing="0.2" data-text="ClosedDay · 3">ClosedDay · 3</text>
+<g data-component="ThreeStepProgress" data-mode="ClosedDay" data-completed="3">
+<circle cx="234" cy="311" r="4" fill="#3E6350"/>
+<circle cx="246" cy="311" r="4" fill="#3E6350"/>
+<circle cx="258" cy="311" r="4" fill="#3E6350"/>
+</g>
+<text x="300" y="316.32" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#EDE7D8" letter-spacing="0.25" data-text="26 августа · День 21 · 15 из 18">26 августа · День 21 · 15 из 18</text>
+</g>
+</g>
+<rect x="40" y="646.85" width="1100" height="346" fill="none" stroke="#C9C0A8" stroke-width="1"/>
+<line x1="40" y1="1018.85" x2="1140" y2="1018.85" stroke="#C9C0A8" stroke-width="1"/>
+<text x="40" y="1043.71" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#23241F" letter-spacing="0.18" data-text="Одно и то же completedCount = 2 в двух режимах">Одно и то же completedCount = 2 в двух режимах</text>
+<g clip-path="url(#clip37)">
+<g transform="translate(40,1057.46)">
+<rect x="0" y="0" width="1100" height="92" fill="#F6F0E2"/>
+<g data-component="ThreeStepProgress" data-mode="ActiveDay" data-completed="2">
+<circle cx="20" cy="24" r="4" fill="#2C4A3E"/>
+<circle cx="32" cy="24" r="4" fill="#2C4A3E"/>
+<circle cx="44" cy="24" r="3.5" fill="#E4E9DE" stroke="#2C4A3E" stroke-width="1"/>
+</g>
+<text x="70" y="31.32" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#23241F" letter-spacing="0.25" data-text="ActiveDay — третья точка — current: обводка primary, заливка primaryContainer">ActiveDay — третья точка — current: обводка primary, заливка primaryContainer</text>
+<g data-component="ThreeStepProgress" data-mode="ClosedDay" data-completed="2">
+<circle cx="20" cy="64" r="4" fill="#2C4A3E"/>
+<circle cx="32" cy="64" r="4" fill="#2C4A3E"/>
+<circle cx="44" cy="64" r="4" fill="#DCD3BC"/>
+</g>
+<text x="70" y="71.32" font-family="Golos Text Regular, Golos Text" font-size="14" font-weight="400" fill="#23241F" letter-spacing="0.25" data-text="ClosedDay — третья точка — outlineVariant: «текущего» задания в закрытом дне нет">ClosedDay — третья точка — outlineVariant: «текущего» задания в закрытом дне нет</text>
+</g>
+</g>
+<rect x="40" y="1057.46" width="1100" height="92" fill="none" stroke="#C9C0A8" stroke-width="1"/>
+</svg>

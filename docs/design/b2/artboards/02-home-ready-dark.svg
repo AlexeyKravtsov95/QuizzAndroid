@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="1093.62" viewBox="0 0 640 1093.62">
+<title>Home · Ready</title>
+<defs>
+<clipPath id="clip2"><rect x="40" y="209.62" width="390" height="844" rx="32"/></clipPath>
+</defs>
+<rect x="0" y="0" width="640" height="1093.62" fill="#EDE6D4"/>
+<text x="40" y="60.34" font-family="Golos Text SemiBold, Golos Text" font-size="18" font-weight="600" fill="#23241F" letter-spacing="0.17" data-text="Home · Ready">Home · Ready</text>
+<text x="40" y="85.87" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="Тема: тёмная · viewport 390×844 dp · font scale 100%">Тема: тёмная · viewport 390×844 dp · font scale 100%</text>
+<text x="40" y="104.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Компоненты: HomeHeader (мастхед, дата, иконки архива и настроек),">Компоненты: HomeHeader (мастхед, дата, иконки архива и настроек),</text>
+<text x="40" y="122.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="DailyIssuePanel.Ready (номер выпуска, серия, лучший день, сыграно дней),">DailyIssuePanel.Ready (номер выпуска, серия, лучший день, сыграно дней),</text>
+<text x="40" y="140.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="PrimaryButton «Играть».">PrimaryButton «Играть».</text>
+<text x="40" y="158.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Категория дня не раскрыта ни текстом, ни иконкой, ни цветом. Иконки архива и">Категория дня не раскрыта ни текстом, ни иконкой, ни цветом. Иконки архива и</text>
+<text x="40" y="176.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="настроек — независимые цели 48 × 48 dp с зазором 8 dp между границами.">настроек — независимые цели 48 × 48 dp с зазором 8 dp между границами.</text>
+<rect x="38" y="207.62" width="394" height="848" rx="34" fill="#000000" fill-opacity="0.08"/>
+<g data-component="DeviceSurface" clip-path="url(#clip2)">
+<g transform="translate(40,209.62)">
+<rect x="0" y="0" width="390" height="844" fill="#1C1A16"/>
+<g data-component="HomeHeader">
+<text x="24" y="53.43" font-family="Noto Serif SemiBold, Noto Serif" font-size="14" font-weight="600" fill="#EDE7D8" letter-spacing="2" data-text="По порядку!">ПО ПОРЯДКУ!</text>
+<line x1="332.88" y1="41.28" x2="351.12" y2="41.28" stroke="#EDE7D8" stroke-width="2"/>
+<circle cx="346.32" cy="41.28" r="2.64" fill="none" stroke="#EDE7D8" stroke-width="2"/>
+<line x1="332.88" y1="48.48" x2="351.12" y2="48.48" stroke="#EDE7D8" stroke-width="2"/>
+<circle cx="338.64" cy="48.48" r="2.64" fill="none" stroke="#EDE7D8" stroke-width="2"/>
+<line x1="332.88" y1="55.68" x2="351.12" y2="55.68" stroke="#EDE7D8" stroke-width="2"/>
+<circle cx="348.24" cy="55.68" r="2.64" fill="none" stroke="#EDE7D8" stroke-width="2"/>
+<rect x="276.4" y="39.6" width="19.2" height="4.32" rx="1" fill="none" stroke="#EDE7D8" stroke-width="2"/>
+<rect x="277.36" y="43.92" width="17.28" height="12.48" rx="1.5" fill="none" stroke="#EDE7D8" stroke-width="2"/>
+<line x1="283.12" y1="49.44" x2="288.88" y2="49.44" stroke="#EDE7D8" stroke-width="2"/>
+<line x1="24" y1="84" x2="366" y2="84" stroke="#3C382C" stroke-width="1"/>
+<text x="24" y="109.68" font-family="JetBrains Mono Medium, JetBrains Mono" font-size="13" font-weight="500" fill="#B9B2A0" letter-spacing="0.2" data-text="Суббота, 29 августа 2026">Суббота, 29 августа 2026</text>
+</g>
+<g data-component="DailyIssuePanel">
+<rect x="24" y="138" width="3" height="290" fill="#3E6350"/>
+<text x="47" y="149.96" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="11" font-weight="700" fill="#D68A63" letter-spacing="1.5" data-text="Выпуск">ВЫПУСК</text>
+<text x="47" y="186.08" font-family="Noto Serif Medium, Noto Serif" font-size="28" font-weight="500" fill="#EDE7D8" data-text="День">День</text>
+<text x="125.14" y="186.08" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="40" font-weight="700" fill="#EDE7D8" data-text="24">24</text>
+<line x1="47" y1="214" x2="366" y2="214" stroke="#3C382C" stroke-width="1"/>
+<text x="47" y="243.18" font-family="Golos Text Bold, Golos Text" font-size="11" font-weight="700" fill="#B9B2A0" letter-spacing="1.5" data-text="Серия">СЕРИЯ</text>
+<text x="47" y="264.94" font-family="Golos Text SemiBold, Golos Text" font-size="13" font-weight="600" fill="#EDE7D8" letter-spacing="0.2" data-text="6 дней">6 дней</text>
+<line x1="47" y1="285" x2="366" y2="285" stroke="#3C382C" stroke-width="1"/>
+<text x="47" y="314.18" font-family="Golos Text Bold, Golos Text" font-size="11" font-weight="700" fill="#B9B2A0" letter-spacing="1.5" data-text="Лучший день">ЛУЧШИЙ ДЕНЬ</text>
+<text x="47" y="335.94" font-family="Golos Text SemiBold, Golos Text" font-size="13" font-weight="600" fill="#EDE7D8" letter-spacing="0.2" data-text="17 из 18">17 из 18</text>
+<line x1="47" y1="356" x2="366" y2="356" stroke="#3C382C" stroke-width="1"/>
+<text x="47" y="385.18" font-family="Golos Text Bold, Golos Text" font-size="11" font-weight="700" fill="#B9B2A0" letter-spacing="1.5" data-text="Сыграно дней">СЫГРАНО ДНЕЙ</text>
+<text x="47" y="406.94" font-family="Golos Text SemiBold, Golos Text" font-size="13" font-weight="600" fill="#EDE7D8" letter-spacing="0.2" data-text="23">23</text>
+<line x1="47" y1="427" x2="366" y2="427" stroke="#3C382C" stroke-width="1"/>
+</g>
+<g data-component="PrimaryButton">
+<rect x="24" y="740" width="342" height="56" rx="8" fill="#3E6350"/>
+<text x="195" y="773.7" font-family="Golos Text SemiBold, Golos Text" font-size="15" font-weight="600" fill="#F5EFE0" letter-spacing="0.1" text-anchor="middle" data-text="Играть">Играть</text>
+</g>
+</g>
+</g>
+<rect x="40" y="209.62" width="390" height="844" rx="32" fill="none" stroke="#23241F" stroke-width="2"/>
+</svg>

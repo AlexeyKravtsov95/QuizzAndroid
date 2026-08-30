@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="1129.62" viewBox="0 0 640 1129.62">
+<title>Home · Ready</title>
+<defs>
+<clipPath id="clip21"><rect x="40" y="245.62" width="320" height="844" rx="32"/></clipPath>
+</defs>
+<rect x="0" y="0" width="640" height="1129.62" fill="#EDE6D4"/>
+<text x="40" y="60.34" font-family="Golos Text SemiBold, Golos Text" font-size="18" font-weight="600" fill="#23241F" letter-spacing="0.17" data-text="Home · Ready">Home · Ready</text>
+<text x="40" y="85.87" font-family="Golos Text SemiBold, Golos Text" font-size="12" font-weight="600" fill="#5B584C" letter-spacing="0.18" data-text="Тема: светлая · viewport 320×844 dp · font scale 200%">Тема: светлая · viewport 320×844 dp · font scale 200%</text>
+<text x="40" y="104.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Компоненты: HomeHeader (мастхед, дата, иконки архива и настроек),">Компоненты: HomeHeader (мастхед, дата, иконки архива и настроек),</text>
+<text x="40" y="122.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="DailyIssuePanel.Ready (номер выпуска, серия, лучший день, сыграно дней),">DailyIssuePanel.Ready (номер выпуска, серия, лучший день, сыграно дней),</text>
+<text x="40" y="140.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="PrimaryButton «Играть».">PrimaryButton «Играть».</text>
+<text x="40" y="158.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="Категория дня не раскрыта ни текстом, ни иконкой, ни цветом. Иконки архива и">Категория дня не раскрыта ни текстом, ни иконкой, ни цветом. Иконки архива и</text>
+<text x="40" y="176.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="настроек — независимые цели 48 × 48 dp с зазором 8 dp между границами.">настроек — независимые цели 48 × 48 dp с зазором 8 dp между границами.</text>
+<text x="40" y="194.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="При 320 dp / 200% мастхед остаётся первой строкой, иконки переносятся на отдельную">При 320 dp / 200% мастхед остаётся первой строкой, иконки переносятся на отдельную</text>
+<text x="40" y="212.18" font-family="Golos Text Regular, Golos Text" font-size="12" font-weight="400" fill="#5B584C" letter-spacing="0.4" data-text="строку под ним; их размер не уменьшен.">строку под ним; их размер не уменьшен.</text>
+<rect x="38" y="243.62" width="324" height="848" rx="34" fill="#000000" fill-opacity="0.08"/>
+<g data-component="DeviceSurface" clip-path="url(#clip21)">
+<g transform="translate(40,245.62)">
+<rect x="0" y="0" width="320" height="844" fill="#F6F0E2"/>
+<g data-component="HomeHeader">
+<text x="16" y="58.86" font-family="Noto Serif SemiBold, Noto Serif" font-size="28" font-weight="600" fill="#23241F" letter-spacing="4" data-text="По порядку!">ПО ПОРЯДКУ!</text>
+<line x1="270.88" y1="97.28" x2="289.12" y2="97.28" stroke="#23241F" stroke-width="2"/>
+<circle cx="284.32" cy="97.28" r="2.64" fill="none" stroke="#23241F" stroke-width="2"/>
+<line x1="270.88" y1="104.48" x2="289.12" y2="104.48" stroke="#23241F" stroke-width="2"/>
+<circle cx="276.64" cy="104.48" r="2.64" fill="none" stroke="#23241F" stroke-width="2"/>
+<line x1="270.88" y1="111.68" x2="289.12" y2="111.68" stroke="#23241F" stroke-width="2"/>
+<circle cx="286.24" cy="111.68" r="2.64" fill="none" stroke="#23241F" stroke-width="2"/>
+<rect x="214.4" y="95.6" width="19.2" height="4.32" rx="1" fill="none" stroke="#23241F" stroke-width="2"/>
+<rect x="215.36" y="99.92" width="17.28" height="12.48" rx="1.5" fill="none" stroke="#23241F" stroke-width="2"/>
+<line x1="221.12" y1="105.44" x2="226.88" y2="105.44" stroke="#23241F" stroke-width="2"/>
+<line x1="16" y1="140" x2="304" y2="140" stroke="#DCD3BC" stroke-width="1"/>
+<text x="16" y="179.36" font-family="JetBrains Mono Medium, JetBrains Mono" font-size="26" font-weight="500" fill="#5B584C" letter-spacing="0.4" data-text="Суббота, 29">Суббота, 29</text>
+<text x="16" y="215.36" font-family="JetBrains Mono Medium, JetBrains Mono" font-size="26" font-weight="500" fill="#5B584C" letter-spacing="0.4" data-text="августа 2026">августа 2026</text>
+</g>
+<g data-component="DailyIssuePanel">
+<rect x="16" y="248" width="3" height="452" fill="#2C4A3E"/>
+<text x="39" y="271.92" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="22" font-weight="700" fill="#9C4A2E" letter-spacing="3" data-text="Выпуск">ВЫПУСК</text>
+<text x="39" y="344.16" font-family="Noto Serif Medium, Noto Serif" font-size="56" font-weight="500" fill="#23241F" data-text="День">День</text>
+<text x="187.28" y="344.16" font-family="JetBrains Mono Bold, JetBrains Mono" font-size="80" font-weight="700" fill="#23241F" data-text="24">24</text>
+<line x1="39" y1="384" x2="304" y2="384" stroke="#DCD3BC" stroke-width="1"/>
+<text x="39" y="425.36" font-family="Golos Text Bold, Golos Text" font-size="22" font-weight="700" fill="#5B584C" letter-spacing="3" data-text="Серия">СЕРИЯ</text>
+<text x="39" y="464.88" font-family="Golos Text SemiBold, Golos Text" font-size="26" font-weight="600" fill="#23241F" letter-spacing="0.4" data-text="6 дней">6 дней</text>
+<line x1="39" y1="489" x2="304" y2="489" stroke="#DCD3BC" stroke-width="1"/>
+<text x="39" y="530.36" font-family="Golos Text Bold, Golos Text" font-size="22" font-weight="700" fill="#5B584C" letter-spacing="3" data-text="Лучший день">ЛУЧШИЙ ДЕНЬ</text>
+<text x="39" y="569.88" font-family="Golos Text SemiBold, Golos Text" font-size="26" font-weight="600" fill="#23241F" letter-spacing="0.4" data-text="17 из 18">17 из 18</text>
+<line x1="39" y1="594" x2="304" y2="594" stroke="#DCD3BC" stroke-width="1"/>
+<text x="39" y="635.36" font-family="Golos Text Bold, Golos Text" font-size="22" font-weight="700" fill="#5B584C" letter-spacing="3" data-text="Сыграно дней">СЫГРАНО ДНЕЙ</text>
+<text x="39" y="674.88" font-family="Golos Text SemiBold, Golos Text" font-size="26" font-weight="600" fill="#23241F" letter-spacing="0.4" data-text="23">23</text>
+<line x1="39" y1="699" x2="304" y2="699" stroke="#DCD3BC" stroke-width="1"/>
+</g>
+<g data-component="PrimaryButton">
+<rect x="16" y="740" width="288" height="64" rx="8" fill="#2C4A3E"/>
+<text x="160" y="783.4" font-family="Golos Text SemiBold, Golos Text" font-size="30" font-weight="600" fill="#F6F0E2" letter-spacing="0.2" text-anchor="middle" data-text="Играть">Играть</text>
+</g>
+</g>
+</g>
+<rect x="40" y="245.62" width="320" height="844" rx="32" fill="none" stroke="#23241F" stroke-width="2"/>
+</svg>
