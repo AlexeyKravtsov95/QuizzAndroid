@@ -24,4 +24,9 @@ interface DayResultDao {
     // PR 2B, ProgressRepository: чтение диапазона ISO-дат для архива/статистики.
     @Query("SELECT * FROM day_results WHERE local_date BETWEEN :from AND :to ORDER BY local_date")
     suspend fun getRange(from: String, to: String): List<DayResultEntity>
+
+    // Read-only диагностический дамп общего назначения (PR 2C, debug-экран, §8):
+    // не debug-тип, архитектуру не меняет.
+    @Query("SELECT * FROM day_results ORDER BY local_date DESC")
+    fun observeAll(): Flow<List<DayResultEntity>>
 }

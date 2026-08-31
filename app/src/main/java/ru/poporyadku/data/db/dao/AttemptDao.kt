@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 import ru.poporyadku.data.db.entity.PuzzleAttemptEntity
 
 // Фундамент схемы (PR 2A). UNIQUE(local_date, slot_index) отбивает повторную запись
@@ -20,4 +21,9 @@ interface AttemptDao {
 
     @Query("SELECT * FROM puzzle_attempts WHERE local_date = :localDate ORDER BY slot_index")
     suspend fun getByDate(localDate: String): List<PuzzleAttemptEntity>
+
+    // Read-only диагностический дамп общего назначения (PR 2C, debug-экран, §8):
+    // не debug-тип, архитектуру не меняет.
+    @Query("SELECT * FROM puzzle_attempts ORDER BY local_date DESC, slot_index")
+    fun observeAll(): Flow<List<PuzzleAttemptEntity>>
 }
