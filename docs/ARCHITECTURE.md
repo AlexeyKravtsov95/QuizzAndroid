@@ -606,7 +606,7 @@ interface EntitlementsRepository {
 
 - `PuzzleViewModel`: перестановки меняют состояние; `Submit` пишет попытку ровно один раз; повторный `Submit` игнорируется; восстановление порядка из `SavedStateHandle`; открытие уже отвеченной головоломки даёт редирект;
 - `HomeViewModel`: переходы `Ready → InProgress → Completed`; `AwaitingNextDay` при переводе часов назад; `ContentExhausted` после последнего набора; смена даты пересчитывает состояние;
-- `ProgressRepository` — на in-memory Room (`Room.inMemoryDatabaseBuilder`, тест JVM через Robolectric или instrumented — решается на итерации 2): уникальность `(local_date, slot_index)`, уникальность `local_date` и `(pack_id, set_index)` в `day_assignments`, корректность агрегатов `day_results` при максимуме 18.
+- `ProgressRepository` — на in-memory Room (`Room.inMemoryDatabaseBuilder`, тест JVM через Robolectric — решено `ITERATION_2_DESIGN.md`, D-2): уникальность `(local_date, slot_index)`, уникальность `local_date` и `(pack_id, set_index)` в `day_assignments`, корректность агрегатов `day_results` при максимуме 18.
 
 ### Уровень 3 — инструментальные тесты (минимум, только критичное)
 

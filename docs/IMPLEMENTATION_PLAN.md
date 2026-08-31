@@ -213,6 +213,7 @@
 
 **Работа.**
 
+- Подключить `androidx.room:room-testing` вместе с первой настоящей миграцией и `MigrationTestHelper` (`ITERATION_2_DESIGN.md`, D-22 — единственный нужный проекту API из этого артефакта).
 - Финализировать JSON Schema (`tools/content-schema.json`) по `CONTENT_MODEL.md`: `correctOrder` в `required`, `sourceIds` у каждой карточки, `kind` у источников, `url` или `reference`, флаг `disputed`.
 - Написать валидатор `tools/validate-content` со всеми **21 правилом**, включая блок покрытия источниками (правила 11–17); подключить в CI и в проверку при старте debug-сборки.
 - Подготовить контент по редакторскому протоколу: каждая карточка — минимум один авторитетный источник, два источника для `slow` и `disputed`.
