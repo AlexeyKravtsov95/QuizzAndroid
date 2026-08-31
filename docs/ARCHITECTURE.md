@@ -372,44 +372,54 @@ object StreakCalculator {
 
 ### Назначение набора
 
-```kotlin
-// domain/assignment
-class SetAssignmentPolicy(
-    private val assignments: AssignmentDao,
-    private val setCount: Int
-) {
-    sealed interface Decision {
-        data class NewSet(val setIndex: Int) : Decision       // создать строку
-        data class CarryOver(                                 // перенести отложенную строку
-            val setIndex: Int,
-            val fromDate: LocalDate
-        ) : Decision
-        data class Assigned(val setIndex: Int) : Decision     // уже назначен на сегодня
-        data object AwaitingNextDay : Decision                // часы переведены назад
-        data object ContentExhausted : Decision
-    }
+`SetAssignmentPolicy` — **чистая синхронная функция** от уже прочитанного снимка, а не класс с DAO и константой `setCount` в конструкторе (`ITERATION_2_DESIGN.md`, D-3/D-4/D-20): `data`-тип в `domain` нарушал бы правило раздела 1, а `setCount` константой был бы несовместим с тем, что число наборов известно только после импорта контента.
 
-    suspend fun decide(today: LocalDate): Decision
+```kotlin
+// domain/assignment/AssignmentSnapshot.kt
+data class AssignmentSnapshot(
+    val pendingAssignments: List<DayAssignment>,   // глобально, ≤ 1 по инварианту
+    val todayAssignment: DayAssignment?,           // глобально
+    val lastAssignedDate: LocalDate?,               // глобально: MAX(local_date)
+    val activePackId: String,
+    val maxSetIndexInActivePack: Int?,              // pack-scoped
+    val setCountInActivePack: Int,                  // pack-scoped, читается из daily_sets
+)
+
+// domain/assignment/Decision.kt — решения несут packId явно
+sealed interface Decision {
+    data class NewSet(val packId: String, val setIndex: Int) : Decision
+    data class CarryOver(val packId: String, val setIndex: Int, val fromDate: LocalDate) : Decision
+    data class Assigned(val packId: String, val setIndex: Int) : Decision
+    data object AwaitingNextDay : Decision
+    data object ContentExhausted : Decision
+}
+
+// domain/assignment/SetAssignmentPolicy.kt — ни зависимостей, ни suspend, ни ввода-вывода
+object SetAssignmentPolicy {
+    fun decide(today: LocalDate, snapshot: AssignmentSnapshot): Decision
 }
 ```
 
-Правила, которые реализует политика (полное описание — `UX_FLOW.md`, раздел 9):
+Правила, которые реализует политика (полное описание — `UX_FLOW.md`, раздел 9, и `ITERATION_2_DESIGN.md`, D-20):
 
-1. Есть **отложенное** назначение (ноль попыток):
+0. Первым действием проверяет инвариант `require(pendingAssignments.size <= 1)` — нарушение бросает исключение, а не молча берёт первую строку.
+1. Есть **отложенное** назначение (ноль попыток, глобально по всем пакетам):
    - его дата равна сегодняшней → `Assigned`, Home показывает `InProgress` и «Продолжить»;
    - его дата в прошлом → `CarryOver`;
    - его дата в будущем (часы переведены назад) → `AwaitingNextDay`, строка не двигается.
-2. Отложенного нет, но есть назначение на сегодня → `Assigned`.
-3. Иначе `today <= max(local_date)` → `AwaitingNextDay`. Защита от перевода часов назад, включая многократное «туда-обратно» за реальные сутки.
-4. Иначе `next = max(set_index) + 1`; при выходе за `setCount` → `ContentExhausted`.
+2. Отложенного нет, но есть назначение на сегодня (тоже глобально) → `Assigned`.
+3. Иначе `today <= lastAssignedDate` (глобально) → `AwaitingNextDay`. Защита от перевода часов назад, включая многократное «туда-обратно» за реальные сутки; переключение активного пакета её не обходит.
+4. Иначе `next = maxSetIndexInActivePack + 1`, только в активном пакете; при `next >= setCountInActivePack` → `ContentExhausted`.
 
-`StartDailySessionUseCase` исполняет решение при переходе `Home → Puzzle(0)`, в одной транзакции:
+Снимок собирается реализацией `DayAssignmentRepository` внутри одной Room-транзакции — политика сама к базе не обращается.
+
+`StartDailySessionUseCase` — `suspend operator fun invoke(): Decision`, без параметра даты; время внедряется в `data`-реализацию репозитория через `ClockProvider` (`core/time`, D-16), а не приходит из UI. Репозиторий исполняет решение при переходе `Home → Puzzle(0)`, в одной транзакции со сборкой снимка:
 
 | Решение | Действие |
 | --- | --- |
 | `NewSet` | `INSERT` строки `(today, packId, setIndex, now)` |
-| `CarryOver` | `UPDATE` существующей строки: `local_date = today`, `assigned_at = now`; `set_index` не меняется |
-| `Assigned` | ничего |
+| `CarryOver` | `UPDATE` существующей строки: `local_date = today`, `assigned_at = now`; `set_index` и `pack_id` не меняются |
+| `Assigned`, `AwaitingNextDay`, `ContentExhausted` | ничего |
 
 Перенос идёт **только вперёд**. Набор становится израсходованным не в момент назначения, а в момент первой записанной попытки — именно поэтому «нажал „Играть" и вышел» не стоит пользователю ни одного задания.
 

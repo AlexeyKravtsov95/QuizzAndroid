@@ -50,6 +50,11 @@ jobs:
       - name: Unit tests
         run: ./gradlew testDebugUnitTest
 
+      # ITERATION_2_DESIGN.md, PR 2B: P17 (SystemClockProviderTest) живёт в src/testRelease
+      # и без этого шага не запускался бы вообще.
+      - name: Release unit tests
+        run: ./gradlew testReleaseUnitTest
+
       - name: Upload lint report
         if: always()
         uses: actions/upload-artifact@v7.0.1
