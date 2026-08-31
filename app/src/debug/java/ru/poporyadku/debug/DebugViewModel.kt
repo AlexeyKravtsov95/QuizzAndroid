@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
 import java.time.LocalTime
 import javax.inject.Inject
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -144,10 +145,17 @@ class DebugViewModel @Inject constructor(
         _uiState.update { it.copy(diagnostics = view) }
     }
 
-    /** Общий каркас: ошибка отражается в состоянии, а не теряется молча. */
+    /** Общий каркас: ошибка отражается в состоянии, а не теряется молча.
+     *  runCatching здесь не годится — он ловит и CancellationException, что подавляет
+     *  отмену viewModelScope; поэтому явный try/catch с обязательным throw для неё. */
     private fun launchTracked(block: suspend () -> Unit) = viewModelScope.launch {
-        runCatching { block() }
-            .onSuccess { _uiState.update { it.copy(error = null) } }
-            .onFailure { e -> _uiState.update { it.copy(error = e.message ?: e.toString()) } }
+        try {
+            block()
+            _uiState.update { it.copy(error = null) }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            _uiState.update { it.copy(error = e.message ?: e.toString()) }
+        }
     }
 }
