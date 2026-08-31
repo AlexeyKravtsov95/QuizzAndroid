@@ -27,6 +27,17 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6.3.0
 
+      # ITERATION_2_DESIGN.md, D-2: Robolectric резолвит android-all instrumented jars
+      # (~190 МБ) собственным резолвером, мимо кэша ~/.gradle из setup-gradle — кэшируется
+      # отдельно. Ключ учитывает ОС и версию Robolectric из каталога версий.
+      - name: Cache Robolectric android-all jars
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository/org/robolectric
+          key: ${{ runner.os }}-robolectric-${{ hashFiles('gradle/libs.versions.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-robolectric-
+
       - name: Assemble debug APK
         run: ./gradlew assembleDebug
 
