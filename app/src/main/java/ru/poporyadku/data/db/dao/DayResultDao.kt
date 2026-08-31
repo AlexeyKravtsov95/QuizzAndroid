@@ -20,4 +20,8 @@ interface DayResultDao {
 
     @Query("SELECT * FROM day_results WHERE local_date = :localDate")
     fun observeByDate(localDate: String): Flow<DayResultEntity?>
+
+    // PR 2B, ProgressRepository: чтение диапазона ISO-дат для архива/статистики.
+    @Query("SELECT * FROM day_results WHERE local_date BETWEEN :from AND :to ORDER BY local_date")
+    suspend fun getRange(from: String, to: String): List<DayResultEntity>
 }
