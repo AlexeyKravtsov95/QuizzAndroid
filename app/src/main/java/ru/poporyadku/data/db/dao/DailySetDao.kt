@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 import ru.poporyadku.data.db.entity.DailySetEntity
 
 // Фундамент схемы (PR 2A). upsertAll — CONTENT_MODEL.md, §7 ("upsert наборов по
@@ -20,4 +21,9 @@ interface DailySetDao {
 
     @Query("SELECT COUNT(*) FROM daily_sets WHERE pack_id = :packId")
     suspend fun countSets(packId: String): Int
+
+    // Read-only диагностический дамп общего назначения (PR 2C, debug-экран, §8):
+    // не debug-тип, архитектуру не меняет.
+    @Query("SELECT * FROM daily_sets ORDER BY pack_id, set_index")
+    fun observeAll(): Flow<List<DailySetEntity>>
 }

@@ -1,8 +1,9 @@
 [versions]
 # Проверено по официальным страницам релизов 30.08.2026 — источники и даты проверки
-# зафиксированы в docs/VERSIONS.md. DataStore/WorkManager/kotlinx-serialization/
-# Turbine пока НЕ подключены к app (см. [libraries] ниже и docs/VERSIONS.md) — версии
-# зафиксированы заранее, чтобы не искать их заново при подключении в будущих итерациях.
+# зафиксированы в docs/VERSIONS.md. DataStore и Turbine подключены к app в итерации 2C
+# (ITERATION_2_DESIGN.md, D-18). WorkManager/kotlinx-serialization пока НЕ подключены
+# (см. [libraries] ниже и docs/VERSIONS.md) — версии зафиксированы заранее, чтобы не
+# искать их заново при подключении в будущих итерациях.
 agp = "9.3.2"
 kotlin = "2.4.10"
 composeBom = "2026.08.00"
@@ -22,11 +23,11 @@ ksp = "2.3.11"
 robolectric = "4.16.1"
 androidxTestCore = "1.7.0"
 kotlinxCoroutinesTest = "1.11.0"
-# Не подключены к app — см. docs/VERSIONS.md.
 datastore = "1.2.1"
+turbine = "1.2.1"
+# Не подключены к app — см. docs/VERSIONS.md.
 workManager = "2.11.2"
 kotlinxSerialization = "1.11.0"
-turbine = "1.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -59,11 +60,12 @@ robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "
 androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidxTestCore" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 
-# Не подключены к app в этом PR (см. docs/VERSIONS.md) — версии зафиксированы для итераций 2+.
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+
+# Не подключены к app в этом PR (см. docs/VERSIONS.md) — версии зафиксированы для итераций 4+.
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workManager" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
-turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
