@@ -51,35 +51,9 @@ class DatabaseSchemaTest {
         )
     }
 
-    // C1: уникальность day_assignments.local_date (первичный ключ).
+    // C1: уникальность puzzle_attempts(local_date, slot_index).
     @Test
-    fun `C1 - day_assignments local_date is unique`() = runTest {
-        val dao = db.assignmentDao()
-        dao.insert(DayAssignmentEntity(localDate = "2026-09-01", packId = "core-ru", setIndex = 0, assignedAt = 1L))
-
-        assertThrows(SQLiteConstraintException::class.java) {
-            runBlocking {
-                dao.insert(DayAssignmentEntity(localDate = "2026-09-01", packId = "core-ru", setIndex = 1, assignedAt = 2L))
-            }
-        }
-    }
-
-    // C2: уникальность day_assignments(pack_id, set_index).
-    @Test
-    fun `C2 - day_assignments pack_id set_index is unique`() = runTest {
-        val dao = db.assignmentDao()
-        dao.insert(DayAssignmentEntity(localDate = "2026-09-01", packId = "core-ru", setIndex = 0, assignedAt = 1L))
-
-        assertThrows(SQLiteConstraintException::class.java) {
-            runBlocking {
-                dao.insert(DayAssignmentEntity(localDate = "2026-09-02", packId = "core-ru", setIndex = 0, assignedAt = 2L))
-            }
-        }
-    }
-
-    // C3: уникальность puzzle_attempts(local_date, slot_index).
-    @Test
-    fun `C3 - puzzle_attempts local_date slot_index is unique`() = runTest {
+    fun `C1 - puzzle_attempts local_date slot_index is unique`() = runTest {
         val dao = db.attemptDao()
         dao.insert(
             PuzzleAttemptEntity(
@@ -104,6 +78,32 @@ class DatabaseSchemaTest {
                         submittedAt = 2L,
                     )
                 )
+            }
+        }
+    }
+
+    // C2: уникальность day_assignments.local_date (первичный ключ).
+    @Test
+    fun `C2 - day_assignments local_date is unique`() = runTest {
+        val dao = db.assignmentDao()
+        dao.insert(DayAssignmentEntity(localDate = "2026-09-01", packId = "core-ru", setIndex = 0, assignedAt = 1L))
+
+        assertThrows(SQLiteConstraintException::class.java) {
+            runBlocking {
+                dao.insert(DayAssignmentEntity(localDate = "2026-09-01", packId = "core-ru", setIndex = 1, assignedAt = 2L))
+            }
+        }
+    }
+
+    // C3: уникальность day_assignments(pack_id, set_index).
+    @Test
+    fun `C3 - day_assignments pack_id set_index is unique`() = runTest {
+        val dao = db.assignmentDao()
+        dao.insert(DayAssignmentEntity(localDate = "2026-09-01", packId = "core-ru", setIndex = 0, assignedAt = 1L))
+
+        assertThrows(SQLiteConstraintException::class.java) {
+            runBlocking {
+                dao.insert(DayAssignmentEntity(localDate = "2026-09-02", packId = "core-ru", setIndex = 0, assignedAt = 2L))
             }
         }
     }
