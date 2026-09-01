@@ -1,8 +1,11 @@
 package ru.poporyadku.data.progress
 
+import android.database.sqlite.SQLiteConstraintException
 import androidx.room.withTransaction
 import java.time.LocalDate
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import ru.poporyadku.core.model.DayResult
 import ru.poporyadku.core.model.PuzzleAttempt
 import ru.poporyadku.core.time.ClockProvider
@@ -12,6 +15,7 @@ import ru.poporyadku.data.db.dao.DayResultDao
 import ru.poporyadku.data.db.entity.DayResultEntity
 import ru.poporyadku.data.db.mapper.toDomain
 import ru.poporyadku.data.db.mapper.toEntity
+import ru.poporyadku.domain.repository.AttemptAlreadyExistsException
 import ru.poporyadku.domain.repository.ProgressRepository
 import ru.poporyadku.domain.scoring.PairwiseScoreCalculator
 
@@ -32,9 +36,23 @@ class ProgressRepositoryImpl @Inject constructor(
         }
 
         val time = clock.now()
-        db.withTransaction {
-            attempts.insert(attempt.copy(submittedAt = time.epochMillis).toEntity())
-            recalculate(attempt.localDate, time.epochMillis)
+        try {
+            db.withTransaction {
+                attempts.insert(attempt.copy(submittedAt = time.epochMillis).toEntity())
+                recalculate(attempt.localDate, time.epochMillis)
+            }
+        } catch (e: SQLiteConstraintException) {
+            // ITERATION_3_DESIGN.md, I3-D42. Транзакция уже откатилась целиком, поэтому
+            // чтение ниже видит РЕАЛЬНОЕ состояние базы, а не состояние внутри неудавшейся
+            // транзакции. Единственное принимаемое доказательство «уже отвечено» —
+            // совпадение по (local_date, slot_index): любое другое нарушение ограничения
+            // (NOT NULL, будущая миграция, вложенный запрос) остаётся инфраструктурным
+            // сбоем и уходит наружу как есть, а не превращается в «вы уже отвечали».
+            val existing = attempts.getByDateAndSlot(attempt.localDate.toString(), attempt.slotIndex)
+            if (existing != null) {
+                throw AttemptAlreadyExistsException(attempt.localDate, attempt.slotIndex)
+            }
+            throw e
         }
     }
 
@@ -60,6 +78,23 @@ class ProgressRepositoryImpl @Inject constructor(
 
     override suspend fun getDayResults(from: LocalDate, to: LocalDate): List<DayResult> =
         results.getRange(from.toString(), to.toString()).map { it.toDomain() }
+
+    override suspend fun getAttempt(localDate: LocalDate, slotIndex: Int): PuzzleAttempt? =
+        attempts.getByDateAndSlot(localDate.toString(), slotIndex)?.toDomain()
+
+    override suspend fun getAttempts(localDate: LocalDate): List<PuzzleAttempt> =
+        attempts.getByDate(localDate.toString()).map { it.toDomain() }
+
+    override suspend fun getAllDayResults(): List<DayResult> =
+        results.getAll().map { it.toDomain() }
+
+    // ISO-строка → LocalDate выполняется здесь: TypeConverter'ов у базы нет (D-8),
+    // а domain про формат хранения не знает.
+    override suspend fun getCompletedDates(): List<LocalDate> =
+        results.completedDates().map(LocalDate::parse)
+
+    override fun observeDayResults(): Flow<List<DayResult>> =
+        results.observeAll().map { rows -> rows.map { it.toDomain() } }
 
     companion object {
         // ITERATION_3_DESIGN.md, I3-D6 (PR 3A): верхняя граница счёта берётся из общего

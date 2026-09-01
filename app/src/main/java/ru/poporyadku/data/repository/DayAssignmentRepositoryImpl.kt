@@ -3,6 +3,7 @@ package ru.poporyadku.data.repository
 import androidx.room.withTransaction
 import java.time.LocalDate
 import javax.inject.Inject
+import ru.poporyadku.core.model.DayAssignment
 import ru.poporyadku.core.time.ClockProvider
 import ru.poporyadku.data.db.AppDatabase
 import ru.poporyadku.data.db.dao.AssignmentDao
@@ -12,6 +13,7 @@ import ru.poporyadku.data.db.mapper.toDomain
 import ru.poporyadku.di.ActivePack
 import ru.poporyadku.domain.assignment.AssignmentSnapshot
 import ru.poporyadku.domain.assignment.Decision
+import ru.poporyadku.domain.assignment.DecisionContext
 import ru.poporyadku.domain.assignment.SetAssignmentPolicy
 import ru.poporyadku.domain.repository.DayAssignmentRepository
 
@@ -25,16 +27,19 @@ class DayAssignmentRepositoryImpl @Inject constructor(
     @ActivePack private val activePackId: String,
 ) : DayAssignmentRepository {
 
-    override suspend fun peek(): Decision {
+    override suspend fun peek(): DecisionContext {
         val time = clock.now() // один Instant, до транзакции
-        return db.withTransaction {
+        val decision = db.withTransaction {
             SetAssignmentPolicy.decide(time.localDate, snapshot(time.localDate))
         }
+        // I3-D40: контекст собирается из ТОГО ЖЕ снимка, что видела политика, —
+        // повторного обращения к часам после решения не появляется.
+        return DecisionContext(decision, time)
     }
 
-    override suspend fun startSession(): Decision {
+    override suspend fun startSession(): DecisionContext {
         val time = clock.now() // один Instant, до транзакции
-        return db.withTransaction {
+        val decision = db.withTransaction {
             val decision = SetAssignmentPolicy.decide(time.localDate, snapshot(time.localDate))
             when (decision) {
                 is Decision.NewSet -> dao.insert(
@@ -62,7 +67,12 @@ class DayAssignmentRepositoryImpl @Inject constructor(
             }
             decision
         }
+        return DecisionContext(decision, time)
     }
+
+    /** Только чтение (I3-D16): собственной транзакции не требует и ничего не создаёт. */
+    override suspend fun getAssignment(localDate: LocalDate): DayAssignment? =
+        dao.byDate(localDate.toString())?.toDomain()
 
     /**
      * Пять чтений одного согласованного состояния. Вызывается только внутри транзакции.

@@ -25,6 +25,19 @@ interface DayResultDao {
     @Query("SELECT * FROM day_results WHERE local_date BETWEEN :from AND :to ORDER BY local_date")
     suspend fun getRange(from: String, to: String): List<DayResultEntity>
 
+    // ITERATION_3_DESIGN.md, I3-D10 / I3-D14 (PR 3B): вся история, без окна.
+    // Лучшая серия по окну занижалась бы молча, а статистика Home считается из одной
+    // выборки. Дата остаётся ISO-строкой: TypeConverter'ов у базы нет (D-8), разбор
+    // в LocalDate выполняет data-слой.
+
+    /** Все дни, по возрастанию даты: статистика и hasAnyAttemptEver Home. */
+    @Query("SELECT * FROM day_results ORDER BY local_date")
+    suspend fun getAll(): List<DayResultEntity>
+
+    /** Только завершённые дни — вход StreakCalculator (I3-D10). */
+    @Query("SELECT local_date FROM day_results WHERE is_complete = 1 ORDER BY local_date")
+    suspend fun completedDates(): List<String>
+
     // Read-only диагностический дамп общего назначения (PR 2C, debug-экран, §8):
     // не debug-тип, архитектуру не меняет.
     @Query("SELECT * FROM day_results ORDER BY local_date DESC")
