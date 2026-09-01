@@ -46,6 +46,7 @@ class DebugViewModel @Inject constructor(
     private val sessionController: DebugSessionController,
     private val diagnostics: DebugDiagnostics,
     private val fixture: DebugContentFixture,
+    private val temporaryContentReset: TemporaryContentReset,
     private val database: AppDatabase,
     assignmentDao: AssignmentDao,
     attemptDao: AttemptDao,
@@ -100,6 +101,13 @@ class DebugViewModel @Inject constructor(
         // clearAllTables() блокирующий, не suspend — Room запрещает вызывать его
         // на главном потоке (viewModelScope по умолчанию на Dispatchers.Main).
         withContext(Dispatchers.IO) { database.clearAllTables() }
+        _uiState.update { it.copy(lastDecision = null, diagnostics = null) }
+    }
+
+    /** ITERATION_3_DESIGN.md, I3-D48: явное восстановление после конфликта установки
+     *  контента. Очищает всю базу Room целиком — весь прогресс и весь контент. */
+    fun resetTemporaryContent() = launchTracked {
+        temporaryContentReset.perform()
         _uiState.update { it.copy(lastDecision = null, diagnostics = null) }
     }
 

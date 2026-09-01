@@ -13,6 +13,7 @@ import ru.poporyadku.data.db.entity.DayResultEntity
 import ru.poporyadku.data.db.mapper.toDomain
 import ru.poporyadku.data.db.mapper.toEntity
 import ru.poporyadku.domain.repository.ProgressRepository
+import ru.poporyadku.domain.scoring.PairwiseScoreCalculator
 
 // ITERATION_2_DESIGN.md, D-5 / D-17. Room не поддерживает CHECK-ограничения — домен
 // обязан держать диапазоны сам, до открытия транзакции: некорректный вызов — дефект
@@ -26,8 +27,8 @@ class ProgressRepositoryImpl @Inject constructor(
 
     override suspend fun recordAttempt(attempt: PuzzleAttempt) {
         require(attempt.slotIndex in 0..2) { "slotIndex вне 0..2: ${attempt.slotIndex}" }
-        require(attempt.score in 0..MAX_SCORE_PER_PUZZLE) {
-            "score вне 0..$MAX_SCORE_PER_PUZZLE: ${attempt.score}"
+        require(attempt.score in 0..PairwiseScoreCalculator.MAX_PER_PUZZLE) {
+            "score вне 0..${PairwiseScoreCalculator.MAX_PER_PUZZLE}: ${attempt.score}"
         }
 
         val time = clock.now()
@@ -61,9 +62,9 @@ class ProgressRepositoryImpl @Inject constructor(
         results.getRange(from.toString(), to.toString()).map { it.toDomain() }
 
     companion object {
-        // ARCHITECTURE.md, §4: MAX_PER_PUZZLE = C(4,2) = 6. PairwiseScoreCalculator сам
-        // не реализуется в PR 2B (ITERATION_2_DESIGN.md, «намеренно не входит»).
-        private const val MAX_SCORE_PER_PUZZLE = 6
+        // ITERATION_3_DESIGN.md, I3-D6 (PR 3A): верхняя граница счёта берётся из общего
+        // контракта PairwiseScoreCalculator.MAX_PER_PUZZLE, а не из приватного литерала, —
+        // связь с C(4,2) видна в коде, как и обещал D-17.
         private const val COMPLETED_SET_SIZE = 3
     }
 }
