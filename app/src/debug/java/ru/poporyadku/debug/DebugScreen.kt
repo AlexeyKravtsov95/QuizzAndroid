@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -24,9 +25,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import java.time.LocalDate
+import ru.poporyadku.R
 import ru.poporyadku.core.model.ThemeMode
 import ru.poporyadku.data.db.entity.DailySetEntity
 import ru.poporyadku.data.db.entity.DayAssignmentEntity
@@ -64,6 +67,28 @@ fun DebugScreen(viewModel: DebugViewModel = hiltViewModel()) {
     var streakCurrentText by rememberSaveable { mutableStateOf("0") }
     var streakBestText by rememberSaveable { mutableStateOf("0") }
     var streakDateText by rememberSaveable { mutableStateOf(uiState.selectedDate.toString()) }
+    var resetDialogVisible by rememberSaveable { mutableStateOf(false) }
+
+    // ITERATION_3_DESIGN.md, I3-D48: действие необратимо и удаляет весь локальный
+    // прогресс, поэтому подтверждение обязательно, а текст называет цену прямо.
+    if (resetDialogVisible) {
+        AlertDialog(
+            onDismissRequest = { resetDialogVisible = false },
+            title = { Text(stringResource(R.string.debug_reset_temporary_content_title)) },
+            text = { Text(stringResource(R.string.debug_reset_temporary_content_message)) },
+            confirmButton = {
+                Button(onClick = {
+                    resetDialogVisible = false
+                    viewModel.resetTemporaryContent()
+                }) { Text(stringResource(R.string.debug_reset_temporary_content_confirm)) }
+            },
+            dismissButton = {
+                Button(onClick = { resetDialogVisible = false }) {
+                    Text(stringResource(R.string.debug_reset_temporary_content_cancel))
+                }
+            },
+        )
+    }
 
     LazyColumn(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
         item {
@@ -102,6 +127,11 @@ fun DebugScreen(viewModel: DebugViewModel = hiltViewModel()) {
             ScrollableRow {
                 Button(onClick = { viewModel.installFixture(5) }) { Text("Залить фикстуру (5 наборов)") }
                 Button(onClick = { viewModel.clearDatabase() }) { Text("Очистить базу") }
+            }
+            ScrollableRow {
+                Button(onClick = { resetDialogVisible = true }) {
+                    Text(stringResource(R.string.debug_reset_temporary_content))
+                }
             }
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
         }
