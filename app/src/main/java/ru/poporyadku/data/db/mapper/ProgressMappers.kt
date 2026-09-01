@@ -31,7 +31,10 @@ fun PuzzleAttemptEntity.toDomain(): PuzzleAttempt = PuzzleAttempt(
     localDate = LocalDate.parse(localDate),
     slotIndex = slotIndex,
     puzzleId = puzzleId,
-    submittedOrder = submittedOrder.split(","),
+    // ITERATION_3_DESIGN.md, I3-D36 / §19 (I3-U16): пропуск хранится пустой строкой,
+    // а "".split(",") даёт listOf("") — список из одной пустой карточки, который
+    // AttemptKind.of классифицировал бы как Answered.
+    submittedOrder = if (submittedOrder.isEmpty()) emptyList() else submittedOrder.split(","),
     score = score,
     submittedAt = submittedAt,
 )

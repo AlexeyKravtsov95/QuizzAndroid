@@ -1,6 +1,5 @@
 package ru.poporyadku.data.progress
 
-import android.database.sqlite.SQLiteConstraintException
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import java.time.Clock
@@ -22,6 +21,7 @@ import org.robolectric.RobolectricTestRunner
 import ru.poporyadku.core.model.PuzzleAttempt
 import ru.poporyadku.core.time.FakeClockProvider
 import ru.poporyadku.data.db.AppDatabase
+import ru.poporyadku.domain.repository.AttemptAlreadyExistsException
 
 // ITERATION_2_DESIGN.md, §4: C4–C6. Robolectric, repository строится напрямую с
 // FakeClockProvider.
@@ -86,9 +86,15 @@ class ProgressRepositoryTest {
     fun `C5 - a rejected attempt does not corrupt day_results`() = runTest {
         repo.recordAttempt(attempt(0, 6))
 
-        assertThrows(SQLiteConstraintException::class.java) {
+        // ITERATION_3_DESIGN.md, I3-D42 (PR 3B): доказанный повтор по (local_date, slot_index)
+        // выходит наружу доменным типом, а не android.database.sqlite.SQLiteConstraintException;
+        // транзакция по-прежнему откатывается целиком. Отказ по другой причине пробрасывается
+        // как есть — это проверяет I3-U26.
+        val repeated = assertThrows(AttemptAlreadyExistsException::class.java) {
             runBlocking { repo.recordAttempt(attempt(0, 3)) } // тот же (local_date, slot_index)
         }
+        assertEquals(date, repeated.localDate)
+        assertEquals(0, repeated.slotIndex)
 
         val result = repo.getDayResult(date)
         assertEquals(6, result?.totalScore)

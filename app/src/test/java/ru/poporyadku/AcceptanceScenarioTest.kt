@@ -71,14 +71,14 @@ class AcceptanceScenarioTest {
     @Test
     fun `full sequential assignment scenario end to end`() = runTest {
         // 2. День 1 — startSession без попыток создаёт набор N (= 0).
-        val day1 = assignments.startSession()
+        val day1 = assignments.startSession().decision
         assertEquals(Decision.NewSet(ContentPack.CORE_RU, 0), day1)
         assertEquals(1, db.assignmentDao().pendingAssignments().size)
         assertEquals("2026-09-01", db.assignmentDao().pendingAssignments().single().localDate)
 
         // 3. День 2 — переносит ту же строку: packId и setIndex сохранены, второй строки нет.
         clock.setDate(LocalDate.of(2026, 9, 2))
-        val day2 = assignments.startSession()
+        val day2 = assignments.startSession().decision
         assertEquals(Decision.CarryOver(ContentPack.CORE_RU, 0, LocalDate.of(2026, 9, 1)), day2)
         val carried = db.assignmentDao().pendingAssignments().single()
         assertEquals(ContentPack.CORE_RU, carried.packId)
@@ -102,14 +102,14 @@ class AcceptanceScenarioTest {
 
         // 5. День 3 — выдаёт N + 1 (= 1), а не восьмой и не тот же самый.
         clock.setDate(LocalDate.of(2026, 9, 3))
-        val day3 = assignments.startSession()
+        val day3 = assignments.startSession().decision
         assertEquals(Decision.NewSet(ContentPack.CORE_RU, 1), day3)
 
         // 6. Перевод даты назад.
         clock.setDate(LocalDate.of(2026, 9, 2))
 
         // 7. AwaitingNextDay — не выдан лишний набор, старая строка не тронута.
-        val decision = assignments.startSession()
+        val decision = assignments.startSession().decision
         assertEquals(Decision.AwaitingNextDay, decision)
 
         // 8. Ни лишних строк, ни повреждённого progress.

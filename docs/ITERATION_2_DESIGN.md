@@ -1692,8 +1692,16 @@ rg -n "AssignmentDao|Repository|androidx\." \
 # продуктовый API не принимает дату
 rg -n "LocalDate|today" \
    app/src/main/java/ru/poporyadku/domain/usecase/StartDailySessionUseCase.kt ; echo "exit=$?"   # ожидаем 1
-rg -n "LocalDate|TimeSnapshot" \
-   app/src/main/java/ru/poporyadku/domain/repository/DayAssignmentRepository.kt ; echo "exit=$?"  # ожидаем 1
+# ITERATION_3_DESIGN.md, I3-D16 (PR 3B): инвариант D-16 относится к ЗАПИСИ. peek() и
+# startSession() даты не принимают; getAssignment(localDate) её принимает, но ничего не
+# создаёт — подделать им назначение нельзя. Прежняя проверка «ни одной строки с LocalDate»
+# стала неверной и заменена двумя.
+rg -n "fun peek\(|fun startSession\(" \
+   app/src/main/java/ru/poporyadku/domain/repository/DayAssignmentRepository.kt
+#   ожидаем сигнатуры без параметров
+rg -n "suspend fun .*\(.*LocalDate" \
+   app/src/main/java/ru/poporyadku/domain/repository/DayAssignmentRepository.kt
+#   ожидаем ровно одну строку — getAssignment(localDate), метод только для чтения
 
 # TimeSnapshot нельзя собрать из независимых date и millis (D-16)
 rg -n "data class TimeSnapshot" app/src ; echo "exit=$?"                                  # ожидаем 1

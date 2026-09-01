@@ -89,7 +89,7 @@ class PackScopeTest {
             }
         }
 
-        val decision = repository("pack-b", LocalDate.of(2026, 9, 1)).startSession()
+        val decision = repository("pack-b", LocalDate.of(2026, 9, 1)).startSession().decision
 
         assertEquals(Decision.Assigned("pack-a", 3), decision)
         assertEquals(1, db.assignmentDao().pendingAssignments().size)
@@ -129,7 +129,7 @@ class PackScopeTest {
         )
         // lastAssignedDate == 2026-09-01. Дата ниже строго раньше него, чтобы проверить
         // именно ветку "today <= lastAssignedDate", а не todayAssignment (её покрывает A10).
-        val decision = repository("pack-b", LocalDate.of(2026, 8, 31)).startSession()
+        val decision = repository("pack-b", LocalDate.of(2026, 8, 31)).startSession().decision
 
         assertEquals(Decision.AwaitingNextDay, decision)
         // pendingAssignments пуст: у pack-a есть попытка, у pack-b строка не создана.

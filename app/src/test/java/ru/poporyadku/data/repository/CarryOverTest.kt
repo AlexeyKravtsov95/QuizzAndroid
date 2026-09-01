@@ -71,7 +71,7 @@ class CarryOverTest {
 
     @Test
     fun `A1 - first session with no attempts creates a single row`() = runTest {
-        val decision = repository().startSession()
+        val decision = repository().startSession().decision
 
         assertEquals(Decision.NewSet(ContentPack.CORE_RU, 0), decision)
         val all = db.assignmentDao().pendingAssignments()
@@ -84,7 +84,7 @@ class CarryOverTest {
         repository().startSession()
 
         clock.setDate(LocalDate.of(2026, 9, 2))
-        val decision = repository().startSession()
+        val decision = repository().startSession().decision
 
         assertEquals(Decision.CarryOver(ContentPack.CORE_RU, 0, LocalDate.of(2026, 9, 1)), decision)
         val rows = db.assignmentDao().pendingAssignments()
@@ -100,7 +100,7 @@ class CarryOverTest {
         repository().startSession()
         val afterCarryOver = db.assignmentDao().byDate("2026-09-02")
 
-        val decision = repository().startSession()
+        val decision = repository().startSession().decision
 
         assertEquals(Decision.Assigned(ContentPack.CORE_RU, 0), decision)
         val afterRepeat = db.assignmentDao().byDate("2026-09-02")
@@ -114,7 +114,7 @@ class CarryOverTest {
         db.attemptDao().insert(attempt("2026-09-01"))
 
         clock.setDate(LocalDate.of(2026, 9, 2))
-        val decision = repository().startSession()
+        val decision = repository().startSession().decision
 
         assertEquals(Decision.NewSet(ContentPack.CORE_RU, 1), decision)
         assertEquals(0, db.assignmentDao().byDate("2026-09-01")?.setIndex)
@@ -127,7 +127,7 @@ class CarryOverTest {
 
         clock.setDate(LocalDate.of(2026, 8, 31))
         val before = db.assignmentDao().byDate("2026-09-01")
-        val decision = repository().startSession()
+        val decision = repository().startSession().decision
         val after = db.assignmentDao().byDate("2026-09-01")
 
         assertEquals(Decision.AwaitingNextDay, decision)
@@ -171,7 +171,7 @@ class CarryOverTest {
         clock.setDate(LocalDate.of(2026, 9, 2))
 
         // peek() строит тот же снимок в своей транзакции и ничего не пишет.
-        val decision = repository().peek()
+        val decision = repository().peek().decision
 
         assertEquals(Decision.CarryOver(ContentPack.CORE_RU, 0, LocalDate.of(2026, 9, 1)), decision)
         assertNull(db.assignmentDao().byDate("2026-09-02"))
