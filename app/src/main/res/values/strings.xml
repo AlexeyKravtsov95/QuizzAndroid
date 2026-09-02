@@ -5,8 +5,6 @@
     <!-- Итерация 1: экраны-заглушки. Реальное содержимое появится в итерациях 3 и 5. -->
     <string name="stub_placeholder_caption">Заглушка итерации 1 — экран появится в следующих итерациях</string>
 
-    <string name="stub_home_title">По порядку!</string>
-    <string name="stub_home_play">Играть</string>
     <string name="cd_archive">Архив</string>
     <string name="cd_settings">Настройки</string>
 
@@ -17,12 +15,98 @@
     <string name="stub_puzzle_result_next">Дальше</string>
     <string name="stub_puzzle_result_next_final">К итогу дня</string>
 
-    <string name="stub_recap_today_title">Сегодня</string>
-    <string name="stub_recap_done">Готово</string>
 
     <string name="stub_archive_title">Архив</string>
     <string name="stub_archive_open_recap">Итог за %1$s</string>
     <string name="stub_settings_title">Настройки</string>
 
     <string name="cd_back">Назад</string>
+
+    <!--
+      Итерация 3, PR 3C. Все пользовательские строки Home и DayRecap — здесь; в коде
+      экранов и компонентов литеральных строк нет (UI_REVIEW_CHECKLIST.md, «Токены»).
+      Формулировки перенесены дословно из UX_FLOW.md и COMPONENTS.md.
+    -->
+
+    <!-- Общие компоненты -->
+    <string name="category_history">История</string>
+    <string name="category_geography">География</string>
+    <string name="category_science">Наука</string>
+    <string name="category_nature">Природа</string>
+    <string name="category_culture">Культура</string>
+    <string name="category_russia">Россия</string>
+    <string name="category_mixed">Смешанное</string>
+    <string name="cd_category">Категория: %1$s</string>
+
+    <string name="statistics_title">Статистика</string>
+
+    <!-- Home -->
+    <string name="home_masthead">По порядку!</string>
+    <string name="home_first_run_intro">Три задания в день. Расставьте карточки в правильном порядке</string>
+    <string name="home_issue_label">Выпуск</string>
+    <string name="home_issue_number_word">День</string>
+    <string name="home_first_run_caption">Задание дня · 3 головоломки · 2–4 минуты</string>
+
+    <string name="home_stat_streak">Серия</string>
+    <string name="home_stat_best_day">Лучший день</string>
+    <string name="home_stat_played_days">Сыграно дней</string>
+    <string name="home_stat_best_streak">Лучшая серия</string>
+
+    <string name="home_today_score_label">Сегодня</string>
+    <string name="home_total_score_label">Итог</string>
+    <string name="home_next_issue_label">Следующее задание</string>
+
+    <string name="home_task_of_three">Задание %1$d из 3</string>
+    <string name="home_next_in">через %1$s</string>
+    <string name="home_next_tomorrow">Следующее задание — завтра</string>
+    <string name="home_next_tomorrow_value">завтра</string>
+    <string name="home_countdown_format">%1$02d:%2$02d</string>
+    <string name="home_countdown_pending">—</string>
+
+    <string name="home_cta_start">Начать</string>
+    <string name="home_cta_play">Играть</string>
+    <string name="home_cta_continue">Продолжить</string>
+    <string name="home_cta_view_recap">Посмотреть итог</string>
+    <string name="home_cta_open_archive">Открыть архив</string>
+
+    <string name="home_content_exhausted">Новые задания готовятся. Ваш архив и лучшая серия сохранены</string>
+    <string name="home_error_message">Не удалось загрузить задания</string>
+    <string name="home_error_retry">Повторить</string>
+
+    <string name="home_recovery_dialog_confirm">Подтвердить</string>
+    <string name="home_recovery_dialog_cancel">Отмена</string>
+
+    <!--
+      Составное описание DailyIssuePanel: один фокус-стоп TalkBack на весь блок
+      (COMPONENTS.md, «Accessibility» DailyIssuePanel), а не 4–5 отдельных.
+    -->
+    <string name="cd_issue_panel_first_run">Выпуск %1$d. Задание дня. 3 головоломки, 2–4 минуты</string>
+    <string name="cd_issue_panel_ready">Выпуск %1$d. Серия %2$s. Лучший день %3$s. Сыграно дней %4$d</string>
+    <string name="cd_issue_panel_in_progress">Выпуск %1$d. Задание %2$d из 3</string>
+    <string name="cd_issue_panel_completed">Выпуск %1$d. Сегодня %2$s. Серия %3$s. Следующее задание через %4$s</string>
+    <string name="cd_issue_panel_awaiting_next_day">Выпуск %1$d. Итог %2$s. Следующее задание завтра</string>
+
+    <!-- DayRecap -->
+    <string name="recap_title_today">Сегодня</string>
+    <string name="recap_slot_unavailable">Задание %1$d</string>
+    <string name="recap_streak">Серия</string>
+    <string name="recap_best_streak">Лучшая серия</string>
+    <string name="recap_done">Готово</string>
+    <string name="recap_not_found">Данные за этот день не сохранились</string>
+
+    <!-- Формат счёта: «N из 18» (день) и «N из 6» (одно задание) -->
+    <string name="score_of_day">%1$d из 18</string>
+    <string name="score_of_slot">%1$d из 6</string>
+
+    <!--
+      Склонение выбирается по правилам ЛОКАЛИ УСТРОЙСТВА, а не по языку самих строк.
+      На русской локали работают one/few/many; на нерусской доступны только one и other,
+      поэтому other несёт форму «дней» — самую частую и нейтральную из трёх.
+    -->
+    <plurals name="streak_days">
+        <item quantity="one">%d день</item>
+        <item quantity="few">%d дня</item>
+        <item quantity="many">%d дней</item>
+        <item quantity="other">%d дней</item>
+    </plurals>
 </resources>
