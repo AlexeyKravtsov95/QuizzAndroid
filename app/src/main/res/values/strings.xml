@@ -138,6 +138,13 @@
     <string name="source_kind_other">Дополнительный источник</string>
     <string name="cd_source_link">%1$s. Открыть источник в браузере</string>
 
+    <!--
+      Состояние раскрывающегося блока источников: TalkBack обязан объявлять его словом,
+      а не только ролью переключателя (COMPONENTS.md, «SourcesBlock»).
+    -->
+    <string name="state_collapsed">Свёрнуто</string>
+    <string name="state_expanded">Развёрнуто</string>
+
     <!-- Формат счёта: «N из 18» (день) и «N из 6» (одно задание) -->
     <string name="score_of_day">%1$d из 18</string>
     <string name="score_of_slot">%1$d из 6</string>

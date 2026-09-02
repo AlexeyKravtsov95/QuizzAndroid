@@ -21,6 +21,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import ru.poporyadku.R
 import ru.poporyadku.core.model.Puzzle
 import ru.poporyadku.ui.theme.IconSizing
@@ -34,8 +36,9 @@ import ru.poporyadku.ui.theme.rememberMotionTokens
  * Свёрнут по умолчанию. Отдельного маршрута или экрана-списка источников не существует —
  * это единственная утверждённая форма и на `PuzzleResult`, и в будущих настройках.
  *
- * Раскрытие/сворачивание — `toggleable`, поэтому TalkBack объявляет состояние
- * «свёрнуто»/«развёрнуто» сам, без выдуманного `contentDescription`.
+ * Раскрытие/сворачивание — `toggleable` плюс явный `stateDescription`: TalkBack
+ * объявляет «Свёрнуто»/«Развёрнуто», а не «отмечено/не отмечено», как сказал бы о
+ * переключателе. Обе строки — ресурсы, не литералы.
  *
  * Шеврон поворачивается на `motion.rotation.chevronExpand` за `motion.duration.short`;
  * при системной настройке «убрать анимацию» длительность приходит уже сокращённой из
@@ -61,11 +64,19 @@ fun SourcesBlock(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(Spacing.scale200),
     ) {
+        val stateLabel = stringResource(
+            if (expanded) R.string.state_expanded else R.string.state_collapsed,
+        )
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .defaultMinSize(minHeight = Sizing.touchTargetMin)
-                .toggleable(value = expanded, onValueChange = { expanded = it }),
+                .toggleable(value = expanded, onValueChange = { expanded = it })
+                // Состояние объявляется ЯВНЫМ словом, а не только через роль
+                // переключателя: `toggleable` сам по себе оставляет TalkBack говорить
+                // «отмечено/не отмечено», что для раскрывающегося блока неверно.
+                .semantics { stateDescription = stateLabel },
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(Spacing.scale200),
         ) {

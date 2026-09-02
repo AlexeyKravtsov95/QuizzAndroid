@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.vector.PathParser
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.net.toUri
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import ru.poporyadku.R
@@ -51,11 +52,9 @@ import ru.poporyadku.ui.theme.Spacing
  * Собственного сетевого запроса не выполняется: переход отдаётся внешнему браузеру, и
  * разрешение `INTERNET` для этого не требуется.
  *
- * **Известное ограничение.** С API 30 `resolveActivity` видит только те приложения,
- * которые объявлены в `<queries>` манифеста. Пока такого объявления нет, состояние
- * `link` на новых устройствах не достигается, и источник штатно деградирует до
- * `urlPlainText` — читаемого, полного и без ошибки. Правка манифеста в границы PR 3D
- * не входит.
+ * Видимость обработчика на API 30+ обеспечена объявлением `<queries>` в манифесте:
+ * без него `resolveActivity` не увидел бы установленный браузер и строка деградировала
+ * бы до `urlPlainText` даже там, где переход возможен.
  */
 @Composable
 fun SourceRow(
@@ -79,11 +78,16 @@ fun SourceRow(
         modifier
             .fillMaxWidth()
             .defaultMinSize(minHeight = Sizing.touchTargetMin)
-            .clickable { context.startActivity(intent) }
-            .semantics { contentDescription = linkDescription }
+            // Роль объявляется ЯВНО, а не выводится из наличия обработчика нажатия:
+            // TalkBack обязан назвать строку кнопкой, а не прочитать её как текст,
+            // за которым почему-то есть действие.
+            .clickable(role = Role.Button) { context.startActivity(intent) }
+            // Описание обязательно включает НАЗВАНИЕ источника: «Открыть источник в
+            // браузере» без него не говорит, какой именно источник откроется.
+            .semantics(mergeDescendants = true) { contentDescription = linkDescription }
     } else {
         // Некликабельная строка не должна быть достижима фокусом как интерактивный
-        // элемент: это обычный текст.
+        // элемент: это обычный текст, без роли и без действия нажатия.
         modifier.fillMaxWidth()
     }
 
