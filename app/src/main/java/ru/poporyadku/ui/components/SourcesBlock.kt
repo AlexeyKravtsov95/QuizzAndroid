@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import ru.poporyadku.R
@@ -72,10 +73,16 @@ fun SourcesBlock(
             modifier = Modifier
                 .fillMaxWidth()
                 .defaultMinSize(minHeight = Sizing.touchTargetMin)
-                .toggleable(value = expanded, onValueChange = { expanded = it })
-                // Состояние объявляется ЯВНЫМ словом, а не только через роль
-                // переключателя: `toggleable` сам по себе оставляет TalkBack говорить
-                // «отмечено/не отмечено», что для раскрывающегося блока неверно.
+                // Роль задаётся ЯВНО: без неё `toggleable` не выставляет
+                // `SemanticsProperties.Role` вовсе, и заголовок читался бы как текст,
+                // за которым почему-то есть действие.
+                .toggleable(
+                    value = expanded,
+                    role = Role.Button,
+                    onValueChange = { expanded = it },
+                )
+                // Состояние — ЯВНЫМ словом: сам по себе `toggleable` оставляет TalkBack
+                // говорить «отмечено/не отмечено», что для раскрывающегося блока неверно.
                 .semantics { stateDescription = stateLabel },
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(Spacing.scale200),

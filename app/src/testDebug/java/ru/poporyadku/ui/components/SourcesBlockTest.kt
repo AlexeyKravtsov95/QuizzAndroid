@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.ResolveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
@@ -44,7 +45,7 @@ class SourcesBlockTest {
 
     // --- SourcesBlock -------------------------------------------------------------------
 
-    /** Блок свёрнут по умолчанию и объявляет это состояние словом. */
+    /** Блок свёрнут по умолчанию, объявляет это состояние словом и имеет роль. */
     @Test
     fun `sources block starts collapsed and says so`() {
         rule.setContent { Sources(listOf(referenceOnlySource)) }
@@ -52,6 +53,23 @@ class SourcesBlockTest {
         rule.onNodeWithText(SOURCES).assertHasClickAction()
         assertEquals(COLLAPSED, stateDescriptionOf(SOURCES))
         rule.onNodeWithText(referenceOnlySource.title).assertDoesNotExist()
+    }
+
+    /**
+     * Роль заголовка объявляется ЯВНО: без неё `toggleable` не выставляет
+     * `SemanticsProperties.Role`, и TalkBack прочитал бы заголовок как обычный текст,
+     * за которым почему-то есть действие.
+     */
+    @Test
+    fun `sources block header announces its role`() {
+        rule.setContent { Sources(listOf(referenceOnlySource)) }
+
+        assertEquals(Role.Button, roleOf(SOURCES))
+
+        // Роль не теряется при смене состояния.
+        rule.onNodeWithText(SOURCES).performClick()
+        assertEquals(EXPANDED, stateDescriptionOf(SOURCES))
+        assertEquals(Role.Button, roleOf(SOURCES))
     }
 
     /** После раскрытия меняется и accessibility-состояние, и содержимое. */
@@ -89,7 +107,7 @@ class SourcesBlockTest {
         node.assertHasClickAction()
         assertEquals(
             "роль кликабельной строки объявляется явно",
-            androidx.compose.ui.semantics.Role.Button,
+            Role.Button,
             node.fetchSemanticsNode().config.getOrNull(SemanticsProperties.Role),
         )
     }
@@ -192,6 +210,12 @@ class SourcesBlockTest {
         }
         shadowOf(context.packageManager).addResolveInfoForIntent(intent, resolveInfo)
     }
+
+    private fun roleOf(text: String): Role? =
+        rule.onNodeWithText(text)
+            .fetchSemanticsNode()
+            .config
+            .getOrNull(SemanticsProperties.Role)
 
     private fun stateDescriptionOf(text: String): String? =
         rule.onNodeWithText(text)
