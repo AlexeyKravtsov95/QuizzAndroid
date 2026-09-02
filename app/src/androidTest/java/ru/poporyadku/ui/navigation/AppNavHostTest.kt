@@ -9,6 +9,12 @@ import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import dagger.hilt.android.EntryPointAccessors
+import java.time.LocalDate
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
@@ -17,6 +23,9 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import ru.poporyadku.MainActivity
+import ru.poporyadku.debug.DebugGraphEntryPoint
+import ru.poporyadku.core.model.PuzzleAttempt
+import ru.poporyadku.core.model.SLOTS_PER_DAY
 import ru.poporyadku.ui.home.HomeTestTags
 import ru.poporyadku.ui.recap.DayRecapTestTags
 import ru.poporyadku.ui.theme.PoPoRyadkuTheme
@@ -24,25 +33,28 @@ import ru.poporyadku.ui.theme.PoPoRyadkuTheme
 /**
  * Навигация — `UX_FLOW.md` §1 и ITERATION_3_DESIGN.md, `I3-N1`, `I3-N6`, `I3-N7`.
  *
- * После PR 3C `Home` и `DayRecap` — настоящие экраны с `hiltViewModel()`, поэтому
- * граф размещается внутри `MainActivity` (единственной `@AndroidEntryPoint`-активности
- * приложения): Hilt-граф берётся у настоящего `PoPoRyadkuApp`, и отдельная тестовая
- * инфраструктура DI не заводится.
+ * После PR 3C `Home` и `DayRecap` — настоящие экраны с `hiltViewModel()`, поэтому граф
+ * размещается внутри `MainActivity` (единственной `@AndroidEntryPoint`-активности
+ * приложения): Hilt-граф берётся у настоящего `PoPoRyadkuApp`, отдельная тестовая
+ * инфраструктура DI не заводится: доступ к синглтонам даёт `DebugGraphEntryPoint`
+ * из `src/debug`.
+ *
+ * **Изоляция состояния.** База — постоянная, и её содержимое напрямую определяет, что
+ * покажет Home и что откроет его CTA. Поэтому каждый тест начинается с полной очистки
+ * (`@Before`) и сам готовит ровно ту фикстуру, которая ему нужна, через **продуктовые**
+ * репозитории. Внешних предусловий и зависимости от порядка
+ * выполнения тестов не остаётся: `@After` очищает базу снова, чтобы ни один тест не
+ * оставил состояние следующему.
  *
  * Пользовательский поток управляется исключительно кликами по реальному UI
  * (`performClick`); возврат — системной (`Espresso.pressBackUnconditionally`) или
  * экранной кнопкой «Назад». Ни один `@Test` не вызывает `navController.navigate(...)`
- * напрямую — `setUp()` лишь размещает `TestNavHostController` внутри `AppNavHost`.
+ * напрямую — `startApp()` лишь размещает `TestNavHostController` внутри `AppNavHost`.
  *
  * `NavController.currentBackStack` не используется — это `@RestrictTo(LIBRARY_GROUP)`
- * API. Единственное чтение состояния, которое допускают тесты, —
- * `currentBackStackEntry` (текущий route и его аргументы). Очистка предыдущих экранов
- * доказывается наблюдаемо: одно нажатие «назад» сразу приводит к ожидаемому экрану.
- *
- * **Предусловие цепочки заглушек.** Сценарии, начинающиеся с основной кнопки Home,
- * требуют устройства, на котором сегодняшний день ещё не завершён: у завершённого дня
- * та же кнопка подписана «Посмотреть итог» и ведёт в `recap`, а не в задание. Это
- * свойство продукта, а не теста; тесты `I3-N` выполняются вручную (`ARCHITECTURE.md` §9).
+ * API. Единственное чтение состояния, которое допускают тесты, — `currentBackStackEntry`
+ * (текущий route и его аргументы). Очистка предыдущих экранов доказывается наблюдаемо:
+ * одно нажатие «назад» сразу приводит к ожидаемому экрану.
  */
 @RunWith(AndroidJUnit4::class)
 class AppNavHostTest {
@@ -52,8 +64,61 @@ class AppNavHostTest {
 
     private lateinit var navController: TestNavHostController
 
+    private val deps: DebugGraphEntryPoint by lazy {
+        EntryPointAccessors.fromApplication(
+            composeTestRule.activity.applicationContext,
+            DebugGraphEntryPoint::class.java,
+        )
+    }
+
     @Before
-    fun setUp() {
+    fun resetDatabase() = clearDatabase()
+
+    @After
+    fun cleanUp() = clearDatabase()
+
+    /**
+     * Пустая база — состояние первого запуска: `Home.FirstRun`, CTA «Начать»,
+     * иконка «Архив» скрыта. Именно от него отталкиваются сценарии игровой цепочки.
+     */
+    private fun clearDatabase() = runBlocking {
+        withContext(Dispatchers.IO) { deps.database().clearAllTables() }
+    }
+
+    /**
+     * Готовит ЗАВЕРШЁННЫЙ сегодняшний день продуктовым путём: назначение создаёт
+     * `startSession()`, три попытки пишет `recordAttempt()`, а `day_results`
+     * пересчитывается той же транзакцией, что и в приложении.
+     *
+     * Пустой `submittedOrder` — это пропуск: итог дня получает три строки
+     * `SlotOutcome.Unavailable` и «0 из 18». Для навигационных проверок важен сам факт
+     * завершённого дня, а не его счёт.
+     */
+    private fun seedCompletedToday(): LocalDate = runBlocking {
+        deps.content().ensureInstalled()
+        val date = deps.assignments().startSession().localDate
+        repeat(SLOTS_PER_DAY) { slot ->
+            deps.progress().recordAttempt(
+                PuzzleAttempt(
+                    id = 0L,
+                    localDate = date,
+                    slotIndex = slot,
+                    puzzleId = "nav-test-slot-$slot",
+                    submittedOrder = emptyList(),
+                    score = 0,
+                    // Игнорируется: фактическую метку ставит репозиторий из ClockProvider.
+                    submittedAt = 0L,
+                ),
+            )
+        }
+        date
+    }
+
+    /**
+     * Размещает граф с [TestNavHostController]. Вызывается ПОСЛЕ подготовки базы,
+     * поэтому первая же эмиссия `HomeViewModel` видит нужную фикстуру.
+     */
+    private fun startApp() {
         composeTestRule.activity.runOnUiThread {
             navController = TestNavHostController(composeTestRule.activity).apply {
                 navigatorProvider.addNavigator(ComposeNavigator())
@@ -78,18 +143,24 @@ class AppNavHostTest {
     /** `I3-N1`. Стартовый экран — настоящий `Home`, а не заглушка итерации 1. */
     @Test
     fun startDestinationIsRealHome() {
+        startApp()
+
         assertEquals(Destinations.HOME, currentRoute())
         composeTestRule.onNodeWithTag(HomeTestTags.SCREEN).assertExists()
+        composeTestRule.onNodeWithTag(HomeTestTags.DAILY_ISSUE_PANEL).assertExists()
     }
 
     /**
      * `Home` → `puzzle/{slotIndex}?date=` → `puzzle/{slotIndex}/result?date=` →
      * `puzzle/{slotIndex + 1}?date=`: аргументы доезжают неизменными.
      *
-     * Настоящих игровых экранов PR 3C не добавляет — переходы идут по заглушкам.
+     * Настоящих игровых экранов PR 3C не добавляет — переходы идут по заглушкам,
+     * которые ничего не пишут и только переносят дату дальше.
      */
     @Test
     fun homeToPuzzle0ToResult0ToPuzzle1CarriesSlotIndexAndDate() {
+        startApp()
+
         composeTestRule.onNodeWithTag(HomeTestTags.PRIMARY_BUTTON).performClick()
         composeTestRule.waitForIdle()
         assertEquals(Destinations.PUZZLE, currentRoute())
@@ -102,13 +173,13 @@ class AppNavHostTest {
         )
         assertEquals(0, currentSlotIndex())
 
-        composeTestRule.onNodeWithTag("puzzle_submit_button").performClick()
+        composeTestRule.onNodeWithTag(PUZZLE_SUBMIT).performClick()
         composeTestRule.waitForIdle()
         assertEquals(Destinations.PUZZLE_RESULT, currentRoute())
         assertEquals(0, currentSlotIndex())
         assertEquals("дата переносится в результат без изменений", sessionDate, currentDate())
 
-        composeTestRule.onNodeWithTag("puzzle_result_next_button").performClick()
+        composeTestRule.onNodeWithTag(PUZZLE_RESULT_NEXT).performClick()
         composeTestRule.waitForIdle()
         assertEquals(Destinations.PUZZLE, currentRoute())
         assertEquals(1, currentSlotIndex())
@@ -121,11 +192,13 @@ class AppNavHostTest {
      */
     @Test
     fun systemBackFromNextPuzzleLandsOnHome() {
+        startApp()
+
         composeTestRule.onNodeWithTag(HomeTestTags.PRIMARY_BUTTON).performClick()
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("puzzle_submit_button").performClick()
+        composeTestRule.onNodeWithTag(PUZZLE_SUBMIT).performClick()
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("puzzle_result_next_button").performClick()
+        composeTestRule.onNodeWithTag(PUZZLE_RESULT_NEXT).performClick()
         composeTestRule.waitForIdle()
         assertEquals(Destinations.PUZZLE, currentRoute())
 
@@ -137,9 +210,11 @@ class AppNavHostTest {
     /** `PuzzleResult` → Back → Home (UX_FLOW.md §5: вернуться в отвеченное задание нельзя). */
     @Test
     fun systemBackFromPuzzleResultLandsOnHome() {
+        startApp()
+
         composeTestRule.onNodeWithTag(HomeTestTags.PRIMARY_BUTTON).performClick()
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("puzzle_submit_button").performClick()
+        composeTestRule.onNodeWithTag(PUZZLE_SUBMIT).performClick()
         composeTestRule.waitForIdle()
         assertEquals(Destinations.PUZZLE_RESULT, currentRoute())
 
@@ -149,24 +224,30 @@ class AppNavHostTest {
     }
 
     /**
-     * Полная цепочка до `recap/{ISO}`, затем `recap` → Back → Home. Одно нажатие
-     * «назад» доказывает, что весь граф сессии вычищен из стека.
+     * Полная цепочка заглушек до `recap/{ISO}`, затем `recap` → Back → Home. Одно
+     * нажатие «назад» доказывает, что весь граф сессии вычищен из стека.
+     *
+     * Заглушки попыток не пишут, поэтому итог дня здесь ожидаемо пуст (`NotFound`) —
+     * проверяются только маршрут, аргумент и бэкстек. Рабочий итог проверяет
+     * [doneButtonOnCompletedDayRecapReturnsToExistingHome].
      */
     @Test
-    fun fullDayChainReachesRecapByIsoDateAndSystemBackLandsOnHome() {
+    fun fullStubChainReachesRecapByIsoDateAndSystemBackLandsOnHome() {
+        startApp()
+
         composeTestRule.onNodeWithTag(HomeTestTags.PRIMARY_BUTTON).performClick()
         composeTestRule.waitForIdle()
         val sessionDate = currentDate()
 
-        repeat(3) { index ->
-            composeTestRule.onNodeWithTag("puzzle_submit_button").performClick()
+        repeat(SLOTS_PER_DAY) { index ->
+            composeTestRule.onNodeWithTag(PUZZLE_SUBMIT).performClick()
             composeTestRule.waitForIdle()
             assertEquals(Destinations.PUZZLE_RESULT, currentRoute())
 
-            composeTestRule.onNodeWithTag("puzzle_result_next_button").performClick()
+            composeTestRule.onNodeWithTag(PUZZLE_RESULT_NEXT).performClick()
             composeTestRule.waitForIdle()
 
-            if (index < 2) {
+            if (index < SLOTS_PER_DAY - 1) {
                 assertEquals(Destinations.PUZZLE, currentRoute())
                 assertEquals(index + 1, currentSlotIndex())
             }
@@ -175,24 +256,33 @@ class AppNavHostTest {
         assertEquals(Destinations.RECAP, currentRoute())
         // Сентинела today больше нет: recap всегда получает явную ISO-дату (I3-D23).
         assertEquals("дата сессии доезжает до итога", sessionDate, currentDate())
+        composeTestRule.onNodeWithTag(DayRecapTestTags.NOT_FOUND).assertExists()
 
         Espresso.pressBackUnconditionally()
         composeTestRule.waitForIdle()
         assertEquals(Destinations.HOME, currentRoute())
     }
 
-    /** `I3-N6`. «Готово» на настоящем `recap` возвращает на существующий `Home`. */
+    /**
+     * `I3-N6`. «Готово» на настоящем `recap` возвращает на существующий `Home`.
+     *
+     * День готовится завершённым, поэтому Home открывается в `Completed`, его CTA —
+     * «Посмотреть итог», а `DayRecap` получает реальный `Content` с кнопкой «Готово».
+     * Через цепочку заглушек этот сценарий недостижим: они не пишут ни попыток, ни
+     * `day_results`, и итог был бы `NotFound`.
+     */
     @Test
-    fun doneButtonOnRecapReturnsToExistingHome() {
+    fun doneButtonOnCompletedDayRecapReturnsToExistingHome() {
+        val date = seedCompletedToday()
+        startApp()
+
+        assertEquals(Destinations.HOME, currentRoute())
         composeTestRule.onNodeWithTag(HomeTestTags.PRIMARY_BUTTON).performClick()
         composeTestRule.waitForIdle()
-        repeat(3) {
-            composeTestRule.onNodeWithTag("puzzle_submit_button").performClick()
-            composeTestRule.waitForIdle()
-            composeTestRule.onNodeWithTag("puzzle_result_next_button").performClick()
-            composeTestRule.waitForIdle()
-        }
+
         assertEquals(Destinations.RECAP, currentRoute())
+        assertEquals(Destinations.serialize(date), currentDate())
+        composeTestRule.onNodeWithTag(DayRecapTestTags.SCORE_BADGE).assertExists()
 
         composeTestRule.onNodeWithTag(DayRecapTestTags.DONE_BUTTON).performClick()
         composeTestRule.waitForIdle()
@@ -205,18 +295,20 @@ class AppNavHostTest {
     /**
      * `I3-N7`. Переход из архива передаёт ISO-дату. Утверждение про сентинел `TODAY`
      * удалено вместе с самим сентинелом (I3-D23).
-     */
-    /**
-     * Предусловие: иконка «Архив» видна только при `completedDayCount > 0`
-     * (COMPONENTS.md), то есть на устройстве должен быть хотя бы один завершённый день.
+     *
+     * Иконка «Архив» видна только при `completedDayCount > 0` (COMPONENTS.md), поэтому
+     * завершённый день готовится тестом, а не ожидается от устройства.
      */
     @Test
     fun homeToArchiveToRecapByIsoDate() {
+        seedCompletedToday()
+        startApp()
+
         composeTestRule.onNodeWithContentDescription(ARCHIVE).performClick()
         composeTestRule.waitForIdle()
         assertEquals(Destinations.ARCHIVE, currentRoute())
 
-        composeTestRule.onNodeWithTag("archive_open_recap_row").performClick()
+        composeTestRule.onNodeWithTag(ARCHIVE_OPEN_RECAP).performClick()
         composeTestRule.waitForIdle()
         assertEquals(Destinations.RECAP, currentRoute())
 
@@ -227,20 +319,38 @@ class AppNavHostTest {
         )
     }
 
+    /** Иконка «Архив» скрыта, пока не завершён ни один день (COMPONENTS.md). */
+    @Test
+    fun archiveIconIsHiddenWhenNoDayIsCompleted() {
+        startApp()
+
+        composeTestRule.onNodeWithContentDescription(ARCHIVE).assertDoesNotExist()
+        composeTestRule.onNodeWithContentDescription(SETTINGS).assertExists()
+    }
+
     @Test
     fun homeToSettingsToHome() {
+        startApp()
+
         composeTestRule.onNodeWithContentDescription(SETTINGS).performClick()
         composeTestRule.waitForIdle()
         assertEquals(Destinations.SETTINGS, currentRoute())
 
-        composeTestRule.onNodeWithTag("stub_generic_back_button").performClick()
+        composeTestRule.onNodeWithTag(GENERIC_BACK).performClick()
         composeTestRule.waitForIdle()
         assertEquals(Destinations.HOME, currentRoute())
     }
 
     private companion object {
         val ISO_DATE_REGEX = Regex("""\d{4}-\d{2}-\d{2}""")
+
         const val ARCHIVE = "Архив"
         const val SETTINGS = "Настройки"
+
+        // testTag заглушек итерации 1 — они переживут PR 3C без изменений.
+        const val PUZZLE_SUBMIT = "puzzle_submit_button"
+        const val PUZZLE_RESULT_NEXT = "puzzle_result_next_button"
+        const val ARCHIVE_OPEN_RECAP = "archive_open_recap_row"
+        const val GENERIC_BACK = "stub_generic_back_button"
     }
 }

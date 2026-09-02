@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -125,17 +124,6 @@ class HomeViewModel @Inject constructor(
             )
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HomeState.Loading)
 
-    private val countdownState = MutableStateFlow<Duration?>(null)
-
-    /**
-     * Обратный отсчёт до начала следующей локальной даты.
-     *
-     * Отдельный поток, а не поле состояния: минутное обновление не должно перестраивать
-     * весь `HomeState` и **не выполняет ни одного запроса к базе**. `Duration` в
-     * состоянии не хранится — сохранённое значение устарело бы к следующему кадру.
-     */
-    val countdown: StateFlow<Duration?> = countdownState.asStateFlow()
-
     /** Собирается в `viewModelScope`; своего диспетчера не назначает (I3-D15). */
     private val minuteTicks: Flow<Unit> = flow {
         while (true) {
@@ -144,11 +132,25 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    init {
-        viewModelScope.launch {
-            minuteTicks.collect { onMinuteTick() }
-        }
-    }
+    /**
+     * Обратный отсчёт до начала следующей локальной даты.
+     *
+     * Отдельный поток, а не поле [HomeState]: минутное обновление не перестраивает весь
+     * экран и **не выполняет ни одного запроса к базе**. `Duration` в состоянии не
+     * хранится — сохранённое значение устарело бы к следующему кадру.
+     *
+     * Производный от ДВУХ источников: пересчитывается и на каждом минутном тике, и на
+     * каждой новой эмиссии `recomputes`. Второе обязательно: первый тик приходится на
+     * момент подписки, когда доменного состояния ещё нет, и без зависимости от
+     * `recomputes` пришедший следом `Completed` до минуты показывал бы пустой отсчёт.
+     *
+     * Постоянного коллектора у тикера нет: `WhileSubscribed(5_000)` останавливает и его,
+     * и — следом — `recomputes`, поэтому уход с экрана по-прежнему гасит upstream.
+     */
+    val countdown: StateFlow<Duration?> =
+        combine(recomputes, minuteTicks) { recompute, _ -> recompute?.state }
+            .map { state -> onTimeSample(state) }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     /**
      * `ON_START` (I3-D14). Не событие экрана: только отправляет сигнал пересчёта.
@@ -172,26 +174,28 @@ class HomeViewModel @Inject constructor(
     }
 
     /**
-     * Ровно один снимок часов на тик: обратный отсчёт и решение «дата сменилась» не
-     * могут относиться к разным моментам (I3-D15).
+     * Ровно один снимок часов на выборку: обратный отсчёт и решение «дата сменилась»
+     * не могут относиться к разным моментам (I3-D15).
+     *
+     * Выборка делает две вещи и ни одной лишней — считает остаток до следующей
+     * локальной даты и ловит её смену.
      */
-    private suspend fun onMinuteTick() {
+    private suspend fun onTimeSample(state: TodayState?): Duration? {
         val now = clock.now()
-        val state = recomputes.value?.state
-
-        countdownState.value = (state as? TodayState.Completed)?.let { completed ->
-            val remaining = Duration.between(
-                Instant.ofEpochMilli(now.epochMillis),
-                completed.nextLocalDateStartsAt,
-            )
-            if (remaining.isNegative) Duration.ZERO else remaining
-        }
 
         val stateDate = state?.todayOrNull
         if (stateDate != null && stateDate != now.localDate) {
             // Приложение, оставленное открытым через полночь, само выходит из
             // Completed — без ON_START и без действий пользователя.
             refreshSignals.emit(Unit)
+        }
+
+        return (state as? TodayState.Completed)?.let { completed ->
+            val remaining = Duration.between(
+                Instant.ofEpochMilli(now.epochMillis),
+                completed.nextLocalDateStartsAt,
+            )
+            if (remaining.isNegative) Duration.ZERO else remaining
         }
     }
 

@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelStore
 import app.cash.turbine.test
 import java.time.Clock
+import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
@@ -267,13 +268,13 @@ class HomeViewModelTest {
         assignments.decision = Decision.Assigned(PACK, setIndex = 2)
         val viewModel = createViewModel()
 
+        val countdownCollector = launch { viewModel.countdown.collect { } }
         viewModel.uiState.test {
             skipItems(2)
-
-            // Первый тик приходится на момент подписки, когда состояния ещё нет;
-            // отсчёт считается на первом тике, у которого состояние уже есть.
-            advanceTimeBy(60_001)
             runCurrent()
+
+            // Отсчёт посчитан СРАЗУ на первом же Completed, без ожидания минуты:
+            // countdown зависит и от тикера, и от recomputes.
             val before = viewModel.countdown.value
             assertNotNull("countdown должен быть посчитан на Completed", before)
 
@@ -300,6 +301,41 @@ class HomeViewModelTest {
             )
             cancelAndIgnoreRemainingEvents()
         }
+        countdownCollector.cancel()
+    }
+
+    /**
+     * `I3-V21` (продолжение): **первый же** `Completed` даёт ненулевой обратный отсчёт
+     * без единого `advanceTimeBy()`. Первый тик приходится на момент подписки, когда
+     * доменного состояния ещё нет, поэтому countdown обязан пересчитываться и на
+     * эмиссии `recomputes`, а не только по тикеру.
+     */
+    @Test
+    fun `I3-V21 first Completed yields a countdown without advancing time`() = homeTest {
+        progress.dayResults.value = listOf(completedDay(today, score = 18))
+        assignments.decision = Decision.Assigned(PACK, setIndex = 2)
+        val viewModel = createViewModel()
+
+        viewModel.countdown.test {
+            // Первое значение — начальное null: состояния ещё нет.
+            assertNull(awaitItem())
+            val first = awaitItem()
+            assertNotNull("первый Completed обязан дать отсчёт немедленно", first)
+            assertTrue("отсчёт до полуночи не может быть нулевым", first!! > Duration.ZERO)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    /** Вне `Completed` обратного отсчёта нет вовсе. */
+    @Test
+    fun `countdown is null outside Completed`() = homeTest {
+        assignments.decision = Decision.NewSet(PACK, setIndex = 0)
+        val viewModel = createViewModel()
+
+        val collector = launch { viewModel.countdown.collect { } }
+        runCurrent()
+        assertNull(viewModel.countdown.value)
+        collector.cancel()
     }
 
     /** Один `ClockProvider.now()` на тик: countdown и решение о дате — из одного снимка. */
@@ -309,6 +345,7 @@ class HomeViewModelTest {
         assignments.decision = Decision.Assigned(PACK, setIndex = 2)
         val viewModel = createViewModel()
 
+        val countdownCollector = launch { viewModel.countdown.collect { } }
         viewModel.uiState.test {
             skipItems(2)
             runCurrent()
@@ -318,6 +355,7 @@ class HomeViewModelTest {
             assertEquals("ровно одно чтение часов на тик", afterFirstTick + 1, clock.reads)
             cancelAndIgnoreRemainingEvents()
         }
+        countdownCollector.cancel()
     }
 
     // --- I3-V18 / I3-V19: маппер -----------------------------------------------------
@@ -643,13 +681,16 @@ class HomeViewModelTest {
         val handle = SavedStateHandle()
         val viewModel = createViewModel(recoveryActions = setOf(action), savedStateHandle = handle)
 
-        // 1. Получаем Error поколения N.
-        val firstCollector = launch { viewModel.uiState.collect { } }
+        // 1. Получаем Error поколения N. Экран собирает ОБА потока — uiState и
+        // countdown, — и оба держат recomputes живым, поэтому снимать нужно оба.
+        val firstState = launch { viewModel.uiState.collect { } }
+        val firstCountdown = launch { viewModel.countdown.collect { } }
         runCurrent()
         val generationN = (viewModel.uiState.value as HomeState.Error).recomputeGeneration
 
         // 2–4. Убираем всех коллекторов и ждём остановки ОБОИХ вложенных stateIn.
-        firstCollector.cancel()
+        firstState.cancel()
+        firstCountdown.cancel()
         advanceTimeBy(10_001)
         runCurrent()
 

@@ -346,7 +346,9 @@ class HomeScreenTest {
             }
         }
 
-        rule.onNodeWithTag(HomeTestTags.PRIMARY_BUTTON).assertExists()
+        // assertExists недостаточно: Compose кликает и по узлу, уехавшему за пределы
+        // viewport, — кнопка обязана остаться ВИДИМОЙ.
+        rule.onNodeWithTag(HomeTestTags.PRIMARY_BUTTON).assertIsDisplayed()
         rule.onNodeWithTag(HomeTestTags.PRIMARY_BUTTON).assertHasClickAction()
         rule.onNodeWithTag(HomeTestTags.PRIMARY_BUTTON).assertIsEnabled()
         rule.onNodeWithTag(HomeTestTags.PRIMARY_BUTTON).performClick()

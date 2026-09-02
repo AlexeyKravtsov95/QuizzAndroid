@@ -252,7 +252,9 @@ class DayRecapScreenTest {
             }
         }
 
-        rule.onNodeWithTag(DayRecapTestTags.DONE_BUTTON).assertExists()
+        // assertExists недостаточно: Compose кликает и по узлу, уехавшему за пределы
+        // viewport, — кнопка обязана остаться ВИДИМОЙ.
+        rule.onNodeWithTag(DayRecapTestTags.DONE_BUTTON).assertIsDisplayed()
         rule.onNodeWithTag(DayRecapTestTags.DONE_BUTTON).assertHasClickAction()
         rule.onNodeWithTag(DayRecapTestTags.DONE_BUTTON).assertIsEnabled()
         rule.onNodeWithTag(DayRecapTestTags.DONE_BUTTON).performClick()

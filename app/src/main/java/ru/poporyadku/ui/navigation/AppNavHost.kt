@@ -36,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -179,16 +180,21 @@ private fun HomeRoute(navController: NavHostController) {
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
-    LaunchedEffect(viewModel) {
-        viewModel.effects.collect { effect ->
-            when (effect) {
-                is HomeEffect.NavigateToPuzzle ->
-                    navController.navigate(Destinations.puzzle(effect.slotIndex, effect.date))
+    // Ровно один коллектор эффектов, и он lifecycle-aware (I3-D25): ниже STARTED
+    // сбор приостанавливается, поэтому навигационный эффект не может быть выполнен
+    // на неактивном экране; Channel удержит его до возобновления.
+    LaunchedEffect(viewModel, lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.effects.collect { effect ->
+                when (effect) {
+                    is HomeEffect.NavigateToPuzzle ->
+                        navController.navigate(Destinations.puzzle(effect.slotIndex, effect.date))
 
-                is HomeEffect.NavigateToRecap ->
-                    navController.navigate(Destinations.recap(effect.date))
+                    is HomeEffect.NavigateToRecap ->
+                        navController.navigate(Destinations.recap(effect.date))
 
-                HomeEffect.NavigateToArchive -> navController.navigate(Destinations.ARCHIVE)
+                    HomeEffect.NavigateToArchive -> navController.navigate(Destinations.ARCHIVE)
+                }
             }
         }
     }
@@ -208,14 +214,17 @@ private fun HomeRoute(navController: NavHostController) {
 private fun DayRecapRoute(navController: NavHostController) {
     val viewModel: DayRecapViewModel = hiltViewModel()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val lifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(viewModel) {
-        viewModel.effects.collect { effect ->
-            when (effect) {
-                // «Готово» и системная «назад» дают один и тот же результат — Home,
-                // а не второй его экземпляр.
-                DayRecapEffect.NavigateHome ->
-                    navController.popBackStack(Destinations.HOME, inclusive = false)
+    LaunchedEffect(viewModel, lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.effects.collect { effect ->
+                when (effect) {
+                    // «Готово» и системная «назад» дают один и тот же результат — Home,
+                    // а не второй его экземпляр.
+                    DayRecapEffect.NavigateHome ->
+                        navController.popBackStack(Destinations.HOME, inclusive = false)
+                }
             }
         }
     }
