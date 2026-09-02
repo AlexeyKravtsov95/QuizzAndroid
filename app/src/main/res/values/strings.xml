@@ -8,14 +8,6 @@
     <string name="cd_archive">Архив</string>
     <string name="cd_settings">Настройки</string>
 
-    <string name="stub_puzzle_title">Задание %1$d из 3</string>
-    <string name="stub_puzzle_submit">Проверить</string>
-
-    <string name="stub_puzzle_result_title">Результат задания %1$d</string>
-    <string name="stub_puzzle_result_next">Дальше</string>
-    <string name="stub_puzzle_result_next_final">К итогу дня</string>
-
-
     <string name="stub_archive_title">Архив</string>
     <string name="stub_archive_open_recap">Итог за %1$s</string>
     <string name="stub_settings_title">Настройки</string>
@@ -93,6 +85,58 @@
     <string name="recap_best_streak">Лучшая серия</string>
     <string name="recap_done">Готово</string>
     <string name="recap_not_found">Данные за этот день не сохранились</string>
+
+    <!--
+      Итерация 3, PR 3D. Строки игровых экранов. Формулировки перенесены дословно из
+      UX_FLOW.md и COMPONENTS.md; литеральных строк в коде экранов и компонентов нет.
+    -->
+
+    <!-- Puzzle -->
+    <string name="puzzle_title">Задание %1$d из %2$d</string>
+    <string name="puzzle_title_unknown">Задание</string>
+    <string name="puzzle_submit">Проверить</string>
+    <string name="puzzle_unavailable">Задание недоступно</string>
+    <string name="puzzle_skip">Пропустить</string>
+    <string name="puzzle_load_failed">Не удалось загрузить задание</string>
+    <string name="puzzle_save_failed">Не удалось сохранить ответ</string>
+    <string name="puzzle_retry">Повторить</string>
+
+    <!-- OrderableCard и MoveButton -->
+    <string name="card_index">№%1$d</string>
+    <string name="cd_card_position">Позиция %1$d из %2$d. %3$s</string>
+    <string name="cd_move_up">Переместить вверх</string>
+    <string name="cd_move_down">Переместить вниз</string>
+    <string name="action_move_up">Переместить вверх</string>
+    <string name="action_move_down">Переместить вниз</string>
+    <string name="action_move_to_top">Переместить в начало</string>
+    <string name="action_move_to_bottom">Переместить в конец</string>
+    <string name="puzzle_card_moved">%1$s перемещён на позицию %2$d из %3$d</string>
+
+    <!-- PuzzleResult -->
+    <string name="result_title">Результат задания %1$d</string>
+    <string name="result_title_unknown">Результат задания</string>
+    <string name="result_correct_order">Правильный порядок</string>
+    <string name="result_all_correct">Всё верно</string>
+    <string name="result_next">Дальше</string>
+    <string name="result_to_recap">К итогу дня</string>
+    <string name="scoring_hint">Баллы даются за каждую пару карточек в правильном порядке. У четырёх карточек шесть пар</string>
+
+    <!--
+      Шаблон перепутанной пары — ОДИН (I3-D5): якорь — порядок пользователя, поэтому
+      строка всегда говорит «после». Варианта «перед» не существует, и мёртвой строки
+      под него здесь нет. Слов «выше»/«ниже» в шаблоне нет физически.
+    -->
+    <string name="inverted_pair">Карточка «%1$s» должна располагаться после карточки «%2$s»</string>
+    <string name="inverted_pair_compact">«%1$s» — после «%2$s»</string>
+
+    <!-- SourcesBlock и SourceRow -->
+    <string name="sources_title">Источники</string>
+    <string name="source_accessed_at">Обращение: %1$s</string>
+    <string name="source_kind_official">Официальный источник</string>
+    <string name="source_kind_encyclopedia">Энциклопедия</string>
+    <string name="source_kind_academic">Научный источник</string>
+    <string name="source_kind_other">Дополнительный источник</string>
+    <string name="cd_source_link">%1$s. Открыть источник в браузере</string>
 
     <!-- Формат счёта: «N из 18» (день) и «N из 6» (одно задание) -->
     <string name="score_of_day">%1$d из 18</string>

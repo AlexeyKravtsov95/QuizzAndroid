@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="debug_activity_label">По порядку! Debug</string>
-
-    <!-- ITERATION_3_DESIGN.md, I3-D48: текст говорит ровно то, что делает действие. -->
+    <!--
+      ITERATION_3_DESIGN.md, I3-D48: текст говорит ровно то, что делает действие.
+      Заголовок и кнопки диалога подтверждения принадлежат Home (`home_recovery_dialog_*`):
+      собственный диалог был у удалённого debug-экрана, и его строки ушли вместе с ним.
+    -->
     <string name="debug_reset_temporary_content">Сбросить временный контент</string>
-    <string name="debug_reset_temporary_content_title">Сбросить временный контент?</string>
     <string name="debug_reset_temporary_content_message">Удалит весь локальный прогресс и весь загруженный контент. Действие необратимо.</string>
-    <string name="debug_reset_temporary_content_confirm">Сбросить</string>
-    <string name="debug_reset_temporary_content_cancel">Отмена</string>
 </resources>
