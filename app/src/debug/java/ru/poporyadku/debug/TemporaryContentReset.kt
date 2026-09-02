@@ -29,7 +29,7 @@ class TemporaryContentReset @Inject constructor(
      * главном потоке; собственной внешней транзакции нет — он управляет ею сам.
      *
      * Квалификатор `@IoDispatcher` не используется: его в проекте не существует —
-     * ни аннотации, ни модуля. Тот же приём, что в `DebugViewModel.clearDatabase()`.
+     * ни аннотации, ни модуля.
      */
     suspend fun perform() = withContext(Dispatchers.IO) {
         db.clearAllTables()

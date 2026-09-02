@@ -2,6 +2,27 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!--
+      Package visibility (API 30+): без этого объявления `resolveActivity` не видит
+      установленный браузер, и SourceRow деградировал бы до `urlPlainText` даже там,
+      где обработчик есть (COMPONENTS.md, «SourceRow»).
+
+      Объявлена ровно одна возможность — открыть http(s)-ссылку во внешнем приложении.
+      Разрешение INTERNET при этом НЕ требуется и не добавляется: сетевой запрос
+      выполняет браузер, а не приложение (UX_FLOW.md §5, IMPLEMENTATION_PLAN.md,
+      итерация 7: «нет ни одного сетевого разрешения и ни одного сетевого вызова»).
+    -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="http" />
+        </intent>
+    </queries>
+
     <application
         android:name=".PoPoRyadkuApp"
         android:allowBackup="false"
