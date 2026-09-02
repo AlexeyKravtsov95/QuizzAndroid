@@ -113,6 +113,10 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
+    // I3-D31: Compose-тесты экранов идут в src/test под Robolectric и выполняются в CI.
+    // platform(bom) нужен здесь же — без него у ui-test-junit4 нет версии.
+    testImplementation(platform(libs.androidx.compose.bom))
+    testImplementation(libs.androidx.compose.ui.test.junit4)
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
