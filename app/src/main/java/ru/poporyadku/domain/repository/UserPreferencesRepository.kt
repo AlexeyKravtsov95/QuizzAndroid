@@ -17,8 +17,18 @@ interface UserPreferencesRepository {
     suspend fun setReminderTime(time: LocalTime)
     suspend fun setThemeMode(mode: ThemeMode)
 
-    /** version >= 0; contentVersion не бывает отрицательной (CONTENT_MODEL.md §7). */
-    suspend fun setStoredContentVersion(version: Int)
+    /**
+     * Единственная операция записи отметки об установленном контенте
+     * (ITERATION_4_DESIGN.md, I4-D10). Оба значения пишутся одним `edit`.
+     *
+     * Двух сеттеров нет намеренно: частично записанная отметка («версия новая,
+     * отпечаток старый») означала бы состояние, которого не бывает, и потребовала бы
+     * отдельной ветки восстановления.
+     *
+     * @param contentVersion >= 0; contentVersion не бывает отрицательной (CONTENT_MODEL.md §7).
+     * @param fingerprint `sha256` байтов манифеста в нижнем регистре.
+     */
+    suspend fun setInstalledContent(contentVersion: Int, fingerprint: String)
 
     suspend fun setHasSeenDragHint(seen: Boolean)
     suspend fun setHasSeenScoringHint(seen: Boolean)

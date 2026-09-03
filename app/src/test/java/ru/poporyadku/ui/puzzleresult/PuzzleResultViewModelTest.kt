@@ -301,6 +301,7 @@ private class FakePreferences : UserPreferencesRepository {
             reminderTime = LocalTime.of(9, 0),
             themeMode = ThemeMode.SYSTEM,
             storedContentVersion = 1,
+            storedContentFingerprint = null,
             hasSeenDragHint = false,
             hasSeenScoringHint = false,
             hasCompletedFirstDay = false,
@@ -326,7 +327,7 @@ private class FakePreferences : UserPreferencesRepository {
     override suspend fun setReminderEnabled(enabled: Boolean) = unsupported()
     override suspend fun setReminderTime(time: LocalTime) = unsupported()
     override suspend fun setThemeMode(mode: ThemeMode) = unsupported()
-    override suspend fun setStoredContentVersion(version: Int) = unsupported()
+    override suspend fun setInstalledContent(contentVersion: Int, fingerprint: String) = unsupported()
     override suspend fun setHasSeenDragHint(seen: Boolean) = unsupported()
     override suspend fun setHasCompletedFirstDay(completed: Boolean) = unsupported()
     override suspend fun setNotificationPromptShown(shown: Boolean) = unsupported()

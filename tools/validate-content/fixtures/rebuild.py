@@ -464,7 +464,10 @@ class Case:
     mutate: Callable[[Pack], None]
     codes: list[str]
     why: str
+    #: Ожидание полного runtime-пути (PR 4B). ``None`` — совпадает с ``codes``.
     runtime: list[str] | None = None
+    #: Почему рантайм отвечает иначе, чем CLI. Обязательно вместе с ``runtime``.
+    runtime_why: str | None = None
 
 
 def _set_field(pack: Pack, index: int, field_name: str, value: object) -> None:
@@ -495,7 +498,10 @@ CASES: list[Case] = [
         lambda p: _set_field(p, 0, "difficulty", "1"),
         [diag.R01_SCHEMA],
         "difficulty строкой вместо целого — общий отказ схемы",
-        runtime=[diag.R01_SCHEMA],
+        runtime=[],
+        runtime_why=(
+            "kotlinx-serialization принимает закавыченное число в числовом поле независимо от isLenient, поэтому DTO строится и difficulty равен 1; ловит это строгая схема в CI, а не защитный набор (§7.3)"
+        ),
     ),
     Case(
         "r02-no-correct-order",
@@ -504,6 +510,9 @@ CASES: list[Case] = [
         [diag.R02_CORRECT_ORDER_MISSING],
         "нет обязательного correctOrder — сверять вычисленный порядок не с чем",
         runtime=[diag.R01_SCHEMA],
+        runtime_why=(
+            "обязательное поле отсутствует — DTO не строится, отказ назван R01 (§7.3)"
+        ),
     ),
     Case(
         "r03-prompt-too-long",
@@ -511,6 +520,10 @@ CASES: list[Case] = [
         lambda p: _set_field(p, 0, "prompt", _long_prompt()),
         [diag.R03_TEXT_LENGTH],
         "prompt длиной 91 символ при пределе 90",
+        runtime=[],
+        runtime_why=(
+            "длина строки — авторское правило: DTO строится, экран работает, место проверки — CI (I4-P3)"
+        ),
     ),
     Case(
         "r04-no-verified-by",
@@ -518,6 +531,10 @@ CASES: list[Case] = [
         lambda p: p.puzzles[0].pop("verifiedBy"),
         [diag.R04_VERIFICATION_MISSING],
         "нет verifiedBy — редакторский протокол не зафиксирован",
+        runtime=[diag.R01_SCHEMA],
+        runtime_why=(
+            "verifiedBy обязателен в формате — DTO не строится, отказ назван R01 (§7.3)"
+        ),
     ),
     Case(
         "r04a-date-not-calendar",
@@ -525,6 +542,10 @@ CASES: list[Case] = [
         lambda p: _set_field(p, 0, "verifiedAt", "2026-02-30"),
         [diag.R04A_DATE_NOT_CALENDAR],
         "30 февраля не существует; pattern такую дату пропускает",
+        runtime=[],
+        runtime_why=(
+            "календарность даты — авторское правило (I4-P3)"
+        ),
     ),
     Case(
         "r04b-date-in-future",
@@ -532,6 +553,10 @@ CASES: list[Case] = [
         lambda p: _set_field(p, 0, "verifiedAt", "2027-06-01"),
         [diag.R04B_DATE_IN_FUTURE],
         "дата проверки позже --validation-date фикстур",
+        runtime=[],
+        runtime_why=(
+            "«не в будущем» — авторское правило (I4-P3)"
+        ),
     ),
     Case(
         "r05-duplicate-puzzle-id",
@@ -548,6 +573,10 @@ CASES: list[Case] = [
         lambda p: _set_field(p, 0, "correctOrder", ["c2", "c1", "c3", "c4"]),
         [diag.R06_ORDER_MISMATCH],
         "записанный порядок не совпадает с вычисленным из sortValue",
+        runtime=[],
+        runtime_why=(
+            "порядок — авторское правило (I4-P3)"
+        ),
     ),
     Case(
         "r07-duplicate-sort-value",
@@ -557,6 +586,10 @@ CASES: list[Case] = [
         ),
         [diag.R07_DUPLICATE_SORT_VALUE],
         "две карточки с одинаковым значением — порядок перестаёт быть однозначным",
+        runtime=[],
+        runtime_why=(
+            "авторское правило (I4-P3)"
+        ),
     ),
     Case(
         "r08-gap-year",
@@ -564,6 +597,10 @@ CASES: list[Case] = [
         lambda p: _replace_values(p, 0, "year", [1900, 1901, 1950, 2000], "ascending"),
         [diag.R08_MIN_GAP],
         "разрыв в один год при пороге в два",
+        runtime=[],
+        runtime_why=(
+            "разрыв — авторское правило (I4-P3)"
+        ),
     ),
     Case(
         "r08-gap-relative",
@@ -571,6 +608,10 @@ CASES: list[Case] = [
         lambda p: _replace_values(p, 1, "height", [1000, 1029, 2000, 3000], "descending"),
         [diag.R08_MIN_GAP],
         "разрыв 2,9 % при пороге 3 % от большего значения пары",
+        runtime=[],
+        runtime_why=(
+            "разрыв — авторское правило (I4-P3)"
+        ),
     ),
     Case(
         "r08c-sort-key-date",
@@ -578,6 +619,10 @@ CASES: list[Case] = [
         lambda p: _set_field(p, 0, "sortKey", "date"),
         [diag.R08C_SORT_KEY_UNSUPPORTED],
         "sortKey date отложен: единица не зафиксирована ни одним документом",
+        runtime=[],
+        runtime_why=(
+            "sortKey — перечисление формата, а не домена: в DTO это строка, и отложенный ключ ловит CI (§9.4, I4-P3)"
+        ),
     ),
     Case(
         "r08d-non-positive-ratio",
@@ -585,6 +630,10 @@ CASES: list[Case] = [
         lambda p: _replace_values(p, 1, "height", [-1000, 500, 1500, 3000], "descending"),
         [diag.R08D_NON_POSITIVE_RATIO],
         "неположительное значение на ратио-шкале: относительный порог не определён",
+        runtime=[],
+        runtime_why=(
+            "авторское правило (I4-P3)"
+        ),
     ),
     Case(
         "r08e-year-zero",
@@ -592,6 +641,10 @@ CASES: list[Case] = [
         lambda p: _replace_values(p, 0, "year", [-100, 0, 100, 200], "ascending"),
         [diag.R08E_YEAR_ZERO],
         "нулевого года не существует",
+        runtime=[],
+        runtime_why=(
+            "авторское правило (I4-P3)"
+        ),
     ),
     Case(
         "r09-volatile",
@@ -599,6 +652,10 @@ CASES: list[Case] = [
         lambda p: _set_field(p, 0, "volatility", "volatile"),
         [diag.R09_VOLATILE_FORBIDDEN],
         "volatile остаётся в enum формата, но запрещён политикой MVP",
+        runtime=[],
+        runtime_why=(
+            "volatility в Room не переносится и в защитный набор не входит (I4-D16, I4-P3)"
+        ),
     ),
     Case(
         "r10-shuffle-identity",
@@ -606,6 +663,10 @@ CASES: list[Case] = [
         _r10_case,
         [diag.R10_SHUFFLE_IDENTITY],
         "подобранный puzzleId: стартовый порядок совпал с правильным",
+        runtime=[],
+        runtime_why=(
+            "правило 10 — авторское: экран работает, ответ верен (I4-P3)"
+        ),
     ),
     Case(
         "r11-empty-source-ids",
@@ -613,7 +674,10 @@ CASES: list[Case] = [
         lambda p: p.puzzles[0]["cards"][0].__setitem__("sourceIds", []),
         [diag.R11_SOURCE_IDS_EMPTY],
         "у карточки пустой массив источников",
-        runtime=[diag.R01_SCHEMA],
+        runtime=[],
+        runtime_why=(
+            "пустой массив ЕСТЬ в документе, поэтому DTO строится; пустой sourceIds защитным инвариантом не является — приложение не читает источники при выдаче головоломки (§7.3, п. 3)"
+        ),
     ),
     Case(
         "r12-unknown-source-id",
@@ -621,6 +685,10 @@ CASES: list[Case] = [
         lambda p: p.puzzles[0]["cards"][0].__setitem__("sourceIds", ["s9"]),
         [diag.R12_SOURCE_ID_UNKNOWN],
         "карточка ссылается на источник, которого нет в sources",
+        runtime=[],
+        runtime_why=(
+            "покрытие источниками — авторское правило (I4-P3)"
+        ),
     ),
     Case(
         "r13-duplicate-source-id",
@@ -636,6 +704,10 @@ CASES: list[Case] = [
         ),
         [diag.R13_DUPLICATE_SOURCE_ID],
         "два источника с одним sourceId внутри головоломки",
+        runtime=[],
+        runtime_why=(
+            "авторское правило (I4-P3)"
+        ),
     ),
     Case(
         "r14-unused-source",
@@ -643,6 +715,10 @@ CASES: list[Case] = [
         lambda p: p.puzzles[0]["sources"].append(copy.deepcopy(SOURCE_OFFICIAL)),
         [diag.R14_UNUSED_SOURCE],
         "мёртвый источник: объявлен и не используется ни одной карточкой",
+        runtime=[],
+        runtime_why=(
+            "авторское правило (I4-P3)"
+        ),
     ),
     Case(
         "r15-only-other",
@@ -650,6 +726,10 @@ CASES: list[Case] = [
         lambda p: _only_other_source(p, 0),
         [diag.R15_NO_AUTHORITATIVE_SOURCE],
         "единственный источник карточки имеет kind other",
+        runtime=[],
+        runtime_why=(
+            "качество источников — авторское правило (I4-P3)"
+        ),
     ),
     Case(
         "r16-slow-single-source",
@@ -657,6 +737,10 @@ CASES: list[Case] = [
         lambda p: _slow_with_single_source(p, 0),
         [diag.R16_SECOND_SOURCE_REQUIRED],
         "volatility slow при одном источнике у первой карточки",
+        runtime=[],
+        runtime_why=(
+            "авторское правило (I4-P3)"
+        ),
     ),
     Case(
         "r16-disputed-single-source",
@@ -664,6 +748,10 @@ CASES: list[Case] = [
         lambda p: _disputed_with_single_source(p, 0),
         [diag.R16_SECOND_SOURCE_REQUIRED],
         "disputed: true при одном источнике у карточки",
+        runtime=[],
+        runtime_why=(
+            "авторское правило (I4-P3)"
+        ),
     ),
     Case(
         "r17-no-locator",
@@ -671,6 +759,10 @@ CASES: list[Case] = [
         lambda p: p.puzzles[0]["sources"][0].pop("url"),
         [diag.R17_SOURCE_LOCATOR_MISSING],
         "у источника нет ни url, ни reference",
+        runtime=[],
+        runtime_why=(
+            "url/reference — правило схемы, а не формы DTO: оба поля необязательны (I4-P3)"
+        ),
     ),
     # --- Ссылки и компоновка наборов ----------------------------------------
     Case(
@@ -729,6 +821,10 @@ CASES: list[Case] = [
         lambda p: _set_field(p, 1, "category", "geography"),
         [diag.R20A_SET_CATEGORY_REPEAT],
         "две одинаковые категории в наборе",
+        runtime=[],
+        runtime_why=(
+            "компоновка набора — авторское правило (I4-P3)"
+        ),
     ),
     Case(
         "r20a-two-mixed",
@@ -736,6 +832,10 @@ CASES: list[Case] = [
         lambda p: (_set_field(p, 0, "category", "mixed"), _set_field(p, 1, "category", "mixed")),
         [diag.R20A_SET_CATEGORY_REPEAT],
         "mixed + mixed + science: mixed не является исключением из R20A",
+        runtime=[],
+        runtime_why=(
+            "компоновка набора — авторское правило (I4-P3)"
+        ),
     ),
     Case(
         "r20a-mixed-plus-repeat",
@@ -743,6 +843,10 @@ CASES: list[Case] = [
         lambda p: (_set_field(p, 0, "category", "mixed"), _set_field(p, 2, "category", "history")),
         [diag.R20A_SET_CATEGORY_REPEAT],
         "mixed + history + history: соседство с mixed не разрешает повтор категории",
+        runtime=[],
+        runtime_why=(
+            "компоновка набора — авторское правило (I4-P3)"
+        ),
     ),
     Case(
         "r20b-profile-112",
@@ -750,6 +854,10 @@ CASES: list[Case] = [
         lambda p: _set_field(p, 1, "difficulty", 1),
         [diag.R20B_SET_DIFFICULTY_PROFILE],
         "профиль [1,1,2] не входит в перечень {[1,2,2],[1,2,3]}",
+        runtime=[],
+        runtime_why=(
+            "профиль сложности — авторское правило (I4-P3)"
+        ),
     ),
     Case(
         "r20b-profile-223",
@@ -757,6 +865,10 @@ CASES: list[Case] = [
         lambda p: _profile_223(p),
         [diag.R20B_SET_DIFFICULTY_PROFILE],
         "профиль [2,2,3] в наборе 7, где difficulty 3 разрешена: падает только R20B",
+        runtime=[],
+        runtime_why=(
+            "профиль сложности — авторское правило (I4-P3)"
+        ),
     ),
     Case(
         "r20c-opening-category",
@@ -764,6 +876,10 @@ CASES: list[Case] = [
         lambda p: _set_field(p, 3, "category", "geography"),
         [diag.R20C_SET_OPENING_CATEGORY],
         "одна категория открывает наборы 0 и 1",
+        runtime=[],
+        runtime_why=(
+            "открывающая категория — авторское правило (I4-P3)"
+        ),
     ),
     Case(
         "r20c-opening-mixed",
@@ -771,6 +887,10 @@ CASES: list[Case] = [
         lambda p: (_set_field(p, 0, "category", "mixed"), _set_field(p, 3, "category", "mixed")),
         [diag.R20C_SET_OPENING_CATEGORY],
         "mixed открывает два соседних набора: правило сравнивает значения",
+        runtime=[],
+        runtime_why=(
+            "открывающая категория — авторское правило (I4-P3)"
+        ),
     ),
     Case(
         "r20d-early-difficulty",
@@ -778,6 +898,10 @@ CASES: list[Case] = [
         lambda p: _set_field(p, 2, "difficulty", 3),
         [diag.R20D_EARLY_DIFFICULTY],
         "difficulty 3 в наборе 0: профиль [1,2,3] допустим, но не в первых семи",
+        runtime=[],
+        runtime_why=(
+            "первые семь наборов — авторское правило (I4-P3)"
+        ),
     ),
     Case(
         "r21-wrong-counts",
@@ -815,6 +939,10 @@ CASES: list[Case] = [
         lambda p: setattr(p, "manifest_damage", _extra_field_in_files),
         [diag.R01_SCHEMA],
         "лишнее поле внутри files[]: нарушение additionalProperties: false",
+        runtime=[],
+        runtime_why=(
+            "неизвестное необязательное поле игнорируется @AssetJson по политике версионирования (I4-D9, I4-R1): в рантайме это не нарушение"
+        ),
     ),
     Case(
         "m02-active-pack-mismatch",
@@ -837,6 +965,10 @@ CASES: list[Case] = [
         lambda p: setattr(p, "declared_files", ["../secret.json", DAILY_SETS_FILE]),
         [diag.M03_FILE_LIST_INVALID, diag.M03_FILE_LIST_INVALID],
         "обход каталога в files[].path; вторая находка — нет файла с префиксом puzzles-",
+        runtime=[diag.M03_FILE_LIST_INVALID],
+        runtime_why=(
+            "то же"
+        ),
     ),
     Case(
         "m03-absolute-path",
@@ -844,6 +976,10 @@ CASES: list[Case] = [
         lambda p: setattr(p, "declared_files", ["/etc/passwd", DAILY_SETS_FILE]),
         [diag.M03_FILE_LIST_INVALID, diag.M03_FILE_LIST_INVALID],
         "абсолютный путь в files[].path",
+        runtime=[diag.M03_FILE_LIST_INVALID],
+        runtime_why=(
+            "рантайм останавливается на первом же нарушении списка файлов: читатель владеет формой и целостностью, и продолжать разбор документа с непроверенными именами нечем"
+        ),
     ),
     Case(
         "m03-subdirectory",
@@ -851,6 +987,10 @@ CASES: list[Case] = [
         lambda p: setattr(p, "declared_files", ["sub/puzzles-001.json", DAILY_SETS_FILE]),
         [diag.M03_FILE_LIST_INVALID, diag.M03_FILE_LIST_INVALID],
         "подкаталог в files[].path: формат допускает ровно три файла без вложенности",
+        runtime=[diag.M03_FILE_LIST_INVALID],
+        runtime_why=(
+            "то же"
+        ),
     ),
     Case(
         "m03-uppercase-extension",
@@ -858,6 +998,10 @@ CASES: list[Case] = [
         lambda p: setattr(p, "declared_files", ["puzzles-001.JSON", DAILY_SETS_FILE]),
         [diag.M03_FILE_LIST_INVALID, diag.M03_FILE_LIST_INVALID],
         "другой регистр расширения не проходит закрытый шаблон",
+        runtime=[diag.M03_FILE_LIST_INVALID],
+        runtime_why=(
+            "то же"
+        ),
     ),
     Case(
         "m03-no-path",
@@ -866,6 +1010,10 @@ CASES: list[Case] = [
         [diag.M03_FILE_LIST_INVALID, diag.M03_FILE_LIST_INVALID],
         "элемент files без path: объявление файла без имени бессмысленно, и это "
         "вопрос M03, а не схемы — вторая находка про отсутствующий префикс puzzles-",
+        runtime=[diag.R01_SCHEMA],
+        runtime_why=(
+            "элемент files без path — та же причина, R01"
+        ),
     ),
     Case(
         "m03-files-not-array",
@@ -873,6 +1021,10 @@ CASES: list[Case] = [
         lambda p: setattr(p, "manifest_damage", _files_not_array),
         [diag.M03_FILE_LIST_INVALID],
         "files не массив: «это вообще массив» — тоже вопрос M03",
+        runtime=[diag.R01_SCHEMA],
+        runtime_why=(
+            "files не массив — та же причина, R01"
+        ),
     ),
     Case(
         "m03-element-not-object",
@@ -881,6 +1033,10 @@ CASES: list[Case] = [
         [diag.M03_FILE_LIST_INVALID, diag.M03_FILE_LIST_INVALID],
         "элемент files строкой вместо объекта; вторая находка — отсутствующий "
         "префикс puzzles-",
+        runtime=[diag.R01_SCHEMA],
+        runtime_why=(
+            "элемент files не объект — документ не собирается в DTO, и отказ назван R01 (§7.3): точность схемы в рантайме не воспроизводится"
+        ),
     ),
     Case(
         "m03-duplicate-path",
@@ -888,6 +1044,10 @@ CASES: list[Case] = [
         lambda p: setattr(p, "declared_files", [PUZZLES_FILE, PUZZLES_FILE]),
         [diag.M03_FILE_LIST_INVALID, diag.M03_FILE_LIST_INVALID],
         "дубликат пути; вторая находка — нет файла с префиксом daily-sets-",
+        runtime=[diag.M03_FILE_LIST_INVALID],
+        runtime_why=(
+            "то же: одна находка вместо двух — читатель не собирает список, он бросает"
+        ),
     ),
     Case(
         "m03-three-files",
@@ -1101,9 +1261,13 @@ def build_all(root: Path) -> dict[str, dict]:
         pack = BASES[case.base]()
         case.mutate(pack)
         write_pack(invalid_root / case.name, pack)
-        entry: dict[str, object] = {"cli": sorted(case.codes), "why": case.why}
+        entry: dict[str, object] = {"cli": sorted(case.codes)}
         if case.runtime is not None:
             entry["runtime"] = sorted(case.runtime)
+        entry["why"] = case.why
+        if case.runtime is not None:
+            assert case.runtime_why, f"{case.name}: runtime без runtime_why"
+            entry["runtimeWhy"] = case.runtime_why
         entries[f"invalid/{case.name}"] = entry
 
     return entries
@@ -1178,9 +1342,9 @@ def main() -> int:
         "_comment": (
             "Единственный источник ожидаемых кодов для фикстур валидатора. Колонка cli "
             "проверяется тестами PR 4A; колонка runtime — контракт полного пути "
-            "ContentPackReader → ContentValidator и заполняется в PR 4B (там, где она "
-            "совпала бы с cli, её опускают). Порядок кодов — отсортированный, тексты "
-            "сообщений контрактом не являются. Поле why — пояснение для человека."
+            "ContentPackReader → ContentValidator, заполнена в PR 4B (там, где она "
+            "совпадает с cli, её опускают). Порядок кодов — отсортированный, тексты "
+            "сообщений контрактом не являются. Поля why и runtimeWhy — пояснения для человека."
         ),
         "validationDate": VALIDATION_DATE,
         "fixtures": dict(sorted(entries.items())),

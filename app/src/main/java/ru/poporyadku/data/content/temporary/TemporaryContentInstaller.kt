@@ -66,7 +66,15 @@ class TemporaryContentInstaller @Inject constructor(
                 // Бросается ВНУТРИ транзакции, поэтому откат гарантирован формой кода:
                 // ни daily_sets, ни day_assignments, ни puzzle_attempts, ни day_results
                 // не изменены. Тип доменный (domain/content), а не data-специфичный.
-                throw ContentInstallException.Conflict(activePackId, staleIndexes, blockedDates)
+                // I4-D31: единственная правка этого файла в PR 4B — именованный
+                // аргумент нового поля. Пустой список честен: временный установщик
+                // сверяет только индексы наборов и о составах ничего не знает.
+                throw ContentInstallException.Conflict(
+                    packId = activePackId,
+                    staleSetIndexes = staleIndexes,
+                    changedSetIndexes = emptyList(),
+                    blockedDates = blockedDates,
+                )
             }
 
             // 3. Ранний выход законен ТОЛЬКО после обеих проверок.

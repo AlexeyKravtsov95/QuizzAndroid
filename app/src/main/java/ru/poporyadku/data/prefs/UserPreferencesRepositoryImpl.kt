@@ -51,9 +51,15 @@ class UserPreferencesRepositoryImpl @Inject constructor(
         dataStore.edit { it[PreferenceKeys.THEME_MODE] = mode.name }
     }
 
-    override suspend fun setStoredContentVersion(version: Int) {
-        require(version >= 0) { "версия контента отрицательна: $version" }
-        dataStore.edit { it[PreferenceKeys.STORED_CONTENT_VERSION] = version }
+    // ITERATION_4_DESIGN.md, I4-D10: версия и отпечаток пишутся ОДНИМ edit, по образцу
+    // updateStreakCache. Отдельного сеттера версии не существует.
+    override suspend fun setInstalledContent(contentVersion: Int, fingerprint: String) {
+        require(contentVersion >= 0) { "версия контента отрицательна: $contentVersion" }
+        require(fingerprint.isNotBlank()) { "отпечаток контента пуст" }
+        dataStore.edit { prefs ->
+            prefs[PreferenceKeys.STORED_CONTENT_VERSION] = contentVersion
+            prefs[PreferenceKeys.STORED_CONTENT_FINGERPRINT] = fingerprint
+        }
     }
 
     override suspend fun setHasSeenDragHint(seen: Boolean) {
@@ -96,6 +102,9 @@ class UserPreferencesRepositoryImpl @Inject constructor(
         reminderTime = readReminderTime(),
         themeMode = readThemeMode(),
         storedContentVersion = (this[PreferenceKeys.STORED_CONTENT_VERSION] ?: 0).coerceAtLeast(0),
+        // Отсутствующий ключ читается как null и не сбрасывает остальные настройки:
+        // «отпечатка нет» — штатное состояние первой установки, а не повреждение.
+        storedContentFingerprint = this[PreferenceKeys.STORED_CONTENT_FINGERPRINT],
         hasSeenDragHint = this[PreferenceKeys.HAS_SEEN_DRAG_HINT] ?: false,
         hasSeenScoringHint = this[PreferenceKeys.HAS_SEEN_SCORING_HINT] ?: false,
         hasCompletedFirstDay = this[PreferenceKeys.HAS_COMPLETED_FIRST_DAY] ?: false,

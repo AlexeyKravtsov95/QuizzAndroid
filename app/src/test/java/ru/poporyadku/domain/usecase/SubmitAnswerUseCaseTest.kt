@@ -31,9 +31,9 @@ import ru.poporyadku.core.model.DailySet
 import ru.poporyadku.core.model.Puzzle
 import ru.poporyadku.core.model.PuzzleAttempt
 import ru.poporyadku.core.model.puzzleIdAt
+import ru.poporyadku.core.model.InMemoryPuzzleRepository
+import ru.poporyadku.core.model.TestContent
 import ru.poporyadku.core.time.FakeClockProvider
-import ru.poporyadku.data.content.temporary.BundledPuzzles
-import ru.poporyadku.data.content.temporary.TemporaryPuzzleRepository
 import ru.poporyadku.data.db.AppDatabase
 import ru.poporyadku.data.db.dao.AttemptDao
 import ru.poporyadku.data.db.entity.DayAssignmentEntity
@@ -64,13 +64,12 @@ class SubmitAnswerUseCaseTest {
     private val date = LocalDate.of(2026, 9, 1)
     private val zone = ZoneOffset.UTC
     private val packId = ContentPack.CORE_RU
-    private val bundledSet: DailySet = BundledPuzzles.sets.first()
+    /** Независимая фикстура (I4-D22): временный источник исчезает в PR 4D. */
+    private val fixtureSet: DailySet = TestContent.set
 
     /** Правильный порядок головоломки слота — ответ на 6 из 6. */
-    private fun correctOrderAt(slotIndex: Int): List<String> {
-        val puzzleId = bundledSet.puzzleIdAt(slotIndex)
-        return BundledPuzzles.puzzles.first { it.puzzleId == puzzleId }.correctOrder
-    }
+    private fun correctOrderAt(slotIndex: Int): List<String> =
+        TestContent.correctOrderOf(fixtureSet.puzzleIdAt(slotIndex))
 
     /** Пропускает стороны только все разом: ни задержек, ни расчёта на планировщик. */
     private class Barrier(private val parties: Int) {
@@ -148,7 +147,7 @@ class SubmitAnswerUseCaseTest {
         progress = ProgressRepositoryImpl(db, db.attemptDao(), db.dayResultDao(), clock)
         assignments = DayAssignmentRepositoryImpl(db, db.assignmentDao(), db.dailySetDao(), clock, packId)
         runBlocking {
-            db.dailySetDao().upsertAll(listOf(bundledSet.toEntity()))
+            db.dailySetDao().upsertAll(listOf(fixtureSet.toEntity()))
             db.assignmentDao().insert(DayAssignmentEntity(date.toString(), packId, 0, assignedAt = 1L))
         }
     }
@@ -159,7 +158,7 @@ class SubmitAnswerUseCaseTest {
     }
 
     private fun useCase(
-        puzzles: PuzzleRepository = TemporaryPuzzleRepository(),
+        puzzles: PuzzleRepository = InMemoryPuzzleRepository(),
         progressRepository: ProgressRepository = progress,
     ) = SubmitAnswerUseCase(
         assignments = assignments,
@@ -298,14 +297,14 @@ class SubmitAnswerUseCaseTest {
         assertEquals(SubmitResult.Recorded(1, 0, AttemptKind.Skipped), result)
         assertEquals(0, puzzles.calls)
         val stored = rows().single()
-        assertEquals(bundledSet.puzzleIdAt(1), stored.puzzleId) // puzzleId — из DailySet
+        assertEquals(fixtureSet.puzzleIdAt(1), stored.puzzleId) // puzzleId — из DailySet
         assertEquals("", stored.submittedOrder)
         assertEquals(0, stored.score)
     }
 
     @Test
     fun `I3-U31 - a broken puzzle does not block a Skip either`() = runTest {
-        val broken = BundledPuzzles.puzzles.first().let { it.copy(correctOrder = emptyList()) }
+        val broken = TestContent.puzzles.first().let { it.copy(correctOrder = emptyList()) }
         val puzzles = FixedPuzzles(broken)
 
         val result = useCase(puzzles)(date, 2, Submission.Skip)

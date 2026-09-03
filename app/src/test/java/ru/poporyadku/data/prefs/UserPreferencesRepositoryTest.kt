@@ -19,6 +19,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -62,6 +63,7 @@ class UserPreferencesRepositoryTest {
         reminderTime = LocalTime.of(9, 0),
         themeMode = ThemeMode.SYSTEM,
         storedContentVersion = 0,
+        storedContentFingerprint = null,
         hasSeenDragHint = false,
         hasSeenScoringHint = false,
         hasCompletedFirstDay = false,
@@ -121,11 +123,30 @@ class UserPreferencesRepositoryTest {
         }
     }
 
+    // ITERATION_4_DESIGN.md, I4-D10: версия и отпечаток — ОДНА операция записи.
     @Test
-    fun `stored_content_version is written and read back`() = runTest {
-        repository.setStoredContentVersion(3)
+    fun `installed content version and fingerprint are written and read back`() = runTest {
+        repository.setInstalledContent(contentVersion = 3, fingerprint = FINGERPRINT)
         repository.preferences.test {
-            assertEquals(3, awaitItem().storedContentVersion)
+            val prefs = awaitItem()
+            assertEquals(3, prefs.storedContentVersion)
+            assertEquals(FINGERPRINT, prefs.storedContentFingerprint)
+        }
+    }
+
+    /** I4-R13: отсутствие ключа отпечатка читается как null и не ломает остальное. */
+    @Test
+    fun `I4-R13 - missing fingerprint key reads as null without touching other settings`() = runTest {
+        repository.setThemeMode(ThemeMode.DARK)
+        repository.setHasSeenDragHint(true)
+        dataStore.edit { it[PreferenceKeys.STORED_CONTENT_VERSION] = 7 }
+
+        repository.preferences.test {
+            val prefs = awaitItem()
+            assertNull(prefs.storedContentFingerprint)
+            assertEquals(7, prefs.storedContentVersion)
+            assertEquals(ThemeMode.DARK, prefs.themeMode)
+            assertTrue(prefs.hasSeenDragHint)
         }
     }
 
@@ -333,14 +354,16 @@ class UserPreferencesRepositoryTest {
 
     @Test
     fun `T9 - negative stored content version on write is rejected, previous value is kept`() = runTest {
-        repository.setStoredContentVersion(2)
+        repository.setInstalledContent(contentVersion = 2, fingerprint = FINGERPRINT)
 
         assertThrows<IllegalArgumentException> {
-            repository.setStoredContentVersion(-1)
+            repository.setInstalledContent(contentVersion = -1, fingerprint = FINGERPRINT)
         }
 
         repository.preferences.test {
-            assertEquals(2, awaitItem().storedContentVersion)
+            val prefs = awaitItem()
+            assertEquals(2, prefs.storedContentVersion)
+            assertEquals(FINGERPRINT, prefs.storedContentFingerprint)
         }
     }
 
@@ -352,6 +375,11 @@ class UserPreferencesRepositoryTest {
         repository.preferences.test {
             assertNull(awaitItem().lastSeenDate)
         }
+    }
+
+    private companion object {
+        /** Любой правдоподобный отпечаток: значение контрактом теста не является. */
+        val FINGERPRINT = "a".repeat(64)
     }
 
     private inline fun <reified T : Throwable> assertThrows(block: () -> Unit) {

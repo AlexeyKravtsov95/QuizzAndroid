@@ -61,6 +61,16 @@ class TemporaryContentInstallerTest {
             delegate.deleteOutside(packId, keep)
         }
 
+        // Диапазонные запросы PR 4B временный установщик не вызывает: он живёт
+        // на списочных предикатах до PR 4D. Делегируются ради полноты интерфейса.
+        override suspend fun byPack(packId: String): List<DailySetEntity> = delegate.byPack(packId)
+
+        override suspend fun deleteOutsideRange(packId: String, setCount: Int): Int =
+            delegate.deleteOutsideRange(packId, setCount)
+
+        override suspend fun countSetsWithMissingPuzzles(packId: String, contentVersion: Int): Int =
+            delegate.countSetsWithMissingPuzzles(packId, contentVersion)
+
         override fun observeAll(): Flow<List<DailySetEntity>> = delegate.observeAll()
     }
 

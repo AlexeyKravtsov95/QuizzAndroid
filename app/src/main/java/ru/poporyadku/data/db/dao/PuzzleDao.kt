@@ -16,4 +16,11 @@ interface PuzzleDao {
 
     @Query("SELECT * FROM puzzles WHERE puzzle_id = :puzzleId")
     suspend fun getById(puzzleId: String): PuzzleEntity?
+
+    // ITERATION_4_DESIGN.md, PR 4B: read-only счётчик для тестов импорта.
+    // DELETE по puzzles не существует ни здесь, ни где-либо ещё в src/main:
+    // головоломка, на которую может ссылаться история, не удаляется никогда
+    // (CONTENT_MODEL.md §7, раздел 3.4).
+    @Query("SELECT COUNT(*) FROM puzzles WHERE pack_id = :packId")
+    suspend fun countByPack(packId: String): Int
 }

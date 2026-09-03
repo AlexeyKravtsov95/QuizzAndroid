@@ -2,15 +2,23 @@
 // org.jetbrains.kotlin.kapt несовместим с built-in Kotlin, поэтому Hilt (на kapt — Dagger KSP
 // пока alpha) использует официальный com.android.legacy-kapt той же версии, что AGP.
 // kotlin.plugin.compose остаётся: built-in Kotlin по-прежнему требует отдельного
-// Compose-компилятора.
+// Compose-компилятора; kotlin.plugin.serialization — по той же причине отдельный
+// плагин компилятора (ITERATION_4_DESIGN.md, §13, PR 4B; совместимость со встроенным
+// Kotlin AGP 9 проверена эмпирически, docs/VERSIONS.md).
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.legacy.kapt)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
 }
+
+// Каталог общих фикстур валидатора контента (tools/validate-content/fixtures).
+// Вычисляется от корня проекта, а не от `projectDir` модуля и не от cwd Gradle.
+val contentFixturesDir: String =
+    rootProject.layout.projectDirectory.dir("tools/validate-content/fixtures").asFile.absolutePath
 
 android {
     namespace = "ru.poporyadku"
@@ -47,6 +55,11 @@ android {
 
     buildFeatures {
         compose = true
+        // ITERATION_4_DESIGN.md, §8.7: единственный потребитель BuildConfig — провайдер
+        // @VerifyBundleIntegrity в ContentModule. Проверка целостности пакета — свойство
+        // сборки, а не тип сборки в теле класса; в тестах она задаётся обычным
+        // параметром конструктора, без Robolectric.
+        buildConfig = true
     }
 
     packaging {
@@ -60,6 +73,11 @@ android {
         unitTests {
             isIncludeAndroidResources = true
             all {
+                // ITERATION_4_DESIGN.md, §7.4: JVM-тесты parity читают ТОТ ЖЕ каталог
+                // фикстур, что и Python-CLI. Путь абсолютный и вычислен от rootProject,
+                // поэтому не зависит от рабочего каталога Gradle; копии в
+                // app/src/test/resources не заводится — две копии разошлись бы молча.
+                it.systemProperty("content.fixtures.dir", contentFixturesDir)
                 it.jvmArgs(
                     "--add-opens=java.base/java.lang=ALL-UNNAMED",
                     "--add-opens=java.base/java.util=ALL-UNNAMED",
@@ -110,6 +128,11 @@ dependencies {
     // DataStore, D-18/D-12: единственный потребитель — UserPreferencesRepositoryImpl
     // и PreferencesModule.
     implementation(libs.androidx.datastore.preferences)
+
+    // kotlinx-serialization, ITERATION_4_DESIGN.md §7.5 и §9.2: два разных Json —
+    // терпимый @AssetJson для пакета из assets и строгий @StorageJson для JSON-колонок
+    // Room. Потребители — только data/content/** и data/db/**.
+    implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)

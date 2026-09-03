@@ -397,7 +397,7 @@ private class RecordingPreferences : UserPreferencesRepository {
     override suspend fun setReminderEnabled(enabled: Boolean) = unsupported()
     override suspend fun setReminderTime(time: LocalTime) = unsupported()
     override suspend fun setThemeMode(mode: ThemeMode) = unsupported()
-    override suspend fun setStoredContentVersion(version: Int) = unsupported()
+    override suspend fun setInstalledContent(contentVersion: Int, fingerprint: String) = unsupported()
     override suspend fun setHasSeenDragHint(seen: Boolean) = unsupported()
     override suspend fun setHasSeenScoringHint(seen: Boolean) = unsupported()
 

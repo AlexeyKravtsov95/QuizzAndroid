@@ -122,11 +122,10 @@ def test_each_fixture_documents_why_it_exists(name):
 
 
 def test_runtime_column_is_optional_and_well_formed():
-    """Колонка `runtime` необязательна и заполняется в PR 4B.
+    """Колонка `runtime` необязательна; её содержание заполнено в PR 4B.
 
-    Здесь фиксируется только её форма: `expectations.json` обязан **допускать** две
-    колонки, а содержательные ожидания рантайма появятся вместе с
-    `ContentPackReader` и `ContentValidator` (ITERATION_4_DESIGN.md §7.3).
+    Здесь фиксируется форма колонки и два следствия §7.3, которые обязаны пережить
+    любую правку рантайма.
     """
     with_runtime = {
         name: entry for name, entry in EXPECTATIONS["fixtures"].items() if "runtime" in entry
@@ -136,11 +135,22 @@ def test_runtime_column_is_optional_and_well_formed():
     for name, entry in with_runtime.items():
         assert isinstance(entry["runtime"], list), name
         assert entry["runtime"] == sorted(entry["runtime"]), name
+        assert entry.get("runtimeWhy"), name
 
-    # §7.3: R02 и R11 — специализированные коды CLI; в рантайме DTO не строится
-    # вовсе, и отказ уже назван R01.
+    # §7.3: отсутствующее обязательное поле не даёт DTO построиться, и отказ рантайма
+    # уже назван R01 — точного кода CLI (`R02`) он не обещает.
     assert EXPECTATIONS["fixtures"]["invalid/r02-no-correct-order"]["runtime"] == [diag.R01_SCHEMA]
-    assert EXPECTATIONS["fixtures"]["invalid/r11-empty-source-ids"]["runtime"] == [diag.R01_SCHEMA]
+
+    # §7.3, п. 3: пустой sourceIds защитным инвариантом НЕ является. Фикстура содержит
+    # именно пустой массив, а не отсутствующее поле, поэтому DTO строится, и рантайм
+    # не находит ничего: приложение не читает источники при выдаче головоломки.
+    # (В ревизии PR 4A здесь стояло R01 — предсказание, которому фикстура противоречит.)
+    assert EXPECTATIONS["fixtures"]["invalid/r11-empty-source-ids"]["runtime"] == []
+
+    # Ни один код рантайма не принадлежит колонке CLI-специализированных правил.
+    for name, entry in with_runtime.items():
+        assert diag.R02_CORRECT_ORDER_MISSING not in entry["runtime"], name
+        assert diag.R11_SOURCE_IDS_EMPTY not in entry["runtime"], name
 
 
 # --- Пересборка фикстур воспроизводима --------------------------------------

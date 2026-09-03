@@ -19,9 +19,9 @@ import ru.poporyadku.core.model.ContentPack
 import ru.poporyadku.core.model.DailySet
 import ru.poporyadku.core.model.Puzzle
 import ru.poporyadku.core.model.puzzleIdAt
+import ru.poporyadku.core.model.InMemoryPuzzleRepository
+import ru.poporyadku.core.model.TestContent
 import ru.poporyadku.core.time.FakeClockProvider
-import ru.poporyadku.data.content.temporary.BundledPuzzles
-import ru.poporyadku.data.content.temporary.TemporaryPuzzleRepository
 import ru.poporyadku.data.db.AppDatabase
 import ru.poporyadku.data.db.entity.DayAssignmentEntity
 import ru.poporyadku.data.db.mapper.toEntity
@@ -47,7 +47,8 @@ class GetPuzzleResultUseCaseTest {
     private val date = LocalDate.of(2026, 9, 1)
     private val zone = ZoneOffset.UTC
     private val packId = ContentPack.CORE_RU
-    private val bundledSet: DailySet = BundledPuzzles.sets.first()
+    /** Независимая фикстура (I4-D22): временный источник исчезает в PR 4D. */
+    private val fixtureSet: DailySet = TestContent.set
 
     /** Считает обращения: «на пропуске головоломка не читается» иначе не проверить. */
     private class CountingPuzzles(private val delegate: PuzzleRepository) : PuzzleRepository {
@@ -58,10 +59,8 @@ class GetPuzzleResultUseCaseTest {
         }
     }
 
-    private fun correctOrderAt(slotIndex: Int): List<String> {
-        val puzzleId = bundledSet.puzzleIdAt(slotIndex)
-        return BundledPuzzles.puzzles.first { it.puzzleId == puzzleId }.correctOrder
-    }
+    private fun correctOrderAt(slotIndex: Int): List<String> =
+        TestContent.correctOrderOf(fixtureSet.puzzleIdAt(slotIndex))
 
     @Before
     fun setUp() {
@@ -72,7 +71,7 @@ class GetPuzzleResultUseCaseTest {
         progress = ProgressRepositoryImpl(db, db.attemptDao(), db.dayResultDao(), clock)
         assignments = DayAssignmentRepositoryImpl(db, db.assignmentDao(), db.dailySetDao(), clock, packId)
         runBlocking {
-            db.dailySetDao().upsertAll(listOf(bundledSet.toEntity()))
+            db.dailySetDao().upsertAll(listOf(fixtureSet.toEntity()))
             db.assignmentDao().insert(DayAssignmentEntity(date.toString(), packId, 0, assignedAt = 1L))
         }
     }
@@ -85,12 +84,12 @@ class GetPuzzleResultUseCaseTest {
     private fun submitUseCase() = SubmitAnswerUseCase(
         assignments = assignments,
         sets = DailySetRepositoryImpl(db.dailySetDao()),
-        puzzles = TemporaryPuzzleRepository(),
+        puzzles = InMemoryPuzzleRepository(),
         progress = progress,
     )
 
     /** Каждый вызов даёт НОВЫЙ экземпляр: общего состояния между записью и чтением нет. */
-    private fun loadUseCase(puzzles: PuzzleRepository = TemporaryPuzzleRepository()) = GetPuzzleResultUseCase(
+    private fun loadUseCase(puzzles: PuzzleRepository = InMemoryPuzzleRepository()) = GetPuzzleResultUseCase(
         assignments = assignments,
         puzzles = puzzles,
         progress = progress,
@@ -107,7 +106,7 @@ class GetPuzzleResultUseCaseTest {
         assertTrue("ожидался Content, получен $load", load is PuzzleResultLoad.Content)
         load as PuzzleResultLoad.Content
         assertEquals(0, load.slotIndex)
-        assertEquals(bundledSet.puzzleIdAt(0), load.puzzle.puzzleId)
+        assertEquals(fixtureSet.puzzleIdAt(0), load.puzzle.puzzleId)
         assertEquals(submitted, load.attempt.submittedOrder)
         assertEquals(recorded.score, load.attempt.score)
         assertEquals(recorded.score, load.scored.score)
@@ -144,7 +143,7 @@ class GetPuzzleResultUseCaseTest {
     @Test
     fun `I3-U36 - a skipped slot returns Skipped without ever calling the calculator`() = runTest {
         submitUseCase()(date, 1, Submission.Skip)
-        val puzzles = CountingPuzzles(TemporaryPuzzleRepository())
+        val puzzles = CountingPuzzles(InMemoryPuzzleRepository())
 
         // Ни IllegalArgumentException из PairwiseScoreCalculator, ни обращения к контенту:
         // ветка Skipped стоит ДО них обоих.
@@ -156,7 +155,7 @@ class GetPuzzleResultUseCaseTest {
 
     @Test
     fun `I3-U36 - a slot without an attempt is NoAttempt`() = runTest {
-        val puzzles = CountingPuzzles(TemporaryPuzzleRepository())
+        val puzzles = CountingPuzzles(InMemoryPuzzleRepository())
 
         assertEquals(PuzzleResultLoad.NoAttempt(2), loadUseCase(puzzles)(date, 2))
         assertEquals(0, puzzles.calls)
