@@ -21,13 +21,13 @@ import org.robolectric.RobolectricTestRunner
 import ru.poporyadku.core.model.Category
 import ru.poporyadku.core.model.ContentPack
 import ru.poporyadku.core.model.DailySet
+import ru.poporyadku.core.model.InMemoryPuzzleRepository
 import ru.poporyadku.core.model.Puzzle
+import ru.poporyadku.core.model.TestContent
 import ru.poporyadku.core.model.ThemeMode
 import ru.poporyadku.core.model.UserPreferences
 import ru.poporyadku.core.model.puzzleIdAt
 import ru.poporyadku.core.time.FakeClockProvider
-import ru.poporyadku.data.content.temporary.BundledPuzzles
-import ru.poporyadku.data.content.temporary.TemporaryPuzzleRepository
 import ru.poporyadku.data.db.AppDatabase
 import ru.poporyadku.data.db.entity.DayAssignmentEntity
 import ru.poporyadku.data.db.entity.DayResultEntity
@@ -56,7 +56,8 @@ class GetDayRecapUseCaseTest {
     private val date = LocalDate.of(2026, 9, 1)
     private val zone = ZoneOffset.UTC
     private val packId = ContentPack.CORE_RU
-    private val bundledSet: DailySet = BundledPuzzles.sets.first()
+    /** Независимая фикстура (I4-D22): временный источник исчезает в PR 4D. */
+    private val fixtureSet: DailySet = TestContent.set
 
     /** Из всего контракта настроек здесь нужен только кэш серии. */
     private class RecordingPreferences : UserPreferencesRepository {
@@ -71,7 +72,7 @@ class GetDayRecapUseCaseTest {
         override suspend fun setReminderEnabled(enabled: Boolean) = unsupported()
         override suspend fun setReminderTime(time: LocalTime) = unsupported()
         override suspend fun setThemeMode(mode: ThemeMode) = unsupported()
-        override suspend fun setStoredContentVersion(version: Int) = unsupported()
+        override suspend fun setInstalledContent(contentVersion: Int, fingerprint: String) = unsupported()
         override suspend fun setHasSeenDragHint(seen: Boolean) = unsupported()
         override suspend fun setHasSeenScoringHint(seen: Boolean) = unsupported()
         override suspend fun setHasCompletedFirstDay(completed: Boolean) = unsupported()
@@ -93,10 +94,8 @@ class GetDayRecapUseCaseTest {
         override suspend fun getPuzzle(puzzleId: String): Puzzle? = null
     }
 
-    private fun correctOrderAt(slotIndex: Int): List<String> {
-        val puzzleId = bundledSet.puzzleIdAt(slotIndex)
-        return BundledPuzzles.puzzles.first { it.puzzleId == puzzleId }.correctOrder
-    }
+    private fun correctOrderAt(slotIndex: Int): List<String> =
+        TestContent.correctOrderOf(fixtureSet.puzzleIdAt(slotIndex))
 
     @Before
     fun setUp() {
@@ -108,7 +107,7 @@ class GetDayRecapUseCaseTest {
         assignments = DayAssignmentRepositoryImpl(db, db.assignmentDao(), db.dailySetDao(), clock, packId)
         preferences = RecordingPreferences()
         runBlocking {
-            db.dailySetDao().upsertAll(listOf(bundledSet.toEntity()))
+            db.dailySetDao().upsertAll(listOf(fixtureSet.toEntity()))
             db.assignmentDao().insert(DayAssignmentEntity(date.toString(), packId, 0, assignedAt = 1L))
         }
     }
@@ -118,14 +117,14 @@ class GetDayRecapUseCaseTest {
         db.close()
     }
 
-    private fun useCase(puzzles: PuzzleRepository = TemporaryPuzzleRepository()) = GetDayRecapUseCase(
+    private fun useCase(puzzles: PuzzleRepository = InMemoryPuzzleRepository()) = GetDayRecapUseCase(
         assignments = assignments,
         puzzles = puzzles,
         progress = progress,
         streaks = GetStreaksUseCase(progress, preferences),
     )
 
-    private fun submitUseCase(puzzles: PuzzleRepository = TemporaryPuzzleRepository()) = SubmitAnswerUseCase(
+    private fun submitUseCase(puzzles: PuzzleRepository = InMemoryPuzzleRepository()) = SubmitAnswerUseCase(
         assignments = assignments,
         sets = DailySetRepositoryImpl(db.dailySetDao()),
         puzzles = puzzles,

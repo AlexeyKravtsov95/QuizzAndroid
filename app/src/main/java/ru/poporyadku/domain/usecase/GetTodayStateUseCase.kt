@@ -180,14 +180,31 @@ class GetTodayStateUseCase @Inject constructor(
     private fun failureState(e: Exception, partial: PartialToday): TodayState = TodayState.Failure(
         today = partial.today,
         stats = partial.stats,
-        // Конфликт установки контента — доменный тип, поэтому классификация помещается
-        // в одну строку и не знает ни про Room, ни про SQLite (I3-D47).
-        kind = if (e is ContentInstallException.Conflict) {
-            TodayFailureKind.ContentConflict
-        } else {
-            TodayFailureKind.Generic
-        },
+        kind = kindOf(e),
     )
+
+    /**
+     * Классификация отказа (I3-D47; ITERATION_4_DESIGN.md, **I4-D19**, `I4-V1`).
+     *
+     * `when` по закрытой taxonomy ИСЧЕРПЫВАЮЩИЙ и без `else` внутри неё: появление
+     * пятого варианта `ContentInstallException` обязано сломать компиляцию здесь,
+     * а не молча уехать в `Generic`.
+     *
+     * Отказы базы среди вариантов отсутствуют намеренно: `SQLiteException` и прочие
+     * исключения Room не оборачиваются и попадают в общую ветку — повторить имеет
+     * смысл, разрушительных действий не предлагается.
+     */
+    private fun kindOf(e: Exception): TodayFailureKind = when (e) {
+        is ContentInstallException -> when (e) {
+            is ContentInstallException.Conflict -> TodayFailureKind.ContentConflict
+            is ContentInstallException.BundleInvalid -> TodayFailureKind.ContentUnusable
+            is ContentInstallException.UnsupportedSchema -> TodayFailureKind.ContentUnusable
+            // Ввод-вывод, а не содержимое: повтор имеет смысл.
+            is ContentInstallException.AssetUnreadable -> TodayFailureKind.Generic
+        }
+
+        else -> TodayFailureKind.Generic
+    }
 
     private companion object {
         /** Номер дня, который видит игрок, — `setIndex + 1`. */

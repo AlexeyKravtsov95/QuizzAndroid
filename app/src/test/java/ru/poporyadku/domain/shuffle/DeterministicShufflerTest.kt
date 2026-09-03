@@ -13,8 +13,9 @@ class DeterministicShufflerTest {
 
     private val cardIds = listOf("c1", "c2", "c3", "c4")
 
-    // Три временные головоломки (data/content/temporary/BundledPuzzles.kt). Идентификаторы
-    // выписаны литералами намеренно: domain про data не знает, и тест домена — тоже.
+    // Три идентификатора контракта I3-H2, выписанные литералами намеренно: domain про
+    // data не знает, и тест домена — тоже. Те же три значения лежат в общих векторах
+    // fixtures/shuffle-vectors.json, где их сверяет parity-тест I4-P4.
     private val geographyId = "tmp-geo-vysota-001"
     private val historyId = "tmp-hist-izobreteniya-002"
     private val scienceId = "tmp-sci-otkrytiya-003"
@@ -60,7 +61,9 @@ class DeterministicShufflerTest {
 
     @Test
     fun `I3-H4 - no temporary puzzle starts in its correct order`() {
-        // correctOrder трёх временных головоломок — литералы BundledPuzzles.
+        // correctOrder трёх головоломок контракта — литералы: инвариант «стартовый
+        // порядок не совпадает с правильным» принадлежит алгоритму, а не источнику
+        // контента. По настоящему пакету то же правило проверяет I4-C3 (PR 4C-1).
         val puzzles = mapOf(
             geographyId to listOf("c2", "c1", "c3", "c4"),
             historyId to listOf("c2", "c4", "c1", "c3"),

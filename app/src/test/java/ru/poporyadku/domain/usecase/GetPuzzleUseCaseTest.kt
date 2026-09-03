@@ -18,9 +18,9 @@ import ru.poporyadku.core.model.ContentPack
 import ru.poporyadku.core.model.DailySet
 import ru.poporyadku.core.model.Puzzle
 import ru.poporyadku.core.model.PuzzleAttempt
+import ru.poporyadku.core.model.InMemoryPuzzleRepository
+import ru.poporyadku.core.model.TestContent
 import ru.poporyadku.core.time.FakeClockProvider
-import ru.poporyadku.data.content.temporary.BundledPuzzles
-import ru.poporyadku.data.content.temporary.TemporaryPuzzleRepository
 import ru.poporyadku.data.db.AppDatabase
 import ru.poporyadku.data.db.entity.DayAssignmentEntity
 import ru.poporyadku.data.db.mapper.toEntity
@@ -83,7 +83,7 @@ class GetPuzzleUseCaseTest {
         db.close()
     }
 
-    private fun useCase(puzzles: PuzzleRepository = TemporaryPuzzleRepository()) = GetPuzzleUseCase(
+    private fun useCase(puzzles: PuzzleRepository = InMemoryPuzzleRepository()) = GetPuzzleUseCase(
         content = NoopInstaller,
         assignments = assignments,
         sets = DailySetRepositoryImpl(db.dailySetDao()),
@@ -101,7 +101,8 @@ class GetPuzzleUseCaseTest {
         db.dailySetDao().upsertAll(listOf(set.copy(setIndex = setIndex).toEntity()))
     }
 
-    private suspend fun seedBundledSet() = seedSet(0, BundledPuzzles.sets.first())
+    /** Набор 0 независимой фикстуры (I4-D22): временный источник тут ни при чём. */
+    private suspend fun seedFixtureSet() = seedSet(0, TestContent.set)
 
     private suspend fun closeSlot(slotIndex: Int, order: List<String>) {
         progress.recordAttempt(
@@ -109,7 +110,7 @@ class GetPuzzleUseCaseTest {
                 id = 0,
                 localDate = date,
                 slotIndex = slotIndex,
-                puzzleId = BundledPuzzles.GEOGRAPHY_PUZZLE_ID,
+                puzzleId = TestContent.FIRST_PUZZLE_ID,
                 submittedOrder = order,
                 score = if (order.isEmpty()) 0 else 6,
                 submittedAt = 0L,
@@ -120,7 +121,7 @@ class GetPuzzleUseCaseTest {
     @Test
     fun `I3-U18 - a closed slot redirects even when its puzzle cannot be loaded`() = runTest {
         assign(setIndex = 0)
-        seedBundledSet()
+        seedFixtureSet()
         closeSlot(0, listOf("c2", "c1", "c3", "c4"))
 
         // Головоломки нет вовсе: проверка отвеченности стоит ДО загрузки набора и Puzzle.
@@ -134,17 +135,17 @@ class GetPuzzleUseCaseTest {
     @Test
     fun `I3-U19 - a playable slot returns the puzzle and a deterministic start order`() = runTest {
         assign(setIndex = 0)
-        seedBundledSet()
+        seedFixtureSet()
 
         val result = useCase()(date, 0)
 
         assertTrue("ожидался Playable, получен $result", result is GetPuzzleResult.Playable)
         result as GetPuzzleResult.Playable
-        assertEquals(BundledPuzzles.GEOGRAPHY_PUZZLE_ID, result.puzzle.puzzleId)
+        assertEquals(TestContent.FIRST_PUZZLE_ID, result.puzzle.puzzleId)
         assertEquals(0, result.setIndex)
         assertEquals(
             DeterministicShuffler.shuffle(
-                BundledPuzzles.GEOGRAPHY_PUZZLE_ID,
+                TestContent.FIRST_PUZZLE_ID,
                 result.puzzle.cards.map { it.cardId },
             ),
             result.startOrder,
@@ -154,7 +155,7 @@ class GetPuzzleUseCaseTest {
     @Test
     fun `I3-U19 - slotIndex out of range is rejected before anything is read`() = runTest {
         assign(setIndex = 0)
-        seedBundledSet()
+        seedFixtureSet()
 
         assertEquals(GetPuzzleResult.Failure(PuzzleErrorKind.SlotOutOfRange), useCase()(date, 3))
         assertEquals(GetPuzzleResult.Failure(PuzzleErrorKind.SlotOutOfRange), useCase()(date, -1))
@@ -162,7 +163,7 @@ class GetPuzzleUseCaseTest {
 
     @Test
     fun `I3-U19 - a date without an assignment is NoAssignment`() = runTest {
-        seedBundledSet()
+        seedFixtureSet()
 
         assertEquals(GetPuzzleResult.Failure(PuzzleErrorKind.NoAssignment), useCase()(date, 0))
     }
@@ -185,8 +186,8 @@ class GetPuzzleUseCaseTest {
     @Test
     fun `I3-U19 - a puzzle failing the shape check is InvalidPuzzle`() = runTest {
         assign(setIndex = 0)
-        seedBundledSet()
-        val broken = BundledPuzzles.puzzles.first().let { it.copy(cards = it.cards.drop(1)) }
+        seedFixtureSet()
+        val broken = TestContent.puzzles.first().let { it.copy(cards = it.cards.drop(1)) }
 
         assertEquals(
             GetPuzzleResult.Failure(PuzzleErrorKind.InvalidPuzzle),
@@ -197,7 +198,7 @@ class GetPuzzleUseCaseTest {
     @Test
     fun `I3-U33 - a slot closed by Skip in this session never leads to PuzzleResult`() = runTest {
         assign(setIndex = 0)
-        seedBundledSet()
+        seedFixtureSet()
         // Ровно то, что пишет SubmitAnswerUseCase на Skip: пустой порядок, ноль баллов.
         closeSlot(0, emptyList())
 
@@ -207,14 +208,14 @@ class GetPuzzleUseCaseTest {
     @Test
     fun `I3-U34 - opening a skipped slot directly gives the same classification`() = runTest {
         assign(setIndex = 0)
-        seedBundledSet()
+        seedFixtureSet()
         // Записи в этой сессии не было: попытка уже лежит в базе, как после смерти процесса.
         db.attemptDao().insert(
             PuzzleAttempt(
                 id = 0,
                 localDate = date,
                 slotIndex = 2,
-                puzzleId = BundledPuzzles.SCIENCE_PUZZLE_ID,
+                puzzleId = TestContent.THIRD_PUZZLE_ID,
                 submittedOrder = emptyList(),
                 score = 0,
                 submittedAt = 1L,
@@ -225,7 +226,7 @@ class GetPuzzleUseCaseTest {
                 id = 0,
                 localDate = date,
                 slotIndex = 1,
-                puzzleId = BundledPuzzles.HISTORY_PUZZLE_ID,
+                puzzleId = TestContent.SECOND_PUZZLE_ID,
                 submittedOrder = listOf("c2", "c4", "c1", "c3"),
                 score = 6,
                 submittedAt = 1L,

@@ -1,5 +1,5 @@
 {
-  "_comment": "Единственный источник ожидаемых кодов для фикстур валидатора. Колонка cli проверяется тестами PR 4A; колонка runtime — контракт полного пути ContentPackReader → ContentValidator и заполняется в PR 4B (там, где она совпала бы с cli, её опускают). Порядок кодов — отсортированный, тексты сообщений контрактом не являются. Поле why — пояснение для человека.",
+  "_comment": "Единственный источник ожидаемых кодов для фикстур валидатора. Колонка cli проверяется тестами PR 4A; колонка runtime — контракт полного пути ContentPackReader → ContentValidator, заполнена в PR 4B (там, где она совпадает с cli, её опускают). Порядок кодов — отсортированный, тексты сообщений контрактом не являются. Поля why и runtimeWhy — пояснения для человека.",
   "validationDate": "2026-09-03",
   "fixtures": {
     "invalid/m01-schema-version": {
@@ -25,41 +25,65 @@
         "M03_FILE_LIST_INVALID",
         "M03_FILE_LIST_INVALID"
       ],
-      "why": "абсолютный путь в files[].path"
+      "runtime": [
+        "M03_FILE_LIST_INVALID"
+      ],
+      "why": "абсолютный путь в files[].path",
+      "runtimeWhy": "рантайм останавливается на первом же нарушении списка файлов: читатель владеет формой и целостностью, и продолжать разбор документа с непроверенными именами нечем"
     },
     "invalid/m03-duplicate-path": {
       "cli": [
         "M03_FILE_LIST_INVALID",
         "M03_FILE_LIST_INVALID"
       ],
-      "why": "дубликат пути; вторая находка — нет файла с префиксом daily-sets-"
+      "runtime": [
+        "M03_FILE_LIST_INVALID"
+      ],
+      "why": "дубликат пути; вторая находка — нет файла с префиксом daily-sets-",
+      "runtimeWhy": "то же: одна находка вместо двух — читатель не собирает список, он бросает"
     },
     "invalid/m03-element-not-object": {
       "cli": [
         "M03_FILE_LIST_INVALID",
         "M03_FILE_LIST_INVALID"
       ],
-      "why": "элемент files строкой вместо объекта; вторая находка — отсутствующий префикс puzzles-"
+      "runtime": [
+        "R01_SCHEMA"
+      ],
+      "why": "элемент files строкой вместо объекта; вторая находка — отсутствующий префикс puzzles-",
+      "runtimeWhy": "элемент files не объект — документ не собирается в DTO, и отказ назван R01 (§7.3): точность схемы в рантайме не воспроизводится"
     },
     "invalid/m03-files-not-array": {
       "cli": [
         "M03_FILE_LIST_INVALID"
       ],
-      "why": "files не массив: «это вообще массив» — тоже вопрос M03"
+      "runtime": [
+        "R01_SCHEMA"
+      ],
+      "why": "files не массив: «это вообще массив» — тоже вопрос M03",
+      "runtimeWhy": "files не массив — та же причина, R01"
     },
     "invalid/m03-no-path": {
       "cli": [
         "M03_FILE_LIST_INVALID",
         "M03_FILE_LIST_INVALID"
       ],
-      "why": "элемент files без path: объявление файла без имени бессмысленно, и это вопрос M03, а не схемы — вторая находка про отсутствующий префикс puzzles-"
+      "runtime": [
+        "R01_SCHEMA"
+      ],
+      "why": "элемент files без path: объявление файла без имени бессмысленно, и это вопрос M03, а не схемы — вторая находка про отсутствующий префикс puzzles-",
+      "runtimeWhy": "элемент files без path — та же причина, R01"
     },
     "invalid/m03-subdirectory": {
       "cli": [
         "M03_FILE_LIST_INVALID",
         "M03_FILE_LIST_INVALID"
       ],
-      "why": "подкаталог в files[].path: формат допускает ровно три файла без вложенности"
+      "runtime": [
+        "M03_FILE_LIST_INVALID"
+      ],
+      "why": "подкаталог в files[].path: формат допускает ровно три файла без вложенности",
+      "runtimeWhy": "то же"
     },
     "invalid/m03-three-files": {
       "cli": [
@@ -72,14 +96,22 @@
         "M03_FILE_LIST_INVALID",
         "M03_FILE_LIST_INVALID"
       ],
-      "why": "обход каталога в files[].path; вторая находка — нет файла с префиксом puzzles-"
+      "runtime": [
+        "M03_FILE_LIST_INVALID"
+      ],
+      "why": "обход каталога в files[].path; вторая находка — нет файла с префиксом puzzles-",
+      "runtimeWhy": "то же"
     },
     "invalid/m03-uppercase-extension": {
       "cli": [
         "M03_FILE_LIST_INVALID",
         "M03_FILE_LIST_INVALID"
       ],
-      "why": "другой регистр расширения не проходит закрытый шаблон"
+      "runtime": [
+        "M03_FILE_LIST_INVALID"
+      ],
+      "why": "другой регистр расширения не проходит закрытый шаблон",
+      "runtimeWhy": "то же"
     },
     "invalid/m04-missing-file": {
       "cli": [
@@ -145,49 +177,61 @@
       "cli": [
         "R01_SCHEMA"
       ],
-      "why": "лишнее поле внутри files[]: нарушение additionalProperties: false"
+      "runtime": [],
+      "why": "лишнее поле внутри files[]: нарушение additionalProperties: false",
+      "runtimeWhy": "неизвестное необязательное поле игнорируется @AssetJson по политике версионирования (I4-D9, I4-R1): в рантайме это не нарушение"
     },
     "invalid/r01-schema-type": {
       "cli": [
         "R01_SCHEMA"
       ],
+      "runtime": [],
       "why": "difficulty строкой вместо целого — общий отказ схемы",
-      "runtime": [
-        "R01_SCHEMA"
-      ]
+      "runtimeWhy": "kotlinx-serialization принимает закавыченное число в числовом поле независимо от isLenient, поэтому DTO строится и difficulty равен 1; ловит это строгая схема в CI, а не защитный набор (§7.3)"
     },
     "invalid/r02-no-correct-order": {
       "cli": [
         "R02_CORRECT_ORDER_MISSING"
       ],
-      "why": "нет обязательного correctOrder — сверять вычисленный порядок не с чем",
       "runtime": [
         "R01_SCHEMA"
-      ]
+      ],
+      "why": "нет обязательного correctOrder — сверять вычисленный порядок не с чем",
+      "runtimeWhy": "обязательное поле отсутствует — DTO не строится, отказ назван R01 (§7.3)"
     },
     "invalid/r03-prompt-too-long": {
       "cli": [
         "R03_TEXT_LENGTH"
       ],
-      "why": "prompt длиной 91 символ при пределе 90"
+      "runtime": [],
+      "why": "prompt длиной 91 символ при пределе 90",
+      "runtimeWhy": "длина строки — авторское правило: DTO строится, экран работает, место проверки — CI (I4-P3)"
     },
     "invalid/r04-no-verified-by": {
       "cli": [
         "R04_VERIFICATION_MISSING"
       ],
-      "why": "нет verifiedBy — редакторский протокол не зафиксирован"
+      "runtime": [
+        "R01_SCHEMA"
+      ],
+      "why": "нет verifiedBy — редакторский протокол не зафиксирован",
+      "runtimeWhy": "verifiedBy обязателен в формате — DTO не строится, отказ назван R01 (§7.3)"
     },
     "invalid/r04a-date-not-calendar": {
       "cli": [
         "R04A_DATE_NOT_CALENDAR"
       ],
-      "why": "30 февраля не существует; pattern такую дату пропускает"
+      "runtime": [],
+      "why": "30 февраля не существует; pattern такую дату пропускает",
+      "runtimeWhy": "календарность даты — авторское правило (I4-P3)"
     },
     "invalid/r04b-date-in-future": {
       "cli": [
         "R04B_DATE_IN_FUTURE"
       ],
-      "why": "дата проверки позже --validation-date фикстур"
+      "runtime": [],
+      "why": "дата проверки позже --validation-date фикстур",
+      "runtimeWhy": "«не в будущем» — авторское правило (I4-P3)"
     },
     "invalid/r05-duplicate-puzzle-id": {
       "cli": [
@@ -199,106 +243,137 @@
       "cli": [
         "R06_ORDER_MISMATCH"
       ],
-      "why": "записанный порядок не совпадает с вычисленным из sortValue"
+      "runtime": [],
+      "why": "записанный порядок не совпадает с вычисленным из sortValue",
+      "runtimeWhy": "порядок — авторское правило (I4-P3)"
     },
     "invalid/r07-duplicate-sort-value": {
       "cli": [
         "R07_DUPLICATE_SORT_VALUE"
       ],
-      "why": "две карточки с одинаковым значением — порядок перестаёт быть однозначным"
+      "runtime": [],
+      "why": "две карточки с одинаковым значением — порядок перестаёт быть однозначным",
+      "runtimeWhy": "авторское правило (I4-P3)"
     },
     "invalid/r08-gap-relative": {
       "cli": [
         "R08_MIN_GAP"
       ],
-      "why": "разрыв 2,9 % при пороге 3 % от большего значения пары"
+      "runtime": [],
+      "why": "разрыв 2,9 % при пороге 3 % от большего значения пары",
+      "runtimeWhy": "разрыв — авторское правило (I4-P3)"
     },
     "invalid/r08-gap-year": {
       "cli": [
         "R08_MIN_GAP"
       ],
-      "why": "разрыв в один год при пороге в два"
+      "runtime": [],
+      "why": "разрыв в один год при пороге в два",
+      "runtimeWhy": "разрыв — авторское правило (I4-P3)"
     },
     "invalid/r08c-sort-key-date": {
       "cli": [
         "R08C_SORT_KEY_UNSUPPORTED"
       ],
-      "why": "sortKey date отложен: единица не зафиксирована ни одним документом"
+      "runtime": [],
+      "why": "sortKey date отложен: единица не зафиксирована ни одним документом",
+      "runtimeWhy": "sortKey — перечисление формата, а не домена: в DTO это строка, и отложенный ключ ловит CI (§9.4, I4-P3)"
     },
     "invalid/r08d-non-positive-ratio": {
       "cli": [
         "R08D_NON_POSITIVE_RATIO"
       ],
-      "why": "неположительное значение на ратио-шкале: относительный порог не определён"
+      "runtime": [],
+      "why": "неположительное значение на ратио-шкале: относительный порог не определён",
+      "runtimeWhy": "авторское правило (I4-P3)"
     },
     "invalid/r08e-year-zero": {
       "cli": [
         "R08E_YEAR_ZERO"
       ],
-      "why": "нулевого года не существует"
+      "runtime": [],
+      "why": "нулевого года не существует",
+      "runtimeWhy": "авторское правило (I4-P3)"
     },
     "invalid/r09-volatile": {
       "cli": [
         "R09_VOLATILE_FORBIDDEN"
       ],
-      "why": "volatile остаётся в enum формата, но запрещён политикой MVP"
+      "runtime": [],
+      "why": "volatile остаётся в enum формата, но запрещён политикой MVP",
+      "runtimeWhy": "volatility в Room не переносится и в защитный набор не входит (I4-D16, I4-P3)"
     },
     "invalid/r10-shuffle-identity": {
       "cli": [
         "R10_SHUFFLE_IDENTITY"
       ],
-      "why": "подобранный puzzleId: стартовый порядок совпал с правильным"
+      "runtime": [],
+      "why": "подобранный puzzleId: стартовый порядок совпал с правильным",
+      "runtimeWhy": "правило 10 — авторское: экран работает, ответ верен (I4-P3)"
     },
     "invalid/r11-empty-source-ids": {
       "cli": [
         "R11_SOURCE_IDS_EMPTY"
       ],
+      "runtime": [],
       "why": "у карточки пустой массив источников",
-      "runtime": [
-        "R01_SCHEMA"
-      ]
+      "runtimeWhy": "пустой массив ЕСТЬ в документе, поэтому DTO строится; пустой sourceIds защитным инвариантом не является — приложение не читает источники при выдаче головоломки (§7.3, п. 3)"
     },
     "invalid/r12-unknown-source-id": {
       "cli": [
         "R12_SOURCE_ID_UNKNOWN"
       ],
-      "why": "карточка ссылается на источник, которого нет в sources"
+      "runtime": [],
+      "why": "карточка ссылается на источник, которого нет в sources",
+      "runtimeWhy": "покрытие источниками — авторское правило (I4-P3)"
     },
     "invalid/r13-duplicate-source-id": {
       "cli": [
         "R13_DUPLICATE_SOURCE_ID"
       ],
-      "why": "два источника с одним sourceId внутри головоломки"
+      "runtime": [],
+      "why": "два источника с одним sourceId внутри головоломки",
+      "runtimeWhy": "авторское правило (I4-P3)"
     },
     "invalid/r14-unused-source": {
       "cli": [
         "R14_UNUSED_SOURCE"
       ],
-      "why": "мёртвый источник: объявлен и не используется ни одной карточкой"
+      "runtime": [],
+      "why": "мёртвый источник: объявлен и не используется ни одной карточкой",
+      "runtimeWhy": "авторское правило (I4-P3)"
     },
     "invalid/r15-only-other": {
       "cli": [
         "R15_NO_AUTHORITATIVE_SOURCE"
       ],
-      "why": "единственный источник карточки имеет kind other"
+      "runtime": [],
+      "why": "единственный источник карточки имеет kind other",
+      "runtimeWhy": "качество источников — авторское правило (I4-P3)"
     },
     "invalid/r16-disputed-single-source": {
       "cli": [
         "R16_SECOND_SOURCE_REQUIRED"
       ],
-      "why": "disputed: true при одном источнике у карточки"
+      "runtime": [],
+      "why": "disputed: true при одном источнике у карточки",
+      "runtimeWhy": "авторское правило (I4-P3)"
     },
     "invalid/r16-slow-single-source": {
       "cli": [
         "R16_SECOND_SOURCE_REQUIRED"
       ],
-      "why": "volatility slow при одном источнике у первой карточки"
+      "runtime": [],
+      "why": "volatility slow при одном источнике у первой карточки",
+      "runtimeWhy": "авторское правило (I4-P3)"
     },
     "invalid/r17-no-locator": {
       "cli": [
         "R17_SOURCE_LOCATOR_MISSING"
       ],
-      "why": "у источника нет ни url, ни reference"
+      "runtime": [],
+      "why": "у источника нет ни url, ни reference",
+      "runtimeWhy": "url/reference — правило схемы, а не формы DTO: оба поля необязательны (I4-P3)"
     },
     "invalid/r18-missing-reference": {
       "cli": [
@@ -340,49 +415,65 @@
       "cli": [
         "R20A_SET_CATEGORY_REPEAT"
       ],
-      "why": "mixed + history + history: соседство с mixed не разрешает повтор категории"
+      "runtime": [],
+      "why": "mixed + history + history: соседство с mixed не разрешает повтор категории",
+      "runtimeWhy": "компоновка набора — авторское правило (I4-P3)"
     },
     "invalid/r20a-same-category": {
       "cli": [
         "R20A_SET_CATEGORY_REPEAT"
       ],
-      "why": "две одинаковые категории в наборе"
+      "runtime": [],
+      "why": "две одинаковые категории в наборе",
+      "runtimeWhy": "компоновка набора — авторское правило (I4-P3)"
     },
     "invalid/r20a-two-mixed": {
       "cli": [
         "R20A_SET_CATEGORY_REPEAT"
       ],
-      "why": "mixed + mixed + science: mixed не является исключением из R20A"
+      "runtime": [],
+      "why": "mixed + mixed + science: mixed не является исключением из R20A",
+      "runtimeWhy": "компоновка набора — авторское правило (I4-P3)"
     },
     "invalid/r20b-profile-112": {
       "cli": [
         "R20B_SET_DIFFICULTY_PROFILE"
       ],
-      "why": "профиль [1,1,2] не входит в перечень {[1,2,2],[1,2,3]}"
+      "runtime": [],
+      "why": "профиль [1,1,2] не входит в перечень {[1,2,2],[1,2,3]}",
+      "runtimeWhy": "профиль сложности — авторское правило (I4-P3)"
     },
     "invalid/r20b-profile-223": {
       "cli": [
         "R20B_SET_DIFFICULTY_PROFILE"
       ],
-      "why": "профиль [2,2,3] в наборе 7, где difficulty 3 разрешена: падает только R20B"
+      "runtime": [],
+      "why": "профиль [2,2,3] в наборе 7, где difficulty 3 разрешена: падает только R20B",
+      "runtimeWhy": "профиль сложности — авторское правило (I4-P3)"
     },
     "invalid/r20c-opening-category": {
       "cli": [
         "R20C_SET_OPENING_CATEGORY"
       ],
-      "why": "одна категория открывает наборы 0 и 1"
+      "runtime": [],
+      "why": "одна категория открывает наборы 0 и 1",
+      "runtimeWhy": "открывающая категория — авторское правило (I4-P3)"
     },
     "invalid/r20c-opening-mixed": {
       "cli": [
         "R20C_SET_OPENING_CATEGORY"
       ],
-      "why": "mixed открывает два соседних набора: правило сравнивает значения"
+      "runtime": [],
+      "why": "mixed открывает два соседних набора: правило сравнивает значения",
+      "runtimeWhy": "открывающая категория — авторское правило (I4-P3)"
     },
     "invalid/r20d-early-difficulty": {
       "cli": [
         "R20D_EARLY_DIFFICULTY"
       ],
-      "why": "difficulty 3 в наборе 0: профиль [1,2,3] допустим, но не в первых семи"
+      "runtime": [],
+      "why": "difficulty 3 в наборе 0: профиль [1,2,3] допустим, но не в первых семи",
+      "runtimeWhy": "первые семь наборов — авторское правило (I4-P3)"
     },
     "invalid/r21-wrong-counts": {
       "cli": [

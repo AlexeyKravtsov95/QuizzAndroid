@@ -29,8 +29,8 @@ import ru.poporyadku.core.model.DayResult
 import ru.poporyadku.core.model.PuzzleAttempt
 import ru.poporyadku.core.model.ThemeMode
 import ru.poporyadku.core.model.UserPreferences
+import ru.poporyadku.core.model.TestContent
 import ru.poporyadku.core.time.FakeClockProvider
-import ru.poporyadku.data.content.temporary.BundledPuzzles
 import ru.poporyadku.data.db.AppDatabase
 import ru.poporyadku.data.db.mapper.toEntity
 import ru.poporyadku.data.progress.ProgressRepositoryImpl
@@ -99,7 +99,7 @@ class GetTodayStateUseCaseTest {
         override suspend fun setReminderEnabled(enabled: Boolean) = unsupported()
         override suspend fun setReminderTime(time: LocalTime) = unsupported()
         override suspend fun setThemeMode(mode: ThemeMode) = unsupported()
-        override suspend fun setStoredContentVersion(version: Int) = unsupported()
+        override suspend fun setInstalledContent(contentVersion: Int, fingerprint: String) = unsupported()
         override suspend fun setHasSeenDragHint(seen: Boolean) = unsupported()
         override suspend fun setHasSeenScoringHint(seen: Boolean) = unsupported()
         override suspend fun setHasCompletedFirstDay(completed: Boolean) = unsupported()
@@ -122,7 +122,7 @@ class GetTodayStateUseCaseTest {
             .build()
         clock = FakeClockProvider(Clock.fixed(day1.atTime(LocalTime.NOON).atZone(zone).toInstant(), zone))
         // Три настоящих набора: политике нужен setCountInActivePack, а не установщик.
-        runBlocking { db.dailySetDao().upsertAll(BundledPuzzles.sets.map { it.toEntity() }) }
+        runBlocking { db.dailySetDao().upsertAll(TestContent.sets.map { it.toEntity() }) }
 
         progress = ProgressRepositoryImpl(db, db.attemptDao(), db.dayResultDao(), clock)
         observable = ObservableProgress(progress)
@@ -287,6 +287,7 @@ class GetTodayStateUseCaseTest {
         installer.failure = ContentInstallException.Conflict(
             packId = ContentPack.CORE_RU,
             staleSetIndexes = listOf(4),
+            changedSetIndexes = emptyList(),
             blockedDates = listOf(day1),
         )
         val refresh = MutableSharedFlow<Unit>(extraBufferCapacity = 8)
@@ -314,6 +315,57 @@ class GetTodayStateUseCaseTest {
             assertEquals(3, installer.calls)
         } finally {
             collector.cancel()
+        }
+    }
+
+    /**
+     * `I4-V1` (ITERATION_4_DESIGN.md, §11.4): исчерпывающая классификация закрытой
+     * taxonomy. Пятый вариант `ContentInstallException` обязан сломать компиляцию
+     * `kindOf`, а не молча уехать в `Generic`.
+     *
+     * Отказ базы среди вариантов отсутствует намеренно: исключения Room не
+     * оборачиваются и попадают в общую ветку.
+     */
+    @Test
+    fun `I4-V1 - every failure cause maps to its TodayFailureKind`() = runBlocking {
+        val cases = listOf(
+            ContentInstallException.Conflict(
+                packId = ContentPack.CORE_RU,
+                staleSetIndexes = listOf(4),
+                changedSetIndexes = listOf(1),
+                blockedDates = listOf(day1),
+            ) to TodayFailureKind.ContentConflict,
+            ContentInstallException.BundleInvalid(
+                code = "R19_SET_INDEX_SEQUENCE",
+                violations = 7,
+                detail = "daily-sets-001.json#/sets — дыра в последовательности",
+            ) to TodayFailureKind.ContentUnusable,
+            ContentInstallException.UnsupportedSchema(manifest = 2, supported = 1)
+                to TodayFailureKind.ContentUnusable,
+            ContentInstallException.AssetUnreadable(
+                fileName = "puzzles-001.json",
+                cause = java.io.IOException("поток закрыт"),
+            ) to TodayFailureKind.Generic,
+            // Не из taxonomy вовсе: так наружу выходит любое исключение Room.
+            IllegalStateException("SQLite: database is locked") to TodayFailureKind.Generic,
+            RuntimeException("что угодно ещё") to TodayFailureKind.Generic,
+        )
+
+        for ((failure, expected) in cases) {
+            installer.failure = failure
+            val refresh = MutableSharedFlow<Unit>(extraBufferCapacity = 8)
+            val states = Channel<TodayState>(Channel.UNLIMITED)
+            val collector = launch(Dispatchers.Default) { useCase(refresh).collect(states::send) }
+
+            try {
+                assertEquals(
+                    failure.toString(),
+                    TodayState.Failure(null, null, expected),
+                    states.next(),
+                )
+            } finally {
+                collector.cancel()
+            }
         }
     }
 

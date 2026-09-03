@@ -804,6 +804,7 @@ class HomeViewModelTest {
     private fun conflict() = ContentInstallException.Conflict(
         packId = PACK,
         staleSetIndexes = listOf(7),
+        changedSetIndexes = emptyList(),
         blockedDates = listOf(today.minusDays(2)),
     )
 
@@ -888,7 +889,7 @@ private class NoOpUserPreferences : UserPreferencesRepository {
     override suspend fun setReminderEnabled(enabled: Boolean) = Unit
     override suspend fun setReminderTime(time: LocalTime) = Unit
     override suspend fun setThemeMode(mode: ThemeMode) = Unit
-    override suspend fun setStoredContentVersion(version: Int) = Unit
+    override suspend fun setInstalledContent(contentVersion: Int, fingerprint: String) = Unit
     override suspend fun setHasSeenDragHint(seen: Boolean) = Unit
     override suspend fun setHasSeenScoringHint(seen: Boolean) = Unit
     override suspend fun setHasCompletedFirstDay(completed: Boolean) = Unit

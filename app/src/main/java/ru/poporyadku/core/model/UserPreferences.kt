@@ -12,6 +12,10 @@ data class UserPreferences(
     val reminderTime: LocalTime,
     val themeMode: ThemeMode,
     val storedContentVersion: Int,
+    /** `sha256` байтов `manifest.json` установленного пакета, нижний регистр.
+     *  `null` — отметки нет: ключ отсутствует, и импортёр обязан пройти полный путь
+     *  (ITERATION_4_DESIGN.md, I4-D10). */
+    val storedContentFingerprint: String?,
     val hasSeenDragHint: Boolean,
     val hasSeenScoringHint: Boolean,
     val hasCompletedFirstDay: Boolean,
