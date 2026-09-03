@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://poporyadku.app/schema/manifest/v1",
+  "title": "manifest.json контентного пакета «По порядку!»",
+  "$comment": "ITERATION_4_DESIGN.md §4.2, §5.1. Владение диагностиками: массив `files` целиком принадлежит правилам M03 (шаблон имени, ровно два элемента, уникальность, по одному файлу каждого типа) и M06 (сверка sha256), поэтому находки схемы с указателем внутри /files подавляются загрузчиком — иначе одна ошибка давала бы и M03, и общий R01. Верхняя граница schemaVersion принадлежит M01.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "contentVersion",
+    "packId",
+    "packTitle",
+    "setCount",
+    "puzzleCount",
+    "files"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1000
+    },
+    "contentVersion": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100000
+    },
+    "packId": {
+      "$ref": "#/$defs/packId"
+    },
+    "packTitle": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40
+    },
+    "setCount": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100000
+    },
+    "puzzleCount": {
+      "type": "integer",
+      "minimum": 3,
+      "maximum": 100000
+    },
+    "files": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "sha256": {
+            "$ref": "#/$defs/sha256"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "packId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "minLength": 3,
+      "maxLength": 32
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "minLength": 64,
+      "maxLength": 64
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 2,
+  "packId": "core-ru",
+  "sets": [
+    {
+      "setIndex": 0,
+      "puzzleIds": [
+        "geo-minimal-001",
+        "hist-minimal-002",
+        "sci-minimal-003"
+      ]
+    }
+  ]
+}

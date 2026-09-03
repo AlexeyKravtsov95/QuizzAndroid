@@ -1,0 +1,219 @@
+{
+  "schemaVersion": 1,
+  "packId": "core-ru",
+  "puzzles": [
+    {
+      "puzzleId": "geo-minimal-001",
+      "category": "geography",
+      "prompt": "Расположите образцы по признаку «год»",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — наименьшее",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Образец А",
+          "subtitle": "Синтетическая карточка 1",
+          "sortValue": 1802,
+          "displayValue": "1802 год",
+          "sourceIds": [
+            "s9"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Образец Б",
+          "subtitle": "Синтетическая карточка 2",
+          "sortValue": 1854,
+          "displayValue": "1854 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Образец В",
+          "subtitle": "Синтетическая карточка 3",
+          "sortValue": 1903,
+          "displayValue": "1903 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Образец Г",
+          "subtitle": "Синтетическая карточка 4",
+          "sortValue": 1961,
+          "displayValue": "1961 год",
+          "sourceIds": [
+            "s1"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Синтетическая головоломка фикстуры валидатора: порядок следует из значений признака «год», выписанных в поле sortValue каждой карточки.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Синтетический справочник фикстуры валидатора, издание первое",
+          "kind": "encyclopedia",
+          "url": "https://example.invalid/fixture/reference-1",
+          "accessedAt": "2026-08-20"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 1,
+      "verifiedAt": "2026-08-20",
+      "verifiedBy": "fixture-editor",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "hist-minimal-002",
+      "category": "history",
+      "prompt": "Расположите образцы по признаку «высота»",
+      "sortKey": "height",
+      "sortDirection": "descending",
+      "directionLabel": "Сверху — наибольшее",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Образец А",
+          "subtitle": "Синтетическая карточка 1",
+          "sortValue": 1200,
+          "displayValue": "1200 м",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Образец Б",
+          "subtitle": "Синтетическая карточка 2",
+          "sortValue": 2400,
+          "displayValue": "2400 м",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Образец В",
+          "subtitle": "Синтетическая карточка 3",
+          "sortValue": 3600,
+          "displayValue": "3600 м",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Образец Г",
+          "subtitle": "Синтетическая карточка 4",
+          "sortValue": 4800,
+          "displayValue": "4800 м",
+          "sourceIds": [
+            "s1"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c4",
+        "c3",
+        "c2",
+        "c1"
+      ],
+      "explanation": "Синтетическая головоломка фикстуры валидатора: порядок следует из значений признака «высота», выписанных в поле sortValue каждой карточки.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Синтетический справочник фикстуры валидатора, издание первое",
+          "kind": "encyclopedia",
+          "url": "https://example.invalid/fixture/reference-1",
+          "accessedAt": "2026-08-20"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-08-20",
+      "verifiedBy": "fixture-editor",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "sci-minimal-003",
+      "category": "science",
+      "prompt": "Расположите образцы по признаку «площадь»",
+      "sortKey": "area",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — наименьшее",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Образец А",
+          "subtitle": "Синтетическая карточка 1",
+          "sortValue": 5000,
+          "displayValue": "5000 км²",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Образец Б",
+          "subtitle": "Синтетическая карточка 2",
+          "sortValue": 12000,
+          "displayValue": "12000 км²",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Образец В",
+          "subtitle": "Синтетическая карточка 3",
+          "sortValue": 30000,
+          "displayValue": "30000 км²",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Образец Г",
+          "subtitle": "Синтетическая карточка 4",
+          "sortValue": 75000,
+          "displayValue": "75000 км²",
+          "sourceIds": [
+            "s1"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Синтетическая головоломка фикстуры валидатора: порядок следует из значений признака «площадь», выписанных в поле sortValue каждой карточки.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Синтетический справочник фикстуры валидатора, издание первое",
+          "kind": "encyclopedia",
+          "url": "https://example.invalid/fixture/reference-1",
+          "accessedAt": "2026-08-20"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-08-20",
+      "verifiedBy": "fixture-editor",
+      "retiredIn": null
+    }
+  ]
+}

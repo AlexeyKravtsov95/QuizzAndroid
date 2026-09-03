@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "packId": "core-ru",
+  "packTitle": "Синтетическая фикстура валидатора",
+  "setCount": 8,
+  "puzzleCount": 25,
+  "files": [
+    {
+      "path": "puzzles-001.json",
+      "sha256": "f84d39e9ff68b7dcfd4f143516b99abf00c80199a4bbc0ec86a00647c75e496e"
+    },
+    {
+      "path": "daily-sets-001.json",
+      "sha256": "7b7e558fef28b9023e8d1d35f1d1bae6c6134ea2301e66172325d58edddac3c2"
+    }
+  ]
+}

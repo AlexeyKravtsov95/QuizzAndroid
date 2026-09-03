@@ -1,0 +1,88 @@
+{
+  "source": "app/src/main/java/ru/poporyadku/domain/shuffle/DeterministicShuffler.kt (ADR-010, I3-D7 — I3-D9); значения сняты с настоящего Kotlin-кода",
+  "cardIds": [
+    "c1",
+    "c2",
+    "c3",
+    "c4"
+  ],
+  "vectors": [
+    {
+      "puzzleId": "tmp-geo-vysota-001",
+      "seed": 8056761665564835395,
+      "startOrder": [
+        "c1",
+        "c2",
+        "c4",
+        "c3"
+      ],
+      "why": "контракт I3-H2: временная головоломка «география»"
+    },
+    {
+      "puzzleId": "tmp-hist-izobreteniya-002",
+      "seed": -1313988808359401040,
+      "startOrder": [
+        "c1",
+        "c3",
+        "c2",
+        "c4"
+      ],
+      "why": "контракт I3-H2: временная головоломка «история»"
+    },
+    {
+      "puzzleId": "tmp-sci-otkrytiya-003",
+      "seed": -5719328115881941861,
+      "startOrder": [
+        "c3",
+        "c4",
+        "c2",
+        "c1"
+      ],
+      "why": "контракт I3-H2: временная головоломка «наука»"
+    },
+    {
+      "puzzleId": "головоломка-кириллица-001",
+      "seed": -8022702799339308999,
+      "startOrder": [
+        "c2",
+        "c1",
+        "c3",
+        "c4"
+      ],
+      "why": "кириллица: seed считается по UTF-8-байтам, не по символам"
+    },
+    {
+      "puzzleId": "geo-predelnaya-dlina-identifikatorov-obrazec-001",
+      "seed": -7504543289813559485,
+      "startOrder": [
+        "c4",
+        "c2",
+        "c1",
+        "c3"
+      ],
+      "why": "идентификатор предельной длины 48 символов"
+    },
+    {
+      "puzzleId": "geo-obrazec-baytovoy-pary-001",
+      "seed": 2911284268006956340,
+      "startOrder": [
+        "c2",
+        "c4",
+        "c3",
+        "c1"
+      ],
+      "why": "пара, различающаяся одним байтом: первый"
+    },
+    {
+      "puzzleId": "geo-obrazec-baytovoy-pary-002",
+      "seed": 2911287566541840973,
+      "startOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "why": "пара, различающаяся одним байтом: второй"
+    }
+  ]
+}
