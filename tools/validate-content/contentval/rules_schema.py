@@ -18,6 +18,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from typing import Iterable
 
@@ -131,16 +132,40 @@ def _code_for(error: ValidationError) -> str:
     return diag.R01_SCHEMA
 
 
-def _suppressed(file_name: str, pointer: str) -> bool:
+_FILES_PATH_POINTER = re.compile(r"^/files/\d+/path$")
+_FILES_SHA_POINTER = re.compile(r"^/files/\d+/sha256$")
+
+
+def _suppressed(file_name: str, pointer: str, validator: str) -> bool:
     """Находки схемы, владельцем которых является специализированное правило.
 
-    Массив ``manifest.files`` целиком принадлежит ``M03`` (шаблон имени, ровно два
-    элемента, уникальность) и ``M06`` (сверка sha256). Без этого исключения одно
-    нарушение — три файла в ``files`` или путь с обходом каталога — давало бы и
-    точный ``M03``, и бессодержательный ``R01`` (ITERATION_4_DESIGN.md §6, «специализированные
-    пакетные ошибки не дублируются общим R01»).
+    Подавление **точечное**, а не по всему поддереву ``/files``: правила ``M03`` и
+    ``M06`` владеют конкретными вопросами, а не массивом целиком. ``M03`` отвечает за
+    состав списка (сколько элементов, уникальны ли) и за имя файла; ``M06`` — за
+    **значение** хеша, включая регистр. Всё остальное внутри ``/files`` — форма
+    документа, и её владелец — схема:
+
+    * элемент без обязательного ``sha256`` — нарушение ``required``;
+    * ``sha256`` не строкой — нарушение ``type``;
+    * лишнее поле в элементе — нарушение ``additionalProperties: false``.
+
+    Ни один из этих трёх случаев ``M03`` и ``M06`` не ловят: ``M03`` смотрит только
+    на ``path``, а ``M06`` сравнивает хеш лишь тогда, когда тот уже является строкой.
+    Подавление по всему поддереву пропускало бы их с кодом выхода 0 — то есть строгая
+    схема манифеста не действовала бы вовсе.
     """
-    return file_name == MANIFEST_FILE_NAME and (pointer == "/files" or pointer.startswith("/files/"))
+    if file_name != MANIFEST_FILE_NAME:
+        return False
+    if pointer == "/files":
+        # Число элементов и их уникальность — M03.
+        return validator in ("minItems", "maxItems", "uniqueItems")
+    if _FILES_PATH_POINTER.match(pointer):
+        # Имя файла целиком — M03 (закрытый шаблон, I4-D6).
+        return True
+    if _FILES_SHA_POINTER.match(pointer):
+        # Значение и регистр хеша — M06; тип и наличие поля остаются за схемой.
+        return validator in ("pattern", "minLength", "maxLength")
+    return False
 
 
 
@@ -155,7 +180,7 @@ def validate_document(file_name: str, schema_file: str, data: object) -> list[di
     findings: list[diag.Finding] = []
     for error in validator.iter_errors(data):
         pointer = _pointer(error)
-        if _suppressed(file_name, pointer):
+        if _suppressed(file_name, pointer, str(error.validator)):
             continue
         findings.append(
             diag.Finding(

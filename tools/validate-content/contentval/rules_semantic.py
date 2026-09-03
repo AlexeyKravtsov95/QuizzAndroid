@@ -212,11 +212,9 @@ def _check_values(
     numbers: list[float] = [float(v) for v in values]  # type: ignore[arg-type]
 
     # --- R07: равные значения внутри головоломки ----------------------------
-    has_duplicates = False
     for i in range(len(numbers)):
         for j in range(i + 1, len(numbers)):
             if numbers[i] == numbers[j]:
-                has_duplicates = True
                 findings.append(
                     diag.Finding(
                         diag.R07_DUPLICATE_SORT_VALUE,
@@ -262,6 +260,14 @@ def _check_values(
         return findings
 
     # --- R08D / R08E: допустимость самих значений ---------------------------
+    #
+    # Значения, уже названные недопустимыми, исключаются из проверки разрыва
+    # ПОПАРНО, а не целиком по головоломке: разрыв — свойство пары, и пара, не
+    # содержащая ни одного диагностированного значения, остаётся самостоятельным
+    # нарушением. Ранний выход по всей головоломке прятал бы, например, пару
+    # 200/202 в [100, 100, 200, 202] за одним R07.
+    diagnosed: set[float] = set()
+
     for index, value in enumerate(numbers):
         if spec.ratio and value <= 0:
             findings.append(
@@ -273,6 +279,7 @@ def _check_values(
                     "обязан быть положительным: относительный порог разрыва иначе не определён",
                 )
             )
+            diagnosed.add(value)
         if sort_key == "year" and value == 0:
             findings.append(
                 diag.Finding(
@@ -282,22 +289,19 @@ def _check_values(
                     "нулевого года не существует: до н. э. записывается отрицательным числом",
                 )
             )
+            diagnosed.add(value)
 
-    if any(spec.ratio and value <= 0 for value in numbers) or (
-        sort_key == "year" and any(value == 0 for value in numbers)
-    ):
-        # Значения уже названы недопустимыми; разрыв между ними ничего не добавит.
-        return findings
-
-    if has_duplicates:
-        # Нулевой разрыв между равными значениями — следствие R07, а не отдельное
-        # нарушение правила 8: R08 здесь дублировал бы уже названную ошибку.
-        return findings
+    # Значение, повторённое в головоломке, уже названо кодом R07: нулевой разрыв
+    # между двумя его вхождениями — следствие той же ошибки, а не отдельное
+    # нарушение правила 8.
+    diagnosed.update(value for value in numbers if numbers.count(value) > 1)
 
     # --- R08: минимальный разрыв между соседними значениями -----------------
     ordered = sorted(numbers)
     for index in range(len(ordered) - 1):
         first, second = ordered[index], ordered[index + 1]
+        if first in diagnosed or second in diagnosed:
+            continue
         if not units.min_gap_satisfied(sort_key, first, second):
             findings.append(
                 diag.Finding(

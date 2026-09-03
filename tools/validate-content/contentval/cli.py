@@ -30,7 +30,7 @@ from typing import Sequence
 
 from . import diagnostics as diag
 from . import rules_crossfile, rules_manifest, rules_schema, rules_semantic
-from .loader import MANIFEST_NAME, PackDirectory, ToolError, load_pack
+from .loader import CONTENT_FILE_NAME, MANIFEST_NAME, PackDirectory, ToolError, load_pack
 
 EXIT_OK = 0
 EXIT_VIOLATIONS = 1
@@ -196,7 +196,43 @@ def _count(document: dict | None, field: str) -> int:
 
 # --- Режим --sync-manifest --------------------------------------------------
 
-_SHA_PATTERN = '"sha256": "{}"'
+
+def _readable(root: Path, name: object, out) -> Path | None:
+    """Путь к контентному файлу пакета — или ``None``, если имя недопустимо.
+
+    **Тот же закрытый allow-list, что у правила M03, и до любого обращения к диску.**
+    Режим синхронизации получает имена из данных, а не из кода, поэтому обязан
+    проверять их сам: обычная валидация объявит `M03` только после того, как файл
+    уже прочитан, а «прочитали, но потом сообщили» защитой не является. Без этой
+    проверки `../secret.json` или абсолютный путь в `files[].path` заставляли бы
+    инструмент прочитать файл за пределами каталога пакета и записать его sha256
+    в манифест (I4-D6).
+    """
+    if not isinstance(name, str) or not CONTENT_FILE_NAME.match(name):
+        print(
+            f"пропущено: недопустимое имя файла {name!r} — синхронизация не обращается "
+            "к диску по именам вне закрытого шаблона; нарушение объявит M03",
+            file=out,
+        )
+        return None
+    return root / name
+
+
+def _replace_value(text: str, field: str, old: object, new: object) -> tuple[str, bool]:
+    """Заменить ровно одно значение, сохранив форматирование манифеста.
+
+    Пробелы вокруг двоеточия в шаблоне не фиксируются: минифицированный
+    ``"sha256":"…"`` — такой же валидный JSON, как ``"sha256": "…"``, и подстановка
+    по точной строке молча не срабатывала бы, а вызывающий всё равно отчитался бы
+    об изменении. Возвращаемый признак говорит, произошла ли замена **на самом деле**.
+    """
+    quoted = '"' if isinstance(old, str) else ""
+    pattern = re.compile(
+        rf'("{re.escape(field)}"\s*:\s*){quoted}{re.escape(str(old))}{quoted}(?=\s*[,}}\n])'
+    )
+    replacement = rf"\g<1>{quoted}{new}{quoted}"
+    updated, count = pattern.subn(replacement, text, count=1)
+    return updated, count == 1
 
 
 def sync_manifest(root: Path, out=sys.stdout) -> int:
@@ -240,18 +276,32 @@ def sync_manifest(root: Path, out=sys.stdout) -> int:
             continue
         name = entry.get("path")
         recorded = entry.get("sha256")
-        if not isinstance(name, str) or not isinstance(recorded, str):
+        target = _readable(root, name, out)
+        if target is None:
             continue
-        target = root / name
+        if not isinstance(recorded, str):
+            print(
+                f"пропущено: у {name} нет строкового sha256, пересчитывать нечего "
+                "(нарушение объявит схема манифеста)",
+                file=out,
+            )
+            continue
         if not target.is_file():
             print(f"пропущено: файла {name} нет в каталоге, sha256 не пересчитан", file=out)
             continue
 
         actual = hashlib.sha256(target.read_bytes()).hexdigest()
         if actual != recorded:
-            text = text.replace(_SHA_PATTERN.format(recorded), _SHA_PATTERN.format(actual), 1)
-            print(f"sha256 {name}: {recorded} → {actual}", file=out)
-            changes += 1
+            text, replaced = _replace_value(text, "sha256", recorded, actual)
+            if replaced:
+                print(f"sha256 {name}: {recorded} → {actual}", file=out)
+                changes += 1
+            else:
+                print(
+                    f"не удалось обновить sha256 {name}: значение {recorded!r} не найдено "
+                    "в тексте манифеста — синхронизация ничего не изменила",
+                    file=out,
+                )
 
     counts = {
         "puzzleCount": _count_in_file(root, manifest, "puzzles-", "puzzles"),
@@ -262,11 +312,16 @@ def sync_manifest(root: Path, out=sys.stdout) -> int:
             continue
         recorded = manifest.get(field)
         if isinstance(recorded, int) and not isinstance(recorded, bool) and recorded != actual:
-            pattern = re.compile(rf'("{field}"\s*:\s*){recorded}\b')
-            text, replaced = pattern.subn(rf"\g<1>{actual}", text, count=1)
+            text, replaced = _replace_value(text, field, recorded, actual)
             if replaced:
                 print(f"{field}: {recorded} → {actual}", file=out)
                 changes += 1
+            else:
+                print(
+                    f"не удалось обновить {field}: значение {recorded} не найдено в тексте "
+                    "манифеста — синхронизация ничего не изменила",
+                    file=out,
+                )
 
     if changes:
         manifest_path.write_text(text, encoding="utf-8")
@@ -276,12 +331,19 @@ def sync_manifest(root: Path, out=sys.stdout) -> int:
 
 
 def _count_in_file(root: Path, manifest: dict, prefix: str, field: str) -> int | None:
+    """Фактическое число элементов в контентном файле пакета.
+
+    Имя файла проходит тот же allow-list, что и в :func:`_readable`: это второй
+    проход синхронизации, и он обращается к диску по данным из манифеста ровно так же.
+    """
     for entry in manifest.get("files", []):
         if not isinstance(entry, dict):
             continue
         name = entry.get("path")
         if not isinstance(name, str) or not name.startswith(prefix):
             continue
+        if not CONTENT_FILE_NAME.match(name):
+            return None
         target = root / name
         if not target.is_file():
             return None
@@ -308,7 +370,10 @@ def main(argv: Sequence[str] | None = None, out=None, err=None) -> int:
 
     try:
         if args.sync_manifest:
-            sync_manifest(root, out=out)
+            # При `--format json` отчёт синхронизации уходит в stderr: stdout обязан
+            # оставаться разбираемым целиком, иначе машиночитаемый вывод перестаёт
+            # быть машиночитаемым ровно тогда, когда его смешали с человеческим.
+            sync_manifest(root, out=err if args.format == "json" else out)
         findings = validate_pack(
             root,
             validation_date=validation_date,

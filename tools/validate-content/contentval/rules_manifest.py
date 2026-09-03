@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from . import diagnostics as diag
 from . import rules_schema
 from .loader import CONTENT_FILE_NAME, FILE_PREFIXES, MANIFEST_NAME, PackDirectory
-from .units import SUPPORTED_SCHEMA_VERSION
+from .units import ACTIVE_PACK_ID, SUPPORTED_SCHEMA_VERSION
 
 
 @dataclass
@@ -90,8 +90,20 @@ def check_manifest(pack: PackDirectory) -> tuple[list[diag.Finding], ManifestFac
                 )
             )
 
+    # --- M02, первая половина: манифест против активного пакета приложения ------
     if isinstance(manifest.get("packId"), str):
         facts.pack_id = manifest["packId"]
+        if facts.pack_id != ACTIVE_PACK_ID:
+            findings.append(
+                diag.Finding(
+                    diag.M02_PACK_ID_MISMATCH,
+                    MANIFEST_NAME,
+                    "/packId",
+                    f"packId пакета {facts.pack_id!r} не совпадает с активным пакетом "
+                    f"приложения {ACTIVE_PACK_ID!r}: такой пакет не импортируется ни при "
+                    "каких условиях, потому что все запросы импортёра pack-scoped",
+                )
+            )
     for field, attribute in (
         ("contentVersion", "content_version"),
         ("setCount", "set_count"),
@@ -286,9 +298,13 @@ def check_envelopes(
 ) -> list[diag.Finding]:
     """M02 и M07: ``packId`` и ``schemaVersion`` обязаны совпадать во всех трёх файлах.
 
-    Это единственная защита от «собрали пакет из двух половин разных паков»:
-    ссылочная целостность такую ошибку не ловит, если идентификаторы случайно совпали
-    (ITERATION_4_DESIGN.md §4.3).
+    Это **вторая половина** правила ``M02``; первая — сверка манифеста с активным
+    пакетом приложения — выполнена в :func:`check_manifest`. Обе требуются
+    ITERATION_4_DESIGN.md §6.3 и тестом ``I4-A14``.
+
+    Сверка файлов между собой — единственная защита от «собрали пакет из двух половин
+    разных паков»: ссылочная целостность такую ошибку не ловит, если идентификаторы
+    случайно совпали (§4.3).
     """
     findings: list[diag.Finding] = []
     for name in (facts.puzzles_file, facts.daily_sets_file):

@@ -795,6 +795,36 @@ CASES: list[Case] = [
         "schemaVersion 2 при поддерживаемой 1 — во всех трёх файлах, чтобы не задеть M07",
     ),
     Case(
+        "r01-files-missing-sha256",
+        "minimal",
+        lambda p: setattr(p, "manifest_damage", _drop_first_hash),
+        [diag.R01_SCHEMA],
+        "элемент files без обязательного sha256: M03 смотрит только на path, а M06 "
+        "сравнивает хеш лишь когда он уже строка — форму поля охраняет схема",
+    ),
+    Case(
+        "r01-files-sha256-type",
+        "minimal",
+        lambda p: setattr(p, "manifest_damage", _numeric_first_hash),
+        [diag.R01_SCHEMA],
+        "sha256 числом вместо строки: нарушение type, которое ни M03, ни M06 не ловят",
+    ),
+    Case(
+        "r01-files-unknown-field",
+        "minimal",
+        lambda p: setattr(p, "manifest_damage", _extra_field_in_files),
+        [diag.R01_SCHEMA],
+        "лишнее поле внутри files[]: нарушение additionalProperties: false",
+    ),
+    Case(
+        "m02-active-pack-mismatch",
+        "minimal",
+        lambda p: setattr(p, "pack_id", "drugoy-pak"),
+        [diag.M02_PACK_ID_MISMATCH],
+        "самосогласованный пакет с чужим packId: расходится не между файлами, а с "
+        "активным пакетом приложения (вторая половина I4-A14)",
+    ),
+    Case(
         "m02-pack-mismatch",
         "minimal",
         lambda p: setattr(p, "puzzles_pack_id", "drugoy-pak"),
@@ -911,6 +941,9 @@ CASES: list[Case] = [
 #: Фикстуры, у которых манифест, хеш или счётчики испорчены **намеренно**.
 #: Пересборка обязана воспроизводить порчу, а не устранять её.
 DELIBERATE = {
+    "r01-files-missing-sha256",
+    "r01-files-sha256-type",
+    "r01-files-unknown-field",
     "r21-wrong-counts",
     "m01-schema-version",
     "m02-pack-mismatch",
@@ -987,6 +1020,18 @@ def _bump_schema_version(pack: Pack, version: int) -> None:
 
 def _break_json(raw: bytes) -> bytes:
     return raw.replace(b'{\n  "schemaVersion"', b'{,\n  "schemaVersion"', 1)
+
+
+def _drop_first_hash(manifest: dict) -> None:
+    del manifest["files"][0]["sha256"]
+
+
+def _numeric_first_hash(manifest: dict) -> None:
+    manifest["files"][0]["sha256"] = 12345
+
+
+def _extra_field_in_files(manifest: dict) -> None:
+    manifest["files"][0]["size"] = 999
 
 
 def _zero_first_hash(manifest: dict) -> None:

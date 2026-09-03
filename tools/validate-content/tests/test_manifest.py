@@ -48,10 +48,10 @@ def test_i4_a13_supported_schema_version_passes():
 
 
 def test_i4_a14_m02_pack_id_mismatch_between_files():
-    """`I4-A14`: `packId` файла расходится с манифестом.
+    """`I4-A14`, первая половина: `packId` файла расходится с манифестом.
 
-    Вторая половина правила — расхождение с **активным пакетом приложения** — живёт
-    в рантайме: у CLI понятия «активный пакет» нет (ITERATION_4_DESIGN.md §4.7).
+    Вторая половина — сверка манифеста с активным пакетом приложения — ниже,
+    в `test_i4_a14_manifest_pack_id_must_match_the_active_pack`.
     """
     run = run_cli(fixture("invalid/m02-pack-mismatch"))
 
@@ -350,3 +350,175 @@ def test_i4_a37_expected_volume_is_not_r21():
     run = run_cli(fixture("valid"), "--expect-sets", "35")
 
     assert diag.R21_MANIFEST_COUNTS not in run.codes
+
+
+# --- Строгая схема manifest.files действительно действует --------------------
+#
+# Подавление находок схемы внутри /files точечное: M03 владеет составом списка и
+# именем файла, M06 — значением хеша. Форма элемента остаётся за схемой, и три
+# случая ниже когда-то проходили с кодом выхода 0, потому что подавлялось всё
+# поддерево: M03 смотрит только на path, а M06 сравнивает хеш лишь тогда, когда
+# тот уже является строкой.
+
+
+@pytest.mark.parametrize(
+    "name",
+    ["r01-files-missing-sha256", "r01-files-sha256-type", "r01-files-unknown-field"],
+)
+def test_manifest_files_form_is_enforced_by_schema(name):
+    """Отсутствующий, нестроковый и лишний ключ внутри `files[]` дают `R01`."""
+    run = run_cli(fixture(f"invalid/{name}"))
+
+    assert run.code == 1
+    assert run.codes == [diag.R01_SCHEMA]
+    assert run.findings[0]["file"] == MANIFEST
+    assert run.findings[0]["pointer"].startswith("/files/")
+
+
+@pytest.mark.parametrize(
+    "damage,pointer",
+    [
+        (lambda m: m["files"][0].pop("sha256"), "/files/0"),
+        (lambda m: m["files"][0].__setitem__("sha256", 12345), "/files/0/sha256"),
+        (lambda m: m["files"][0].__setitem__("size", 999), "/files/0"),
+        (lambda m: m["files"][0].__setitem__("path", 42), "/files"),
+    ],
+    ids=["нет sha256", "sha256 не строка", "лишнее поле", "path не строка"],
+)
+def test_manifest_files_form_violations_are_never_silent(tmp_path, damage, pointer):
+    """Ни одно нарушение формы элемента `files[]` не проходит с кодом выхода 0."""
+    pack_dir = build_pack(tmp_path, base="valid-minimal")
+    manifest = json.loads((pack_dir / MANIFEST).read_text(encoding="utf-8"))
+    damage(manifest)
+    (pack_dir / MANIFEST).write_bytes(dump(manifest))
+
+    run = run_cli(str(pack_dir))
+    assert run.code == 1, "нарушение схемы манифеста обязано быть замечено"
+    assert any(finding["pointer"].startswith(pointer) for finding in run.findings)
+
+
+def test_manifest_hash_pattern_is_still_owned_by_m06(tmp_path):
+    """Регистр и значение хеша остаются за `M06`, а не дублируются `R01`."""
+    run = run_cli(fixture("invalid/m06-hash-uppercase"))
+
+    assert run.codes == [diag.M06_HASH_MISMATCH]
+
+
+# --- I4-A14, вторая половина: сверка с активным пакетом ----------------------
+
+
+def test_i4_a14_manifest_pack_id_must_match_the_active_pack():
+    """`I4-A14`: самосогласованный пакет с чужим `packId` отвергается.
+
+    Он не импортируется приложением ни при каких условиях — все запросы импортёра
+    pack-scoped, — поэтому пропускать его в CI значило бы обещать то, чего рантайм
+    не выполнит.
+    """
+    run = run_cli(fixture("invalid/m02-active-pack-mismatch"))
+
+    assert run.code == 1
+    assert run.codes == [diag.M02_PACK_ID_MISMATCH]
+    assert run.findings[0]["file"] == MANIFEST
+    assert run.findings[0]["pointer"] == "/packId"
+
+
+def test_i4_a14_both_halves_are_independent(tmp_path):
+    """`I4-A14`: обе половины правила работают порознь и не подменяют друг друга."""
+    from contentval.units import ACTIVE_PACK_ID
+
+    # Только расхождение между файлами: манифест совпадает с активным пакетом.
+    between_files = run_cli(fixture("invalid/m02-pack-mismatch"))
+    assert between_files.findings[0]["file"] == PUZZLES
+
+    # Только расхождение с активным пакетом: файлы между собой согласованы.
+    with_active = run_cli(fixture("invalid/m02-active-pack-mismatch"))
+    assert with_active.findings[0]["file"] == MANIFEST
+
+    assert ACTIVE_PACK_ID == "core-ru"
+
+
+# --- --sync-manifest не обходит защиту путей ---------------------------------
+
+
+@pytest.mark.parametrize(
+    "hostile", ["../secret.json", "/etc/passwd", "sub/puzzles-001.json", "puzzles-001.JSON"]
+)
+def test_sync_manifest_never_reads_outside_the_pack(tmp_path, hostile):
+    """`--sync-manifest` применяет тот же allow-list, что `M03`, **до** чтения диска.
+
+    Обычная валидация объявила бы `M03` уже после чтения, а «прочитали, но потом
+    сообщили» защитой не является: инструмент успел бы взять байты чужого файла и
+    записать его sha256 в манифест.
+    """
+    secret = tmp_path / "secret.json"
+    secret.write_text('{"тайна": "за пределами пакета"}\n', encoding="utf-8")
+    secret_hash = hashlib.sha256(secret.read_bytes()).hexdigest()
+
+    pack_dir = build_pack(tmp_path, base="valid-minimal")
+    manifest = json.loads((pack_dir / MANIFEST).read_text(encoding="utf-8"))
+    recorded = manifest["files"][0]["sha256"]
+    manifest["files"][0]["path"] = hostile
+    (pack_dir / MANIFEST).write_bytes(dump(manifest))
+
+    report = io.StringIO()
+    cli.sync_manifest(pack_dir, out=report)
+
+    after = json.loads((pack_dir / MANIFEST).read_text(encoding="utf-8"))
+    assert after["files"][0]["sha256"] == recorded, "чужой файл не должен попасть в манифест"
+    assert after["files"][0]["sha256"] != secret_hash
+    assert "пропущено" in report.getvalue()
+
+
+def test_sync_manifest_traversal_still_reports_m03(tmp_path):
+    """Пропуск в синхронизации не отменяет находку: `M03` объявляется как обычно."""
+    pack_dir = build_pack(tmp_path, base="valid-minimal")
+    manifest = json.loads((pack_dir / MANIFEST).read_text(encoding="utf-8"))
+    manifest["files"][0]["path"] = "../secret.json"
+    (pack_dir / MANIFEST).write_bytes(dump(manifest))
+
+    run = run_cli(str(pack_dir), "--sync-manifest")
+    assert run.code == 1
+    assert set(run.codes) == {diag.M03_FILE_LIST_INVALID}
+
+
+# --- --sync-manifest не зависит от форматирования манифеста ------------------
+
+
+@pytest.mark.parametrize(
+    "separators,indent",
+    [((",", ":"), None), ((", ", ": "), 2), ((",", " : "), 4)],
+    ids=["минифицированный", "обычный", "широкие пробелы"],
+)
+def test_sync_manifest_handles_any_json_spacing(tmp_path, separators, indent):
+    """Замена значения не привязана к точной форме `"sha256": "…"`.
+
+    Минифицированный манифест — такой же валидный JSON; при подстановке по точной
+    строке инструмент не менял бы ничего, но всё равно печатал бы отчёт об
+    изменении и увеличивал счётчик — то есть врал бы о том, что сделал.
+    """
+    pack_dir = build_pack(tmp_path, base="valid-minimal")
+    manifest = json.loads((pack_dir / MANIFEST).read_text(encoding="utf-8"))
+    manifest["files"][0]["sha256"] = "0" * 64
+    manifest["puzzleCount"] = 99
+    (pack_dir / MANIFEST).write_bytes(
+        (json.dumps(manifest, ensure_ascii=False, indent=indent, separators=separators) + "\n").encode()
+    )
+
+    report = io.StringIO()
+    changes = cli.sync_manifest(pack_dir, out=report)
+
+    assert changes == 2
+    assert "не удалось обновить" not in report.getvalue()
+    after = json.loads((pack_dir / MANIFEST).read_text(encoding="utf-8"))
+    assert after["files"][0]["sha256"] != "0" * 64
+    assert after["puzzleCount"] == 3
+    assert codes(str(pack_dir)) == []
+
+
+def test_sync_manifest_reports_only_real_changes(tmp_path):
+    """Счётчик изменений считает только те замены, которые действительно произошли."""
+    pack_dir = build_pack(tmp_path, base="valid-minimal")
+    report = io.StringIO()
+
+    assert cli.sync_manifest(pack_dir, out=report) == 0
+    assert "уже синхронизирован" in report.getvalue()

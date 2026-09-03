@@ -479,3 +479,48 @@ def test_i4_a12a_retired_in_current_version_passes():
     Фикстура `valid/` содержит ровно такую головоломку и даёт ноль находок.
     """
     assert codes(fixture("valid")) == []
+
+
+# --- R08 не прячется за R07, R08D и R08E ------------------------------------
+
+
+def test_r08_is_reported_for_pairs_without_diagnosed_values(pack):
+    """Разрыв — свойство пары, поэтому один дубликат не отменяет проверку остальных.
+
+    В `[100, 100, 200, 202]` дубликат даёт `R07`, но пара 200/202 нарушает порог
+    3 % независимо: 0,03 · 202 = 6,06 > 2. Ранний выход по всей головоломке прятал
+    бы её за уже названной ошибкой.
+    """
+    found = codes(pack(lambda d: set_values(d, 0, "height", [100, 100, 200, 202])))
+
+    # Порядок задан сортировкой указателей: R08 указывает на массив /cards целиком,
+    # R07 — на конкретную карточку, и `/cards` короче, поэтому идёт раньше.
+    assert found == [diag.R08_MIN_GAP, diag.R07_DUPLICATE_SORT_VALUE]
+
+
+def test_r08_is_reported_alongside_r08d(pack):
+    """То же для `R08D`: пара из двух допустимых значений проверяется как обычно."""
+    found = codes(pack(lambda d: set_values(d, 0, "height", [-50, 200, 202, 5000])))
+
+    assert found == [diag.R08_MIN_GAP, diag.R08D_NON_POSITIVE_RATIO]
+
+
+def test_r08_is_reported_alongside_r08e(pack):
+    """То же для `R08E`: нулевой год не отменяет проверку разрыва между годами."""
+    found = codes(pack(lambda d: set_values(d, 0, "year", [0, 100, 101, 500])))
+
+    assert found == [diag.R08_MIN_GAP, diag.R08E_YEAR_ZERO]
+
+
+def test_pairs_touching_a_diagnosed_value_stay_suppressed(pack):
+    """Пара, содержащая уже названное значение, второй находки не порождает.
+
+    Нулевой разрыв между двумя вхождениями дубликата — следствие `R07`, а не
+    отдельное нарушение правила 8.
+    """
+    assert codes(pack(lambda d: set_values(d, 0, "year", [1802, 1802, 1903, 1961]))) == [
+        diag.R07_DUPLICATE_SORT_VALUE
+    ]
+    assert codes(pack(lambda d: set_values(d, 0, "height", [-1000, 500, 1500, 3000]))) == [
+        diag.R08D_NON_POSITIVE_RATIO
+    ]

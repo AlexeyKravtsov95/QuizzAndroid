@@ -8,6 +8,12 @@
       ],
       "why": "schemaVersion 2 при поддерживаемой 1 — во всех трёх файлах, чтобы не задеть M07"
     },
+    "invalid/m02-active-pack-mismatch": {
+      "cli": [
+        "M02_PACK_ID_MISMATCH"
+      ],
+      "why": "самосогласованный пакет с чужим packId: расходится не между файлами, а с активным пакетом приложения (вторая половина I4-A14)"
+    },
     "invalid/m02-pack-mismatch": {
       "cli": [
         "M02_PACK_ID_MISMATCH"
@@ -102,6 +108,24 @@
         "M09_ENCODING"
       ],
       "why": "нет завершающего перевода строки: единственная фикстура вне нормализации"
+    },
+    "invalid/r01-files-missing-sha256": {
+      "cli": [
+        "R01_SCHEMA"
+      ],
+      "why": "элемент files без обязательного sha256: M03 смотрит только на path, а M06 сравнивает хеш лишь когда он уже строка — форму поля охраняет схема"
+    },
+    "invalid/r01-files-sha256-type": {
+      "cli": [
+        "R01_SCHEMA"
+      ],
+      "why": "sha256 числом вместо строки: нарушение type, которое ни M03, ни M06 не ловят"
+    },
+    "invalid/r01-files-unknown-field": {
+      "cli": [
+        "R01_SCHEMA"
+      ],
+      "why": "лишнее поле внутри files[]: нарушение additionalProperties: false"
     },
     "invalid/r01-schema-type": {
       "cli": [
