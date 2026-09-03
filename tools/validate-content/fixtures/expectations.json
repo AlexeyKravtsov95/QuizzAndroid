@@ -34,6 +34,26 @@
       ],
       "why": "дубликат пути; вторая находка — нет файла с префиксом daily-sets-"
     },
+    "invalid/m03-element-not-object": {
+      "cli": [
+        "M03_FILE_LIST_INVALID",
+        "M03_FILE_LIST_INVALID"
+      ],
+      "why": "элемент files строкой вместо объекта; вторая находка — отсутствующий префикс puzzles-"
+    },
+    "invalid/m03-files-not-array": {
+      "cli": [
+        "M03_FILE_LIST_INVALID"
+      ],
+      "why": "files не массив: «это вообще массив» — тоже вопрос M03"
+    },
+    "invalid/m03-no-path": {
+      "cli": [
+        "M03_FILE_LIST_INVALID",
+        "M03_FILE_LIST_INVALID"
+      ],
+      "why": "элемент files без path: объявление файла без имени бессмысленно, и это вопрос M03, а не схемы — вторая находка про отсутствующий префикс puzzles-"
+    },
     "invalid/m03-subdirectory": {
       "cli": [
         "M03_FILE_LIST_INVALID",

@@ -524,3 +524,55 @@ def test_pairs_touching_a_diagnosed_value_stay_suppressed(pack):
     assert codes(pack(lambda d: set_values(d, 0, "height", [-1000, 500, 1500, 3000]))) == [
         diag.R08D_NON_POSITIVE_RATIO
     ]
+
+
+# --- Верхние границы принадлежат правилам, а не схеме ------------------------
+
+
+def test_retired_in_upper_bound_belongs_to_r18c(pack):
+    """Огромный `retiredIn` даёт `R18C`, а не `R01`.
+
+    Выдуманная верхняя граница в схеме не просто дублировала бы правило, а
+    **подменяла** его: находка схемы блокирует семантические правила файла, и точный
+    `R18C` заменился бы общим `R01`.
+    """
+    # Головоломка берётся из пула вне наборов: у используемой набором сработал бы ещё
+    # и R18A, и тест перестал бы проверять то, ради чего написан.
+    found = codes(
+        pack(
+            lambda d: d[PUZZLES]["puzzles"][-1].__setitem__("retiredIn", 100001),
+            base="invalid/r18c-retired-in-future",
+        )
+    )
+
+    assert found == [diag.R18C_RETIRED_IN_FUTURE]
+
+
+def test_set_index_upper_bound_belongs_to_r19(pack):
+    """Огромный `setIndex` даёт `R19`, а не `R01`, по той же причине."""
+    found = codes(pack(lambda d: d[SETS]["sets"][0].__setitem__("setIndex", 100001)))
+
+    assert found == [diag.R19_SET_INDEX_SEQUENCE]
+
+
+def test_schema_keeps_bounds_it_actually_owns():
+    """Границы, у которых нет другого владельца, из схемы не убраны.
+
+    Проверка нужна, чтобы «убрать выдуманное maximum» не превратилось в «ослабить
+    схему»: `difficulty` ограничена 1..3 по `CONTENT_MODEL.md` §4, а размеры массивов
+    и длины строк не проверяет ни одно правило.
+    """
+    import json
+    from pathlib import Path
+
+    from conftest import TOOL_DIR
+
+    puzzles = json.loads(
+        (Path(TOOL_DIR) / "schema" / "puzzles.schema.json").read_text(encoding="utf-8")
+    )
+    puzzle = puzzles["$defs"]["puzzle"]["properties"]
+
+    assert puzzle["difficulty"] == {"type": "integer", "minimum": 1, "maximum": 3}
+    assert puzzle["cards"]["minItems"] == 4 and puzzle["cards"]["maxItems"] == 4
+    assert puzzle["sources"]["minItems"] == 1 and puzzle["sources"]["maxItems"] == 12
+    assert puzzle["prompt"]["minLength"] == 10 and puzzle["prompt"]["maxLength"] == 90

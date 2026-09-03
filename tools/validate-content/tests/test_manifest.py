@@ -522,3 +522,101 @@ def test_sync_manifest_reports_only_real_changes(tmp_path):
 
     assert cli.sync_manifest(pack_dir, out=report) == 0
     assert "уже синхронизирован" in report.getvalue()
+
+
+# --- Владение диагностикой односторонне: одна причина — один владелец --------
+
+
+@pytest.mark.parametrize(
+    "name,expected",
+    [
+        ("m03-no-path", [diag.M03_FILE_LIST_INVALID, diag.M03_FILE_LIST_INVALID]),
+        ("m03-files-not-array", [diag.M03_FILE_LIST_INVALID]),
+        ("m03-element-not-object", [diag.M03_FILE_LIST_INVALID, diag.M03_FILE_LIST_INVALID]),
+    ],
+)
+def test_m03_owned_forms_never_add_r01(name, expected):
+    """Там, где на вопрос отвечает `M03`, схема молчит.
+
+    «files не массив», «элемент не объект» и «у элемента нет `path`» — это ответы
+    `M03`, и он даёт их своими сообщениями. Находка схемы рядом с ними означала бы,
+    что одна причина выдаёт два кода, — ровно то, что запрещает закреплённое
+    однозначное владение диагностикой.
+    """
+    run = run_cli(fixture(f"invalid/{name}"))
+
+    assert run.code == 1
+    assert run.codes == expected
+    assert diag.R01_SCHEMA not in run.codes
+
+
+@pytest.mark.parametrize(
+    "damage,expected",
+    [
+        (lambda m: m["files"][0].pop("path"), {diag.M03_FILE_LIST_INVALID}),
+        (lambda m: m.__setitem__("files", {"path": PUZZLES}), {diag.M03_FILE_LIST_INVALID}),
+        (lambda m: m["files"].__setitem__(0, PUZZLES), {diag.M03_FILE_LIST_INVALID}),
+        (lambda m: m["files"][0].pop("sha256"), {diag.R01_SCHEMA}),
+        (lambda m: m["files"][0].__setitem__("sha256", 1), {diag.R01_SCHEMA}),
+        (lambda m: m["files"][0].__setitem__("size", 1), {diag.R01_SCHEMA}),
+    ],
+    ids=["нет path", "files не массив", "элемент не объект",
+         "нет sha256", "sha256 не строка", "лишнее поле"],
+)
+def test_files_diagnostics_have_exactly_one_owner(tmp_path, damage, expected):
+    """Каждая форма нарушения внутри `files` даёт коды ровно одного владельца.
+
+    Первые три принадлежат `M03`, последние три — схеме. Пересечения быть не должно
+    ни в ту, ни в другую сторону.
+    """
+    pack_dir = build_pack(tmp_path, base="valid-minimal")
+    manifest = json.loads((pack_dir / MANIFEST).read_text(encoding="utf-8"))
+    damage(manifest)
+    (pack_dir / MANIFEST).write_bytes(dump(manifest))
+
+    run = run_cli(str(pack_dir))
+    assert run.code == 1
+    assert set(run.codes) == expected
+
+
+# --- Верхние границы принадлежат правилам, а не схеме ------------------------
+
+
+def test_schema_version_upper_bound_belongs_to_m01(tmp_path):
+    """`schemaVersion` выше поддерживаемой даёт ровно один `M01`, а не `M01` + `R01`.
+
+    Выдуманная верхняя граница в схеме дублировала бы правило: `M01` уже сверяет
+    значение с `SUPPORTED_SCHEMA_VERSION`.
+    """
+    pack_dir = build_pack(
+        tmp_path,
+        base="valid-minimal",
+        mutate=lambda d: [doc.__setitem__("schemaVersion", 1001) for doc in d.values()],
+    )
+
+    run = run_cli(str(pack_dir))
+    assert run.codes == [diag.M01_SCHEMA_VERSION_UNSUPPORTED]
+
+
+@pytest.mark.parametrize("value", [2, 1001, 100001])
+def test_schema_version_is_rejected_at_any_magnitude(tmp_path, value):
+    """Величина превышения не меняет ни код, ни их число."""
+    pack_dir = build_pack(
+        tmp_path,
+        base="valid-minimal",
+        mutate=lambda d: [doc.__setitem__("schemaVersion", value) for doc in d.values()],
+    )
+
+    assert run_cli(str(pack_dir)).codes == [diag.M01_SCHEMA_VERSION_UNSUPPORTED]
+
+
+@pytest.mark.parametrize("field", ["setCount", "puzzleCount"])
+def test_manifest_counts_upper_bound_belongs_to_r21(tmp_path, field):
+    """Огромный счётчик даёт `R21`, а не `R01`: верхнюю границу владеет правило 21."""
+    pack_dir = build_pack(tmp_path, base="valid-minimal")
+    manifest = json.loads((pack_dir / MANIFEST).read_text(encoding="utf-8"))
+    manifest[field] = 100001
+    (pack_dir / MANIFEST).write_bytes(dump(manifest))
+
+    run = run_cli(str(pack_dir))
+    assert run.codes == [diag.R21_MANIFEST_COUNTS]

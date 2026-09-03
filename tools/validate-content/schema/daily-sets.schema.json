@@ -8,9 +8,9 @@
   "required": ["schemaVersion", "packId", "sets"],
   "properties": {
     "schemaVersion": {
+      "$comment": "Верхней границы здесь нет намеренно: её владелец — правило M01, сверяющее значение с SUPPORTED_SCHEMA_VERSION. Выдуманное «maximum» либо дублировало бы M01 вторым кодом, либо (в конвертах) подменяло бы точный M07 общим R01.",
       "type": "integer",
-      "minimum": 1,
-      "maximum": 1000
+      "minimum": 1
     },
     "packId": {
       "$ref": "#/$defs/packId"
@@ -43,9 +43,9 @@
       "required": ["setIndex", "puzzleIds"],
       "properties": {
         "setIndex": {
+          "$comment": "Верхней границы нет: её владелец — правило R19, требующее, чтобы множество setIndex было ровно 0..setCount-1. Выдуманное «maximum» подменяло бы точный R19 общим R01.",
           "type": "integer",
-          "minimum": 0,
-          "maximum": 100000
+          "minimum": 0
         },
         "puzzleIds": {
           "type": "array",

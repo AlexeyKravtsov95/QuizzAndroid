@@ -132,11 +132,12 @@ def _code_for(error: ValidationError) -> str:
     return diag.R01_SCHEMA
 
 
+_FILES_ELEMENT_POINTER = re.compile(r"^/files/\d+$")
 _FILES_PATH_POINTER = re.compile(r"^/files/\d+/path$")
 _FILES_SHA_POINTER = re.compile(r"^/files/\d+/sha256$")
 
 
-def _suppressed(file_name: str, pointer: str, validator: str) -> bool:
+def _suppressed(file_name: str, pointer: str, error: ValidationError) -> bool:
     """Находки схемы, владельцем которых является специализированное правило.
 
     Подавление **точечное**, а не по всему поддереву ``/files``: правила ``M03`` и
@@ -153,18 +154,36 @@ def _suppressed(file_name: str, pointer: str, validator: str) -> bool:
     на ``path``, а ``M06`` сравнивает хеш лишь тогда, когда тот уже является строкой.
     Подавление по всему поддереву пропускало бы их с кодом выхода 0 — то есть строгая
     схема манифеста не действовала бы вовсе.
+
+    Обратная ошибка так же реальна: там, где ``M03`` **отвечает** сам — «files не
+    массив», «элемент не объект», «у элемента нет ``path``», — находка схемы обязана
+    молчать, иначе одна причина выдаёт два кода.
     """
     if file_name != MANIFEST_FILE_NAME:
         return False
+
+    validator = str(error.validator)
+
     if pointer == "/files":
-        # Число элементов и их уникальность — M03.
-        return validator in ("minItems", "maxItems", "uniqueItems")
+        # Сам массив: «это вообще массив», сколько в нём элементов и уникальны ли
+        # они — вопросы M03, и он отвечает на них своими сообщениями.
+        return validator in ("type", "minItems", "maxItems", "uniqueItems")
+
+    if _FILES_ELEMENT_POINTER.match(pointer):
+        # «Элемент обязан быть объектом» и «у элемента обязан быть path» — тоже M03:
+        # без пути объявление файла бессмысленно, и именно это M03 и сообщает.
+        if validator == "type":
+            return True
+        return _missing_property(error) == "path"
+
     if _FILES_PATH_POINTER.match(pointer):
         # Имя файла целиком — M03 (закрытый шаблон, I4-D6).
         return True
+
     if _FILES_SHA_POINTER.match(pointer):
         # Значение и регистр хеша — M06; тип и наличие поля остаются за схемой.
         return validator in ("pattern", "minLength", "maxLength")
+
     return False
 
 
@@ -180,7 +199,7 @@ def validate_document(file_name: str, schema_file: str, data: object) -> list[di
     findings: list[diag.Finding] = []
     for error in validator.iter_errors(data):
         pointer = _pointer(error)
-        if _suppressed(file_name, pointer, str(error.validator)):
+        if _suppressed(file_name, pointer, error):
             continue
         findings.append(
             diag.Finding(

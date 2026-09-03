@@ -860,6 +860,29 @@ CASES: list[Case] = [
         "другой регистр расширения не проходит закрытый шаблон",
     ),
     Case(
+        "m03-no-path",
+        "minimal",
+        lambda p: setattr(p, "manifest_damage", _drop_first_path),
+        [diag.M03_FILE_LIST_INVALID, diag.M03_FILE_LIST_INVALID],
+        "элемент files без path: объявление файла без имени бессмысленно, и это "
+        "вопрос M03, а не схемы — вторая находка про отсутствующий префикс puzzles-",
+    ),
+    Case(
+        "m03-files-not-array",
+        "minimal",
+        lambda p: setattr(p, "manifest_damage", _files_not_array),
+        [diag.M03_FILE_LIST_INVALID],
+        "files не массив: «это вообще массив» — тоже вопрос M03",
+    ),
+    Case(
+        "m03-element-not-object",
+        "minimal",
+        lambda p: setattr(p, "manifest_damage", _element_not_object),
+        [diag.M03_FILE_LIST_INVALID, diag.M03_FILE_LIST_INVALID],
+        "элемент files строкой вместо объекта; вторая находка — отсутствующий "
+        "префикс puzzles-",
+    ),
+    Case(
         "m03-duplicate-path",
         "minimal",
         lambda p: setattr(p, "declared_files", [PUZZLES_FILE, PUZZLES_FILE]),
@@ -941,6 +964,9 @@ CASES: list[Case] = [
 #: Фикстуры, у которых манифест, хеш или счётчики испорчены **намеренно**.
 #: Пересборка обязана воспроизводить порчу, а не устранять её.
 DELIBERATE = {
+    "m03-no-path",
+    "m03-files-not-array",
+    "m03-element-not-object",
     "r01-files-missing-sha256",
     "r01-files-sha256-type",
     "r01-files-unknown-field",
@@ -1020,6 +1046,18 @@ def _bump_schema_version(pack: Pack, version: int) -> None:
 
 def _break_json(raw: bytes) -> bytes:
     return raw.replace(b'{\n  "schemaVersion"', b'{,\n  "schemaVersion"', 1)
+
+
+def _drop_first_path(manifest: dict) -> None:
+    del manifest["files"][0]["path"]
+
+
+def _files_not_array(manifest: dict) -> None:
+    manifest["files"] = {"path": PUZZLES_FILE}
+
+
+def _element_not_object(manifest: dict) -> None:
+    manifest["files"][0] = PUZZLES_FILE
 
 
 def _drop_first_hash(manifest: dict) -> None:

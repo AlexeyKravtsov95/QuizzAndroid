@@ -8,9 +8,9 @@
   "required": ["schemaVersion", "packId", "puzzles"],
   "properties": {
     "schemaVersion": {
+      "$comment": "Верхней границы здесь нет намеренно: её владелец — правило M01, сверяющее значение с SUPPORTED_SCHEMA_VERSION. Выдуманное «maximum» либо дублировало бы M01 вторым кодом, либо (в конвертах) подменяло бы точный M07 общим R01.",
       "type": "integer",
-      "minimum": 1,
-      "maximum": 1000
+      "minimum": 1
     },
     "packId": {
       "$ref": "#/$defs/packId"
@@ -267,9 +267,9 @@
           "maxLength": 40
         },
         "retiredIn": {
+          "$comment": "Верхней границы нет: её владелец — правило R18C, требующее retiredIn <= contentVersion пакета. Выдуманное «maximum» не дублировало бы R18C, а ПОДМЕНЯЛО его: находка схемы блокирует семантические правила файла, и точный R18C заменился бы общим R01.",
           "type": ["integer", "null"],
-          "minimum": 1,
-          "maximum": 100000
+          "minimum": 1
         }
       }
     }
