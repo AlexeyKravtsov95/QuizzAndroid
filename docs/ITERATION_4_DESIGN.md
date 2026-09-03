@@ -426,6 +426,8 @@ tools/validate-content/schema/
 - перечисления заданы `enum`, идентификаторы — `pattern`;
 - `$defs` используются для повторяющихся типов (`isoDate`, `sha256`, `cardId`, `sourceId`).
 
+**Исключение из требования о числовых границах — только верхняя, и только там, где границей владеет правило.** Пять полей её не имеют: `schemaVersion` (сверяется с `SUPPORTED_SCHEMA_VERSION` правилом `M01`), `retiredIn` (с `contentVersion` — `R18C`), `setCount` и `puzzleCount` (с фактическим числом элементов — `R21`), `setIndex` (с `0..setCount−1` — `R19`). Выдуманное `maximum` там не просто дублирует правило вторым кодом: находка схемы блокирует семантические правила файла, поэтому точный `R18C` или `R19` заменился бы общим `R01`. Нижние границы этих полей и обе границы всех остальных числовых полей на месте. Подробности и остальные границы владения — раздел «Уточнения, сделанные при реализации PR 4A» в конце документа.
+
 ### 5.2 Даты ISO: почему `format` недостаточно
 
 В Draft 2020-12 `format` по умолчанию — **аннотация**, а не утверждение: валидатор вправе его игнорировать, и большинство реализаций так и делает. Поэтому даты проверяются тремя слоями:
@@ -2200,7 +2202,7 @@ git diff --stat main -- app/schemas                                             
 
 | PR | Статус | Дата | Что фактически сделано |
 | --- | --- | --- | --- |
-| **4A** — контракт контента и валидатор | **выполнен** | 2026-09-03 | Создан `tools/validate-content/` целиком: CLI на Python 3.12, три схемы Draft 2020-12 с включённым `FormatChecker`, все коды `R01`–`R21` с буквенными подкодами и `M01`–`M10`, порт `DeterministicShuffler`, 64 фикстуры (2 позитивные + 62 негативные), `expectations.json`, `shuffle-vectors.json`, `rebuild.py`, 354 pytest-проверки. Создан `docs/CONTENT_REVIEW_CHECKLIST.md`. В CI добавлены `setup-python@v6`, установка с `--require-hashes` и self-check; Android-шаги не изменены. Синхронизированы `ARCHITECTURE.md` (§9, §10, ADR-010), `CONTENT_MODEL.md` (§2, §3, §4, §6, §8), `IMPLEMENTATION_PLAN.md` (итерация 4), `VERSIONS.md` (Python 3.12, `jsonschema` 4.26.0, `referencing` 0.37.0, `pytest` 9.1.1 и их замыкание). Kotlin-код, Gradle, Room-схема и `assets` не затронуты |
+| **4A** — контракт контента и валидатор | **выполнен** | 2026-09-03 | Создан `tools/validate-content/` целиком: CLI на Python 3.12, три схемы Draft 2020-12 с включённым `FormatChecker`, все коды `R01`–`R21` с буквенными подкодами и `M01`–`M10`, порт `DeterministicShuffler`, 64 фикстуры (2 позитивные + 62 негативные), `expectations.json`, `shuffle-vectors.json`, `rebuild.py`, 363 pytest-проверки. Создан `docs/CONTENT_REVIEW_CHECKLIST.md`. В CI добавлены `setup-python@v6`, установка с `--require-hashes` и self-check; Android-шаги не изменены. Синхронизированы `ARCHITECTURE.md` (§9, §10, ADR-010), `CONTENT_MODEL.md` (§2, §3, §4, §6, §8), `IMPLEMENTATION_PLAN.md` (итерация 4), `VERSIONS.md` (Python 3.12, `jsonschema` 4.26.0, `referencing` 0.37.0, `pytest` 9.1.1 и их замыкание). Kotlin-код, Gradle, Room-схема и `assets` не затронуты |
 | **4B** — рантайм-конвейер импорта | не начат | — | — |
 | **4C-1 … 4C-5** — редакционный контент | не начаты | — | — |
 | **4D** — активация | не начат | — | — |

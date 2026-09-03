@@ -620,3 +620,63 @@ def test_manifest_counts_upper_bound_belongs_to_r21(tmp_path, field):
 
     run = run_cli(str(pack_dir))
     assert run.codes == [diag.R21_MANIFEST_COUNTS]
+
+
+# --- Отсутствие обязательного поля манифеста: ровно один владелец ------------
+
+
+def test_missing_files_field_yields_exactly_one_finding(tmp_path):
+    """Удалённое поле `files` даёт ровно одну находку — `R01` на корне документа.
+
+    Сверяется **точный список находок**, а не множество кодов: два указателя с
+    одним кодом множество бы не различило, а именно этим отсутствие `files`
+    и отличалось от остальных обязательных полей.
+
+    Владелец выбран не произвольно: отсутствие любого другого required-поля
+    манифеста (`packId`, `schemaVersion`, `setCount`) уже даёт ровно `R01` на корне.
+    `M03` отвечает на вопрос «каков список файлов», а не «есть ли он вообще».
+    """
+    pack_dir = build_pack(tmp_path, base="valid-minimal")
+    manifest = json.loads((pack_dir / MANIFEST).read_text(encoding="utf-8"))
+    manifest.pop("files")
+    (pack_dir / MANIFEST).write_bytes(dump(manifest))
+
+    run = run_cli(str(pack_dir))
+
+    assert run.code == 1
+    assert [(f["code"], f["file"], f["pointer"]) for f in run.findings] == [
+        (diag.R01_SCHEMA, MANIFEST, "")
+    ]
+
+
+@pytest.mark.parametrize(
+    "field", ["schemaVersion", "contentVersion", "packId", "packTitle", "setCount", "puzzleCount", "files"]
+)
+def test_every_required_manifest_field_has_one_owner(tmp_path, field):
+    """Отсутствие **любого** обязательного поля манифеста даёт ровно `R01` на корне.
+
+    Проверка удерживает единообразие: `files` перестаёт быть полем-исключением, а
+    новое правило уровня пакета не сможет незаметно завести второго владельца.
+    """
+    pack_dir = build_pack(tmp_path, base="valid-minimal")
+    manifest = json.loads((pack_dir / MANIFEST).read_text(encoding="utf-8"))
+    manifest.pop(field)
+    (pack_dir / MANIFEST).write_bytes(dump(manifest))
+
+    run = run_cli(str(pack_dir))
+
+    assert [(f["code"], f["pointer"]) for f in run.findings] == [(diag.R01_SCHEMA, "")], field
+
+
+def test_missing_files_does_not_trigger_directory_checks(tmp_path):
+    """Без списка файлов не выполняются `M08`, `M04` и `M06`: сверять каталог не с чем."""
+    pack_dir = build_pack(tmp_path, base="valid-minimal")
+    manifest = json.loads((pack_dir / MANIFEST).read_text(encoding="utf-8"))
+    manifest.pop("files")
+    (pack_dir / MANIFEST).write_bytes(dump(manifest))
+
+    run = run_cli(str(pack_dir))
+
+    assert diag.M08_UNEXPECTED_FILE not in run.codes
+    assert diag.M04_FILE_MISSING not in run.codes
+    assert diag.M06_HASH_MISMATCH not in run.codes

@@ -117,11 +117,12 @@ def check_manifest(pack: PackDirectory) -> tuple[list[diag.Finding], ManifestFac
     file_findings, declared = _check_file_list(manifest)
     findings.extend(file_findings)
 
-    if file_findings:
-        # Список файлов недостоверен, а он — единственный источник ответа на вопрос
-        # «что вообще входит в пакет». Сверять с ним каталог (M08), искать объявленные
-        # файлы (M04) и считать их хеши (M06) означало бы выдавать каскад находок про
-        # ошибку, которая уже названа точным кодом M03.
+    if file_findings or not declared:
+        # Список файлов недостоверен либо отсутствует, а он — единственный источник
+        # ответа на вопрос «что вообще входит в пакет». Сверять с ним каталог (M08),
+        # искать объявленные файлы (M04) и считать их хеши (M06) означало бы выдавать
+        # каскад находок про ошибку, которая уже названа точным кодом — M03, если
+        # список испорчен, или R01, если поля `files` в манифесте нет вовсе.
         return findings, facts, False
 
     for name in declared:
@@ -148,8 +149,17 @@ def _check_file_list(manifest: dict) -> tuple[list[diag.Finding], list[str]]:
     санитайзер здесь был бы слабее, потому что у него бывают обходы, а у allow-list нет.
     """
     findings: list[diag.Finding] = []
-    files = manifest.get("files")
 
+    if "files" not in manifest:
+        # Отсутствие обязательного верхнеуровневого поля — вопрос схемы, и она уже
+        # объявила R01 на корне документа, ровно как для `packId`, `schemaVersion` и
+        # любого другого required-поля манифеста. M03 отвечает на вопрос «каков
+        # список файлов», а не «есть ли он вообще»: добавить сюда свою находку
+        # значило бы сделать `files` единственным полем, отсутствие которого даёт
+        # два кода на одну причину.
+        return findings, []
+
+    files = manifest["files"]
     if not isinstance(files, list):
         findings.append(
             diag.Finding(
