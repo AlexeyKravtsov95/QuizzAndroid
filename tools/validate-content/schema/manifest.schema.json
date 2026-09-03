@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://poporyadku.app/schema/manifest/v1",
+  "title": "manifest.json контентного пакета «По порядку!»",
+  "$comment": "ITERATION_4_DESIGN.md §4.2, §5.1. Владение диагностиками ТОЧЕЧНОЕ — по вопросу, а не по месту. M03 отвечает за состав списка files (это массив, ровно два элемента, уникальны) и за объявление файла (элемент — объект, у него есть path, path проходит закрытый шаблон); M06 — за значение sha256, включая регистр. Всё остальное внутри /files остаётся за схемой: отсутствующий или нестроковый sha256 и лишнее поле в элементе дают R01, потому что ни M03, ни M06 их не проверяют. Верхняя граница schemaVersion принадлежит M01, верхние границы setCount и puzzleCount — R21, поэтому в схеме их нет.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "contentVersion",
+    "packId",
+    "packTitle",
+    "setCount",
+    "puzzleCount",
+    "files"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "$comment": "Верхней границы здесь нет намеренно: её владелец — правило M01, сверяющее значение с SUPPORTED_SCHEMA_VERSION. Выдуманное «maximum» либо дублировало бы M01 вторым кодом, либо (в конвертах) подменяло бы точный M07 общим R01.",
+      "type": "integer",
+      "minimum": 1
+    },
+    "contentVersion": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100000
+    },
+    "packId": {
+      "$ref": "#/$defs/packId"
+    },
+    "packTitle": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40
+    },
+    "setCount": {
+      "$comment": "Верхней границы нет: её владелец — правило R21, сверяющее счётчик с фактическим числом элементов в файле. Любое выдуманное «maximum» дублировало бы R21.",
+      "type": "integer",
+      "minimum": 1
+    },
+    "puzzleCount": {
+      "$comment": "Верхней границы нет: её владелец — правило R21, сверяющее счётчик с фактическим числом элементов в файле. Любое выдуманное «maximum» дублировало бы R21.",
+      "type": "integer",
+      "minimum": 3
+    },
+    "files": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "sha256": {
+            "$ref": "#/$defs/sha256"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "packId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "minLength": 3,
+      "maxLength": 32
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "minLength": 64,
+      "maxLength": 64
+    }
+  }
+}

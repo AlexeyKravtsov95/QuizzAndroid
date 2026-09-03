@@ -38,6 +38,30 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-robolectric-
 
+      # ITERATION_4_DESIGN.md, PR 4A (I4-D8): валидатор контента — автономный
+      # инструмент на Python, а не Gradle-задача. Он не тянет AGP, не влияет на
+      # время Android-шагов и запускается до них: сломанный инструмент должен быть
+      # виден раньше, чем сборка APK.
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: tools/validate-content/requirements.txt
+
+      # --require-hashes: lock-файл фиксирует точные версии и sha256 всех
+      # дистрибутивов, поэтому подмена пакета на PyPI приведёт к падению установки,
+      # а не к тихому запуску другой версии.
+      - name: Install content validator
+        run: pip install --require-hashes -r tools/validate-content/requirements.txt
+
+      # Self-check валидатора на синтетических фикстурах: 21 правило, буквенные
+      # подкоды и M01-M10. Настоящий пакет здесь НЕ проверяется — каталог
+      # app/src/main/assets/content появляется только в PR 4C-1, и шаг
+      # «Validate content pack» добавляется вместе с ним.
+      - name: Validator self-check
+        run: python3 -m pytest tools/validate-content/tests -q
+
       - name: Assemble debug APK
         run: ./gradlew assembleDebug
 

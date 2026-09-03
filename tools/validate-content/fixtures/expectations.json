@@ -1,0 +1,400 @@
+{
+  "_comment": "Единственный источник ожидаемых кодов для фикстур валидатора. Колонка cli проверяется тестами PR 4A; колонка runtime — контракт полного пути ContentPackReader → ContentValidator и заполняется в PR 4B (там, где она совпала бы с cli, её опускают). Порядок кодов — отсортированный, тексты сообщений контрактом не являются. Поле why — пояснение для человека.",
+  "validationDate": "2026-09-03",
+  "fixtures": {
+    "invalid/m01-schema-version": {
+      "cli": [
+        "M01_SCHEMA_VERSION_UNSUPPORTED"
+      ],
+      "why": "schemaVersion 2 при поддерживаемой 1 — во всех трёх файлах, чтобы не задеть M07"
+    },
+    "invalid/m02-active-pack-mismatch": {
+      "cli": [
+        "M02_PACK_ID_MISMATCH"
+      ],
+      "why": "самосогласованный пакет с чужим packId: расходится не между файлами, а с активным пакетом приложения (вторая половина I4-A14)"
+    },
+    "invalid/m02-pack-mismatch": {
+      "cli": [
+        "M02_PACK_ID_MISMATCH"
+      ],
+      "why": "packId файла головоломок расходится с манифестом"
+    },
+    "invalid/m03-absolute-path": {
+      "cli": [
+        "M03_FILE_LIST_INVALID",
+        "M03_FILE_LIST_INVALID"
+      ],
+      "why": "абсолютный путь в files[].path"
+    },
+    "invalid/m03-duplicate-path": {
+      "cli": [
+        "M03_FILE_LIST_INVALID",
+        "M03_FILE_LIST_INVALID"
+      ],
+      "why": "дубликат пути; вторая находка — нет файла с префиксом daily-sets-"
+    },
+    "invalid/m03-element-not-object": {
+      "cli": [
+        "M03_FILE_LIST_INVALID",
+        "M03_FILE_LIST_INVALID"
+      ],
+      "why": "элемент files строкой вместо объекта; вторая находка — отсутствующий префикс puzzles-"
+    },
+    "invalid/m03-files-not-array": {
+      "cli": [
+        "M03_FILE_LIST_INVALID"
+      ],
+      "why": "files не массив: «это вообще массив» — тоже вопрос M03"
+    },
+    "invalid/m03-no-path": {
+      "cli": [
+        "M03_FILE_LIST_INVALID",
+        "M03_FILE_LIST_INVALID"
+      ],
+      "why": "элемент files без path: объявление файла без имени бессмысленно, и это вопрос M03, а не схемы — вторая находка про отсутствующий префикс puzzles-"
+    },
+    "invalid/m03-subdirectory": {
+      "cli": [
+        "M03_FILE_LIST_INVALID",
+        "M03_FILE_LIST_INVALID"
+      ],
+      "why": "подкаталог в files[].path: формат допускает ровно три файла без вложенности"
+    },
+    "invalid/m03-three-files": {
+      "cli": [
+        "M03_FILE_LIST_INVALID"
+      ],
+      "why": "три объявления вместо двух: шарды не поддерживаются. Обе находки (лишний элемент и два файла с префиксом puzzles-) указывают на /files и схлопываются в одну — это одна ошибка списка файлов"
+    },
+    "invalid/m03-traversal": {
+      "cli": [
+        "M03_FILE_LIST_INVALID",
+        "M03_FILE_LIST_INVALID"
+      ],
+      "why": "обход каталога в files[].path; вторая находка — нет файла с префиксом puzzles-"
+    },
+    "invalid/m03-uppercase-extension": {
+      "cli": [
+        "M03_FILE_LIST_INVALID",
+        "M03_FILE_LIST_INVALID"
+      ],
+      "why": "другой регистр расширения не проходит закрытый шаблон"
+    },
+    "invalid/m04-missing-file": {
+      "cli": [
+        "M04_FILE_MISSING"
+      ],
+      "why": "объявленный манифестом файл отсутствует в каталоге"
+    },
+    "invalid/m05-malformed": {
+      "cli": [
+        "M05_MALFORMED_JSON"
+      ],
+      "why": "лишняя запятая делает файл неразбираемым; sha256 считается уже от порченых байтов"
+    },
+    "invalid/m06-hash-mismatch": {
+      "cli": [
+        "M06_HASH_MISMATCH"
+      ],
+      "why": "sha256 в манифесте не соответствует байтам файла"
+    },
+    "invalid/m06-hash-uppercase": {
+      "cli": [
+        "M06_HASH_MISMATCH"
+      ],
+      "why": "верхний регистр хеша: сравнение точное, требуются 64 строчных hex-символа"
+    },
+    "invalid/m07-schema-mismatch": {
+      "cli": [
+        "M07_SCHEMA_VERSION_MISMATCH"
+      ],
+      "why": "schemaVersion файла головоломок расходится с манифестом"
+    },
+    "invalid/m08-extra-file": {
+      "cli": [
+        "M08_UNEXPECTED_FILE"
+      ],
+      "why": "необъявленный файл в каталоге: шарда быть не может"
+    },
+    "invalid/m09-bom": {
+      "cli": [
+        "M09_ENCODING"
+      ],
+      "why": "BOM в начале файла; хеш посчитан от байтов с BOM, поэтому M06 не срабатывает"
+    },
+    "invalid/m09-no-trailing-newline": {
+      "cli": [
+        "M09_ENCODING"
+      ],
+      "why": "нет завершающего перевода строки: единственная фикстура вне нормализации"
+    },
+    "invalid/r01-files-missing-sha256": {
+      "cli": [
+        "R01_SCHEMA"
+      ],
+      "why": "элемент files без обязательного sha256: M03 смотрит только на path, а M06 сравнивает хеш лишь когда он уже строка — форму поля охраняет схема"
+    },
+    "invalid/r01-files-sha256-type": {
+      "cli": [
+        "R01_SCHEMA"
+      ],
+      "why": "sha256 числом вместо строки: нарушение type, которое ни M03, ни M06 не ловят"
+    },
+    "invalid/r01-files-unknown-field": {
+      "cli": [
+        "R01_SCHEMA"
+      ],
+      "why": "лишнее поле внутри files[]: нарушение additionalProperties: false"
+    },
+    "invalid/r01-schema-type": {
+      "cli": [
+        "R01_SCHEMA"
+      ],
+      "why": "difficulty строкой вместо целого — общий отказ схемы",
+      "runtime": [
+        "R01_SCHEMA"
+      ]
+    },
+    "invalid/r02-no-correct-order": {
+      "cli": [
+        "R02_CORRECT_ORDER_MISSING"
+      ],
+      "why": "нет обязательного correctOrder — сверять вычисленный порядок не с чем",
+      "runtime": [
+        "R01_SCHEMA"
+      ]
+    },
+    "invalid/r03-prompt-too-long": {
+      "cli": [
+        "R03_TEXT_LENGTH"
+      ],
+      "why": "prompt длиной 91 символ при пределе 90"
+    },
+    "invalid/r04-no-verified-by": {
+      "cli": [
+        "R04_VERIFICATION_MISSING"
+      ],
+      "why": "нет verifiedBy — редакторский протокол не зафиксирован"
+    },
+    "invalid/r04a-date-not-calendar": {
+      "cli": [
+        "R04A_DATE_NOT_CALENDAR"
+      ],
+      "why": "30 февраля не существует; pattern такую дату пропускает"
+    },
+    "invalid/r04b-date-in-future": {
+      "cli": [
+        "R04B_DATE_IN_FUTURE"
+      ],
+      "why": "дата проверки позже --validation-date фикстур"
+    },
+    "invalid/r05-duplicate-puzzle-id": {
+      "cli": [
+        "R05_DUPLICATE_PUZZLE_ID"
+      ],
+      "why": "второй объект с уже занятым puzzleId лежит в пуле вне наборов"
+    },
+    "invalid/r06-order-mismatch": {
+      "cli": [
+        "R06_ORDER_MISMATCH"
+      ],
+      "why": "записанный порядок не совпадает с вычисленным из sortValue"
+    },
+    "invalid/r07-duplicate-sort-value": {
+      "cli": [
+        "R07_DUPLICATE_SORT_VALUE"
+      ],
+      "why": "две карточки с одинаковым значением — порядок перестаёт быть однозначным"
+    },
+    "invalid/r08-gap-relative": {
+      "cli": [
+        "R08_MIN_GAP"
+      ],
+      "why": "разрыв 2,9 % при пороге 3 % от большего значения пары"
+    },
+    "invalid/r08-gap-year": {
+      "cli": [
+        "R08_MIN_GAP"
+      ],
+      "why": "разрыв в один год при пороге в два"
+    },
+    "invalid/r08c-sort-key-date": {
+      "cli": [
+        "R08C_SORT_KEY_UNSUPPORTED"
+      ],
+      "why": "sortKey date отложен: единица не зафиксирована ни одним документом"
+    },
+    "invalid/r08d-non-positive-ratio": {
+      "cli": [
+        "R08D_NON_POSITIVE_RATIO"
+      ],
+      "why": "неположительное значение на ратио-шкале: относительный порог не определён"
+    },
+    "invalid/r08e-year-zero": {
+      "cli": [
+        "R08E_YEAR_ZERO"
+      ],
+      "why": "нулевого года не существует"
+    },
+    "invalid/r09-volatile": {
+      "cli": [
+        "R09_VOLATILE_FORBIDDEN"
+      ],
+      "why": "volatile остаётся в enum формата, но запрещён политикой MVP"
+    },
+    "invalid/r10-shuffle-identity": {
+      "cli": [
+        "R10_SHUFFLE_IDENTITY"
+      ],
+      "why": "подобранный puzzleId: стартовый порядок совпал с правильным"
+    },
+    "invalid/r11-empty-source-ids": {
+      "cli": [
+        "R11_SOURCE_IDS_EMPTY"
+      ],
+      "why": "у карточки пустой массив источников",
+      "runtime": [
+        "R01_SCHEMA"
+      ]
+    },
+    "invalid/r12-unknown-source-id": {
+      "cli": [
+        "R12_SOURCE_ID_UNKNOWN"
+      ],
+      "why": "карточка ссылается на источник, которого нет в sources"
+    },
+    "invalid/r13-duplicate-source-id": {
+      "cli": [
+        "R13_DUPLICATE_SOURCE_ID"
+      ],
+      "why": "два источника с одним sourceId внутри головоломки"
+    },
+    "invalid/r14-unused-source": {
+      "cli": [
+        "R14_UNUSED_SOURCE"
+      ],
+      "why": "мёртвый источник: объявлен и не используется ни одной карточкой"
+    },
+    "invalid/r15-only-other": {
+      "cli": [
+        "R15_NO_AUTHORITATIVE_SOURCE"
+      ],
+      "why": "единственный источник карточки имеет kind other"
+    },
+    "invalid/r16-disputed-single-source": {
+      "cli": [
+        "R16_SECOND_SOURCE_REQUIRED"
+      ],
+      "why": "disputed: true при одном источнике у карточки"
+    },
+    "invalid/r16-slow-single-source": {
+      "cli": [
+        "R16_SECOND_SOURCE_REQUIRED"
+      ],
+      "why": "volatility slow при одном источнике у первой карточки"
+    },
+    "invalid/r17-no-locator": {
+      "cli": [
+        "R17_SOURCE_LOCATOR_MISSING"
+      ],
+      "why": "у источника нет ни url, ни reference"
+    },
+    "invalid/r18-missing-reference": {
+      "cli": [
+        "R18_SET_REFERENCE_MISSING"
+      ],
+      "why": "набор ссылается на головоломку, которой нет в пуле"
+    },
+    "invalid/r18a-retired-reference": {
+      "cli": [
+        "R18A_SET_REFERENCE_RETIRED"
+      ],
+      "why": "набор ссылается на отозванную головоломку"
+    },
+    "invalid/r18b-reused-puzzle": {
+      "cli": [
+        "R18B_PUZZLE_REUSED"
+      ],
+      "why": "одна головоломка использована в двух наборах пакета"
+    },
+    "invalid/r18c-retired-in-future": {
+      "cli": [
+        "R18C_RETIRED_IN_FUTURE"
+      ],
+      "why": "retiredIn ссылается на версию контента, которой ещё не существует"
+    },
+    "invalid/r19-index-duplicate": {
+      "cli": [
+        "R19_SET_INDEX_SEQUENCE"
+      ],
+      "why": "два набора с одним setIndex"
+    },
+    "invalid/r19-index-gap": {
+      "cli": [
+        "R19_SET_INDEX_SEQUENCE"
+      ],
+      "why": "дыра в последовательности setIndex: 0 и 2"
+    },
+    "invalid/r20a-mixed-plus-repeat": {
+      "cli": [
+        "R20A_SET_CATEGORY_REPEAT"
+      ],
+      "why": "mixed + history + history: соседство с mixed не разрешает повтор категории"
+    },
+    "invalid/r20a-same-category": {
+      "cli": [
+        "R20A_SET_CATEGORY_REPEAT"
+      ],
+      "why": "две одинаковые категории в наборе"
+    },
+    "invalid/r20a-two-mixed": {
+      "cli": [
+        "R20A_SET_CATEGORY_REPEAT"
+      ],
+      "why": "mixed + mixed + science: mixed не является исключением из R20A"
+    },
+    "invalid/r20b-profile-112": {
+      "cli": [
+        "R20B_SET_DIFFICULTY_PROFILE"
+      ],
+      "why": "профиль [1,1,2] не входит в перечень {[1,2,2],[1,2,3]}"
+    },
+    "invalid/r20b-profile-223": {
+      "cli": [
+        "R20B_SET_DIFFICULTY_PROFILE"
+      ],
+      "why": "профиль [2,2,3] в наборе 7, где difficulty 3 разрешена: падает только R20B"
+    },
+    "invalid/r20c-opening-category": {
+      "cli": [
+        "R20C_SET_OPENING_CATEGORY"
+      ],
+      "why": "одна категория открывает наборы 0 и 1"
+    },
+    "invalid/r20c-opening-mixed": {
+      "cli": [
+        "R20C_SET_OPENING_CATEGORY"
+      ],
+      "why": "mixed открывает два соседних набора: правило сравнивает значения"
+    },
+    "invalid/r20d-early-difficulty": {
+      "cli": [
+        "R20D_EARLY_DIFFICULTY"
+      ],
+      "why": "difficulty 3 в наборе 0: профиль [1,2,3] допустим, но не в первых семи"
+    },
+    "invalid/r21-wrong-counts": {
+      "cli": [
+        "R21_MANIFEST_COUNTS"
+      ],
+      "why": "puzzleCount манифеста не совпадает с фактическим"
+    },
+    "valid": {
+      "cli": []
+    },
+    "valid-minimal": {
+      "cli": []
+    }
+  }
+}

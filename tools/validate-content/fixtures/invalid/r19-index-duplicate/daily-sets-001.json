@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "packId": "core-ru",
+  "sets": [
+    {
+      "setIndex": 0,
+      "puzzleIds": [
+        "geo-para-001",
+        "hist-para-002",
+        "sci-para-003"
+      ]
+    },
+    {
+      "setIndex": 0,
+      "puzzleIds": [
+        "hist-para-004",
+        "sci-para-005",
+        "nat-para-006"
+      ]
+    }
+  ]
+}

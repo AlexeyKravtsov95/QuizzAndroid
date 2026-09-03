@@ -36,6 +36,27 @@
 | targetSdk | 37 | Соответствует `compileSdk` — рекомендация Google target latest | 2026-08-30 | RuStore не публикует отдельного обязательного минимума `targetSdk` (см. ниже) |
 | minSdk | 26 | `ARCHITECTURE.md`, ADR-009 | 2026-08-30 | Подтверждено без изменений: `java.time` без десугаринга, каналы уведомлений и адаптивные иконки нативно; RuStore-специфичная статистика распределения версий Android недоступна публично на момент проверки (см. ниже) |
 | JDK | 17 | [developer.android.com/build/releases/about-agp](https://developer.android.com/build/releases/about-agp) (AGP 9.x требует JDK 17 для запуска Gradle); фактически использованный в сборках этой сессии — OpenJDK 17.0.19 (Homebrew) | 2026-08-30 | `compileOptions`/`kotlin.compilerOptions` в `app/build.gradle.kts` уже целятся в `JavaVersion.VERSION_17`/`JvmTarget.JVM_17` |
+| Python (валидатор контента `tools/validate-content/`) | 3.12 | [devguide.python.org/versions](https://devguide.python.org/versions/) — 3.12 в статусе `security`/поддерживаемой ветки; в CI ставится `actions/setup-python@v6` с `python-version: "3.12"` | 2026-09-03 | Итерация 4, PR 4A (**I4-D8**). Автономный инструмент: Gradle не трогает, зависимостью `app` не является. Локально проверено на CPython 3.12.13 |
+| `jsonschema` | 4.26.0 | [pypi.org/project/jsonschema/4.26.0](https://pypi.org/project/jsonschema/4.26.0/) (первичный источник — PyPI JSON API проекта; релиз 2026-01-07) | 2026-09-03 | Референсная реализация JSON Schema Draft 2020-12. `FormatChecker` включается явно, иначе `format` остался бы аннотацией (`ITERATION_4_DESIGN.md` §5.2). Extra `format-nongpl` не подключается: из форматов нужен только `date`, он проверяется стандартной библиотекой |
+| `referencing` | 0.37.0 | [pypi.org/project/referencing/0.37.0](https://pypi.org/project/referencing/0.37.0/) (релиз 2025-10-13) | 2026-09-03 | Реестр схем, через который `jsonschema` резолвит `$ref`. Прямая зависимость инструмента и явная строка lock-файла, а не только транзитивная |
+| `pytest` | 9.1.1 | [pypi.org/project/pytest/9.1.1](https://pypi.org/project/pytest/9.1.1/) (релиз 2026-06-19) | 2026-09-03 | Self-check валидатора в CI (`python3 -m pytest tools/validate-content/tests -q`). Ставится **из lock-файла**, а не берётся предустановленным на GitHub runner |
+| Транзитивное замыкание валидатора | `attrs` 26.1.0, `jsonschema-specifications` 2025.9.1, `rpds-py` 2026.6.3, `typing-extensions` 4.16.0, `iniconfig` 2.3.0, `packaging` 26.3, `pluggy` 1.6.0, `pygments` 2.21.0, `colorama` 0.4.6 | PyPI JSON API соответствующих проектов | 2026-09-03 | Полное замыкание трёх прямых зависимостей. Версии и все sha256 их дистрибутивов зафиксированы в `tools/validate-content/requirements.txt`; установка только через `pip install --require-hashes`. `exceptiongroup` и `tomli` (зависимости pytest для `python_version < "3.11"`) на 3.12 не нужны и не пинуются; `colorama` оставлен с маркером `sys_platform == "win32"`, `typing-extensions` — с `python_version < "3.13"` |
+
+---
+
+## Зависимости валидатора контента: как они зафиксированы
+
+`tools/validate-content/requirements.txt` — **lock-файл**, а не список пожеланий. Каждая строка содержит точную версию (`==`) и sha256 **всех** дистрибутивов этой версии на PyPI, поэтому файл устанавливается только так:
+
+```bash
+pip install --require-hashes -r tools/validate-content/requirements.txt
+```
+
+`--require-hashes` отвергает файл целиком, если хоть одна строка не пинована или не имеет хеша, — поэтому `>=`, диапазоны и «просто имя пакета» здесь невозможны в принципе, а не по договорённости. Подмена пакета на PyPI приведёт к падению установки, а не к тихому запуску другой версии.
+
+Версии сверены по PyPI JSON API соответствующих проектов 2026-09-03 и дополнительно подтверждены **эмпирически**: установка по lock-файлу в чистое окружение `python3.12 -m venv` в этой сессии прошла, и весь self-check валидатора зелёный.
+
+Python-зависимости **не подключаются к Gradle** и не входят в `gradle/libs.versions.toml`: валидатор — автономный инструмент авторинга контента, и привязка его к Android-сборке означала бы, что «просто проверить контент» тянет AGP (`ITERATION_4_DESIGN.md`, **I4-D8**).
 
 ---
 

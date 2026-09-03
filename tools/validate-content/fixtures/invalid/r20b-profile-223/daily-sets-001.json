@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "packId": "core-ru",
+  "sets": [
+    {
+      "setIndex": 0,
+      "puzzleIds": [
+        "geo-obrazec-001",
+        "hist-obrazec-002",
+        "sci-obrazec-003"
+      ]
+    },
+    {
+      "setIndex": 1,
+      "puzzleIds": [
+        "hist-obrazec-004",
+        "sci-obrazec-005",
+        "nat-obrazec-006"
+      ]
+    },
+    {
+      "setIndex": 2,
+      "puzzleIds": [
+        "sci-obrazec-007",
+        "nat-obrazec-008",
+        "cult-obrazec-009"
+      ]
+    },
+    {
+      "setIndex": 3,
+      "puzzleIds": [
+        "nat-obrazec-010",
+        "cult-obrazec-011",
+        "rus-obrazec-012"
+      ]
+    },
+    {
+      "setIndex": 4,
+      "puzzleIds": [
+        "cult-obrazec-013",
+        "rus-obrazec-014",
+        "mix-obrazec-015"
+      ]
+    },
+    {
+      "setIndex": 5,
+      "puzzleIds": [
+        "rus-obrazec-016",
+        "mix-obrazec-017",
+        "hist-obrazec-018"
+      ]
+    },
+    {
+      "setIndex": 6,
+      "puzzleIds": [
+        "mix-obrazec-019",
+        "hist-obrazec-020",
+        "geo-obrazec-021"
+      ]
+    },
+    {
+      "setIndex": 7,
+      "puzzleIds": [
+        "geo-obrazec-022",
+        "sci-obrazec-023",
+        "rus-obrazec-024"
+      ]
+    }
+  ]
+}
