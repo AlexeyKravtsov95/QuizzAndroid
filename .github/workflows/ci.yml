@@ -56,11 +56,16 @@ jobs:
         run: pip install --require-hashes -r tools/validate-content/requirements.txt
 
       # Self-check валидатора на синтетических фикстурах: 21 правило, буквенные
-      # подкоды и M01-M10. Настоящий пакет здесь НЕ проверяется — каталог
-      # app/src/main/assets/content появляется только в PR 4C-1, и шаг
-      # «Validate content pack» добавляется вместе с ним.
+      # подкоды и M01-M10.
       - name: Validator self-check
         run: python3 -m pytest tools/validate-content/tests -q
+
+      # ITERATION_4_DESIGN.md, §12.4: CI проверяет настоящий пакет целиком и БЕЗ
+      # --expect-*. Накопительный объём батча (7/21 в 4C-1) живёт в описании PR и в
+      # чек-листе, а не в конфигурации, которую пришлось бы править пять раз;
+      # постоянное ожидание 35/105 добавляется сюда в PR 4D.
+      - name: Validate content pack
+        run: python3 tools/validate-content/validate.py app/src/main/assets/content
 
       - name: Assemble debug APK
         run: ./gradlew assembleDebug

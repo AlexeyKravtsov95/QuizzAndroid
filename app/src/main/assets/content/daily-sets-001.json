@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "packId": "core-ru",
+  "sets": [
+    {
+      "setIndex": 0,
+      "puzzleIds": [
+        "nat-zhivotnye-massa-001",
+        "hist-organizacii-god-002",
+        "geo-kanaly-dlina-003"
+      ]
+    },
+    {
+      "setIndex": 1,
+      "puzzleIds": [
+        "sci-planety-orbity-004",
+        "nat-vodopady-vysota-005",
+        "hist-dokumenty-god-006"
+      ]
+    },
+    {
+      "setIndex": 2,
+      "puzzleIds": [
+        "geo-materiki-ploshchad-007",
+        "hist-nobel-fizika-017",
+        "cult-muzei-god-014"
+      ]
+    },
+    {
+      "setIndex": 3,
+      "puzzleIds": [
+        "nat-zhivotnye-vozrast-008",
+        "geo-ostrova-ploshchad-023",
+        "hist-aviaciya-vehi-010"
+      ]
+    },
+    {
+      "setIndex": 4,
+      "puzzleIds": [
+        "sci-planety-diametr-011",
+        "cult-universitety-god-012",
+        "mix-zooparki-god-013"
+      ]
+    },
+    {
+      "setIndex": 5,
+      "puzzleIds": [
+        "cult-pamyatniki-vysota-015",
+        "mix-parki-god-025",
+        "sci-planety-god-018"
+      ]
+    },
+    {
+      "setIndex": 6,
+      "puzzleIds": [
+        "sci-skorosti-020",
+        "geo-vershiny-vysota-021",
+        "cult-nobel-literatura-027"
+      ]
+    }
+  ]
+}
