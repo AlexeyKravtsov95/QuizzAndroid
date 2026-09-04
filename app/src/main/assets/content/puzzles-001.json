@@ -5,7 +5,7 @@
     {
       "puzzleId": "nat-zhivotnye-massa-001",
       "category": "nature",
-      "prompt": "Расположите животных от самого лёгкого к самому тяжёлому",
+      "prompt": "Расположите животных по наибольшей известной массе взрослой особи",
       "sortKey": "mass",
       "sortDirection": "ascending",
       "directionLabel": "Сверху — самое лёгкое",
@@ -19,7 +19,9 @@
           "sourceIds": [
             "s1",
             "s5"
-          ]
+          ],
+          "disputed": true,
+          "note": "ADW — до 14 кг; второй источник по подвидам не выходит за 10 кг"
         },
         {
           "cardId": "c2",
@@ -41,7 +43,9 @@
           "sourceIds": [
             "s3",
             "s7"
-          ]
+          ],
+          "disputed": true,
+          "note": "ADW — верхняя граница 6100 кг; второй источник даёт для самцов 5,2–6,9 т"
         },
         {
           "cardId": "c4",
@@ -61,7 +65,7 @@
         "c3",
         "c4"
       ],
-      "explanation": "Предел массы задаёт опора. Наземное животное держит вес на костях и ногах, и слон близок к этому пределу. Кита держит вода, поэтому он весит в три десятка раз больше слона, оставаясь подвижным.",
+      "explanation": "Сравниваются наибольшие массы, которые приводят зоологические своды, а не средние. Шаг между соседями здесь не проценты, а разы: медведь тяжелее лисицы примерно в 57 раз, слон тяжелее медведя в 7,6, а кит тяжелее слона в 31 раз.",
       "sources": [
         {
           "sourceId": "s1",
@@ -100,7 +104,8 @@
           "title": "Википедия (проверочный источник): Red fox",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Red_fox",
-          "accessedAt": "2026-09-04"
+          "accessedAt": "2026-09-04",
+          "note": "Таблица подвидов даёт массы 2,7–10 кг; значения 14 кг на странице нет — расхождение отмечено в карточке"
         },
         {
           "sourceId": "s6",
@@ -115,7 +120,8 @@
           "title": "Википедия (проверочный источник): African bush elephant",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/African_bush_elephant",
-          "accessedAt": "2026-09-04"
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «a body mass of 5.2–6.9 t» для взрослых самцов; методика отличается от верхней границы ADW"
         },
         {
           "sourceId": "s8",
@@ -283,7 +289,7 @@
         "c3",
         "c4"
       ],
-      "explanation": "Длину задаёт ширина перешейка или пролива, а не масштаб стройки. Ла-Манш и Панамский перешеек узкие, а Суэцкий канал пересекает почти двести километров суши между двумя морями.",
+      "explanation": "Самый известный из четырёх — не самый длинный: Панамский канал короче Суэцкого в два с половиной раза. А тоннель под Ла-Маншем, о котором говорят как о стройке века, оказывается короче всех трёх каналов.",
       "sources": [
         {
           "sourceId": "s1",
@@ -379,7 +385,7 @@
         "c3",
         "c4"
       ],
-      "explanation": "Планеты расположены не равномерно: между Марсом и Юпитером лежит пояс астероидов, поэтому шаг от Марса к Юпитеру больше, чем всё расстояние от Солнца до Марса.",
+      "explanation": "Планеты стоят не через равные промежутки. Первые три укладываются в 228 миллионов километров, а один только шаг от Марса к Юпитеру — 550 миллионов, то есть больше, чем всё расстояние от Солнца до Марса.",
       "sources": [
         {
           "sourceId": "s1",
@@ -438,7 +444,8 @@
             "s1",
             "s2"
           ],
-          "note": "Водопад знаменит шириной, а не высотой"
+          "disputed": true,
+          "note": "БРЭ — 72 м; второй источник даёт 82 м для самого длинного уступа"
         },
         {
           "cardId": "c2",
@@ -448,8 +455,10 @@
           "displayValue": "120 м",
           "sourceIds": [
             "s1",
-            "s2"
-          ]
+            "s3"
+          ],
+          "disputed": true,
+          "note": "БРЭ — 120 м; второй источник даёт полную высоту 108 м"
         },
         {
           "cardId": "c3",
@@ -459,7 +468,7 @@
           "displayValue": "727 м",
           "sourceIds": [
             "s1",
-            "s3"
+            "s4"
           ],
           "disputed": true,
           "note": "БРЭ — 727 м, другие своды дают 739 м для суммы трёх каскадов"
@@ -472,10 +481,10 @@
           "displayValue": "1054 м",
           "sourceIds": [
             "s1",
-            "s3"
+            "s4"
           ],
           "disputed": true,
-          "note": "БРЭ — 1054 м; часть источников приводит 979 м"
+          "note": "БРЭ — 1054 м; второй источник приводит 979 м"
         }
       ],
       "correctOrder": [
@@ -484,7 +493,7 @@
         "c3",
         "c4"
       ],
-      "explanation": "Высота водопада зависит от того, через какой уступ падает река. Игуасу и Виктория срываются с края плато шириной в километры, а Анхель падает с отвесной стены столовой горы почти без касания склона.",
+      "explanation": "В справочниках Игуасу и Виктория стоят среди самых широких водопадов, а Анхель и Йосемити — среди самых высоких: это разные списки. Разброс значений между сводами доходит до восьми процентов и порядок не меняет: соседние значения различаются не менее чем в 1,4 раза.",
       "sources": [
         {
           "sourceId": "s1",
@@ -496,18 +505,27 @@
         },
         {
           "sourceId": "s2",
-          "title": "Википедия (проверочный источник): List of waterfalls by flow rate и статьи о водопадах",
+          "title": "Википедия (проверочный источник): Iguazu Falls",
           "kind": "other",
-          "url": "https://en.wikipedia.org/wiki/List_of_waterfalls_by_height",
-          "accessedAt": "2026-09-04"
+          "url": "https://en.wikipedia.org/wiki/Iguazu_Falls",
+          "accessedAt": "2026-09-04",
+          "note": "В карточке статьи: «Longest drop 82 metres» — независимая оценка, отличная от 72 м"
         },
         {
           "sourceId": "s3",
+          "title": "Википедия (проверочный источник): Victoria Falls",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Victoria_Falls",
+          "accessedAt": "2026-09-04",
+          "note": "В карточке статьи: «Total height 108 m» — независимая оценка, отличная от 120 м"
+        },
+        {
+          "sourceId": "s4",
           "title": "Википедия (проверочный источник): List of waterfalls by height",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/List_of_waterfalls_by_height",
           "accessedAt": "2026-09-04",
-          "note": "Независимая оценка: Angel Falls 979 м, Yosemite Falls 739 м"
+          "note": "Независимые оценки: Angel Falls 979 м, Yosemite Falls 739 м"
         }
       ],
       "volatility": "slow",
@@ -571,7 +589,7 @@
         "c3",
         "c4"
       ],
-      "explanation": "Круг тех, чьи права защищает документ, расширяется от строки к строке: сначала английские бароны, затем жители одной страны, затем раненые любой армии и, наконец, каждый человек.",
+      "explanation": "Между первым и последним документом больше семи веков, и почти вся эта дистанция приходится на первый шаг: от Великой хартии до Декларации независимости прошло 561 год, а три остальных уместились в 172 года.",
       "sources": [
         {
           "sourceId": "s1",
@@ -629,7 +647,9 @@
           "sourceIds": [
             "s1",
             "s5"
-          ]
+          ],
+          "disputed": true,
+          "note": "БРЭ — площадь материка; второй источник — с шельфовыми ледниками и островами"
         },
         {
           "cardId": "c2",
@@ -640,7 +660,9 @@
           "sourceIds": [
             "s2",
             "s5"
-          ]
+          ],
+          "disputed": true,
+          "note": "БРЭ — без островов (17,5 млн); второй источник — с островами (17,8 млн)"
         },
         {
           "cardId": "c3",
@@ -651,7 +673,9 @@
           "sourceIds": [
             "s3",
             "s5"
-          ]
+          ],
+          "disputed": true,
+          "note": "БРЭ — без островов (22,5 млн); второй источник — с островами (24,2 млн)"
         },
         {
           "cardId": "c4",
@@ -662,7 +686,9 @@
           "sourceIds": [
             "s4",
             "s5"
-          ]
+          ],
+          "disputed": true,
+          "note": "БРЭ — без островов (29,2 млн); второй источник — с островами (30,4 млн)"
         }
       ],
       "correctOrder": [
@@ -671,7 +697,7 @@
         "c3",
         "c4"
       ],
-      "explanation": "Антарктида кажется огромной на привычных картах: проекция Меркатора растягивает приполярные области. На деле она меньше Южной Америки, а самый большой из четырёх — Африка.",
+      "explanation": "Площадь материка считают двумя способами — с прилегающими островами и без них, и своды расходятся до восьми процентов. Порядок от этого не меняется: соседи различаются на четверть и больше, а Африка вдвое превосходит Антарктиду.",
       "sources": [
         {
           "sourceId": "s1",
@@ -871,7 +897,7 @@
         "c3",
         "c4"
       ],
-      "explanation": "Лувр открыли для публики в разгар революции — дворцовое собрание объявили общим достоянием. Остальные три выросли иначе: из частной коллекции, из городской подписки и из императорского указа.",
+      "explanation": "Лувр открыли для публики в разгар революции: за два года до того декрет объявил дворец хранилищем памятников искусства. Третьяковская галерея и Метрополитен выросли из частных собраний, а Русский музей учреждён императорским указом.",
       "sources": [
         {
           "sourceId": "s1",
@@ -929,7 +955,9 @@
           "sourceIds": [
             "s1",
             "s5"
-          ]
+          ],
+          "disputed": true,
+          "note": "ADW — 5 лет, AnAge — 4 года при одном и том же критерии"
         },
         {
           "cardId": "c2",
@@ -951,7 +979,9 @@
           "sourceIds": [
             "s3",
             "s7"
-          ]
+          ],
+          "disputed": true,
+          "note": "ADW — 50 лет, AnAge — 40 лет при одном и том же критерии"
         },
         {
           "cardId": "c4",
@@ -962,7 +992,9 @@
           "sourceIds": [
             "s4",
             "s8"
-          ]
+          ],
+          "disputed": true,
+          "note": "ADW — 61 год, AnAge — 57 лет при одном и том же критерии"
         }
       ],
       "correctOrder": [
@@ -971,7 +1003,7 @@
         "c3",
         "c4"
       ],
-      "explanation": "Крупные животные обычно живут дольше мелких: обмен веществ идёт медленнее, а взросление занимает годы. Лошадь обгоняет медведя не размером, а тем, что рядом с человеком у неё нет ни голода, ни хищников.",
+      "explanation": "Сравниваются опубликованные рекорды: наибольший возраст, до которого особь дожила в неволе. Обычная продолжительность жизни у всех четырёх заметно меньше рекорда, поэтому такие числа говорят о пределе вида, а не о том, сколько живёт типичное животное.",
       "sources": [
         {
           "sourceId": "s1",
@@ -1007,31 +1039,35 @@
         },
         {
           "sourceId": "s5",
-          "title": "Википедия (проверочный источник): House mouse",
-          "kind": "other",
-          "url": "https://en.wikipedia.org/wiki/House_mouse",
-          "accessedAt": "2026-09-04"
+          "title": "AnAge, база Human Ageing Genomic Resources: Mus musculus",
+          "kind": "academic",
+          "url": "https://genomics.senescence.info/species/entry.php?species=Mus_musculus",
+          "accessedAt": "2026-09-04",
+          "note": "Поле «Maximum longevity»: 4 years (captivity) — тот же критерий, другое значение"
         },
         {
           "sourceId": "s6",
-          "title": "Википедия (проверочный источник): Tiger",
-          "kind": "other",
-          "url": "https://en.wikipedia.org/wiki/Tiger",
-          "accessedAt": "2026-09-04"
+          "title": "AnAge, база Human Ageing Genomic Resources: Panthera tigris",
+          "kind": "academic",
+          "url": "https://genomics.senescence.info/species/entry.php?species=Panthera_tigris",
+          "accessedAt": "2026-09-04",
+          "note": "Поле «Maximum longevity»: 26.3 years (captivity) — подтверждает значение ADW"
         },
         {
           "sourceId": "s7",
-          "title": "Википедия (проверочный источник): Brown bear",
-          "kind": "other",
-          "url": "https://en.wikipedia.org/wiki/Brown_bear",
-          "accessedAt": "2026-09-04"
+          "title": "AnAge, база Human Ageing Genomic Resources: Ursus arctos",
+          "kind": "academic",
+          "url": "https://genomics.senescence.info/species/entry.php?species=Ursus_arctos",
+          "accessedAt": "2026-09-04",
+          "note": "Поле «Maximum longevity»: 40 years (captivity) — тот же критерий, другое значение"
         },
         {
           "sourceId": "s8",
-          "title": "Википедия (проверочный источник): Horse",
-          "kind": "other",
-          "url": "https://en.wikipedia.org/wiki/Horse",
-          "accessedAt": "2026-09-04"
+          "title": "AnAge, база Human Ageing Genomic Resources: Equus caballus",
+          "kind": "academic",
+          "url": "https://genomics.senescence.info/species/entry.php?species=Equus_caballus",
+          "accessedAt": "2026-09-04",
+          "note": "Поле «Maximum longevity»: 57 years (captivity) — тот же критерий, другое значение"
         }
       ],
       "volatility": "slow",
@@ -1127,49 +1163,49 @@
       "retiredIn": null
     },
     {
-      "puzzleId": "hist-kosmos-vehi-010",
+      "puzzleId": "hist-aviaciya-vehi-010",
       "category": "history",
-      "prompt": "Расположите космические запуски от раннего к позднему",
+      "prompt": "Расположите события авиации от раннего к позднему",
       "sortKey": "year",
       "sortDirection": "ascending",
-      "directionLabel": "Сверху — самый ранний",
+      "directionLabel": "Сверху — самое раннее",
       "cards": [
         {
           "cardId": "c1",
-          "title": "«Спутник-1»",
-          "subtitle": "Первый искусственный спутник Земли",
-          "sortValue": 1957,
-          "displayValue": "1957 год",
+          "title": "Полёт братьев Райт",
+          "subtitle": "Китти-Хок, первый полёт с мотором",
+          "sortValue": 1903,
+          "displayValue": "1903 год",
           "sourceIds": [
             "s1"
           ]
         },
         {
           "cardId": "c2",
-          "title": "«Аполлон-11»",
-          "subtitle": "Первая экспедиция на Луну",
-          "sortValue": 1969,
-          "displayValue": "1969 год",
+          "title": "Перелёт Линдберга",
+          "subtitle": "Одиночный перелёт через Атлантику",
+          "sortValue": 1927,
+          "displayValue": "1927 год",
           "sourceIds": [
             "s2"
           ]
         },
         {
           "cardId": "c3",
-          "title": "«Вояджер-1»",
-          "subtitle": "Зонд к Юпитеру и Сатурну",
-          "sortValue": 1977,
-          "displayValue": "1977 год",
+          "title": "Звуковой барьер",
+          "subtitle": "Самолёт Bell X-1 преодолел его первым",
+          "sortValue": 1947,
+          "displayValue": "1947 год",
           "sourceIds": [
             "s3"
           ]
         },
         {
           "cardId": "c4",
-          "title": "«Хаббл»",
-          "subtitle": "Орбитальный телескоп",
-          "sortValue": 1990,
-          "displayValue": "1990 год",
+          "title": "Рейсы «Конкорда»",
+          "subtitle": "Начало регулярных сверхзвуковых рейсов",
+          "sortValue": 1976,
+          "displayValue": "1976 год",
           "sourceIds": [
             "s4"
           ]
@@ -1181,39 +1217,39 @@
         "c3",
         "c4"
       ],
-      "explanation": "Порядок отражает смену задач: сначала выход на орбиту, затем полёт к Луне, потом уход к внешним планетам и, наконец, обсерватория, вынесенная за пределы атмосферы, чтобы та не мешала наблюдениям.",
+      "explanation": "От первого двенадцатисекундного полёта до сверхзвуковых рейсов с пассажирами прошло семьдесят три года, и шаги ложатся почти ровно: примерно четверть века между соседними событиями.",
       "sources": [
         {
           "sourceId": "s1",
-          "title": "NASA History: Sputnik and the Dawn of the Space Age",
+          "title": "Национальный музей авиации и космонавтики (Смитсоновский институт): 1903 Wright Flyer",
           "kind": "official",
-          "url": "https://www.nasa.gov/history/sputnik/sputorig.html",
+          "url": "https://airandspace.si.edu/collection-objects/1903-wright-flyer/nasm_A19610048000",
           "accessedAt": "2026-09-04",
-          "note": "На странице: «Sputnik 1, launched on 4 October 1957»"
+          "note": "На странице: «first powered airplane flew at Kitty Hawk, North Carolina, on December 17, 1903»"
         },
         {
           "sourceId": "s2",
-          "title": "NASA: миссия «Аполлон-11»",
+          "title": "Национальный музей авиации и космонавтики (Смитсоновский институт): Ryan NYP «Spirit of St. Louis»",
           "kind": "official",
-          "url": "https://www.nasa.gov/mission/apollo-11/",
+          "url": "https://airandspace.si.edu/collection-objects/ryan-nyp-spirit-st-louis/nasm_A19280021000",
           "accessedAt": "2026-09-04",
-          "note": "На странице указаны даты старта и возвращения: July 16 и July 24, 1969"
+          "note": "На странице: «Charles A. Lindbergh's extraordinary solo transatlantic flight in 1927»"
         },
         {
           "sourceId": "s3",
-          "title": "NASA Science: Voyager 1",
+          "title": "Национальный музей авиации и космонавтики (Смитсоновский институт): Bell X-1",
           "kind": "official",
-          "url": "https://science.nasa.gov/mission/voyager/voyager-1/",
+          "url": "https://airandspace.si.edu/collection-objects/bell-x-1/nasm_A19510007000",
           "accessedAt": "2026-09-04",
-          "note": "На странице приведена дата запуска 1977 года и масса аппарата 721,9 кг"
+          "note": "На странице: «On October 14, 1947, the Bell X-1 became the first airplane to fly faster than the speed of sound»"
         },
         {
           "sourceId": "s4",
-          "title": "NASA Science: Hubble Space Telescope Overview",
+          "title": "Национальный музей авиации и космонавтики (Смитсоновский институт): Air France Concorde",
           "kind": "official",
-          "url": "https://science.nasa.gov/mission/hubble/overview/",
+          "url": "https://airandspace.si.edu/collection-objects/air-france-concorde-foxtrot-alpha/nasm_A20030139000",
           "accessedAt": "2026-09-04",
-          "note": "На странице: «since its launch and deployment by the space shuttle Discovery in 1990»"
+          "note": "На странице: «In 1976 Air France and British Airways jointly inaugurated Concorde service»"
         }
       ],
       "volatility": "stable",
@@ -1277,7 +1313,7 @@
         "c3",
         "c4"
       ],
-      "explanation": "Порядок по размеру не совпадает с порядком по удалённости от Солнца: Марс дальше Земли, но вдвое меньше её. Юпитер же газовый, и потому он крупнее всех каменных планет на порядок.",
+      "explanation": "Порядок по размеру не совпадает с порядком по удалённости от Солнца: Марс дальше Земли, но почти вдвое меньше её. Юпитер — газовый и крупнее Земли в одиннадцать раз.",
       "sources": [
         {
           "sourceId": "s1",
@@ -1373,7 +1409,7 @@
         "c3",
         "c4"
       ],
-      "explanation": "Университеты расходились из Средиземноморья на север и восток. Болонья и Саламанка выросли из школ права, а Прага и Краков были основаны королями уже как государственное дело, с разницей всего в шестнадцать лет.",
+      "explanation": "Болонья ведёт счёт от учёного сообщества, остальные три основаны властью: Саламанку создал король Леона, Прагу — император Карл IV, Краков — король Казимир Великий. Между двумя последними всего шестнадцать лет.",
       "sources": [
         {
           "sourceId": "s1",
@@ -1415,50 +1451,49 @@
       "retiredIn": null
     },
     {
-      "puzzleId": "mix-massa-obektov-013",
+      "puzzleId": "mix-zooparki-god-013",
       "category": "mixed",
-      "prompt": "Расположите рукотворные объекты от лёгкого к тяжёлому",
-      "sortKey": "mass",
+      "prompt": "Расположите зоопарки по году, когда они открылись",
+      "sortKey": "year",
       "sortDirection": "ascending",
-      "directionLabel": "Сверху — самый лёгкий",
+      "directionLabel": "Сверху — открылся раньше",
       "cards": [
         {
           "cardId": "c1",
-          "title": "«Вояджер-1»",
-          "subtitle": "Межпланетный зонд",
-          "sortValue": 721.9,
-          "displayValue": "721,9 кг",
+          "title": "Берлинский зоопарк",
+          "subtitle": "Германия",
+          "sortValue": 1844,
+          "displayValue": "1844 год",
           "sourceIds": [
             "s1"
           ]
         },
         {
           "cardId": "c2",
-          "title": "Телескоп «Хаббл»",
-          "subtitle": "Орбитальная обсерватория",
-          "sortValue": 12246,
-          "displayValue": "12 246 кг",
+          "title": "Будапештский зоопарк",
+          "subtitle": "Венгрия",
+          "sortValue": 1866,
+          "displayValue": "1866 год",
           "sourceIds": [
             "s2"
           ]
         },
         {
           "cardId": "c3",
-          "title": "МКС",
-          "subtitle": "Международная космическая станция",
-          "sortValue": 400000,
-          "displayValue": "более 400 000 кг",
+          "title": "Коркеасаари",
+          "subtitle": "Хельсинки, Финляндия",
+          "sortValue": 1889,
+          "displayValue": "1889 год",
           "sourceIds": [
             "s3"
-          ],
-          "note": "Масса меняется с приходом и уходом грузовых кораблей"
+          ]
         },
         {
           "cardId": "c4",
-          "title": "Эйфелева башня",
-          "subtitle": "Париж, Франция",
-          "sortValue": 10100000,
-          "displayValue": "10 100 000 кг",
+          "title": "Пражский зоопарк",
+          "subtitle": "Чехия",
+          "sortValue": 1931,
+          "displayValue": "1931 год",
           "sourceIds": [
             "s4"
           ]
@@ -1470,39 +1505,39 @@
         "c3",
         "c4"
       ],
-      "explanation": "Всё, что нужно поднять с Земли, приходится делать лёгким: зонд весит меньше автомобиля. МКС собрали из десятков отдельных модулей, но и она легче Эйфелевой башни в двадцать пять раз.",
+      "explanation": "Три старших зоопарка укладываются в сорок пять лет: берлинский открылся первым в Германии, за ним будапештский и хельсинкский. Пражский появился уже в двадцатом веке — через сорок два года после хельсинкского.",
       "sources": [
         {
           "sourceId": "s1",
-          "title": "NASA Science: Voyager 1",
+          "title": "Берлинский зоопарк, официальный сайт: история",
           "kind": "official",
-          "url": "https://science.nasa.gov/mission/voyager/voyager-1/",
+          "url": "https://www.zoo-berlin.de/en/about-the-zoo/history",
           "accessedAt": "2026-09-04",
-          "note": "На странице: «Spacecraft Mass 1,592 pounds (721.9 kilograms)»"
+          "note": "На странице: «Zoologischer Garten Berlin opened on 1 August 1844 as the first zoo in Germany»"
         },
         {
           "sourceId": "s2",
-          "title": "NASA Science: Hubble Space Telescope, устройство обсерватории",
+          "title": "Будапештский зоопарк, официальный сайт: история",
           "kind": "official",
-          "url": "https://science.nasa.gov/mission/hubble/observatory/design/",
+          "url": "https://zoobudapest.com/en/about-us/history",
           "accessedAt": "2026-09-04",
-          "note": "На странице: «Weighing about 27,000 pounds (12,246 kg)»"
+          "note": "На странице: «it opened to the public in 1866»"
         },
         {
           "sourceId": "s3",
-          "title": "NASA: Международная космическая станция",
+          "title": "Зоопарк Коркеасаари, Хельсинки, официальный сайт: история",
           "kind": "official",
-          "url": "https://www.nasa.gov/reference/international-space-station/",
+          "url": "https://www.korkeasaari.fi/en/about-us/history/",
           "accessedAt": "2026-09-04",
-          "note": "На странице: «a mass over 400,000 kg (900,000 lbs)»"
+          "note": "На странице: «Korkeasaari Zoo was established in 1889»"
         },
         {
           "sourceId": "s4",
-          "title": "Эйфелева башня, официальный сайт: ключевые цифры",
+          "title": "Пражский зоопарк, официальный сайт: история",
           "kind": "official",
-          "url": "https://www.toureiffel.paris/en/the-monument/key-figures",
+          "url": "https://www.zoopraha.cz/en/about-zoo/history",
           "accessedAt": "2026-09-04",
-          "note": "На странице: «Total weight 10,100 tons»"
+          "note": "В хронологии 1931: «On 28 September, the zoological garden ... opens to the public»"
         }
       ],
       "volatility": "stable",
@@ -1514,7 +1549,7 @@
     {
       "puzzleId": "cult-pamyatniki-vysota-015",
       "category": "culture",
-      "prompt": "Расположите сооружения от самого низкого к самому высокому",
+      "prompt": "Расположите объекты по высоте без учёта пьедестала",
       "sortKey": "height",
       "sortDirection": "ascending",
       "directionLabel": "Сверху — самое низкое",
@@ -1569,7 +1604,7 @@
         "c3",
         "c4"
       ],
-      "explanation": "Здесь сравнивается сама фигура, а не постамент: у Статуи Свободы пьедестал добавляет ещё почти полсотни метров. Даже при этом Статуя Единства выше её вчетверо, а башня остаётся вне конкуренции.",
+      "explanation": "Считается сам объект, а не то, на чём он стоит: с пьедесталом Статуя Свободы поднимается до 93 метров, вдвое выше собственной фигуры. Разрывы всё равно велики — Статуя Единства почти вчетверо выше Свободы, а башня почти вдвое выше Статуи Единства.",
       "sources": [
         {
           "sourceId": "s1",
@@ -1585,7 +1620,7 @@
           "kind": "official",
           "url": "https://www.nps.gov/stli/learn/historyculture/statue-statistics.htm",
           "accessedAt": "2026-09-04",
-          "note": "В таблице строка «Top of base to torch» — 46.05 m"
+          "note": "В таблице: «Top of base to torch» — 46.05 m; «Ground to tip of torch» — 92.99 m"
         },
         {
           "sourceId": "s3",
@@ -1665,7 +1700,7 @@
         "c3",
         "c4"
       ],
-      "explanation": "Йеллоустон — первый национальный парк в мире, и Европа переняла эту идею лишь через сорок лет. Олимпик до 1938 года имел статус памятника природы, а Плитвицкие озёра получили защиту сразу после войны.",
+      "explanation": "Между Йеллоустоном и старейшим парком Альп прошло сорок два года. Олимпик получил защиту раньше указанной даты, но как памятник природы — статус национального парка ему дали в 1938 году, а Плитвицкие озёра стали первым национальным парком Хорватии сразу после войны.",
       "sources": [
         {
           "sourceId": "s1",
@@ -1761,7 +1796,7 @@
         "c3",
         "c4"
       ],
-      "explanation": "Чем дальше планета, тем длиннее её путь вокруг Солнца и тем медленнее она движется. Оба обстоятельства складываются, поэтому год Нептуна длиннее года Венеры не в тридцать раз, а в двести шестьдесят.",
+      "explanation": "Год растёт быстрее, чем расстояние до Солнца: Нептун удалён от него примерно в тридцать раз сильнее Земли, а его год длиннее земного в сто шестьдесят пять раз и почти в двести семьдесят раз длиннее венерианского.",
       "sources": [
         {
           "sourceId": "s1",
@@ -1857,7 +1892,7 @@
         "c3",
         "c4"
       ],
-      "explanation": "Ветры и орбитальное движение — это движение вещества, и оно ограничено энергией. Свет вещества не переносит, поэтому его скорость больше орбитальной скорости Меркурия в шесть тысяч раз.",
+      "explanation": "Три верхние строки разделяют тысячи раз, а не проценты: Меркурий движется по орбите в восемьдесят раз быстрее нептунианского ветра, а свет быстрее Меркурия ещё в шесть тысяч раз. Его скорость не измеряют — ею определяют метр.",
       "sources": [
         {
           "sourceId": "s1",
@@ -1925,7 +1960,7 @@
           "displayValue": "2228 м",
           "sourceIds": [
             "s2",
-            "s5"
+            "s6"
           ]
         },
         {
@@ -1936,7 +1971,7 @@
           "displayValue": "4634 м",
           "sourceIds": [
             "s3",
-            "s5"
+            "s7"
           ]
         },
         {
@@ -1947,8 +1982,10 @@
           "displayValue": "6959 м",
           "sourceIds": [
             "s4",
-            "s5"
-          ]
+            "s8"
+          ],
+          "disputed": true,
+          "note": "БРЭ — 6959 м; второй источник приводит 6961 м"
         }
       ],
       "correctOrder": [
@@ -1957,7 +1994,7 @@
         "c3",
         "c4"
       ],
-      "explanation": "Высоту задаёт возраст гор. Бен-Невис и Косцюшко — остатки древних, источенных временем систем, а Альпы и Анды продолжают расти на стыке литосферных плит, и потому они на километры выше.",
+      "explanation": "Каждая из четырёх — высшая точка своей страны, но масштаб у них разный: Дюфур выше Косцюшко вдвое, а Аконкагуа выше Бен-Невиса впятеро. Высоты уточняются пересъёмкой — Бен-Невис в 2016 году «подрос» на метр.",
       "sources": [
         {
           "sourceId": "s1",
@@ -1993,10 +2030,35 @@
         },
         {
           "sourceId": "s5",
-          "title": "Википедия (проверочный источник): List of highest points of countries",
+          "title": "Википедия (проверочный источник): Ben Nevis",
           "kind": "other",
-          "url": "https://en.wikipedia.org/wiki/List_of_elevation_extremes_by_country",
-          "accessedAt": "2026-09-04"
+          "url": "https://en.wikipedia.org/wiki/Ben_Nevis",
+          "accessedAt": "2026-09-04",
+          "note": "Карточка статьи даёт 1345 м со ссылкой на Ordnance Survey — совпадает с основным источником"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Mount Kosciuszko",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Mount_Kosciuszko",
+          "accessedAt": "2026-09-04",
+          "note": "Карточка статьи даёт 2228 м — совпадает с основным источником"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Dufourspitze",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Dufourspitze",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Elevation 4,634 m» — совпадает с основным источником"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Aconcagua",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Aconcagua",
+          "accessedAt": "2026-09-04",
+          "note": "Статья приводит 6961 м; БРЭ — 6959 м, расхождение 2 м отмечено в карточке"
         }
       ],
       "volatility": "slow",
@@ -2060,7 +2122,7 @@
         "c3",
         "c4"
       ],
-      "explanation": "Премию присуждают не за одну книгу, а за весь путь автора, поэтому она приходит через десятилетия после первых работ. Между наградами Манна и Бунина всего четыре года — это соседние литературные поколения.",
+      "explanation": "Полвека между Киплингом и Хемингуэем вмещают обе мировые войны. Награды Манна и Бунина разделяют всего четыре года: их отмечали почти одновременно, хотя писали они на разных языках и в разных странах.",
       "sources": [
         {
           "sourceId": "s1",

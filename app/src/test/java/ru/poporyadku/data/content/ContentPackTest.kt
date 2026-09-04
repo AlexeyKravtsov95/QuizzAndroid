@@ -168,12 +168,16 @@ class ContentPackTest {
         val writesAfterFirst = prefs.writes
         val puzzleUpsertsAfterFirst = puzzleDao.upsertCalls
         val setUpsertsAfterFirst = setDao.upsertCalls
+        // Единственный DELETE импортёра. Без него «повтор ничего не пишет» проверялось бы
+        // только по upsert-ам, а удаление наборов вне диапазона осталось бы незамеченным.
+        val setDeletesAfterFirst = setDao.deleteCalls
 
         importer.ensureInstalled()
 
         assertEquals("снимок базы после повтора", afterFirst, db.snapshot())
         assertEquals("записей головоломок", puzzleUpsertsAfterFirst, puzzleDao.upsertCalls)
         assertEquals("записей наборов", setUpsertsAfterFirst, setDao.upsertCalls)
+        assertEquals("удалений наборов", setDeletesAfterFirst, setDao.deleteCalls)
         assertEquals("записей отметки", writesAfterFirst, prefs.writes)
     }
 

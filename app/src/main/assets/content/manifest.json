@@ -8,11 +8,11 @@
   "files": [
     {
       "path": "puzzles-001.json",
-      "sha256": "49bbe470510ae6569946df24d9f25180cf64a86c8c8f82f9842da8a3db206999"
+      "sha256": "c125e28e3869532cd4a7db62dca277221f3c14982f9c850c4e2d97807e590f44"
     },
     {
       "path": "daily-sets-001.json",
-      "sha256": "e8f8b3337943bc18b8c00f922ac75b979314cca443cb6c98ec9078593b56c123"
+      "sha256": "d96e3554923fc42e9993018c9d0bd42b2c3b840c9fc5f68f5cd55d60a29f26a7"
     }
   ]
 }
