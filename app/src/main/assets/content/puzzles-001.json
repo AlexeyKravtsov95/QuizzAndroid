@@ -2229,7 +2229,7 @@
           "title": "AnAge, Human Ageing Genomic Resources: Oryctolagus cuniculus",
           "kind": "academic",
           "url": "https://genomics.senescence.info/species/entry.php?species=Oryctolagus_cuniculus",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "В таблице «Life history traits (averages)»: «Gestation 30 days»"
         },
         {
@@ -2237,7 +2237,7 @@
           "title": "AnAge, Human Ageing Genomic Resources: Felis catus",
           "kind": "academic",
           "url": "https://genomics.senescence.info/species/entry.php?species=Felis_catus",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "В таблице «Life history traits (averages)»: «Gestation 65 days»"
         },
         {
@@ -2245,7 +2245,7 @@
           "title": "AnAge, Human Ageing Genomic Resources: Giraffa camelopardalis",
           "kind": "academic",
           "url": "https://genomics.senescence.info/species/entry.php?species=Giraffa_camelopardalis",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "В таблице «Life history traits (averages)»: «Gestation 457 days»"
         },
         {
@@ -2253,7 +2253,7 @@
           "title": "AnAge, Human Ageing Genomic Resources: Loxodonta africana",
           "kind": "academic",
           "url": "https://genomics.senescence.info/species/entry.php?species=Loxodonta_africana",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "В таблице «Life history traits (averages)»: «Gestation 670 days»"
         },
         {
@@ -2261,7 +2261,7 @@
           "title": "Animal Diversity Web, Мичиганский университет: Oryctolagus cuniculus",
           "kind": "academic",
           "url": "https://animaldiversity.org/accounts/Oryctolagus_cuniculus/",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "На странице: «Gestation is about 30 days»"
         },
         {
@@ -2269,7 +2269,7 @@
           "title": "Animal Diversity Web, Мичиганский университет: Felis catus",
           "kind": "academic",
           "url": "https://animaldiversity.org/accounts/Felis_catus/",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "На странице: «Gestation ranges from 60 to 67 days» — 65 суток входит в диапазон"
         },
         {
@@ -2277,7 +2277,7 @@
           "title": "Animal Diversity Web, Мичиганский университет: Giraffa camelopardalis",
           "kind": "academic",
           "url": "https://animaldiversity.org/accounts/Giraffa_camelopardalis/",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "На странице: «The gestation period is about 457 days»"
         },
         {
@@ -2285,13 +2285,13 @@
           "title": "Animal Diversity Web, Мичиганский университет: Loxodonta africana",
           "kind": "academic",
           "url": "https://animaldiversity.org/accounts/Loxodonta_africana/",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "На странице: «The gestation period is about 22 months» — около 670 суток"
         }
       ],
       "volatility": "slow",
       "difficulty": 1,
-      "verifiedAt": "2026-09-04",
+      "verifiedAt": "2026-09-05",
       "verifiedBy": "agent-4c2-precheck",
       "retiredIn": null
     },
@@ -2357,13 +2357,13 @@
           "title": "Большая российская энциклопедия: статья «Книгопечатание»",
           "kind": "encyclopedia",
           "url": "https://bre.ruwiki.ru/wiki/Книгопечатание",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«…в Европе считается 1440 г.»; «…впервые осуществлено… в 1457 г. на страницах… Майнцской псалтири»; «…применённый впервые в 1475 г.»; «…отпечатали в 1564 г. первую точно датированную русскую книгу»"
         }
       ],
       "volatility": "stable",
       "difficulty": 2,
-      "verifiedAt": "2026-09-04",
+      "verifiedAt": "2026-09-05",
       "verifiedBy": "agent-4c2-precheck",
       "retiredIn": null
     },
@@ -2433,7 +2433,7 @@
           "title": "Enciclopedia Treccani: статья «Vesuvio»",
           "kind": "encyclopedia",
           "url": "https://www.treccani.it/enciclopedia/vesuvio",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Rilievo vulcanico (1.281 m) della Campania»"
         },
         {
@@ -2441,7 +2441,7 @@
           "title": "Управление геопространственной информации Японии: база высот гор",
           "kind": "official",
           "url": "https://maps.gsi.go.jp/3d/mountain/mountain.html",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "В таблице высот: «富士山（剣ヶ峯）… 3776m»"
         },
         {
@@ -2449,7 +2449,7 @@
           "title": "Национальная геодезическая служба NOAA: репер TU2314 (Mauna Kea)",
           "kind": "official",
           "url": "https://www.ngs.noaa.gov/cgi-bin/ds_mark.prl?PidBox=TU2314",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«LMSL ORTHO HEIGHT - 4207.3 (meters) 13803. (feet)»"
         },
         {
@@ -2457,7 +2457,7 @@
           "title": "VolcanoWorld, Университет штата Орегон: Kilimanjaro",
           "kind": "academic",
           "url": "https://volcano.oregonstate.edu/kilimanjaro",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Kilimanjaro is a giant stratovolcano reaching an elevation of 19,335.6 ft. (5,895 m)»"
         },
         {
@@ -2465,7 +2465,7 @@
           "title": "Википедия (проверочный источник): Mount Vesuvius",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Mount_Vesuvius",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «Elevation 1,281 m (4,203 ft)»"
         },
         {
@@ -2473,7 +2473,7 @@
           "title": "Википедия (проверочный источник): Mount Fuji",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Mount_Fuji",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «3,776 m (12,388 ft)»"
         },
         {
@@ -2481,7 +2481,7 @@
           "title": "Википедия (проверочный источник): Mauna Kea",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Mauna_Kea",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «Elevation 13,803 ft (4,207 m)»"
         },
         {
@@ -2489,13 +2489,13 @@
           "title": "Википедия (проверочный источник): Mount Kilimanjaro",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Mount_Kilimanjaro",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «Elevation 5,895 m (19,341 ft)»"
         }
       ],
       "volatility": "slow",
       "difficulty": 2,
-      "verifiedAt": "2026-09-04",
+      "verifiedAt": "2026-09-05",
       "verifiedBy": "agent-4c2-precheck",
       "retiredIn": null
     },
@@ -2529,7 +2529,9 @@
           "sourceIds": [
             "s2",
             "s6"
-          ]
+          ],
+          "note": "Треккани — 812 км; Википедия приводит 813,69 км",
+          "disputed": true
         },
         {
           "cardId": "c3",
@@ -2540,7 +2542,9 @@
           "sourceIds": [
             "s3",
             "s7"
-          ]
+          ],
+          "note": "Треккани — 2860 км; Википедия приводит 2850 км",
+          "disputed": true
         },
         {
           "cardId": "c4",
@@ -2569,7 +2573,7 @@
           "title": "Enciclopedia Treccani: статья «Tamigi»",
           "kind": "encyclopedia",
           "url": "https://www.treccani.it/enciclopedia/tamigi",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Fiume dell’Inghilterra, il maggiore della regione per lunghezza (338 km)»"
         },
         {
@@ -2577,7 +2581,7 @@
           "title": "Enciclopedia Treccani: статья «Rodano»",
           "kind": "encyclopedia",
           "url": "https://www.treccani.it/enciclopedia/rodano",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«…con uno sviluppo di 812 km e un bacino di 98.000 km2»"
         },
         {
@@ -2585,7 +2589,7 @@
           "title": "Enciclopedia Treccani: статья «Danubio»",
           "kind": "encyclopedia",
           "url": "https://www.treccani.it/enciclopedia/danubio",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«secondo soltanto al Volga per lunghezza di corso (2860 km)»"
         },
         {
@@ -2593,7 +2597,7 @@
           "title": "Enciclopedia Treccani: статья «Nilo»",
           "kind": "encyclopedia",
           "url": "https://www.treccani.it/enciclopedia/nilo",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Il maggior fiume dell’Africa, primo del globo per lunghezza (6671 km)»"
         },
         {
@@ -2601,7 +2605,7 @@
           "title": "Википедия (проверочный источник): River Thames",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/River_Thames",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Length 215 mi (346 km)» — расхождение со сводом Треккани"
         },
         {
@@ -2609,7 +2613,7 @@
           "title": "Википедия (проверочный источник): Rhône",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Rh%C3%B4ne",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «Length 813.69 km (505.60 mi)»"
         },
         {
@@ -2617,7 +2621,7 @@
           "title": "Википедия (проверочный источник): Danube",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Danube",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «Length 2,850 km (1,770 mi)»"
         },
         {
@@ -2625,40 +2629,40 @@
           "title": "Википедия (проверочный источник): Nile",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Nile",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Length 7,088 km (4,404 mi)» — другой отсчёт истока"
         }
       ],
       "volatility": "slow",
       "difficulty": 1,
-      "verifiedAt": "2026-09-04",
+      "verifiedAt": "2026-09-05",
       "verifiedBy": "agent-4c2-precheck",
       "retiredIn": null
     },
     {
       "puzzleId": "cult-arhitektura-vysota-032",
       "category": "culture",
-      "prompt": "Расположите здания по наибольшей высоте сооружения",
+      "prompt": "Расположите постройки по высоте наивысшей точки",
       "sortKey": "height",
       "sortDirection": "ascending",
-      "directionLabel": "Сверху — самое низкое",
+      "directionLabel": "Сверху — самая низкая",
       "cards": [
         {
           "cardId": "c1",
-          "title": "Пантеон в Риме",
-          "subtitle": "Древнеримский храм с бетонным куполом",
-          "sortValue": 43.44,
-          "displayValue": "43,44 м",
+          "title": "Колизей",
+          "subtitle": "Амфитеатр Флавиев в Риме",
+          "sortValue": 48.5,
+          "displayValue": "48,5 м",
           "sourceIds": [
             "s1"
           ]
         },
         {
           "cardId": "c2",
-          "title": "Колизей",
-          "subtitle": "Амфитеатр Флавиев в Риме",
-          "sortValue": 48.5,
-          "displayValue": "48,5 м",
+          "title": "Собор Святого Стефана",
+          "subtitle": "Главный собор Вены",
+          "sortValue": 136.44,
+          "displayValue": "136,44 м",
           "sourceIds": [
             "s2"
           ]
@@ -2690,30 +2694,30 @@
         "c3",
         "c4"
       ],
-      "explanation": "Два римских сооружения различаются всего на 5 м, а от них до готических высот — разрыв больше чем втрое. Между Кёльнским собором и башней Иисуса Христа в Саграда Фамилия — 15,3 м, около 9 %.",
+      "explanation": "У всех четырёх построек измерена одна и та же величина — расстояние от земли до самой высокой точки: у Колизея это наружная стена, у трёх остальных — вершина башни. Готические соборы выше римского амфитеатра в 2,8–3,6 раза, а между Кёльнским собором и башней Иисуса Христа — 15,3 м, около 9 %.",
       "sources": [
         {
           "sourceId": "s1",
-          "title": "Официальный сайт Пантеона в Риме: раздел «Il Pantheon»",
-          "kind": "official",
-          "url": "https://www.pantheonroma.com/il-pantheon/",
-          "accessedAt": "2026-09-04",
-          "note": "«la sua altezza è esattamente uguale al suo diametro: 43 m e 44 cm per 43 m e 44 cm»"
-        },
-        {
-          "sourceId": "s2",
           "title": "S. B. Platner, A Topographical Dictionary of Ancient Rome, Чикагский университет",
           "kind": "academic",
           "url": "https://penelope.uchicago.edu/Thayer/E/Gazetteer/Places/Europe/Italy/Lazio/Roma/Rome/_Texts/PLATOP*/Amphitheatrum_Flavium.html",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«The outer wall, or façade, is 48.50 metres high»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Wien Geschichte Wiki, ресурс городской администрации Вены: «Stephansdom»",
+          "kind": "official",
+          "url": "https://www.geschichtewiki.wien.gv.at/Stephansdom",
+          "accessedAt": "2026-09-05",
+          "note": "«Höchster Punkt (Südturm, inkl. Turmkreuz): 136,44 Meter»"
         },
         {
           "sourceId": "s3",
           "title": "Кёльнский собор, официальный сайт: «Der Dom in Zahlen»",
           "kind": "official",
           "url": "https://www.koelner-dom.de/erleben/der-dom-in-zahlen",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«157,22 m Südturm Höhe»"
         },
         {
@@ -2721,13 +2725,13 @@
           "title": "Basílica de la Sagrada Família, официальный сайт",
           "kind": "official",
           "url": "https://sagradafamilia.org/en/-/una-creu-que-arriba-al-cel-de-barcelona",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«It has 12 faces and stands 172.5 metres tall»"
         }
       ],
       "volatility": "stable",
       "difficulty": 2,
-      "verifiedAt": "2026-09-04",
+      "verifiedAt": "2026-09-05",
       "verifiedBy": "agent-4c2-precheck",
       "retiredIn": null
     },
@@ -2793,7 +2797,7 @@
           "title": "Большая российская энциклопедия: статья «Рентгеновское излучение»",
           "kind": "encyclopedia",
           "url": "https://bre.ruwiki.ru/wiki/Рентгеновское_излучение",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«электромагнитное излучение с длинами волн 10 − 11 -- 10 − 8» (в записи страницы), то есть 10⁻¹¹–10⁻⁸ м"
         },
         {
@@ -2801,7 +2805,7 @@
           "title": "Большая российская энциклопедия: статья «Ультрафиолетовое излучение»",
           "kind": "encyclopedia",
           "url": "https://bre.ruwiki.ru/wiki/Ультрафиолетовое_излучение",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«электромагнитные волны с длиной волны λ = 10–400 нм», то есть от 1·10⁻⁸ м"
         },
         {
@@ -2809,7 +2813,7 @@
           "title": "Большая российская энциклопедия: статья «Инфракрасное излучение»",
           "kind": "encyclopedia",
           "url": "https://bre.ruwiki.ru/wiki/Инфракрасное_излучение",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«электромагнитное излучение с длинами волн λ…от около 0,74 мкм до около 1–2 мм»"
         },
         {
@@ -2817,13 +2821,13 @@
           "title": "Большая российская энциклопедия: статья «Радиоволны»",
           "kind": "encyclopedia",
           "url": "https://bre.ruwiki.ru/wiki/Радиоволны",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«электромагнитные волны с длиной волны λ…от 5·10 –5 до 5·10 8 м»"
         }
       ],
       "volatility": "stable",
       "difficulty": 3,
-      "verifiedAt": "2026-09-04",
+      "verifiedAt": "2026-09-05",
       "verifiedBy": "agent-4c2-precheck",
       "retiredIn": null
     },
@@ -2889,7 +2893,7 @@
           "title": "Большая российская энциклопедия: статья «Исаакиевский собор»",
           "kind": "encyclopedia",
           "url": "https://bre.ruwiki.ru/wiki/Исаакиевский_собор",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«одной из основных градообразующих доминант Санкт-Петербурга (высота 101,5 м…)»"
         },
         {
@@ -2897,7 +2901,7 @@
           "title": "Большая российская энциклопедия: статья «Петропавловская крепость»",
           "kind": "encyclopedia",
           "url": "https://bre.ruwiki.ru/wiki/Петропавловская_крепость",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«современная высота 122,5 м, одна из доминант Санкт-Петербурга»"
         },
         {
@@ -2905,7 +2909,7 @@
           "title": "«Лахта Центр», официальный сайт: раздел «About»",
           "kind": "official",
           "url": "https://lakhta.center/en/about/",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«ITS 462-METER HIGH TOWER IS THE MOST ECO-FRIENDLY SKYSCRAPER IN RUSSIA»"
         },
         {
@@ -2913,13 +2917,13 @@
           "title": "Большая российская энциклопедия: статья «Останкинская телебашня»",
           "kind": "encyclopedia",
           "url": "https://bre.ruwiki.ru/wiki/Останкинская_телебашня",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Высота сооружения вместе с антенной составляет 540 м»"
         }
       ],
       "volatility": "stable",
       "difficulty": 1,
-      "verifiedAt": "2026-09-04",
+      "verifiedAt": "2026-09-05",
       "verifiedBy": "agent-4c2-precheck",
       "retiredIn": null
     },
@@ -2940,7 +2944,9 @@
           "sourceIds": [
             "s1",
             "s5"
-          ]
+          ],
+          "note": "ADW — до 34,3 см; Википедия приводит 34,5 см",
+          "disputed": true
         },
         {
           "cardId": "c2",
@@ -2995,7 +3001,7 @@
           "title": "Animal Diversity Web, Мичиганский университет: Hirundo rustica",
           "kind": "academic",
           "url": "https://animaldiversity.org/accounts/Hirundo_rustica/",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«with a wingspan of 31.8 to 34.3 cm»"
         },
         {
@@ -3003,7 +3009,7 @@
           "title": "Animal Diversity Web, Мичиганский университет: Falco peregrinus",
           "kind": "academic",
           "url": "https://animaldiversity.org/accounts/Falco_peregrinus/",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Wingspan varies from 91 to 112 cm»"
         },
         {
@@ -3011,7 +3017,7 @@
           "title": "Animal Diversity Web, Мичиганский университет: Cygnus olor",
           "kind": "academic",
           "url": "https://animaldiversity.org/accounts/Cygnus_olor/",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«The wingspan is 2 to 2.5 meters»"
         },
         {
@@ -3019,7 +3025,7 @@
           "title": "Animal Diversity Web, Мичиганский университет: Vultur gryphus",
           "kind": "academic",
           "url": "https://animaldiversity.org/accounts/Vultur_gryphus/",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Their wingspan of 3.2 m is the longest wingspan of any land bird»"
         },
         {
@@ -3027,7 +3033,7 @@
           "title": "Википедия (проверочный источник): Barn swallow",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Barn_swallow",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «a wingspan of 32–34.5 cm»"
         },
         {
@@ -3035,7 +3041,7 @@
           "title": "Википедия (проверочный источник): Peregrine falcon",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Peregrine_falcon",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«a wingspan from 74 to 120 cm» — верхняя граница выше, чем у ADW"
         },
         {
@@ -3043,7 +3049,7 @@
           "title": "Википедия (проверочный источник): Mute swan",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Mute_swan",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«with a 200 to 240 cm…wingspan» — верхняя граница ниже, чем у ADW"
         },
         {
@@ -3051,13 +3057,13 @@
           "title": "Википедия (проверочный источник): Andean condor",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Andean_condor",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«With a maximum wingspan of 3.3 m» — на 0,1 м больше, чем у ADW"
         }
       ],
       "volatility": "slow",
-      "difficulty": 2,
-      "verifiedAt": "2026-09-04",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-05",
       "verifiedBy": "agent-4c2-precheck",
       "retiredIn": null
     },
@@ -3129,7 +3135,7 @@
           "title": "Postojnska jama, официальный сайт управляющей организации",
           "kind": "official",
           "url": "https://www.postojnska-jama.eu/en/",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«While touring the 24-kilometre-long cave system…»"
         },
         {
@@ -3137,7 +3143,7 @@
           "title": "Служба национальных парков США: Lechuguilla Cave",
           "kind": "official",
           "url": "https://home.nps.gov/cave/learn/nature/lechuguilla_cave.htm",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«explorers have mapped over 145 miles (233 km) of passages»"
         },
         {
@@ -3145,7 +3151,7 @@
           "title": "Служба национальных парков США: Jewel Cave National Monument",
           "kind": "official",
           "url": "https://www.nps.gov/jeca/planyourvisit/index.htm",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Jewel Cave spans over 220 miles in length», то есть свыше 354 км"
         },
         {
@@ -3153,7 +3159,7 @@
           "title": "Служба национальных парков США: Exploring the World’s Longest Known Cave",
           "kind": "official",
           "url": "https://www.nps.gov/articles/000/exploring-the-worlds-longest-known-cave.htm",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Mammoth Cave is currently mapped and explored at 426 miles (686 km)»"
         },
         {
@@ -3161,7 +3167,7 @@
           "title": "Википедия (проверочный источник): Postojna Cave",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Postojna_Cave",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «the cave system is 24 km long»"
         },
         {
@@ -3169,7 +3175,7 @@
           "title": "Википедия (проверочный источник): Lechuguilla Cave",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Lechuguilla_Cave",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«explorers have mapped over 150 miles (240 km) of passages» — позднее значение"
         },
         {
@@ -3177,7 +3183,7 @@
           "title": "Википедия (проверочный источник): Jewel Cave National Monument",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Jewel_Cave_National_Monument",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Статья подтверждает статус пещеры и порядок длины ходов"
         },
         {
@@ -3185,13 +3191,13 @@
           "title": "Википедия (проверочный источник): Mammoth Cave National Park",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Mammoth_Cave_National_Park",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «more than 426 miles (686 km) of passageways»"
         }
       ],
       "volatility": "slow",
       "difficulty": 2,
-      "verifiedAt": "2026-09-04",
+      "verifiedAt": "2026-09-05",
       "verifiedBy": "agent-4c2-precheck",
       "retiredIn": null
     },
@@ -3261,7 +3267,7 @@
           "title": "Royal Opera House, официальный сайт: раздел «About»",
           "kind": "official",
           "url": "https://www.roh.org.uk/about",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«the three theatres that have stood on the Covent Garden site since 1732»"
         },
         {
@@ -3269,7 +3275,7 @@
           "title": "Enciclopedia Treccani: статья «Scala, Teatro alla»",
           "kind": "encyclopedia",
           "url": "https://www.treccani.it/enciclopedia/teatro-alla-scala",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Inaugurato nel 1778 con l’esecuzione dell’Europa riconosciuta di A. Salieri»"
         },
         {
@@ -3277,7 +3283,7 @@
           "title": "Мариинский театр, официальный сайт: раздел «История»",
           "kind": "official",
           "url": "https://www.mariinsky.ru/about/history/",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Мариинский театр ведет родословную, отсчитывает век от 1783 года»"
         },
         {
@@ -3285,13 +3291,13 @@
           "title": "Правительство города Буэнос-Айрес: страница Teatro Colón",
           "kind": "official",
           "url": "https://buenosaires.gob.ar/teatro-colon",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«El edificio fue finalmente inaugurado el 25 de mayo de 1908»"
         }
       ],
       "volatility": "stable",
-      "difficulty": 1,
-      "verifiedAt": "2026-09-04",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-05",
       "verifiedBy": "agent-4c2-precheck",
       "retiredIn": null
     },
@@ -3357,13 +3363,13 @@
           "title": "Большая российская энциклопедия: статья «Дирижабль»",
           "kind": "encyclopedia",
           "url": "https://bre.ruwiki.ru/wiki/Дирижабль",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«24 сентября 1852 г. совершил первый полёт дирижабль конструкции А. Жиффара»; «В 1872 г. испытан в полёте дирижабль…»; «В 1883 г. …братьев А. и Г. Тиссандье»; «…графом Ф. Цеппелином в 1900 г.»"
         }
       ],
       "volatility": "stable",
       "difficulty": 2,
-      "verifiedAt": "2026-09-04",
+      "verifiedAt": "2026-09-05",
       "verifiedBy": "agent-4c2-precheck",
       "retiredIn": null
     },
@@ -3384,7 +3390,9 @@
           "sourceIds": [
             "s1",
             "s5"
-          ]
+          ],
+          "note": "EPA — 8,02 суток; Википедия приводит 8,0249 суток",
+          "disputed": true
         },
         {
           "cardId": "c2",
@@ -3395,7 +3403,9 @@
           "sourceIds": [
             "s2",
             "s6"
-          ]
+          ],
+          "note": "EPA — 5,27 года; Википедия приводит 5,2714 года",
+          "disputed": true
         },
         {
           "cardId": "c3",
@@ -3435,7 +3445,7 @@
           "title": "Агентство по охране окружающей среды США: Radionuclide Basics — Iodine",
           "kind": "official",
           "url": "https://www.epa.gov/radiation/radionuclide-basics-iodine",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Half-life: Iodine-131: 8.02 days»"
         },
         {
@@ -3443,7 +3453,7 @@
           "title": "Агентство по охране окружающей среды США: Radionuclide Basics — Cobalt-60",
           "kind": "official",
           "url": "https://www.epa.gov/radiation/radionuclide-basics-cobalt-60",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Half-life: 5.27 years»"
         },
         {
@@ -3451,7 +3461,7 @@
           "title": "Агентство по охране окружающей среды США: Radionuclide Basics — Cesium-137",
           "kind": "official",
           "url": "https://www.epa.gov/radiation/radionuclide-basics-cesium-137",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Half-life: 30.17 years»"
         },
         {
@@ -3459,7 +3469,7 @@
           "title": "Агентство по охране окружающей среды США: Radionuclide Basics — Radium",
           "kind": "official",
           "url": "https://www.epa.gov/radiation/radionuclide-basics-radium",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Half-life: … Radium-226: 1,600 years»"
         },
         {
@@ -3467,7 +3477,7 @@
           "title": "Википедия (проверочный источник): Iodine-131",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Iodine-131",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «Half-life (t1/2) 8.0249 d»"
         },
         {
@@ -3475,7 +3485,7 @@
           "title": "Википедия (проверочный источник): Cobalt-60",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Cobalt-60",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «Half-life (t1/2) 5.2714 years»"
         },
         {
@@ -3483,7 +3493,7 @@
           "title": "Википедия (проверочный источник): Caesium-137",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Caesium-137",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Half-life (t1/2) 30.04 years» — на 0,13 года меньше значения EPA"
         },
         {
@@ -3491,13 +3501,13 @@
           "title": "Википедия (проверочный источник): Isotopes of radium",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Isotopes_of_radium",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «226Ra … 1600 y»"
         }
       ],
       "volatility": "slow",
       "difficulty": 3,
-      "verifiedAt": "2026-09-04",
+      "verifiedAt": "2026-09-05",
       "verifiedBy": "agent-4c2-precheck",
       "retiredIn": null
     },
@@ -3542,7 +3552,7 @@
         {
           "cardId": "c4",
           "title": "Линия Ливерпуль — Манчестер",
-          "subtitle": "Первое пассажирское сообщение",
+          "subtitle": "Регулярное пассажирское сообщение",
           "sortValue": 1830,
           "displayValue": "1830 год",
           "sourceIds": [
@@ -3556,20 +3566,20 @@
         "c3",
         "c4"
       ],
-      "explanation": "Признак один — год события, и все четыре даты Треккани приводит в одной статье. От первых железных рельсов до первого паровоза прошло 64 года, затем всего 23 года до регулярной линии и ещё 5 лет до первых пассажирских поездов.",
+      "explanation": "Признак один — год события, и все четыре даты Треккани приводит в одной статье. От первых железных рельсов до первого паровоза прошло 64 года, затем всего 23 года до регулярной линии и ещё 5 лет до регулярного пассажирского сообщения.",
       "sources": [
         {
           "sourceId": "s1",
           "title": "Enciclopedia Treccani: статья «Ferrovia»",
           "kind": "encyclopedia",
           "url": "https://www.treccani.it/enciclopedia/ferrovia",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Le prime ferrovie con rotaie di ferro… nel 1738 a Whitehaven»; «Nel 1802 R. Trevithick…»; «…inaugurato nel 1825 sul tronco Stockton-Darlington»; «…Liverpool-Manchester, nel 1830»"
         }
       ],
       "volatility": "stable",
       "difficulty": 1,
-      "verifiedAt": "2026-09-04",
+      "verifiedAt": "2026-09-05",
       "verifiedBy": "agent-4c2-precheck",
       "retiredIn": null
     },
@@ -3590,7 +3600,9 @@
           "sourceIds": [
             "s1",
             "s5"
-          ]
+          ],
+          "note": "Треккани — 145 км²; Википедия приводит 146 км²",
+          "disputed": true
         },
         {
           "cardId": "c2",
@@ -3612,7 +3624,9 @@
           "sourceIds": [
             "s3",
             "s7"
-          ]
+          ],
+          "note": "Треккани — 539 км²; Википедия приводит 536 км²",
+          "disputed": true
         },
         {
           "cardId": "c4",
@@ -3634,14 +3648,14 @@
         "c3",
         "c4"
       ],
-      "explanation": "Три альпийских озера различаются в разы, но все вместе теряются на фоне Ладожского: оно больше Боденского в 34 раза и больше Комо в 127 раз. Площадь зеркала считается без островов.",
+      "explanation": "Три альпийских озера различаются в разы, но все вместе теряются на фоне Ладожского: оно больше Боденского в 34 раза и больше Комо в 127 раз. Сравниваются площади, которые для каждого озера приводит один и тот же свод.",
       "sources": [
         {
           "sourceId": "s1",
           "title": "Enciclopedia Treccani: статья «Lago di Como»",
           "kind": "encyclopedia",
           "url": "https://www.treccani.it/enciclopedia/lago-di-como",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«dopo il Lago di Garda e il Lago Maggiore il più vasto d’Italia (145 km2)»"
         },
         {
@@ -3649,7 +3663,7 @@
           "title": "Enciclopedia Treccani: статья «Lago di Garda»",
           "kind": "encyclopedia",
           "url": "https://www.treccani.it/enciclopedia/lago-di-garda",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«(superficie 370 km2; perimetro 155 km; profondità massima 346 m…)»"
         },
         {
@@ -3657,7 +3671,7 @@
           "title": "Enciclopedia Treccani: статья «Lago di Costanza»",
           "kind": "encyclopedia",
           "url": "https://www.treccani.it/enciclopedia/lago-di-costanza",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Lago subalpino (539 km2; lunghezza 69 km, larghezza massima 14 km)»"
         },
         {
@@ -3665,7 +3679,7 @@
           "title": "Enciclopedia Treccani: статья «Ladoga»",
           "kind": "encyclopedia",
           "url": "https://www.treccani.it/enciclopedia/ladoga",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Lago della Russia settentrionale (18.400 km2, lungo 210 km, largo 130 km)»"
         },
         {
@@ -3673,7 +3687,7 @@
           "title": "Википедия (проверочный источник): Lake Como",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Lake_Como",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «Surface area 146 km2 (56 sq mi)»"
         },
         {
@@ -3681,7 +3695,7 @@
           "title": "Википедия (проверочный источник): Lake Garda",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Lake_Garda",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «Surface area 369.98 km2»"
         },
         {
@@ -3689,7 +3703,7 @@
           "title": "Википедия (проверочный источник): Lake Constance",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Lake_Constance",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «Surface area 536 km2 (207 sq mi)»"
         },
         {
@@ -3697,13 +3711,13 @@
           "title": "Википедия (проверочный источник): Lake Ladoga",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Lake_Ladoga",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Surface area 17,891 km2 (6,908 sq mi)» — на 2,8 % меньше значения Треккани"
         }
       ],
       "volatility": "slow",
       "difficulty": 2,
-      "verifiedAt": "2026-09-04",
+      "verifiedAt": "2026-09-05",
       "verifiedBy": "agent-4c2-precheck",
       "retiredIn": null
     },
@@ -3769,13 +3783,13 @@
           "title": "Большая российская энциклопедия: статья «Колокол»",
           "kind": "encyclopedia",
           "url": "https://bre.ruwiki.ru/wiki/Колокол",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«„Лебедь“ в Троице-Сергиевой лавре (вес 10,2 т»; «Большой колокол Саввино-Сторожевского монастыря в Звенигороде (вес более 41 т»; «Большой Успенский (вес 65 т»; «отлит Царь-колокол (вес около 202 т»"
         }
       ],
       "volatility": "stable",
       "difficulty": 2,
-      "verifiedAt": "2026-09-04",
+      "verifiedAt": "2026-09-05",
       "verifiedBy": "agent-4c2-precheck",
       "retiredIn": null
     },
@@ -3842,7 +3856,7 @@
           "title": "Enciclopedia Treccani: статья «Metropolitana»",
           "kind": "encyclopedia",
           "url": "https://www.treccani.it/enciclopedia/metropolitana",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Il primo impianto di tipo sotterraneo… fu aperto all’esercizio a Londra nel 1863»; «…quelle di Chicago (1892), Budapest (1896), Glasgow (1897), Vienna (1898)»"
         },
         {
@@ -3850,7 +3864,7 @@
           "title": "BKV, транспортное предприятие Будапешта: тематические маршруты",
           "kind": "official",
           "url": "https://www.bkv.hu/en/our_thematic_routes_with_/our_thematic_routes_with",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«The Millennium Underground was the first underground on the European continent, opened in 1896»"
         },
         {
@@ -3858,13 +3872,13 @@
           "title": "Московский метрополитен, официальный сайт: раздел «История»",
           "kind": "official",
           "url": "https://mosmetro.ru/about/history",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«15 мая 1935 года. Открытие первой очереди Московского метрополитена…»"
         }
       ],
       "volatility": "stable",
-      "difficulty": 1,
-      "verifiedAt": "2026-09-04",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-05",
       "verifiedBy": "agent-4c2-precheck",
       "retiredIn": null
     },
@@ -3907,7 +3921,9 @@
           "sourceIds": [
             "s1",
             "s4"
-          ]
+          ],
+          "note": "EPA — 282 м; Википедия приводит 281 м",
+          "disputed": true
         },
         {
           "cardId": "c4",
@@ -3934,7 +3950,7 @@
           "title": "Агентство по охране окружающей среды США: Physical Features of the Great Lakes",
           "kind": "official",
           "url": "https://www.epa.gov/greatlakes/physical-features-great-lakes",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Строка «Maximum Depth (measured at low water) … meters 406 282 229 64 244»"
         },
         {
@@ -3942,7 +3958,7 @@
           "title": "Википедия (проверочный источник): Lake Erie",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Lake_Erie",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «Max. depth 210 ft (64 m)»"
         },
         {
@@ -3950,7 +3966,7 @@
           "title": "Википедия (проверочный источник): Lake Huron",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Lake_Huron",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «Max. depth 750 ft (229 m)»"
         },
         {
@@ -3958,7 +3974,7 @@
           "title": "Википедия (проверочный источник): Lake Michigan",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Lake_Michigan",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Max. depth 923 ft (281 m)» — расхождение с EPA в 1 м"
         },
         {
@@ -3966,13 +3982,13 @@
           "title": "Википедия (проверочный источник): Lake Superior",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Lake_Superior",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «Max. depth 1,333 ft (406 m)»"
         }
       ],
       "volatility": "slow",
       "difficulty": 2,
-      "verifiedAt": "2026-09-04",
+      "verifiedAt": "2026-09-05",
       "verifiedBy": "agent-4c2-precheck",
       "retiredIn": null
     },
@@ -3993,7 +4009,9 @@
           "sourceIds": [
             "s1",
             "s5"
-          ]
+          ],
+          "note": "Треккани — 440 000 км²; Википедия приводит 438 000 км²",
+          "disputed": true
         },
         {
           "cardId": "c2",
@@ -4004,7 +4022,9 @@
           "sourceIds": [
             "s2",
             "s6"
-          ]
+          ],
+          "note": "Треккани — 575 000 км²; Википедия приводит 570 000 км²",
+          "disputed": true
         },
         {
           "cardId": "c3",
@@ -4046,7 +4066,7 @@
           "title": "Enciclopedia Treccani: статья «Mar Rosso»",
           "kind": "encyclopedia",
           "url": "https://www.treccani.it/enciclopedia/mar-rosso",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«coprendo una superficie di circa 440.000 km2»"
         },
         {
@@ -4054,7 +4074,7 @@
           "title": "Enciclopedia Treccani: статья «Mare del Nord»",
           "kind": "encyclopedia",
           "url": "https://www.treccani.it/enciclopedia/mare-del-nord",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Mare dell’Europa nord-occidentale (ca. 575.000 km2)»"
         },
         {
@@ -4062,7 +4082,7 @@
           "title": "Enciclopedia Treccani: статья «Oceano Indiano»",
           "kind": "encyclopedia",
           "url": "https://www.treccani.it/enciclopedia/oceano-indiano",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«È il minore dei tre oceani principali, con una superficie di circa 74.917.000 km2»"
         },
         {
@@ -4070,7 +4090,7 @@
           "title": "Enciclopedia Treccani: статья «Oceano Pacifico»",
           "kind": "encyclopedia",
           "url": "https://www.treccani.it/enciclopedia/oceano-pacifico",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«si stende su un’area complessiva di 179.680.000 km2 circa»"
         },
         {
@@ -4078,7 +4098,7 @@
           "title": "Википедия (проверочный источник): Red Sea",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Red_Sea",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «Surface area 438,000 km2»"
         },
         {
@@ -4086,7 +4106,7 @@
           "title": "Википедия (проверочный источник): North Sea",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/North_Sea",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «Surface area 570,000 km2»"
         },
         {
@@ -4094,7 +4114,7 @@
           "title": "Википедия (проверочный источник): Indian Ocean",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Indian_Ocean",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "В инфобоксе статьи: «Convert|70560000|km2» — 70 560 000 км², на 5,8 % меньше значения Треккани"
         },
         {
@@ -4102,13 +4122,13 @@
           "title": "Википедия (проверочный источник): Pacific Ocean",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Pacific_Ocean",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Surface area 165,250,000 km2» — на 8 % меньше значения Треккани"
         }
       ],
       "volatility": "slow",
-      "difficulty": 2,
-      "verifiedAt": "2026-09-04",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-05",
       "verifiedBy": "agent-4c2-precheck",
       "retiredIn": null
     },
@@ -4180,7 +4200,7 @@
           "title": "Itaipu Binacional, официальный сайт: технические данные",
           "kind": "official",
           "url": "https://www.itaipu.gov.br/en/energy/technical-data",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«196 m Maximum height of the dam»"
         },
         {
@@ -4188,7 +4208,7 @@
           "title": "Бюро мелиорации США: Hoover Dam FAQ",
           "kind": "official",
           "url": "https://www.usbr.gov/lc/hooverdam/faqs/damfaqs.html",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«It is 726.4 feet from foundation rock to the roadway on the crest of the dam» — 221,4 м"
         },
         {
@@ -4196,7 +4216,7 @@
           "title": "Большая российская энциклопедия: статья «Плотина»",
           "kind": "encyclopedia",
           "url": "https://bre.ruwiki.ru/wiki/Плотина",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«…плотина Нурекской ГЭС на реке Вахш (высота 304 м…)»; «…плотина Саяно-Шушенской ГЭС на Енисее (высота 242 м…)»"
         },
         {
@@ -4204,7 +4224,7 @@
           "title": "Википедия (проверочный источник): Itaipu Dam",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Itaipu_Dam",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «Height 196 m (643 ft)»"
         },
         {
@@ -4212,7 +4232,7 @@
           "title": "Википедия (проверочный источник): Hoover Dam",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Hoover_Dam",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «Height 726.4 ft (221.4 m)»"
         },
         {
@@ -4220,7 +4240,7 @@
           "title": "Википедия (проверочный источник): Sayano-Shushenskaya Dam",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Sayano%E2%80%93Shushenskaya_Dam",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «Height 242 m (794 ft)»"
         },
         {
@@ -4228,13 +4248,13 @@
           "title": "Википедия (проверочный источник): Nurek Dam",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Nurek_Dam",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Height 300 m (980 ft)» — на 4 м меньше значения БРЭ"
         }
       ],
       "volatility": "slow",
-      "difficulty": 1,
-      "verifiedAt": "2026-09-04",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-05",
       "verifiedBy": "agent-4c2-precheck",
       "retiredIn": null
     },
@@ -4306,7 +4326,7 @@
           "title": "Enciclopedia Treccani: статья «Neva»",
           "kind": "encyclopedia",
           "url": "https://www.treccani.it/enciclopedia/neva",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Fiume della Russia nord-occidentale (74 km), emissario del Lago Ladoga»"
         },
         {
@@ -4314,7 +4334,7 @@
           "title": "Enciclopedia Treccani: статья «Oka»",
           "kind": "encyclopedia",
           "url": "https://www.treccani.it/enciclopedia/oka",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Fiume della Russia centrale (1480 km; bacino di 245.000 km2), affluente di destra del Volga»"
         },
         {
@@ -4322,7 +4342,7 @@
           "title": "Enciclopedia Treccani: статья «Kama»",
           "kind": "encyclopedia",
           "url": "https://www.treccani.it/enciclopedia/kama",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Fiume della Russia (1805 km; bacino di 507.000 km2), principale affluente del Volga»"
         },
         {
@@ -4330,7 +4350,7 @@
           "title": "Enciclopedia Treccani: статья «Volga»",
           "kind": "encyclopedia",
           "url": "https://www.treccani.it/enciclopedia/volga",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Fiume della Russia (3531 km; bacino di 1.360.000 km2), il più lungo e imponente d’Europa»"
         },
         {
@@ -4338,7 +4358,7 @@
           "title": "Википедия (проверочный источник): Neva",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Neva",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «Length 74 km (46 mi)»"
         },
         {
@@ -4346,7 +4366,7 @@
           "title": "Википедия (проверочный источник): Oka (river)",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Oka_(river)",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "«Length 1,500 km (930 mi)» — на 20 км больше значения Треккани"
         },
         {
@@ -4354,7 +4374,7 @@
           "title": "Википедия (проверочный источник): Kama (river)",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Kama_(river)",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «Length 1,805 km (1,122 mi)»"
         },
         {
@@ -4362,69 +4382,72 @@
           "title": "Википедия (проверочный источник): Volga",
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Volga",
-          "accessedAt": "2026-09-04",
+          "accessedAt": "2026-09-05",
           "note": "Независимое подтверждение: «Length 3,531 km (2,194 mi)»"
         }
       ],
       "volatility": "slow",
       "difficulty": 2,
-      "verifiedAt": "2026-09-04",
+      "verifiedAt": "2026-09-05",
       "verifiedBy": "agent-4c2-precheck",
       "retiredIn": null
     },
     {
-      "puzzleId": "nat-massa-vzroslyh-048",
-      "category": "nature",
-      "prompt": "Расположите животных по средней массе взрослой особи",
-      "sortKey": "mass",
+      "puzzleId": "geo-glubiny-vodoemov-048",
+      "category": "geography",
+      "prompt": "Расположите водные объекты по наибольшей глубине",
+      "sortKey": "depth",
       "sortDirection": "ascending",
-      "directionLabel": "Сверху — самое лёгкое",
+      "directionLabel": "Сверху — самый мелкий",
       "cards": [
         {
           "cardId": "c1",
-          "title": "Обыкновенный ёж",
-          "subtitle": "Ночной житель садов и опушек",
-          "sortValue": 0.75,
-          "displayValue": "0,75 кг",
+          "title": "Лаго-Маджоре",
+          "subtitle": "Второе по площади озеро Италии",
+          "sortValue": 372,
+          "displayValue": "372 м",
           "sourceIds": [
             "s1",
             "s5"
-          ],
-          "note": "AnAge — средние 750 г; ADW даёт диапазон 800–1200 г",
-          "disputed": true
+          ]
         },
         {
           "cardId": "c2",
-          "title": "Серый волк",
-          "subtitle": "Хищник семейства псовых",
-          "sortValue": 26.625,
-          "displayValue": "26,6 кг",
+          "title": "Согне-фьорд",
+          "subtitle": "Самый длинный фьорд Норвегии",
+          "sortValue": 1208,
+          "displayValue": "1208 м",
           "sourceIds": [
             "s2",
             "s6"
-          ]
+          ],
+          "note": "БРЭ — 1208 м; Википедия приводит 1308 м",
+          "disputed": true
         },
         {
           "cardId": "c3",
-          "title": "Гепард",
-          "subtitle": "Пятнистая кошка африканских саванн",
-          "sortValue": 53.5,
-          "displayValue": "53,5 кг",
+          "title": "Северный Ледовитый океан",
+          "subtitle": "Наименьший океан Земли",
+          "sortValue": 5567,
+          "displayValue": "5567 м",
           "sourceIds": [
             "s3",
             "s7"
-          ]
+          ],
+          "note": "NOAA — 18 264 фута (5567 м); Википедия — около 5550 м в Моллой-Дип",
+          "disputed": true
         },
         {
           "cardId": "c4",
-          "title": "Обыкновенный бегемот",
-          "subtitle": "Полуводное животное африканских рек",
-          "sortValue": 3750,
-          "displayValue": "3750 кг",
+          "title": "Марианский жёлоб",
+          "subtitle": "Глубочайшее место Мирового океана",
+          "sortValue": 10935,
+          "displayValue": "10 935 м",
           "sourceIds": [
             "s4",
             "s8"
-          ]
+          ],
+          "note": "Глубина измерена в Бездне Челленджера — южной части жёлоба"
         }
       ],
       "correctOrder": [
@@ -4433,76 +4456,76 @@
         "c3",
         "c4"
       ],
-      "explanation": "Здесь сравнивается средняя масса взрослой особи, а не рекордная. Волк тяжелее ежа в 35 раз, гепард тяжелее волка вдвое, а бегемот тяжелее гепарда в 70 раз — разброс внутри четвёрки млекопитающих достигает пяти тысяч раз.",
+      "explanation": "Сравнивается наибольшая известная глубина каждого объекта. Согне-фьорд глубже Лаго-Маджоре втрое, Северный Ледовитый океан глубже фьорда в 4,6 раза, а Марианский жёлоб почти вдвое глубже самой глубокой точки Арктики.",
       "sources": [
         {
           "sourceId": "s1",
-          "title": "AnAge, Human Ageing Genomic Resources: Erinaceus europaeus",
-          "kind": "academic",
-          "url": "https://genomics.senescence.info/species/entry.php?species=Erinaceus_europaeus",
-          "accessedAt": "2026-09-04",
-          "note": "В таблице признаков: «Adult weight 750 g»"
+          "title": "Enciclopedia Treccani: статья «Lago Maggiore»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/lago-maggiore",
+          "accessedAt": "2026-09-05",
+          "note": "«il punto di massima profondità (372 m) si trova in prossimità di Ghiffa»"
         },
         {
           "sourceId": "s2",
-          "title": "AnAge, Human Ageing Genomic Resources: Canis lupus",
-          "kind": "academic",
-          "url": "https://genomics.senescence.info/species/entry.php?species=Canis_lupus",
-          "accessedAt": "2026-09-04",
-          "note": "В таблице признаков: «Adult weight 26,625 g»"
+          "title": "Большая российская энциклопедия: статья «Фьорд»",
+          "kind": "encyclopedia",
+          "url": "https://bre.ruwiki.ru/wiki/Фьорд",
+          "accessedAt": "2026-09-05",
+          "note": "«Согне-фьорд в Норвегии (длина 204 км, ширина до 6 км, глубина до 1208 м)»"
         },
         {
           "sourceId": "s3",
-          "title": "AnAge, Human Ageing Genomic Resources: Acinonyx jubatus",
-          "kind": "academic",
-          "url": "https://genomics.senescence.info/species/entry.php?species=Acinonyx_jubatus",
-          "accessedAt": "2026-09-04",
-          "note": "В таблице признаков: «Adult weight 53,500 g»"
+          "title": "Национальная океаническая служба NOAA: What is the world’s smallest ocean?",
+          "kind": "official",
+          "url": "https://oceanservice.noaa.gov/facts/smallestocean.html",
+          "accessedAt": "2026-09-05",
+          "note": "«it is 18,264 feet at its deepest point», то есть 5567 м"
         },
         {
           "sourceId": "s4",
-          "title": "AnAge, Human Ageing Genomic Resources: Hippopotamus amphibius",
-          "kind": "academic",
-          "url": "https://genomics.senescence.info/species/entry.php?species=Hippopotamus_amphibius",
-          "accessedAt": "2026-09-04",
-          "note": "В таблице признаков: «Adult weight 3,750,000 g»"
+          "title": "Национальная океаническая служба NOAA: How deep is the ocean?",
+          "kind": "official",
+          "url": "https://oceanservice.noaa.gov/facts/oceandepth.html",
+          "accessedAt": "2026-09-05",
+          "note": "«Challenger Deep is approximately 10,935 meters (35,876 feet) deep»"
         },
         {
           "sourceId": "s5",
-          "title": "Animal Diversity Web, Мичиганский университет: Erinaceus europaeus",
-          "kind": "academic",
-          "url": "https://animaldiversity.org/accounts/Erinaceus_europaeus/",
-          "accessedAt": "2026-09-04",
-          "note": "«Range mass 800 to 1200 g» — нижняя граница выше среднего значения AnAge"
+          "title": "Википедия (проверочный источник): Lake Maggiore",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Lake_Maggiore",
+          "accessedAt": "2026-09-05",
+          "note": "Независимое подтверждение: «Max. depth 372 m (1,220 ft)»"
         },
         {
           "sourceId": "s6",
-          "title": "Animal Diversity Web, Мичиганский университет: Canis lupus",
-          "kind": "academic",
-          "url": "https://animaldiversity.org/accounts/Canis_lupus/",
-          "accessedAt": "2026-09-04",
-          "note": "«Range mass 23.0 to 80 kg» — 26,6 кг входит в диапазон"
+          "title": "Википедия (проверочный источник): Sognefjord",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Sognefjord",
+          "accessedAt": "2026-09-05",
+          "note": "«Max. depth 1,308 m (4,291 ft)» — на 100 м больше значения БРЭ"
         },
         {
           "sourceId": "s7",
-          "title": "Animal Diversity Web, Мичиганский университет: Acinonyx jubatus",
-          "kind": "academic",
-          "url": "https://animaldiversity.org/accounts/Acinonyx_jubatus/",
-          "accessedAt": "2026-09-04",
-          "note": "«Range mass 21 to 72 kg» — 53,5 кг входит в диапазон"
+          "title": "Википедия (проверочный источник): Arctic Ocean",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Arctic_Ocean",
+          "accessedAt": "2026-09-05",
+          "note": "«The deepest point is Molloy Hole in the Fram Strait, at about 5,550 m»"
         },
         {
           "sourceId": "s8",
-          "title": "Animal Diversity Web, Мичиганский университет: Hippopotamus amphibius",
-          "kind": "academic",
-          "url": "https://animaldiversity.org/accounts/Hippopotamus_amphibius/",
-          "accessedAt": "2026-09-04",
-          "note": "«Range mass 1300 to 4500 kg» — 3750 кг входит в диапазон"
+          "title": "Википедия (проверочный источник): Challenger Deep",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Challenger_Deep",
+          "accessedAt": "2026-09-05",
+          "note": "Независимое подтверждение: «Max. depth 10,935 ± 6 m»"
         }
       ],
       "volatility": "slow",
-      "difficulty": 2,
-      "verifiedAt": "2026-09-04",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-05",
       "verifiedBy": "agent-4c2-precheck",
       "retiredIn": null
     }

@@ -77,15 +77,15 @@
     {
       "setIndex": 9,
       "puzzleIds": [
-        "russia-sooruzheniya-vysota-034",
-        "nat-razmah-kryliev-035",
-        "mix-peshchery-dlina-036"
+        "mix-zheldorogi-god-040",
+        "geo-ozera-ploshchad-041",
+        "russia-kolokola-massa-042"
       ]
     },
     {
       "setIndex": 10,
       "puzzleIds": [
-        "cult-teatry-god-037",
+        "russia-sooruzheniya-vysota-034",
         "hist-dirizhabli-god-038",
         "sci-poluraspad-039"
       ]
@@ -93,25 +93,25 @@
     {
       "setIndex": 11,
       "puzzleIds": [
-        "mix-zheldorogi-god-040",
-        "geo-ozera-ploshchad-041",
-        "russia-kolokola-massa-042"
+        "nat-razmah-kryliev-035",
+        "geo-ozera-glubina-044",
+        "mix-peshchery-dlina-036"
       ]
     },
     {
       "setIndex": 12,
       "puzzleIds": [
+        "geo-glubiny-vodoemov-048",
         "hist-metro-god-043",
-        "geo-ozera-glubina-044",
-        "mix-akvatorii-ploshchad-045"
+        "russia-reki-dlina-047"
       ]
     },
     {
       "setIndex": 13,
       "puzzleIds": [
-        "geo-plotiny-vysota-046",
-        "russia-reki-dlina-047",
-        "nat-massa-vzroslyh-048"
+        "mix-akvatorii-ploshchad-045",
+        "cult-teatry-god-037",
+        "geo-plotiny-vysota-046"
       ]
     }
   ]
