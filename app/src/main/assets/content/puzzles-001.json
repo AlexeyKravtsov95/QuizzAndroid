@@ -1,0 +1,2105 @@
+{
+  "schemaVersion": 1,
+  "packId": "core-ru",
+  "puzzles": [
+    {
+      "puzzleId": "nat-zhivotnye-massa-001",
+      "category": "nature",
+      "prompt": "Расположите животных от самого лёгкого к самому тяжёлому",
+      "sortKey": "mass",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самое лёгкое",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Обыкновенная лисица",
+          "subtitle": "Хищник размером с небольшую собаку",
+          "sortValue": 14,
+          "displayValue": "до 14 кг",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Белый медведь",
+          "subtitle": "Самый крупный наземный хищник",
+          "sortValue": 800,
+          "displayValue": "до 800 кг",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Африканский слон",
+          "subtitle": "Самое тяжёлое сухопутное животное",
+          "sortValue": 6100,
+          "displayValue": "до 6100 кг",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Синий кит",
+          "subtitle": "Самое тяжёлое животное на Земле",
+          "sortValue": 190000,
+          "displayValue": "до 190 000 кг",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Предел массы задаёт опора. Наземное животное держит вес на костях и ногах, и слон близок к этому пределу. Кита держит вода, поэтому он весит в три десятка раз больше слона, оставаясь подвижным.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Animal Diversity Web, Музей зоологии Мичиганского университета: Vulpes vulpes",
+          "kind": "academic",
+          "url": "https://animaldiversity.org/accounts/Vulpes_vulpes/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице указано «Range mass 3 to 14 kg»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Animal Diversity Web, Музей зоологии Мичиганского университета: Ursus maritimus",
+          "kind": "academic",
+          "url": "https://animaldiversity.org/accounts/Ursus_maritimus/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице указано «Range mass 150 to 800 kg»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Animal Diversity Web, Музей зоологии Мичиганского университета: Loxodonta africana",
+          "kind": "academic",
+          "url": "https://animaldiversity.org/accounts/Loxodonta_africana/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице указано «Range mass 2000 to 6100 kg»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Animal Diversity Web, Музей зоологии Мичиганского университета: Balaenoptera musculus",
+          "kind": "academic",
+          "url": "https://animaldiversity.org/accounts/Balaenoptera_musculus/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице указано «Range mass 190000 (high) kg»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Red fox",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Red_fox",
+          "accessedAt": "2026-09-04"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Polar bear",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Polar_bear",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «adult males weighing 300–800 kg»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): African bush elephant",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/African_bush_elephant",
+          "accessedAt": "2026-09-04"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Blue whale",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Blue_whale",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «weighing up to 190–200 t»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c1-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "hist-organizacii-god-002",
+      "category": "history",
+      "prompt": "Расположите организации от самой старой к самой молодой",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая старая",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Красный Крест",
+          "subtitle": "Международный комитет, Женева",
+          "sortValue": 1863,
+          "displayValue": "1863 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Организация труда",
+          "subtitle": "Международная организация труда",
+          "sortValue": 1919,
+          "displayValue": "1919 год",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "ООН",
+          "subtitle": "Организация Объединённых Наций",
+          "sortValue": 1945,
+          "displayValue": "1945 год",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "ВОЗ",
+          "subtitle": "Всемирная организация здравоохранения",
+          "sortValue": 1948,
+          "displayValue": "1948 год",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Красный Крест старше остальных на полвека: он вырос из частной инициативы, а не из договора между государствами. Организация труда появилась вместе с Версальским миром, а ООН и ВОЗ — уже после Второй мировой войны.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Международный комитет Красного Креста: история организации",
+          "kind": "official",
+          "url": "https://www.icrc.org/en/document/history-icrc",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «met for the first time in February 1863 in Geneva»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Международная организация труда: история МОТ",
+          "kind": "official",
+          "url": "https://www.ilo.org/about-ilo/history-ilo",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «It was created in 1919, as part of the Treaty of Versailles»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Организация Объединённых Наций: история ООН",
+          "kind": "official",
+          "url": "https://www.un.org/en/about-us/history-of-the-un",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «on 24 October 1945, when it came into existence»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Всемирная организация здравоохранения: история",
+          "kind": "official",
+          "url": "https://www.who.int/about/history",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «WHO's Constitution came into force on 7 April 1948»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c1-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "geo-kanaly-dlina-003",
+      "category": "geography",
+      "prompt": "Расположите искусственные пути от короткого к длинному",
+      "sortKey": "length",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый короткий",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Евротоннель",
+          "subtitle": "Под Ла-Маншем, Франция и Великобритания",
+          "sortValue": 50000,
+          "displayValue": "50 км",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Панамский канал",
+          "subtitle": "Между Атлантическим и Тихим океанами",
+          "sortValue": 80000,
+          "displayValue": "около 80 км",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Кильский канал",
+          "subtitle": "Между Северным и Балтийским морями",
+          "sortValue": 98637,
+          "displayValue": "98,637 км",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Суэцкий канал",
+          "subtitle": "Между Средиземным и Красным морями",
+          "sortValue": 193300,
+          "displayValue": "193,30 км",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Длину задаёт ширина перешейка или пролива, а не масштаб стройки. Ла-Манш и Панамский перешеек узкие, а Суэцкий канал пересекает почти двести километров суши между двумя морями.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Getlink: Евротоннель, тоннель под Ла-Маншем",
+          "kind": "official",
+          "url": "https://www.getlinkgroup.com/en/our-group/eurotunnel/channel-tunnel/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «three tunnels, each 50km long»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Администрация Панамского канала: история канала",
+          "kind": "official",
+          "url": "https://pancanal.com/en/history-of-the-panama-canal/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «a length of approximately 80 kilometers»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Управление водных путей Германии: Кильский канал",
+          "kind": "official",
+          "url": "https://www.wsa-nord-ostsee-kanal.wsv.de/Webs/WSA/WSA-Nord-Ostsee-Kanal/DE/1_Wasserstrasse/1_Nord-Ostsee-Kanal/Nord-Ostsee-Kanal_node.html",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Länge: 98,637 Kilometer»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Администрация Суэцкого канала: характеристики канала",
+          "kind": "official",
+          "url": "https://www.suezcanal.gov.eg/English/About/SuezCanal/Pages/CanalCharacteristics.aspx",
+          "accessedAt": "2026-09-04",
+          "note": "В таблице «Overall Length, Km» указано 193.30"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c1-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "sci-planety-orbity-004",
+      "category": "science",
+      "prompt": "Расположите планеты по среднему расстоянию от Солнца",
+      "sortKey": "distance",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — ближайшая к Солнцу",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Меркурий",
+          "subtitle": "Первая планета от Солнца",
+          "sortValue": 58000000000,
+          "displayValue": "58 млн км",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Земля",
+          "subtitle": "Третья планета от Солнца",
+          "sortValue": 150000000000,
+          "displayValue": "150 млн км",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Марс",
+          "subtitle": "Четвёртая планета от Солнца",
+          "sortValue": 228000000000,
+          "displayValue": "228 млн км",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Юпитер",
+          "subtitle": "Пятая планета от Солнца",
+          "sortValue": 778000000000,
+          "displayValue": "778 млн км",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Планеты расположены не равномерно: между Марсом и Юпитером лежит пояс астероидов, поэтому шаг от Марса к Юпитеру больше, чем всё расстояние от Солнца до Марса.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NASA Science: Mercury Facts",
+          "kind": "official",
+          "url": "https://science.nasa.gov/mercury/facts/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «average distance of 36 million miles (58 million kilometers)»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NASA Science: Earth Facts",
+          "kind": "official",
+          "url": "https://science.nasa.gov/earth/facts/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «average distance of 93 million miles (150 million kilometers)»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NASA Science: Mars Facts",
+          "kind": "official",
+          "url": "https://science.nasa.gov/mars/facts/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «average distance of 142 million miles (228 million kilometers)»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "NASA Science: Jupiter Facts",
+          "kind": "official",
+          "url": "https://science.nasa.gov/jupiter/jupiter-facts/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «average distance of 484 million miles (778 million kilometers)»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c1-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "nat-vodopady-vysota-005",
+      "category": "nature",
+      "prompt": "Расположите водопады от самого низкого к самому высокому",
+      "sortKey": "height",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый низкий",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Игуасу",
+          "subtitle": "Река Игуасу, Бразилия и Аргентина",
+          "sortValue": 72,
+          "displayValue": "72 м",
+          "sourceIds": [
+            "s1",
+            "s2"
+          ],
+          "note": "Водопад знаменит шириной, а не высотой"
+        },
+        {
+          "cardId": "c2",
+          "title": "Виктория",
+          "subtitle": "Река Замбези, Замбия и Зимбабве",
+          "sortValue": 120,
+          "displayValue": "120 м",
+          "sourceIds": [
+            "s1",
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Йосемити",
+          "subtitle": "Ручей Йосемити, США",
+          "sortValue": 727,
+          "displayValue": "727 м",
+          "sourceIds": [
+            "s1",
+            "s3"
+          ],
+          "disputed": true,
+          "note": "БРЭ — 727 м, другие своды дают 739 м для суммы трёх каскадов"
+        },
+        {
+          "cardId": "c4",
+          "title": "Анхель",
+          "subtitle": "Река Чурун, Венесуэла",
+          "sortValue": 1054,
+          "displayValue": "1054 м",
+          "sourceIds": [
+            "s1",
+            "s3"
+          ],
+          "disputed": true,
+          "note": "БРЭ — 1054 м; часть источников приводит 979 м"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Высота водопада зависит от того, через какой уступ падает река. Игуасу и Виктория срываются с края плато шириной в километры, а Анхель падает с отвесной стены столовой горы почти без касания склона.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Большая российская энциклопедия: статья «Водопад» с таблицей высот",
+          "kind": "encyclopedia",
+          "url": "https://bre.ruwiki.ru/wiki/Водопад",
+          "accessedAt": "2026-09-04",
+          "note": "В таблицах статьи: Анхель 1054, Йосемити 727, Виктория 120, Игуасу 72"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Википедия (проверочный источник): List of waterfalls by flow rate и статьи о водопадах",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/List_of_waterfalls_by_height",
+          "accessedAt": "2026-09-04"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Википедия (проверочный источник): List of waterfalls by height",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/List_of_waterfalls_by_height",
+          "accessedAt": "2026-09-04",
+          "note": "Независимая оценка: Angel Falls 979 м, Yosemite Falls 739 м"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c1-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "hist-dokumenty-god-006",
+      "category": "history",
+      "prompt": "Расположите документы от самого раннего к самому позднему",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый ранний",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Великая хартия вольностей",
+          "subtitle": "Англия",
+          "sortValue": 1215,
+          "displayValue": "1215 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Декларация независимости",
+          "subtitle": "Соединённые Штаты Америки",
+          "sortValue": 1776,
+          "displayValue": "1776 год",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Женевская конвенция",
+          "subtitle": "Первая конвенция о раненых, Женева",
+          "sortValue": 1864,
+          "displayValue": "1864 год",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Декларация прав человека",
+          "subtitle": "Всеобщая декларация, ООН",
+          "sortValue": 1948,
+          "displayValue": "1948 год",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Круг тех, чьи права защищает документ, расширяется от строки к строке: сначала английские бароны, затем жители одной страны, затем раненые любой армии и, наконец, каждый человек.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Национальный архив Великобритании: Великая хартия вольностей",
+          "kind": "official",
+          "url": "https://www.nationalarchives.gov.uk/education/resources/magna-carta/",
+          "accessedAt": "2026-09-04",
+          "note": "Заголовок раздела архива: «Magna Carta, 1215 and beyond»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Национальный архив США: Декларация независимости",
+          "kind": "official",
+          "url": "https://www.archives.gov/founding-docs/declaration",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Original Declaration of Independence dated 4th. July 1776»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Международный комитет Красного Креста: история организации",
+          "kind": "official",
+          "url": "https://www.icrc.org/en/document/history-icrc",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «in August 1864 it persuaded governments to adopt the first Geneva Convention»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "ООН: Всеобщая декларация прав человека",
+          "kind": "official",
+          "url": "https://www.un.org/en/about-us/universal-declaration-of-human-rights",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: принята Генеральной Ассамблеей 10 декабря 1948 года"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c1-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "geo-materiki-ploshchad-007",
+      "category": "geography",
+      "prompt": "Расположите материки от меньшего к большему по площади",
+      "sortKey": "area",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый маленький",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Антарктида",
+          "subtitle": "Южный полярный материк",
+          "sortValue": 13975000,
+          "displayValue": "14,0 млн км²",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Южная Америка",
+          "subtitle": "Западное полушарие, к югу от экватора",
+          "sortValue": 17500000,
+          "displayValue": "17,5 млн км²",
+          "sourceIds": [
+            "s2",
+            "s5"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Северная Америка",
+          "subtitle": "Западное полушарие, к северу от экватора",
+          "sortValue": 22500000,
+          "displayValue": "22,5 млн км²",
+          "sourceIds": [
+            "s3",
+            "s5"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Африка",
+          "subtitle": "Материк по обе стороны экватора",
+          "sortValue": 29200000,
+          "displayValue": "29,2 млн км²",
+          "sourceIds": [
+            "s4",
+            "s5"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Антарктида кажется огромной на привычных картах: проекция Меркатора растягивает приполярные области. На деле она меньше Южной Америки, а самый большой из четырёх — Африка.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Большая российская энциклопедия: статья «Антарктида»",
+          "kind": "encyclopedia",
+          "url": "https://bre.ruwiki.ru/wiki/Антарктида",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Площадь Антарктиды 13 975 тыс. км2»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Большая российская энциклопедия: статья «Южная Америка»",
+          "kind": "encyclopedia",
+          "url": "https://bre.ruwiki.ru/wiki/Южная_Америка",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Площадь 17,5 млн км2, с островами – 17,9 млн км2»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Большая российская энциклопедия: статья «Северная Америка»",
+          "kind": "encyclopedia",
+          "url": "https://bre.ruwiki.ru/wiki/Северная_Америка",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Площадь около 22,5 млн км2, с островами 24,7 млн км2»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Большая российская энциклопедия: статья «Африка»",
+          "kind": "encyclopedia",
+          "url": "https://bre.ruwiki.ru/wiki/Африка",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Площадь 29,2 млн км2 (с островами 30,3 млн км2)»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Continent, таблица площадей",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Continent",
+          "accessedAt": "2026-09-04",
+          "note": "Независимые значения: 14 200 000; 17 814 000; 24 230 000; 30 365 000 км²"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c1-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "hist-nobel-fizika-017",
+      "category": "history",
+      "prompt": "Расположите Нобелевские премии по физике по году присуждения",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая ранняя",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Вильгельм Рёнтген",
+          "subtitle": "За открытие рентгеновских лучей",
+          "sortValue": 1901,
+          "displayValue": "1901 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Альберт Эйнштейн",
+          "subtitle": "За объяснение фотоэффекта",
+          "sortValue": 1921,
+          "displayValue": "1921 год",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Энрико Ферми",
+          "subtitle": "За работы по ядерным реакциям",
+          "sortValue": 1938,
+          "displayValue": "1938 год",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Создатели транзистора",
+          "subtitle": "Шокли, Бардин и Браттейн",
+          "sortValue": 1956,
+          "displayValue": "1956 год",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Ряд показывает, как физика меняла масштаб: от невидимого излучения к природе света, затем к ядру атома и, наконец, к прибору, на котором стоит вся современная электроника.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Нобелевский комитет, официальный сайт: премия по физике 1901 года",
+          "kind": "official",
+          "url": "https://www.nobelprize.org/prizes/physics/1901/summary/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «The Nobel Prize in Physics 1901 — Wilhelm Conrad Röntgen»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Нобелевский комитет, официальный сайт: премия по физике 1921 года",
+          "kind": "official",
+          "url": "https://www.nobelprize.org/prizes/physics/1921/summary/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Nobel Prize in Physics 1921 — Albert Einstein»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Нобелевский комитет, официальный сайт: премия по физике 1938 года",
+          "kind": "official",
+          "url": "https://www.nobelprize.org/prizes/physics/1938/summary/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Nobel Prize in Physics 1938 — Enrico Fermi»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Нобелевский комитет, официальный сайт: премия по физике 1956 года",
+          "kind": "official",
+          "url": "https://www.nobelprize.org/prizes/physics/1956/summary/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: премия присуждена Шокли, Бардину и Браттейну за открытие транзисторного эффекта"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c1-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "cult-muzei-god-014",
+      "category": "culture",
+      "prompt": "Расположите музеи от самого старого к самому молодому",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый старый",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Лувр",
+          "subtitle": "Париж, Франция",
+          "sortValue": 1793,
+          "displayValue": "1793 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Третьяковская галерея",
+          "subtitle": "Москва, Россия",
+          "sortValue": 1856,
+          "displayValue": "1856 год",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Метрополитен-музей",
+          "subtitle": "Нью-Йорк, США",
+          "sortValue": 1870,
+          "displayValue": "1870 год",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Русский музей",
+          "subtitle": "Санкт-Петербург, Россия",
+          "sortValue": 1895,
+          "displayValue": "1895 год",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Лувр открыли для публики в разгар революции — дворцовое собрание объявили общим достоянием. Остальные три выросли иначе: из частной коллекции, из городской подписки и из императорского указа.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Большая российская энциклопедия: статья «Лувр»",
+          "kind": "encyclopedia",
+          "url": "https://bre.ruwiki.ru/wiki/Лувр",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «В 1793 г. Лувр открыт для публики как общедоступный Центральный музей искусств»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Государственная Третьяковская галерея: история",
+          "kind": "official",
+          "url": "https://www.tretyakovgallery.ru/about/history/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Годом основания Третьяковской галереи принято считать 1856 год»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Большая российская энциклопедия: статья «Метрополитен-музей»",
+          "kind": "encyclopedia",
+          "url": "https://bre.ruwiki.ru/wiki/Метрополитен-музей",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Музей основан в 1870 г., открыт в 1872 г.»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Большая российская энциклопедия: статья «Русский музей»",
+          "kind": "encyclopedia",
+          "url": "https://bre.ruwiki.ru/wiki/Русский_музей",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Основан в 1895 г. императором Николаем II»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c1-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "nat-zhivotnye-vozrast-008",
+      "category": "nature",
+      "prompt": "Расположите животных по наибольшему возрасту, прожитому в неволе",
+      "sortKey": "duration",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый короткий срок",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Домовая мышь",
+          "subtitle": "Грызун весом около 20 граммов",
+          "sortValue": 157788000,
+          "displayValue": "до 5 лет",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Тигр",
+          "subtitle": "Крупнейшая из кошек",
+          "sortValue": 820497600,
+          "displayValue": "до 26 лет",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Бурый медведь",
+          "subtitle": "Хищник лесов Евразии и Северной Америки",
+          "sortValue": 1577880000,
+          "displayValue": "до 50 лет",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Домашняя лошадь",
+          "subtitle": "Одомашнена около пяти тысяч лет назад",
+          "sortValue": 1925013600,
+          "displayValue": "до 61 года",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Крупные животные обычно живут дольше мелких: обмен веществ идёт медленнее, а взросление занимает годы. Лошадь обгоняет медведя не размером, а тем, что рядом с человеком у неё нет ни голода, ни хищников.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Animal Diversity Web, Музей зоологии Мичиганского университета: Mus musculus",
+          "kind": "academic",
+          "url": "https://animaldiversity.org/accounts/Mus_musculus/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Range lifespan Status: captivity 5.0 (high) years»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Animal Diversity Web, Музей зоологии Мичиганского университета: Panthera tigris",
+          "kind": "academic",
+          "url": "https://animaldiversity.org/accounts/Panthera_tigris/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Range lifespan Status: captivity 26 (high) years»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Animal Diversity Web, Музей зоологии Мичиганского университета: Ursus arctos",
+          "kind": "academic",
+          "url": "https://animaldiversity.org/accounts/Ursus_arctos/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Range lifespan Status: captivity 50 (high) years»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Animal Diversity Web, Музей зоологии Мичиганского университета: Equus caballus",
+          "kind": "academic",
+          "url": "https://animaldiversity.org/accounts/Equus_caballus/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Range lifespan Status: captivity 61 (high) years»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): House mouse",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/House_mouse",
+          "accessedAt": "2026-09-04"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Tiger",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Tiger",
+          "accessedAt": "2026-09-04"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Brown bear",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Brown_bear",
+          "accessedAt": "2026-09-04"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Horse",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Horse",
+          "accessedAt": "2026-09-04"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c1-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "geo-ostrova-ploshchad-023",
+      "category": "geography",
+      "prompt": "Расположите острова от самого большого к самому маленькому",
+      "sortKey": "area",
+      "sortDirection": "descending",
+      "directionLabel": "Сверху — самый большой",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Гренландия",
+          "subtitle": "Северный Ледовитый океан",
+          "sortValue": 2130800,
+          "displayValue": "2 130 800 км²",
+          "sourceIds": [
+            "s1",
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Новая Гвинея",
+          "subtitle": "Тихий океан",
+          "sortValue": 829000,
+          "displayValue": "829 000 км²",
+          "sourceIds": [
+            "s1",
+            "s2"
+          ],
+          "disputed": true,
+          "note": "БРЭ — 829 тыс. км², другие своды дают около 774 тыс. км²"
+        },
+        {
+          "cardId": "c3",
+          "title": "Мадагаскар",
+          "subtitle": "Индийский океан",
+          "sortValue": 587000,
+          "displayValue": "587 000 км²",
+          "sourceIds": [
+            "s1",
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Хонсю",
+          "subtitle": "Главный остров Японии",
+          "sortValue": 227900,
+          "displayValue": "227 900 км²",
+          "sourceIds": [
+            "s1",
+            "s2"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Гренландия крупнее следующего острова более чем вдвое, поэтому её первенство не зависит от способа обмера береговой линии. Разрыв между остальными тремя тоже велик — десятки процентов, а не проценты.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Большая российская энциклопедия: статья «Остров» с таблицей крупнейших островов",
+          "kind": "encyclopedia",
+          "url": "https://bre.ruwiki.ru/wiki/Остров",
+          "accessedAt": "2026-09-04",
+          "note": "В таблице: Гренландия 2130,8; Новая Гвинея 829,0; Мадагаскар 587,0; Хонсю 227,9 тыс. км²"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Википедия (проверочный источник): List of islands by area",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/List_of_islands_by_area",
+          "accessedAt": "2026-09-04",
+          "note": "Независимые значения: 2 108 459; 773 751; 592 521; 228 296 км²"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c1-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "hist-kosmos-vehi-010",
+      "category": "history",
+      "prompt": "Расположите космические запуски от раннего к позднему",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый ранний",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "«Спутник-1»",
+          "subtitle": "Первый искусственный спутник Земли",
+          "sortValue": 1957,
+          "displayValue": "1957 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "«Аполлон-11»",
+          "subtitle": "Первая экспедиция на Луну",
+          "sortValue": 1969,
+          "displayValue": "1969 год",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "«Вояджер-1»",
+          "subtitle": "Зонд к Юпитеру и Сатурну",
+          "sortValue": 1977,
+          "displayValue": "1977 год",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "«Хаббл»",
+          "subtitle": "Орбитальный телескоп",
+          "sortValue": 1990,
+          "displayValue": "1990 год",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Порядок отражает смену задач: сначала выход на орбиту, затем полёт к Луне, потом уход к внешним планетам и, наконец, обсерватория, вынесенная за пределы атмосферы, чтобы та не мешала наблюдениям.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NASA History: Sputnik and the Dawn of the Space Age",
+          "kind": "official",
+          "url": "https://www.nasa.gov/history/sputnik/sputorig.html",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Sputnik 1, launched on 4 October 1957»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NASA: миссия «Аполлон-11»",
+          "kind": "official",
+          "url": "https://www.nasa.gov/mission/apollo-11/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице указаны даты старта и возвращения: July 16 и July 24, 1969"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NASA Science: Voyager 1",
+          "kind": "official",
+          "url": "https://science.nasa.gov/mission/voyager/voyager-1/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице приведена дата запуска 1977 года и масса аппарата 721,9 кг"
+        },
+        {
+          "sourceId": "s4",
+          "title": "NASA Science: Hubble Space Telescope Overview",
+          "kind": "official",
+          "url": "https://science.nasa.gov/mission/hubble/overview/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «since its launch and deployment by the space shuttle Discovery in 1990»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c1-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "sci-planety-diametr-011",
+      "category": "science",
+      "prompt": "Расположите планеты от самой маленькой к самой большой",
+      "sortKey": "length",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая маленькая",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Меркурий",
+          "subtitle": "Радиус 2440 км",
+          "sortValue": 4880000,
+          "displayValue": "4880 км",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Марс",
+          "subtitle": "Радиус 3390 км",
+          "sortValue": 6780000,
+          "displayValue": "6780 км",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Земля",
+          "subtitle": "Экваториальный диаметр",
+          "sortValue": 12756000,
+          "displayValue": "12 756 км",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Юпитер",
+          "subtitle": "Радиус 69 911 км",
+          "sortValue": 139822000,
+          "displayValue": "139 822 км",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Порядок по размеру не совпадает с порядком по удалённости от Солнца: Марс дальше Земли, но вдвое меньше её. Юпитер же газовый, и потому он крупнее всех каменных планет на порядок.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NASA Science: Mercury Facts",
+          "kind": "official",
+          "url": "https://science.nasa.gov/mercury/facts/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «With a radius of 1,516 miles (2,440 kilometers)»; диаметр — удвоенный радиус"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NASA Science: Mars Facts",
+          "kind": "official",
+          "url": "https://science.nasa.gov/mars/facts/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «With a radius of 2,106 miles (3,390 kilometers)»; диаметр — удвоенный радиус"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NASA Science: Earth Facts",
+          "kind": "official",
+          "url": "https://science.nasa.gov/earth/facts/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «With an equatorial diameter of 7,926 miles (12,756 kilometers)»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "NASA Science: Jupiter Facts",
+          "kind": "official",
+          "url": "https://science.nasa.gov/jupiter/jupiter-facts/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «With a radius of 43,440.7 miles (69,911 kilometers)»; диаметр — удвоенный радиус"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c1-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "cult-universitety-god-012",
+      "category": "culture",
+      "prompt": "Расположите университеты от самого старого к самому молодому",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый старый",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Болонский университет",
+          "subtitle": "Болонья, Италия",
+          "sortValue": 1088,
+          "displayValue": "1088 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Университет Саламанки",
+          "subtitle": "Саламанка, Испания",
+          "sortValue": 1218,
+          "displayValue": "1218 год",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Карлов университет",
+          "subtitle": "Прага, Чехия",
+          "sortValue": 1348,
+          "displayValue": "1348 год",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Ягеллонский университет",
+          "subtitle": "Краков, Польша",
+          "sortValue": 1364,
+          "displayValue": "1364 год",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Университеты расходились из Средиземноморья на север и восток. Болонья и Саламанка выросли из школ права, а Прага и Краков были основаны королями уже как государственное дело, с разницей всего в шестнадцать лет.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Болонский университет: наша история",
+          "kind": "official",
+          "url": "https://www.unibo.it/en/university/who-we-are/our-history",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «from as far back as 1088, conventionally referred to as the year in which the Studium of Bologna was founded»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Университет Саламанки: история",
+          "kind": "official",
+          "url": "https://www.usal.es/historia",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «FUNDADA EN 1218»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Карлов университет: об университете",
+          "kind": "official",
+          "url": "https://cuni.cz/UKEN-106.html",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Charles University was founded in 1348»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Ягеллонский университет: история",
+          "kind": "official",
+          "url": "https://en.uj.edu.pl/en_GB/about-university/history",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «It was founded on 12 May 1364 by the Polish king Casimir the Great»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c1-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "mix-massa-obektov-013",
+      "category": "mixed",
+      "prompt": "Расположите рукотворные объекты от лёгкого к тяжёлому",
+      "sortKey": "mass",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый лёгкий",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "«Вояджер-1»",
+          "subtitle": "Межпланетный зонд",
+          "sortValue": 721.9,
+          "displayValue": "721,9 кг",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Телескоп «Хаббл»",
+          "subtitle": "Орбитальная обсерватория",
+          "sortValue": 12246,
+          "displayValue": "12 246 кг",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "МКС",
+          "subtitle": "Международная космическая станция",
+          "sortValue": 400000,
+          "displayValue": "более 400 000 кг",
+          "sourceIds": [
+            "s3"
+          ],
+          "note": "Масса меняется с приходом и уходом грузовых кораблей"
+        },
+        {
+          "cardId": "c4",
+          "title": "Эйфелева башня",
+          "subtitle": "Париж, Франция",
+          "sortValue": 10100000,
+          "displayValue": "10 100 000 кг",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Всё, что нужно поднять с Земли, приходится делать лёгким: зонд весит меньше автомобиля. МКС собрали из десятков отдельных модулей, но и она легче Эйфелевой башни в двадцать пять раз.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NASA Science: Voyager 1",
+          "kind": "official",
+          "url": "https://science.nasa.gov/mission/voyager/voyager-1/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Spacecraft Mass 1,592 pounds (721.9 kilograms)»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NASA Science: Hubble Space Telescope, устройство обсерватории",
+          "kind": "official",
+          "url": "https://science.nasa.gov/mission/hubble/observatory/design/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Weighing about 27,000 pounds (12,246 kg)»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NASA: Международная космическая станция",
+          "kind": "official",
+          "url": "https://www.nasa.gov/reference/international-space-station/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «a mass over 400,000 kg (900,000 lbs)»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Эйфелева башня, официальный сайт: ключевые цифры",
+          "kind": "official",
+          "url": "https://www.toureiffel.paris/en/the-monument/key-figures",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Total weight 10,100 tons»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c1-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "cult-pamyatniki-vysota-015",
+      "category": "culture",
+      "prompt": "Расположите сооружения от самого низкого к самому высокому",
+      "sortKey": "height",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самое низкое",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Статуя Линкольна",
+          "subtitle": "Мемориал Линкольна, Вашингтон",
+          "sortValue": 5.79,
+          "displayValue": "5,79 м",
+          "sourceIds": [
+            "s1"
+          ],
+          "note": "Высота самой фигуры, без пьедестала и здания мемориала"
+        },
+        {
+          "cardId": "c2",
+          "title": "Статуя Свободы",
+          "subtitle": "Нью-Йорк, США",
+          "sortValue": 46.05,
+          "displayValue": "46,05 м",
+          "sourceIds": [
+            "s2"
+          ],
+          "note": "От основания статуи до факела, без пьедестала"
+        },
+        {
+          "cardId": "c3",
+          "title": "Статуя Единства",
+          "subtitle": "Гуджарат, Индия",
+          "sortValue": 182,
+          "displayValue": "182 м",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Эйфелева башня",
+          "subtitle": "Париж, Франция",
+          "sortValue": 330.1,
+          "displayValue": "330,1 м",
+          "sourceIds": [
+            "s4"
+          ],
+          "note": "Текущая высота с антеннами"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Здесь сравнивается сама фигура, а не постамент: у Статуи Свободы пьедестал добавляет ещё почти полсотни метров. Даже при этом Статуя Единства выше её вчетверо, а башня остаётся вне конкуренции.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Служба национальных парков США: статуя Линкольна",
+          "kind": "official",
+          "url": "https://www.nps.gov/linc/learn/historyculture/statue.htm",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «stands 19 feet tall from head to foot» (5,79 м)"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Служба национальных парков США: параметры Статуи Свободы",
+          "kind": "official",
+          "url": "https://www.nps.gov/stli/learn/historyculture/statue-statistics.htm",
+          "accessedAt": "2026-09-04",
+          "note": "В таблице строка «Top of base to torch» — 46.05 m"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Статуя Единства, официальный сайт",
+          "kind": "official",
+          "url": "https://www.statueofunity.in/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «The Statue of Unity stands at 182 metres»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Эйфелева башня, официальный сайт: ключевые цифры",
+          "kind": "official",
+          "url": "https://www.toureiffel.paris/en/the-monument/key-figures",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Current height 1083 feet» (330,1 м)"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c1-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "mix-parki-god-025",
+      "category": "mixed",
+      "prompt": "Расположите национальные парки по году, когда их учредили",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — учреждён раньше",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Йеллоустон",
+          "subtitle": "США",
+          "sortValue": 1872,
+          "displayValue": "1872 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Швейцарский парк",
+          "subtitle": "Швейцария, Энгадин",
+          "sortValue": 1914,
+          "displayValue": "1914 год",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Олимпик",
+          "subtitle": "США, штат Вашингтон",
+          "sortValue": 1938,
+          "displayValue": "1938 год",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Плитвицкие озёра",
+          "subtitle": "Хорватия",
+          "sortValue": 1949,
+          "displayValue": "1949 год",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Йеллоустон — первый национальный парк в мире, и Европа переняла эту идею лишь через сорок лет. Олимпик до 1938 года имел статус памятника природы, а Плитвицкие озёра получили защиту сразу после войны.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Служба национальных парков США: история Йеллоустона",
+          "kind": "official",
+          "url": "https://www.nps.gov/yell/learn/historyculture/park-history.htm",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Yellowstone National Park established in 1872»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Швейцарский национальный парк, официальный сайт",
+          "kind": "official",
+          "url": "https://www.nationalpark.ch/en/about-us/national-park/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Founded in 1914» и «Founded 1 August 1914»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Служба национальных парков США: история парка Олимпик",
+          "kind": "official",
+          "url": "https://www.nps.gov/olym/learn/historyculture/index.htm",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «it was redesignated as a National Park in 1938»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Национальный парк «Плитвицкие озёра», официальный сайт",
+          "kind": "official",
+          "url": "https://np-plitvicka-jezera.hr/en/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «declared the first national park of the Republic of Croatia as early as 8 April 1949»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c1-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "sci-planety-god-018",
+      "category": "science",
+      "prompt": "Расположите планеты по длительности их года",
+      "sortKey": "duration",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый короткий год",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Венера",
+          "subtitle": "Вторая планета от Солнца",
+          "sortValue": 19440000,
+          "displayValue": "225 земных суток",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Марс",
+          "subtitle": "Четвёртая планета от Солнца",
+          "sortValue": 59356800,
+          "displayValue": "687 земных суток",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Юпитер",
+          "subtitle": "Пятая планета от Солнца",
+          "sortValue": 374371200,
+          "displayValue": "4333 земных суток",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Нептун",
+          "subtitle": "Восьмая планета от Солнца",
+          "sortValue": 5207004000,
+          "displayValue": "165 земных лет",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Чем дальше планета, тем длиннее её путь вокруг Солнца и тем медленнее она движется. Оба обстоятельства складываются, поэтому год Нептуна длиннее года Венеры не в тридцать раз, а в двести шестьдесят.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NASA Science: Venus Facts",
+          "kind": "official",
+          "url": "https://science.nasa.gov/venus/venus-facts/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «a Venus year (one trip around the Sun), which takes only 225 Earth days»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NASA Science: Mars Facts",
+          "kind": "official",
+          "url": "https://science.nasa.gov/mars/facts/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «A year on Mars lasts 669.6 sols, which is the same as 687 Earth days»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NASA Science: Jupiter Facts",
+          "kind": "official",
+          "url": "https://science.nasa.gov/jupiter/jupiter-facts/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «a complete orbit around the Sun ... in about 12 Earth years (4,333 Earth days)»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "NASA Science: Neptune Facts",
+          "kind": "official",
+          "url": "https://science.nasa.gov/neptune/neptune-facts/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «In 2011 Neptune completed its first 165-year orbit since its discovery in 1846»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c1-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "sci-skorosti-020",
+      "category": "science",
+      "prompt": "Расположите от самой малой скорости к самой большой",
+      "sortKey": "speed",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая малая",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Ветер на Юпитере",
+          "subtitle": "Струйные течения у экватора",
+          "sortValue": 539,
+          "displayValue": "539 км/ч",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Ветер на Нептуне",
+          "subtitle": "Самые быстрые ветры Солнечной системы",
+          "sortValue": 2000,
+          "displayValue": "2000 км/ч",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Меркурий по орбите",
+          "subtitle": "Быстрейшая планета Солнечной системы",
+          "sortValue": 169200,
+          "displayValue": "169 200 км/ч",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Свет в вакууме",
+          "subtitle": "Предел скорости в природе",
+          "sortValue": 1079252848.8,
+          "displayValue": "1 079 252 849 км/ч",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Ветры и орбитальное движение — это движение вещества, и оно ограничено энергией. Свет вещества не переносит, поэтому его скорость больше орбитальной скорости Меркурия в шесть тысяч раз.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NASA Science: Jupiter Facts",
+          "kind": "official",
+          "url": "https://science.nasa.gov/jupiter/jupiter-facts/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «reaching up to 335 miles per hour (539 kilometers per hour) at the equator»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NASA Science: Neptune Facts",
+          "kind": "official",
+          "url": "https://science.nasa.gov/neptune/neptune-facts/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «more than 1,200 miles per hour (2,000 kilometers per hour)»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NASA Science: Mercury Facts",
+          "kind": "official",
+          "url": "https://science.nasa.gov/mercury/facts/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «traveling through space at nearly 29 miles (47 kilometers) per second» — 169 200 км/ч"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Международное бюро мер и весов: определяющие константы СИ",
+          "kind": "official",
+          "url": "https://www.bipm.org/en/measurement-units/si-defining-constants",
+          "accessedAt": "2026-09-04",
+          "note": "В таблице: скорость света в вакууме c = 299 792 458 м/с, то есть 1 079 252 848,8 км/ч"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c1-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "geo-vershiny-vysota-021",
+      "category": "geography",
+      "prompt": "Расположите вершины от самой низкой к самой высокой",
+      "sortKey": "height",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая низкая",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Бен-Невис",
+          "subtitle": "Высшая точка Великобритании",
+          "sortValue": 1345,
+          "displayValue": "1345 м",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Косцюшко",
+          "subtitle": "Высшая точка материковой Австралии",
+          "sortValue": 2228,
+          "displayValue": "2228 м",
+          "sourceIds": [
+            "s2",
+            "s5"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Дюфур",
+          "subtitle": "Высшая точка Швейцарии, массив Монте-Роза",
+          "sortValue": 4634,
+          "displayValue": "4634 м",
+          "sourceIds": [
+            "s3",
+            "s5"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Аконкагуа",
+          "subtitle": "Высшая точка Анд, Аргентина",
+          "sortValue": 6959,
+          "displayValue": "6959 м",
+          "sourceIds": [
+            "s4",
+            "s5"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Высоту задаёт возраст гор. Бен-Невис и Косцюшко — остатки древних, источенных временем систем, а Альпы и Анды продолжают расти на стыке литосферных плит, и потому они на километры выше.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Ordnance Survey: официальная высота Бен-Невиса",
+          "kind": "official",
+          "url": "https://getoutside.ordnancesurvey.co.uk/guides/reaching-new-heights-ben-nevis-is-now-officially-1345m-tall/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Ben Nevis is the highest mountain in Britain standing at 1345m»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Geoscience Australia: высочайшие горы Австралии",
+          "kind": "official",
+          "url": "https://www.ga.gov.au/scientific-topics/national-location-information/landforms/highest-mountains",
+          "accessedAt": "2026-09-04",
+          "note": "В таблице: Mount Kosciuszko — 2228 м"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Швейцарские федеральные власти: Альпы",
+          "kind": "official",
+          "url": "https://www.aboutswitzerland.eda.admin.ch/en/the-alps",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «At 4,634m above sea level, the Dufourspitze ... is the highest of Switzerland's peaks»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Большая российская энциклопедия: статья «Анды»",
+          "kind": "encyclopedia",
+          "url": "https://bre.ruwiki.ru/wiki/Анды",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «одна из самых высоких (6959 м, гора Аконкагуа) горных систем»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): List of highest points of countries",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/List_of_elevation_extremes_by_country",
+          "accessedAt": "2026-09-04"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c1-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "cult-nobel-literatura-027",
+      "category": "culture",
+      "prompt": "Расположите нобелевских лауреатов по литературе по году награды",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый ранний",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Редьярд Киплинг",
+          "subtitle": "Великобритания",
+          "sortValue": 1907,
+          "displayValue": "1907 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Томас Манн",
+          "subtitle": "Германия",
+          "sortValue": 1929,
+          "displayValue": "1929 год",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Иван Бунин",
+          "subtitle": "Первый русский лауреат",
+          "sortValue": 1933,
+          "displayValue": "1933 год",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Эрнест Хемингуэй",
+          "subtitle": "США",
+          "sortValue": 1954,
+          "displayValue": "1954 год",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Премию присуждают не за одну книгу, а за весь путь автора, поэтому она приходит через десятилетия после первых работ. Между наградами Манна и Бунина всего четыре года — это соседние литературные поколения.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Нобелевский комитет, официальный сайт: премия по литературе 1907 года",
+          "kind": "official",
+          "url": "https://www.nobelprize.org/prizes/literature/1907/summary/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «The Nobel Prize in Literature 1907 — Rudyard Kipling»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Нобелевский комитет, официальный сайт: премия по литературе 1929 года",
+          "kind": "official",
+          "url": "https://www.nobelprize.org/prizes/literature/1929/summary/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «The Nobel Prize in Literature 1929 — Thomas Mann»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Нобелевский комитет, официальный сайт: премия по литературе 1933 года",
+          "kind": "official",
+          "url": "https://www.nobelprize.org/prizes/literature/1933/summary/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «The Nobel Prize in Literature 1933 — Ivan Bunin»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Нобелевский комитет, официальный сайт: премия по литературе 1954 года",
+          "kind": "official",
+          "url": "https://www.nobelprize.org/prizes/literature/1954/summary/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «The Nobel Prize in Literature 1954 — Ernest Hemingway»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c1-precheck",
+      "retiredIn": null
+    }
+  ]
+}
