@@ -113,6 +113,62 @@
         "cult-teatry-god-037",
         "geo-plotiny-vysota-046"
       ]
+    },
+    {
+      "setIndex": 14,
+      "puzzleIds": [
+        "russia-goroda-god-067",
+        "nat-pogruzhenie-glubina-050",
+        "mix-observatorii-vysota-064"
+      ]
+    },
+    {
+      "setIndex": 15,
+      "puzzleIds": [
+        "hist-vojny-dlitelnost-065",
+        "mix-mosty-prolet-061",
+        "sci-chasticy-massa-057"
+      ]
+    },
+    {
+      "setIndex": 16,
+      "puzzleIds": [
+        "sci-apparaty-zapusk-god-054",
+        "mix-tonneli-dlina-062",
+        "cult-mayaki-vysota-059"
+      ]
+    },
+    {
+      "setIndex": 17,
+      "puzzleIds": [
+        "russia-ozera-glubina-068",
+        "sci-uskoriteli-dlina-056",
+        "hist-pravleniya-dlitelnost-066"
+      ]
+    },
+    {
+      "setIndex": 18,
+      "puzzleIds": [
+        "geo-gornye-sistemy-dlina-049",
+        "cult-kartiny-god-060",
+        "nat-pingviny-massa-053"
+      ]
+    },
+    {
+      "setIndex": 19,
+      "puzzleIds": [
+        "nat-kitoobraznye-dlina-052",
+        "sci-orbity-vysota-055",
+        "russia-basseyny-rek-069"
+      ]
+    },
+    {
+      "setIndex": 20,
+      "puzzleIds": [
+        "cult-kino-god-058",
+        "nat-cherepahi-massa-051",
+        "mix-teleskopy-diametr-063"
+      ]
     }
   ]
 }
