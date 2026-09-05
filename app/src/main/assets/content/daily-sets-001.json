@@ -119,14 +119,14 @@
       "puzzleIds": [
         "russia-goroda-god-067",
         "nat-pogruzhenie-glubina-050",
-        "mix-mosty-prolet-061"
+        "mix-observatorii-vysota-064"
       ]
     },
     {
       "setIndex": 15,
       "puzzleIds": [
         "hist-vojny-dlitelnost-065",
-        "russia-basseyny-rek-069",
+        "mix-mosty-prolet-061",
         "sci-chasticy-massa-057"
       ]
     },
@@ -158,8 +158,8 @@
       "setIndex": 19,
       "puzzleIds": [
         "nat-kitoobraznye-dlina-052",
-        "sci-rasstoyaniya-ot-zemli-055",
-        "mix-observatorii-vysota-064"
+        "sci-orbity-vysota-055",
+        "russia-basseyny-rek-069"
       ]
     },
     {
