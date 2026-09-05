@@ -57,6 +57,62 @@
         "geo-vershiny-vysota-021",
         "cult-nobel-literatura-027"
       ]
+    },
+    {
+      "setIndex": 7,
+      "puzzleIds": [
+        "nat-beremennost-028",
+        "hist-knigopechatanie-029",
+        "geo-vulkany-vysota-030"
+      ]
+    },
+    {
+      "setIndex": 8,
+      "puzzleIds": [
+        "geo-reki-dlina-031",
+        "cult-arhitektura-vysota-032",
+        "sci-izluchenie-dlina-033"
+      ]
+    },
+    {
+      "setIndex": 9,
+      "puzzleIds": [
+        "mix-zheldorogi-god-040",
+        "geo-ozera-ploshchad-041",
+        "russia-kolokola-massa-042"
+      ]
+    },
+    {
+      "setIndex": 10,
+      "puzzleIds": [
+        "russia-sooruzheniya-vysota-034",
+        "hist-dirizhabli-god-038",
+        "sci-poluraspad-039"
+      ]
+    },
+    {
+      "setIndex": 11,
+      "puzzleIds": [
+        "nat-razmah-kryliev-035",
+        "geo-ozera-glubina-044",
+        "mix-peshchery-dlina-036"
+      ]
+    },
+    {
+      "setIndex": 12,
+      "puzzleIds": [
+        "geo-glubiny-vodoemov-048",
+        "hist-metro-god-043",
+        "russia-reki-dlina-047"
+      ]
+    },
+    {
+      "setIndex": 13,
+      "puzzleIds": [
+        "mix-akvatorii-ploshchad-045",
+        "cult-teatry-god-037",
+        "geo-plotiny-vysota-046"
+      ]
     }
   ]
 }

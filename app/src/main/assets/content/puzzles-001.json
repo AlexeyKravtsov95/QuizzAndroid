@@ -2162,6 +2162,2370 @@
       "verifiedAt": "2026-09-04",
       "verifiedBy": "agent-4c1-precheck",
       "retiredIn": null
+    },
+    {
+      "puzzleId": "nat-beremennost-028",
+      "category": "nature",
+      "prompt": "Расположите животных по продолжительности беременности",
+      "sortKey": "duration",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая короткая",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Европейский кролик",
+          "subtitle": "Дикий предок домашних кроликов",
+          "sortValue": 2592000,
+          "displayValue": "30 суток",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Домашняя кошка",
+          "subtitle": "Древний спутник человека",
+          "sortValue": 5616000,
+          "displayValue": "65 суток",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Жираф",
+          "subtitle": "Самое высокое сухопутное животное",
+          "sortValue": 39484800,
+          "displayValue": "457 суток",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Африканский слон",
+          "subtitle": "Самое тяжёлое сухопутное животное",
+          "sortValue": 57888000,
+          "displayValue": "670 суток",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Сравнивается средняя продолжительность беременности по зоологическим базам данных. Шаг между соседями неравномерен: кошка вынашивает потомство в 2,2 раза дольше кролика, жираф — в 7 раз дольше кошки, а слон — ещё в 1,5 раза дольше жирафа.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "AnAge, Human Ageing Genomic Resources: Oryctolagus cuniculus",
+          "kind": "academic",
+          "url": "https://genomics.senescence.info/species/entry.php?species=Oryctolagus_cuniculus",
+          "accessedAt": "2026-09-04",
+          "note": "В таблице «Life history traits (averages)»: «Gestation 30 days»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "AnAge, Human Ageing Genomic Resources: Felis catus",
+          "kind": "academic",
+          "url": "https://genomics.senescence.info/species/entry.php?species=Felis_catus",
+          "accessedAt": "2026-09-04",
+          "note": "В таблице «Life history traits (averages)»: «Gestation 65 days»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "AnAge, Human Ageing Genomic Resources: Giraffa camelopardalis",
+          "kind": "academic",
+          "url": "https://genomics.senescence.info/species/entry.php?species=Giraffa_camelopardalis",
+          "accessedAt": "2026-09-04",
+          "note": "В таблице «Life history traits (averages)»: «Gestation 457 days»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "AnAge, Human Ageing Genomic Resources: Loxodonta africana",
+          "kind": "academic",
+          "url": "https://genomics.senescence.info/species/entry.php?species=Loxodonta_africana",
+          "accessedAt": "2026-09-04",
+          "note": "В таблице «Life history traits (averages)»: «Gestation 670 days»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Animal Diversity Web, Мичиганский университет: Oryctolagus cuniculus",
+          "kind": "academic",
+          "url": "https://animaldiversity.org/accounts/Oryctolagus_cuniculus/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Gestation is about 30 days»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Animal Diversity Web, Мичиганский университет: Felis catus",
+          "kind": "academic",
+          "url": "https://animaldiversity.org/accounts/Felis_catus/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «Gestation ranges from 60 to 67 days» — 65 суток входит в диапазон"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Animal Diversity Web, Мичиганский университет: Giraffa camelopardalis",
+          "kind": "academic",
+          "url": "https://animaldiversity.org/accounts/Giraffa_camelopardalis/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «The gestation period is about 457 days»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Animal Diversity Web, Мичиганский университет: Loxodonta africana",
+          "kind": "academic",
+          "url": "https://animaldiversity.org/accounts/Loxodonta_africana/",
+          "accessedAt": "2026-09-04",
+          "note": "На странице: «The gestation period is about 22 months» — около 670 суток"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c2-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "hist-knigopechatanie-029",
+      "category": "history",
+      "prompt": "Расположите вехи книгопечатания от ранней к поздней",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая ранняя",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Высокая печать в Европе",
+          "subtitle": "Официальная дата появления способа",
+          "sortValue": 1440,
+          "displayValue": "1440 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Майнцская псалтирь",
+          "subtitle": "Первые печатные иллюстрации в книге",
+          "sortValue": 1457,
+          "displayValue": "1457 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "«История Трои» Кэкстона",
+          "subtitle": "Первая гравюра на металле в книге",
+          "sortValue": 1475,
+          "displayValue": "1475 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "«Апостол» Ивана Фёдорова",
+          "subtitle": "Первая датированная русская книга",
+          "sortValue": 1564,
+          "displayValue": "1564 год",
+          "sourceIds": [
+            "s1"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Все четыре даты БРЭ приводит в одной статье и по одному признаку — год события. Между появлением способа печати и первой книжной иллюстрацией прошло 17 лет, до гравюры на металле — ещё 18, а до первой датированной русской книги — 89 лет.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Большая российская энциклопедия: статья «Книгопечатание»",
+          "kind": "encyclopedia",
+          "url": "https://bre.ruwiki.ru/wiki/Книгопечатание",
+          "accessedAt": "2026-09-04",
+          "note": "«…в Европе считается 1440 г.»; «…впервые осуществлено… в 1457 г. на страницах… Майнцской псалтири»; «…применённый впервые в 1475 г.»; «…отпечатали в 1564 г. первую точно датированную русскую книгу»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c2-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "geo-vulkany-vysota-030",
+      "category": "geography",
+      "prompt": "Расположите вулканы по высоте вершины над уровнем моря",
+      "sortKey": "height",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый низкий",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Везувий",
+          "subtitle": "Вулкан у Неаполитанского залива",
+          "sortValue": 1281,
+          "displayValue": "1281 м",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Фудзияма",
+          "subtitle": "Высшая точка Японии",
+          "sortValue": 3776,
+          "displayValue": "3776 м",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Мауна-Кеа",
+          "subtitle": "Высшая точка Гавайских островов",
+          "sortValue": 4207.3,
+          "displayValue": "4207,3 м",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Килиманджаро",
+          "subtitle": "Высшая точка Африки",
+          "sortValue": 5895,
+          "displayValue": "5895 м",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Высота считается от уровня моря: подводная часть Мауна-Кеа в этот счёт не входит. Везувий ниже Фудзиямы почти в три раза, а разрыв между Фудзиямой и Мауна-Кеа — всего 431 м, около 11 %.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Enciclopedia Treccani: статья «Vesuvio»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/vesuvio",
+          "accessedAt": "2026-09-04",
+          "note": "«Rilievo vulcanico (1.281 m) della Campania»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Управление геопространственной информации Японии: база высот гор",
+          "kind": "official",
+          "url": "https://maps.gsi.go.jp/3d/mountain/mountain.html",
+          "accessedAt": "2026-09-04",
+          "note": "В таблице высот: «富士山（剣ヶ峯）… 3776m»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Национальная геодезическая служба NOAA: репер TU2314 (Mauna Kea)",
+          "kind": "official",
+          "url": "https://www.ngs.noaa.gov/cgi-bin/ds_mark.prl?PidBox=TU2314",
+          "accessedAt": "2026-09-04",
+          "note": "«LMSL ORTHO HEIGHT - 4207.3 (meters) 13803. (feet)»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "VolcanoWorld, Университет штата Орегон: Kilimanjaro",
+          "kind": "academic",
+          "url": "https://volcano.oregonstate.edu/kilimanjaro",
+          "accessedAt": "2026-09-04",
+          "note": "«Kilimanjaro is a giant stratovolcano reaching an elevation of 19,335.6 ft. (5,895 m)»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Mount Vesuvius",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Mount_Vesuvius",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «Elevation 1,281 m (4,203 ft)»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Mount Fuji",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Mount_Fuji",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «3,776 m (12,388 ft)»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Mauna Kea",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Mauna_Kea",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «Elevation 13,803 ft (4,207 m)»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Mount Kilimanjaro",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Mount_Kilimanjaro",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «Elevation 5,895 m (19,341 ft)»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c2-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "geo-reki-dlina-031",
+      "category": "geography",
+      "prompt": "Расположите реки по длине русла",
+      "sortKey": "length",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая короткая",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Темза",
+          "subtitle": "Главная река Англии",
+          "sortValue": 338000,
+          "displayValue": "338 км",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ],
+          "note": "Треккани — 338 км; Википедия приводит 346 км по другому обмеру устья",
+          "disputed": true
+        },
+        {
+          "cardId": "c2",
+          "title": "Рона",
+          "subtitle": "Река Швейцарии и Франции",
+          "sortValue": 812000,
+          "displayValue": "812 км",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ],
+          "note": "Треккани — 812 км; Википедия приводит 813,69 км",
+          "disputed": true
+        },
+        {
+          "cardId": "c3",
+          "title": "Дунай",
+          "subtitle": "Вторая река Европы по длине",
+          "sortValue": 2860000,
+          "displayValue": "2860 км",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ],
+          "note": "Треккани — 2860 км; Википедия приводит 2850 км",
+          "disputed": true
+        },
+        {
+          "cardId": "c4",
+          "title": "Нил",
+          "subtitle": "Крупнейшая река Африки",
+          "sortValue": 6671000,
+          "displayValue": "6671 км",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ],
+          "note": "Треккани — 6671 км; Википедия — 7088 км: разные точки истока",
+          "disputed": true
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Длина реки зависит от того, где проведена граница истока и устья, поэтому своды расходятся. Разрывы здесь настолько велики, что расхождение порядка процентов порядок не меняет: Рона длиннее Темзы в 2,4 раза, Дунай — Роны в 3,5, Нил — Дуная в 2,3 раза.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Enciclopedia Treccani: статья «Tamigi»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/tamigi",
+          "accessedAt": "2026-09-04",
+          "note": "«Fiume dell’Inghilterra, il maggiore della regione per lunghezza (338 km)»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Enciclopedia Treccani: статья «Rodano»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/rodano",
+          "accessedAt": "2026-09-04",
+          "note": "«…con uno sviluppo di 812 km e un bacino di 98.000 km2»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Enciclopedia Treccani: статья «Danubio»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/danubio",
+          "accessedAt": "2026-09-04",
+          "note": "«secondo soltanto al Volga per lunghezza di corso (2860 km)»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Enciclopedia Treccani: статья «Nilo»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/nilo",
+          "accessedAt": "2026-09-04",
+          "note": "«Il maggior fiume dell’Africa, primo del globo per lunghezza (6671 km)»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): River Thames",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/River_Thames",
+          "accessedAt": "2026-09-04",
+          "note": "«Length 215 mi (346 km)» — расхождение со сводом Треккани"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Rhône",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Rh%C3%B4ne",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «Length 813.69 km (505.60 mi)»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Danube",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Danube",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «Length 2,850 km (1,770 mi)»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Nile",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Nile",
+          "accessedAt": "2026-09-04",
+          "note": "«Length 7,088 km (4,404 mi)» — другой отсчёт истока"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c2-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "cult-arhitektura-vysota-032",
+      "category": "culture",
+      "prompt": "Расположите постройки по высоте наивысшей точки",
+      "sortKey": "height",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая низкая",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Колизей",
+          "subtitle": "Амфитеатр Флавиев в Риме",
+          "sortValue": 48.5,
+          "displayValue": "48,5 м",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Собор Святого Стефана",
+          "subtitle": "Главный собор Вены",
+          "sortValue": 136.44,
+          "displayValue": "136,44 м",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Кёльнский собор",
+          "subtitle": "Готический собор на Рейне",
+          "sortValue": 157.22,
+          "displayValue": "157,22 м",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Саграда Фамилия",
+          "subtitle": "Базилика Антонио Гауди в Барселоне",
+          "sortValue": 172.5,
+          "displayValue": "172,5 м",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "У всех четырёх построек измерена одна и та же величина — расстояние от земли до самой высокой точки: у Колизея это наружная стена, у трёх остальных — вершина башни. Башни трёх храмов выше римского амфитеатра в 2,8–3,6 раза, а между Кёльнским собором и башней Иисуса Христа — 15,3 м, около 9 %.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "S. B. Platner, A Topographical Dictionary of Ancient Rome, Чикагский университет",
+          "kind": "academic",
+          "url": "https://penelope.uchicago.edu/Thayer/E/Gazetteer/Places/Europe/Italy/Lazio/Roma/Rome/_Texts/PLATOP*/Amphitheatrum_Flavium.html",
+          "accessedAt": "2026-09-04",
+          "note": "«The outer wall, or façade, is 48.50 metres high»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Wien Geschichte Wiki, ресурс городской администрации Вены: «Stephansdom»",
+          "kind": "official",
+          "url": "https://www.geschichtewiki.wien.gv.at/Stephansdom",
+          "accessedAt": "2026-09-04",
+          "note": "«Höchster Punkt (Südturm, inkl. Turmkreuz): 136,44 Meter»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Кёльнский собор, официальный сайт: «Der Dom in Zahlen»",
+          "kind": "official",
+          "url": "https://www.koelner-dom.de/erleben/der-dom-in-zahlen",
+          "accessedAt": "2026-09-04",
+          "note": "«157,22 m Südturm Höhe»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Basílica de la Sagrada Família, официальный сайт",
+          "kind": "official",
+          "url": "https://sagradafamilia.org/en/-/una-creu-que-arriba-al-cel-de-barcelona",
+          "accessedAt": "2026-09-04",
+          "note": "«It has 12 faces and stands 172.5 metres tall»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c2-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "sci-izluchenie-dlina-033",
+      "category": "science",
+      "prompt": "Расположите диапазоны излучения по наименьшей длине волны",
+      "sortKey": "length",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая короткая волна",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Рентгеновское излучение",
+          "subtitle": "Открыто В. Рёнтгеном в 1895 году",
+          "sortValue": 1e-11,
+          "displayValue": "от 10⁻¹¹ м",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Ультрафиолетовое излучение",
+          "subtitle": "За фиолетовым краем видимого света",
+          "sortValue": 1e-08,
+          "displayValue": "от 10⁻⁸ м",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Инфракрасное излучение",
+          "subtitle": "Тепловое излучение нагретых тел",
+          "sortValue": 7.4e-07,
+          "displayValue": "от 7,4·10⁻⁷ м",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Радиоволны",
+          "subtitle": "Служат для связи и радиолокации",
+          "sortValue": 5e-05,
+          "displayValue": "от 5·10⁻⁵ м",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Сравнивается коротковолновая граница каждого диапазона, как её задаёт БРЭ. Шкала логарифмическая: от рентгеновской границы до ультрафиолетовой — три порядка, далее ещё почти два, и от инфракрасной до радиоволновой — ещё около двух.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Большая российская энциклопедия: статья «Рентгеновское излучение»",
+          "kind": "encyclopedia",
+          "url": "https://bre.ruwiki.ru/wiki/Рентгеновское_излучение",
+          "accessedAt": "2026-09-04",
+          "note": "«электромагнитное излучение с длинами волн 10 − 11 -- 10 − 8» (в записи страницы), то есть 10⁻¹¹–10⁻⁸ м"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Большая российская энциклопедия: статья «Ультрафиолетовое излучение»",
+          "kind": "encyclopedia",
+          "url": "https://bre.ruwiki.ru/wiki/Ультрафиолетовое_излучение",
+          "accessedAt": "2026-09-04",
+          "note": "«электромагнитные волны с длиной волны λ = 10–400 нм», то есть от 1·10⁻⁸ м"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Большая российская энциклопедия: статья «Инфракрасное излучение»",
+          "kind": "encyclopedia",
+          "url": "https://bre.ruwiki.ru/wiki/Инфракрасное_излучение",
+          "accessedAt": "2026-09-04",
+          "note": "«электромагнитное излучение с длинами волн λ…от около 0,74 мкм до около 1–2 мм»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Большая российская энциклопедия: статья «Радиоволны»",
+          "kind": "encyclopedia",
+          "url": "https://bre.ruwiki.ru/wiki/Радиоволны",
+          "accessedAt": "2026-09-04",
+          "note": "«электромагнитные волны с длиной волны λ…от 5·10 –5 до 5·10 8 м»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 3,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c2-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "russia-sooruzheniya-vysota-034",
+      "category": "russia",
+      "prompt": "Расположите российские сооружения по полной высоте",
+      "sortKey": "height",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самое низкое",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Исаакиевский собор",
+          "subtitle": "Доминанта центра Санкт-Петербурга",
+          "sortValue": 101.5,
+          "displayValue": "101,5 м",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Петропавловский собор",
+          "subtitle": "Собор Петропавловской крепости",
+          "sortValue": 122.5,
+          "displayValue": "122,5 м",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "«Лахта Центр»",
+          "subtitle": "Самый северный небоскрёб мира",
+          "sortValue": 462,
+          "displayValue": "462 м",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Останкинская телебашня",
+          "subtitle": "Телебашня в Москве",
+          "sortValue": 540,
+          "displayValue": "540 м",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Высота считается вместе со шпилем или антенной. Петропавловский собор выше Исаакиевского на 21 м, «Лахта Центр» — почти вчетверо выше собора, а Останкинская телебашня прибавляет к нему ещё 78 м, около 17 %.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Большая российская энциклопедия: статья «Исаакиевский собор»",
+          "kind": "encyclopedia",
+          "url": "https://bre.ruwiki.ru/wiki/Исаакиевский_собор",
+          "accessedAt": "2026-09-04",
+          "note": "«одной из основных градообразующих доминант Санкт-Петербурга (высота 101,5 м…)»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Большая российская энциклопедия: статья «Петропавловская крепость»",
+          "kind": "encyclopedia",
+          "url": "https://bre.ruwiki.ru/wiki/Петропавловская_крепость",
+          "accessedAt": "2026-09-04",
+          "note": "«современная высота 122,5 м, одна из доминант Санкт-Петербурга»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "«Лахта Центр», официальный сайт: раздел «About»",
+          "kind": "official",
+          "url": "https://lakhta.center/en/about/",
+          "accessedAt": "2026-09-04",
+          "note": "«ITS 462-METER HIGH TOWER IS THE MOST ECO-FRIENDLY SKYSCRAPER IN RUSSIA»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Большая российская энциклопедия: статья «Останкинская телебашня»",
+          "kind": "encyclopedia",
+          "url": "https://bre.ruwiki.ru/wiki/Останкинская_телебашня",
+          "accessedAt": "2026-09-04",
+          "note": "«Высота сооружения вместе с антенной составляет 540 м»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c2-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "nat-razmah-kryliev-035",
+      "category": "nature",
+      "prompt": "Расположите птиц по наибольшему размаху крыльев",
+      "sortKey": "length",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый малый размах",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Деревенская ласточка",
+          "subtitle": "Гнездится у сельских построек",
+          "sortValue": 0.343,
+          "displayValue": "до 0,343 м",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ],
+          "note": "ADW — до 34,3 см; Википедия приводит 34,5 см",
+          "disputed": true
+        },
+        {
+          "cardId": "c2",
+          "title": "Сапсан",
+          "subtitle": "Хищная птица размером с ворону",
+          "sortValue": 1.12,
+          "displayValue": "до 1,12 м",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ],
+          "note": "ADW — до 112 см; Википедия приводит верхнюю границу 120 см",
+          "disputed": true
+        },
+        {
+          "cardId": "c3",
+          "title": "Лебедь-шипун",
+          "subtitle": "Крупная водоплавающая птица",
+          "sortValue": 2.5,
+          "displayValue": "до 2,5 м",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ],
+          "note": "ADW — до 2,5 м; Википедия — до 2,4 м",
+          "disputed": true
+        },
+        {
+          "cardId": "c4",
+          "title": "Андский кондор",
+          "subtitle": "Крупнейшая хищная птица Анд",
+          "sortValue": 3.2,
+          "displayValue": "до 3,2 м",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ],
+          "note": "ADW — 3,2 м; Википедия — максимум 3,3 м",
+          "disputed": true
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Сравнивается верхняя граница размаха крыльев по зоологической базе данных. Сапсан превосходит ласточку в 3,3 раза, лебедь превосходит сапсана в 2,2 раза, а кондор прибавляет к лебедю ещё 0,7 м — около 28 %.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Animal Diversity Web, Мичиганский университет: Hirundo rustica",
+          "kind": "academic",
+          "url": "https://animaldiversity.org/accounts/Hirundo_rustica/",
+          "accessedAt": "2026-09-04",
+          "note": "«with a wingspan of 31.8 to 34.3 cm»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Animal Diversity Web, Мичиганский университет: Falco peregrinus",
+          "kind": "academic",
+          "url": "https://animaldiversity.org/accounts/Falco_peregrinus/",
+          "accessedAt": "2026-09-04",
+          "note": "«Wingspan varies from 91 to 112 cm»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Animal Diversity Web, Мичиганский университет: Cygnus olor",
+          "kind": "academic",
+          "url": "https://animaldiversity.org/accounts/Cygnus_olor/",
+          "accessedAt": "2026-09-04",
+          "note": "«The wingspan is 2 to 2.5 meters»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Animal Diversity Web, Мичиганский университет: Vultur gryphus",
+          "kind": "academic",
+          "url": "https://animaldiversity.org/accounts/Vultur_gryphus/",
+          "accessedAt": "2026-09-04",
+          "note": "«Their wingspan of 3.2 m is the longest wingspan of any land bird»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Barn swallow",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Barn_swallow",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «a wingspan of 32–34.5 cm»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Peregrine falcon",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Peregrine_falcon",
+          "accessedAt": "2026-09-04",
+          "note": "«a wingspan from 74 to 120 cm» — верхняя граница выше, чем у ADW"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Mute swan",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Mute_swan",
+          "accessedAt": "2026-09-04",
+          "note": "«with a 200 to 240 cm…wingspan» — верхняя граница ниже, чем у ADW"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Andean condor",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Andean_condor",
+          "accessedAt": "2026-09-04",
+          "note": "«With a maximum wingspan of 3.3 m» — на 0,1 м больше, чем у ADW"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c2-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "mix-peshchery-dlina-036",
+      "category": "mixed",
+      "prompt": "Расположите пещерные системы по длине разведанных ходов",
+      "sortKey": "length",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая короткая",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Постойнска-Яма",
+          "subtitle": "Карстовая пещера в Словении",
+          "sortValue": 24000,
+          "displayValue": "24 км",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Лечугия",
+          "subtitle": "Пещера в штате Нью-Мексико",
+          "sortValue": 233000,
+          "displayValue": "233 км",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ],
+          "note": "Служба парков США — 233 км; Википедия приводит 240 км по более поздней съёмке",
+          "disputed": true
+        },
+        {
+          "cardId": "c3",
+          "title": "Джевел-Кейв",
+          "subtitle": "Пещера в штате Южная Дакота",
+          "sortValue": 354000,
+          "displayValue": "354 км",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Мамонтова пещера",
+          "subtitle": "Длиннейшая пещерная система мира",
+          "sortValue": 686000,
+          "displayValue": "686 км",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Считается не объём полости, а длина уже отснятых ходов, поэтому значения растут по мере работы спелеологов. Мамонтова пещера почти вдвое длиннее Джевел-Кейв и втрое длиннее Лечугии.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Postojnska jama, официальный сайт управляющей организации",
+          "kind": "official",
+          "url": "https://www.postojnska-jama.eu/en/",
+          "accessedAt": "2026-09-04",
+          "note": "«While touring the 24-kilometre-long cave system…»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Служба национальных парков США: Lechuguilla Cave",
+          "kind": "official",
+          "url": "https://home.nps.gov/cave/learn/nature/lechuguilla_cave.htm",
+          "accessedAt": "2026-09-04",
+          "note": "«explorers have mapped over 145 miles (233 km) of passages»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Служба национальных парков США: Jewel Cave National Monument",
+          "kind": "official",
+          "url": "https://www.nps.gov/jeca/planyourvisit/index.htm",
+          "accessedAt": "2026-09-04",
+          "note": "«Jewel Cave spans over 220 miles in length», то есть свыше 354 км"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Служба национальных парков США: Exploring the World’s Longest Known Cave",
+          "kind": "official",
+          "url": "https://www.nps.gov/articles/000/exploring-the-worlds-longest-known-cave.htm",
+          "accessedAt": "2026-09-04",
+          "note": "«Mammoth Cave is currently mapped and explored at 426 miles (686 km)»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Postojna Cave",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Postojna_Cave",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «the cave system is 24 km long»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Lechuguilla Cave",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Lechuguilla_Cave",
+          "accessedAt": "2026-09-04",
+          "note": "«explorers have mapped over 150 miles (240 km) of passages» — позднее значение"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Jewel Cave National Monument",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Jewel_Cave_National_Monument",
+          "accessedAt": "2026-09-04",
+          "note": "Статья подтверждает статус пещеры и порядок длины ходов"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Mammoth Cave National Park",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Mammoth_Cave_National_Park",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «more than 426 miles (686 km) of passageways»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c2-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "cult-teatry-god-037",
+      "category": "culture",
+      "prompt": "Расположите оперные театры по году, с которого они ведут историю",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый ранний",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Королевский оперный театр",
+          "subtitle": "Ковент-Гарден в Лондоне",
+          "sortValue": 1732,
+          "displayValue": "1732 год",
+          "sourceIds": [
+            "s1"
+          ],
+          "note": "Год постройки первого театра на нынешнем месте в Ковент-Гардене"
+        },
+        {
+          "cardId": "c2",
+          "title": "Ла Скала",
+          "subtitle": "Оперный театр Милана",
+          "sortValue": 1778,
+          "displayValue": "1778 год",
+          "sourceIds": [
+            "s2"
+          ],
+          "note": "Год открытия здания оперой А. Сальери"
+        },
+        {
+          "cardId": "c3",
+          "title": "Мариинский театр",
+          "subtitle": "Оперный театр Санкт-Петербурга",
+          "sortValue": 1783,
+          "displayValue": "1783 год",
+          "sourceIds": [
+            "s3"
+          ],
+          "note": "Год указа о театральном комитете, от которого театр ведёт родословную"
+        },
+        {
+          "cardId": "c4",
+          "title": "Театр «Колон»",
+          "subtitle": "Оперный театр Буэнос-Айреса",
+          "sortValue": 1908,
+          "displayValue": "1908 год",
+          "sourceIds": [
+            "s4"
+          ],
+          "note": "Год открытия нынешнего здания"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Признак один — год, с которого театр официально отсчитывает свою историю, но событие у каждого своё, и это названо в карточках. Ла Скала и Мариинский разделяют всего пять лет, а «Колон» моложе Ковент-Гардена на 176 лет.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Royal Opera House, официальный сайт: раздел «About»",
+          "kind": "official",
+          "url": "https://www.roh.org.uk/about",
+          "accessedAt": "2026-09-04",
+          "note": "«the three theatres that have stood on the Covent Garden site since 1732»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Enciclopedia Treccani: статья «Scala, Teatro alla»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/teatro-alla-scala",
+          "accessedAt": "2026-09-04",
+          "note": "«Inaugurato nel 1778 con l’esecuzione dell’Europa riconosciuta di A. Salieri»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Мариинский театр, официальный сайт: раздел «История»",
+          "kind": "official",
+          "url": "https://www.mariinsky.ru/about/history/",
+          "accessedAt": "2026-09-04",
+          "note": "«Мариинский театр ведет родословную, отсчитывает век от 1783 года»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Правительство города Буэнос-Айрес: страница Teatro Colón",
+          "kind": "official",
+          "url": "https://buenosaires.gob.ar/teatro-colon",
+          "accessedAt": "2026-09-04",
+          "note": "«El edificio fue finalmente inaugurado el 25 de mayo de 1908»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c2-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "hist-dirizhabli-god-038",
+      "category": "history",
+      "prompt": "Расположите вехи дирижаблестроения от ранней к поздней",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая ранняя",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Дирижабль Жиффара",
+          "subtitle": "Первый полёт управляемого аэростата",
+          "sortValue": 1852,
+          "displayValue": "1852 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Аэростат с мускульным приводом",
+          "subtitle": "Испытан в полёте",
+          "sortValue": 1872,
+          "displayValue": "1872 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Дирижабль братьев Тиссандье",
+          "subtitle": "Первый электродвигатель на борту",
+          "sortValue": 1883,
+          "displayValue": "1883 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Дирижабль графа Цеппелина",
+          "subtitle": "Первый жёсткий дирижабль",
+          "sortValue": 1900,
+          "displayValue": "1900 год",
+          "sourceIds": [
+            "s1"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Все четыре даты БРЭ приводит в одной статье и по одному признаку — год испытания или первого полёта. От паровой машины Жиффара до жёсткого каркаса Цеппелина прошло 48 лет, причём последний шаг занял 17 лет.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Большая российская энциклопедия: статья «Дирижабль»",
+          "kind": "encyclopedia",
+          "url": "https://bre.ruwiki.ru/wiki/Дирижабль",
+          "accessedAt": "2026-09-04",
+          "note": "«24 сентября 1852 г. совершил первый полёт дирижабль конструкции А. Жиффара»; «В 1872 г. испытан в полёте дирижабль…»; «В 1883 г. …братьев А. и Г. Тиссандье»; «…графом Ф. Цеппелином в 1900 г.»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c2-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "sci-poluraspad-039",
+      "category": "science",
+      "prompt": "Расположите радионуклиды по периоду полураспада",
+      "sortKey": "duration",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый короткий",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Йод-131",
+          "subtitle": "Применяется в медицине",
+          "sortValue": 692928,
+          "displayValue": "8,02 суток",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ],
+          "note": "EPA — 8,02 суток; Википедия приводит 8,0249 суток",
+          "disputed": true
+        },
+        {
+          "cardId": "c2",
+          "title": "Кобальт-60",
+          "subtitle": "Источник гамма-излучения",
+          "sortValue": 166308552,
+          "displayValue": "5,27 года",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ],
+          "note": "EPA — 5,27 года; Википедия приводит 5,2714 года",
+          "disputed": true
+        },
+        {
+          "cardId": "c3",
+          "title": "Цезий-137",
+          "subtitle": "Продукт деления ядер урана",
+          "sortValue": 952092792,
+          "displayValue": "30,17 года",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ],
+          "note": "Агентство по охране среды США — 30,17 года; Википедия приводит 30,04 года",
+          "disputed": true
+        },
+        {
+          "cardId": "c4",
+          "title": "Радий-226",
+          "subtitle": "Природный радионуклид ряда урана",
+          "sortValue": 50492160000,
+          "displayValue": "1600 лет",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Период полураспада — время, за которое распадается половина ядер. Шкала здесь растёт скачками: кобальт-60 живёт в 240 раз дольше йода-131, цезий-137 — в 5,7 раза дольше кобальта, а радий-226 — ещё в 53 раза дольше цезия.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Агентство по охране окружающей среды США: Radionuclide Basics — Iodine",
+          "kind": "official",
+          "url": "https://www.epa.gov/radiation/radionuclide-basics-iodine",
+          "accessedAt": "2026-09-04",
+          "note": "«Half-life: Iodine-131: 8.02 days»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Агентство по охране окружающей среды США: Radionuclide Basics — Cobalt-60",
+          "kind": "official",
+          "url": "https://www.epa.gov/radiation/radionuclide-basics-cobalt-60",
+          "accessedAt": "2026-09-04",
+          "note": "«Half-life: 5.27 years»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Агентство по охране окружающей среды США: Radionuclide Basics — Cesium-137",
+          "kind": "official",
+          "url": "https://www.epa.gov/radiation/radionuclide-basics-cesium-137",
+          "accessedAt": "2026-09-04",
+          "note": "«Half-life: 30.17 years»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Агентство по охране окружающей среды США: Radionuclide Basics — Radium",
+          "kind": "official",
+          "url": "https://www.epa.gov/radiation/radionuclide-basics-radium",
+          "accessedAt": "2026-09-04",
+          "note": "«Half-life: … Radium-226: 1,600 years»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Iodine-131",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Iodine-131",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «Half-life (t1/2) 8.0249 d»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Cobalt-60",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Cobalt-60",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «Half-life (t1/2) 5.2714 years»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Caesium-137",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Caesium-137",
+          "accessedAt": "2026-09-04",
+          "note": "«Half-life (t1/2) 30.04 years» — на 0,13 года меньше значения EPA"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Isotopes of radium",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Isotopes_of_radium",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «226Ra … 1600 y»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 3,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c2-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "mix-zheldorogi-god-040",
+      "category": "mixed",
+      "prompt": "Расположите вехи железных дорог от ранней к поздней",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая ранняя",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Рельсы под открытым небом",
+          "subtitle": "Уайтхейвен, Англия",
+          "sortValue": 1738,
+          "displayValue": "1738 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Паровоз на рельсовом пути",
+          "subtitle": "Опыт Ричарда Тревитика",
+          "sortValue": 1802,
+          "displayValue": "1802 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Линия Стоктон — Дарлингтон",
+          "subtitle": "Первая железнодорожная служба",
+          "sortValue": 1825,
+          "displayValue": "1825 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Линия Ливерпуль — Манчестер",
+          "subtitle": "Регулярное пассажирское сообщение",
+          "sortValue": 1830,
+          "displayValue": "1830 год",
+          "sourceIds": [
+            "s1"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Признак один — год события, и все четыре даты Треккани приводит в одной статье. От первых железных рельсов до первого паровоза прошло 64 года, затем всего 23 года до регулярной линии и ещё 5 лет до регулярного пассажирского сообщения.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Enciclopedia Treccani: статья «Ferrovia»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/ferrovia",
+          "accessedAt": "2026-09-04",
+          "note": "«Le prime ferrovie con rotaie di ferro… nel 1738 a Whitehaven»; «Nel 1802 R. Trevithick…»; «…inaugurato nel 1825 sul tronco Stockton-Darlington»; «…Liverpool-Manchester, nel 1830»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c2-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "geo-ozera-ploshchad-041",
+      "category": "geography",
+      "prompt": "Расположите озёра Европы по площади зеркала",
+      "sortKey": "area",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самое маленькое",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Комо",
+          "subtitle": "Озеро в предгорьях Альп",
+          "sortValue": 145,
+          "displayValue": "145 км²",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ],
+          "note": "Треккани — 145 км²; Википедия приводит 146 км²",
+          "disputed": true
+        },
+        {
+          "cardId": "c2",
+          "title": "Гарда",
+          "subtitle": "Крупнейшее озеро Италии",
+          "sortValue": 370,
+          "displayValue": "370 км²",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Боденское озеро",
+          "subtitle": "Озеро на стыке трёх стран",
+          "sortValue": 539,
+          "displayValue": "539 км²",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ],
+          "note": "Треккани — 539 км²; Википедия приводит 536 км²",
+          "disputed": true
+        },
+        {
+          "cardId": "c4",
+          "title": "Ладожское озеро",
+          "subtitle": "Крупнейшее озеро Европы",
+          "sortValue": 18400,
+          "displayValue": "18 400 км²",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ],
+          "note": "Треккани — 18 400 км²; Википедия приводит 17 891 км²",
+          "disputed": true
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Три альпийских озера различаются в разы, но все вместе теряются на фоне Ладожского: оно больше Боденского в 34 раза и больше Комо в 127 раз. Сравниваются площади, которые для каждого озера приводит один и тот же свод.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Enciclopedia Treccani: статья «Lago di Como»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/lago-di-como",
+          "accessedAt": "2026-09-04",
+          "note": "«dopo il Lago di Garda e il Lago Maggiore il più vasto d’Italia (145 km2)»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Enciclopedia Treccani: статья «Lago di Garda»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/lago-di-garda",
+          "accessedAt": "2026-09-04",
+          "note": "«(superficie 370 km2; perimetro 155 km; profondità massima 346 m…)»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Enciclopedia Treccani: статья «Lago di Costanza»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/lago-di-costanza",
+          "accessedAt": "2026-09-04",
+          "note": "«Lago subalpino (539 km2; lunghezza 69 km, larghezza massima 14 km)»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Enciclopedia Treccani: статья «Ladoga»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/ladoga",
+          "accessedAt": "2026-09-04",
+          "note": "«Lago della Russia settentrionale (18.400 km2, lungo 210 km, largo 130 km)»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Lake Como",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Lake_Como",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «Surface area 146 km2 (56 sq mi)»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Lake Garda",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Lake_Garda",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «Surface area 369.98 km2»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Lake Constance",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Lake_Constance",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «Surface area 536 km2 (207 sq mi)»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Lake Ladoga",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Lake_Ladoga",
+          "accessedAt": "2026-09-04",
+          "note": "«Surface area 17,891 km2 (6,908 sq mi)» — на 2,8 % меньше значения Треккани"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c2-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "russia-kolokola-massa-042",
+      "category": "russia",
+      "prompt": "Расположите русские колокола по массе",
+      "sortKey": "mass",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый лёгкий",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "«Лебедь»",
+          "subtitle": "Колокол Троице-Сергиевой лавры",
+          "sortValue": 10200,
+          "displayValue": "10,2 т",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Большой Звенигородский колокол",
+          "subtitle": "Саввино-Сторожевский монастырь",
+          "sortValue": 41000,
+          "displayValue": "более 41 т",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Большой Успенский колокол",
+          "subtitle": "Успенская звонница Кремля",
+          "sortValue": 65000,
+          "displayValue": "65 т",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Царь-колокол",
+          "subtitle": "Самый большой колокол в мире",
+          "sortValue": 202000,
+          "displayValue": "около 202 т",
+          "sourceIds": [
+            "s1"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Все четыре массы БРЭ приводит в одной статье. Звенигородский колокол тяжелее «Лебедя» вчетверо, Успенский — Звенигородского в 1,6 раза, а Царь-колокол тяжелее Успенского ещё втрое — и при этом, как пишет БРЭ, никогда не звучал.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Большая российская энциклопедия: статья «Колокол»",
+          "kind": "encyclopedia",
+          "url": "https://bre.ruwiki.ru/wiki/Колокол",
+          "accessedAt": "2026-09-04",
+          "note": "«„Лебедь“ в Троице-Сергиевой лавре (вес 10,2 т»; «Большой колокол Саввино-Сторожевского монастыря в Звенигороде (вес более 41 т»; «Большой Успенский (вес 65 т»; «отлит Царь-колокол (вес около 202 т»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c2-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "hist-metro-god-043",
+      "category": "history",
+      "prompt": "Расположите метрополитены по году открытия",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый ранний",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Лондон",
+          "subtitle": "Первый в мире подземный метрополитен",
+          "sortValue": 1863,
+          "displayValue": "1863 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Чикаго",
+          "subtitle": "Метрополитен в США",
+          "sortValue": 1892,
+          "displayValue": "1892 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Будапешт",
+          "subtitle": "Первый метрополитен на континенте",
+          "sortValue": 1896,
+          "displayValue": "1896 год",
+          "sourceIds": [
+            "s1",
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Москва",
+          "subtitle": "Метрополитен столицы России",
+          "sortValue": 1935,
+          "displayValue": "1935 год",
+          "sourceIds": [
+            "s3"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Признак один — год, когда метрополитен начал работу. Лондон опередил Чикаго на 29 лет, Чикаго опередил Будапешт всего на 4 года, а между Будапештом и Москвой прошло почти четыре десятилетия.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Enciclopedia Treccani: статья «Metropolitana»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/metropolitana",
+          "accessedAt": "2026-09-04",
+          "note": "«Il primo impianto di tipo sotterraneo… fu aperto all’esercizio a Londra nel 1863»; «…quelle di Chicago (1892), Budapest (1896), Glasgow (1897), Vienna (1898)»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "BKV, транспортное предприятие Будапешта: тематические маршруты",
+          "kind": "official",
+          "url": "https://www.bkv.hu/en/our_thematic_routes_with_/our_thematic_routes_with",
+          "accessedAt": "2026-09-04",
+          "note": "«The Millennium Underground was the first underground on the European continent, opened in 1896»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Московский метрополитен, официальный сайт: раздел «История»",
+          "kind": "official",
+          "url": "https://mosmetro.ru/about/history",
+          "accessedAt": "2026-09-04",
+          "note": "«15 мая 1935 года. Открытие первой очереди Московского метрополитена…»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c2-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "geo-ozera-glubina-044",
+      "category": "geography",
+      "prompt": "Расположите Великие озёра по наибольшей глубине",
+      "sortKey": "depth",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самое мелкое",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Эри",
+          "subtitle": "Самое мелкое из Великих озёр",
+          "sortValue": 64,
+          "displayValue": "64 м",
+          "sourceIds": [
+            "s1",
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Гурон",
+          "subtitle": "Озеро между США и Канадой",
+          "sortValue": 229,
+          "displayValue": "229 м",
+          "sourceIds": [
+            "s1",
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Мичиган",
+          "subtitle": "Единственное целиком в США",
+          "sortValue": 282,
+          "displayValue": "282 м",
+          "sourceIds": [
+            "s1",
+            "s4"
+          ],
+          "note": "EPA — 282 м; Википедия приводит 281 м",
+          "disputed": true
+        },
+        {
+          "cardId": "c4",
+          "title": "Верхнее",
+          "subtitle": "Крупнейшее пресноводное озеро мира",
+          "sortValue": 406,
+          "displayValue": "406 м",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Сравнивается наибольшая глубина при низком уровне воды — так её измеряет агентство по охране среды. Эри мельче соседей в несколько раз, а между Гуроном и Мичиганом всего 53 м, около 19 %.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Агентство по охране окружающей среды США: Physical Features of the Great Lakes",
+          "kind": "official",
+          "url": "https://www.epa.gov/greatlakes/physical-features-great-lakes",
+          "accessedAt": "2026-09-04",
+          "note": "Строка «Maximum Depth (measured at low water) … meters 406 282 229 64 244»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Википедия (проверочный источник): Lake Erie",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Lake_Erie",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «Max. depth 210 ft (64 m)»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Википедия (проверочный источник): Lake Huron",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Lake_Huron",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «Max. depth 750 ft (229 m)»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Википедия (проверочный источник): Lake Michigan",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Lake_Michigan",
+          "accessedAt": "2026-09-04",
+          "note": "«Max. depth 923 ft (281 m)» — расхождение с EPA в 1 м"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Lake Superior",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Lake_Superior",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «Max. depth 1,333 ft (406 m)»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c2-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "mix-akvatorii-ploshchad-045",
+      "category": "mixed",
+      "prompt": "Расположите моря и океаны по площади акватории",
+      "sortKey": "area",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая малая площадь",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Красное море",
+          "subtitle": "Море между Африкой и Аравией",
+          "sortValue": 440000,
+          "displayValue": "440 000 км²",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ],
+          "note": "Треккани — 440 000 км²; Википедия приводит 438 000 км²",
+          "disputed": true
+        },
+        {
+          "cardId": "c2",
+          "title": "Северное море",
+          "subtitle": "Море у берегов Северо-Западной Европы",
+          "sortValue": 575000,
+          "displayValue": "575 000 км²",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ],
+          "note": "Треккани — 575 000 км²; Википедия приводит 570 000 км²",
+          "disputed": true
+        },
+        {
+          "cardId": "c3",
+          "title": "Индийский океан",
+          "subtitle": "Наименьший из трёх главных океанов",
+          "sortValue": 74917000,
+          "displayValue": "74,9 млн км²",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ],
+          "note": "Треккани — 74,9 млн км²; Википедия — 70,6 млн: разные южные границы",
+          "disputed": true
+        },
+        {
+          "cardId": "c4",
+          "title": "Тихий океан",
+          "subtitle": "Крупнейший океан Земли",
+          "sortValue": 179680000,
+          "displayValue": "179,7 млн км²",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ],
+          "note": "Треккани — 179,7 млн км²; Википедия — 165,3 млн: разные южные границы",
+          "disputed": true
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Площадь океана зависит от того, где проведена граница с Южным океаном, поэтому своды расходятся на проценты. На порядок величин это не влияет: Индийский океан больше Северного моря в 130 раз, а Тихий больше Индийского в 2,4 раза.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Enciclopedia Treccani: статья «Mar Rosso»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/mar-rosso",
+          "accessedAt": "2026-09-04",
+          "note": "«coprendo una superficie di circa 440.000 km2»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Enciclopedia Treccani: статья «Mare del Nord»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/mare-del-nord",
+          "accessedAt": "2026-09-04",
+          "note": "«Mare dell’Europa nord-occidentale (ca. 575.000 km2)»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Enciclopedia Treccani: статья «Oceano Indiano»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/oceano-indiano",
+          "accessedAt": "2026-09-04",
+          "note": "«È il minore dei tre oceani principali, con una superficie di circa 74.917.000 km2»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Enciclopedia Treccani: статья «Oceano Pacifico»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/oceano-pacifico",
+          "accessedAt": "2026-09-04",
+          "note": "«si stende su un’area complessiva di 179.680.000 km2 circa»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Red Sea",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Red_Sea",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «Surface area 438,000 km2»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): North Sea",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/North_Sea",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «Surface area 570,000 km2»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Indian Ocean",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Indian_Ocean",
+          "accessedAt": "2026-09-04",
+          "note": "В инфобоксе статьи: «Convert|70560000|km2» — 70 560 000 км², на 5,8 % меньше значения Треккани"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Pacific Ocean",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Pacific_Ocean",
+          "accessedAt": "2026-09-04",
+          "note": "«Surface area 165,250,000 km2» — на 8 % меньше значения Треккани"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c2-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "geo-plotiny-vysota-046",
+      "category": "geography",
+      "prompt": "Расположите плотины по высоте сооружения",
+      "sortKey": "height",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая низкая",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Итайпу",
+          "subtitle": "ГЭС на реке Парана",
+          "sortValue": 196,
+          "displayValue": "196 м",
+          "sourceIds": [
+            "s1",
+            "s4"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Гувер",
+          "subtitle": "Плотина на реке Колорадо",
+          "sortValue": 221.4,
+          "displayValue": "221,4 м",
+          "sourceIds": [
+            "s2",
+            "s5"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Саяно-Шушенская",
+          "subtitle": "Плотина на Енисее",
+          "sortValue": 242,
+          "displayValue": "242 м",
+          "sourceIds": [
+            "s3",
+            "s6"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Нурекская",
+          "subtitle": "Плотина на реке Вахш",
+          "sortValue": 304,
+          "displayValue": "304 м",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ],
+          "note": "БРЭ — 304 м; Википедия приводит 300 м",
+          "disputed": true
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Высота считается от основания до гребня. Три первые плотины укладываются в диапазон 196–242 м, различаясь на 9–12 %, а Нурекская выше Саяно-Шушенской сразу на 62 м — на четверть больше.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Itaipu Binacional, официальный сайт: технические данные",
+          "kind": "official",
+          "url": "https://www.itaipu.gov.br/en/energy/technical-data",
+          "accessedAt": "2026-09-04",
+          "note": "«196 m Maximum height of the dam»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Бюро мелиорации США: Hoover Dam FAQ",
+          "kind": "official",
+          "url": "https://www.usbr.gov/lc/hooverdam/faqs/damfaqs.html",
+          "accessedAt": "2026-09-04",
+          "note": "«It is 726.4 feet from foundation rock to the roadway on the crest of the dam» — 221,4 м"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Большая российская энциклопедия: статья «Плотина»",
+          "kind": "encyclopedia",
+          "url": "https://bre.ruwiki.ru/wiki/Плотина",
+          "accessedAt": "2026-09-04",
+          "note": "«…плотина Нурекской ГЭС на реке Вахш (высота 304 м…)»; «…плотина Саяно-Шушенской ГЭС на Енисее (высота 242 м…)»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Википедия (проверочный источник): Itaipu Dam",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Itaipu_Dam",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «Height 196 m (643 ft)»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Hoover Dam",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Hoover_Dam",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «Height 726.4 ft (221.4 m)»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Sayano-Shushenskaya Dam",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Sayano%E2%80%93Shushenskaya_Dam",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «Height 242 m (794 ft)»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Nurek Dam",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Nurek_Dam",
+          "accessedAt": "2026-09-04",
+          "note": "«Height 300 m (980 ft)» — на 4 м меньше значения БРЭ"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c2-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "russia-reki-dlina-047",
+      "category": "russia",
+      "prompt": "Расположите реки России по длине русла",
+      "sortKey": "length",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая короткая",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Нева",
+          "subtitle": "Река, на которой стоит Санкт-Петербург",
+          "sortValue": 74000,
+          "displayValue": "74 км",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Ока",
+          "subtitle": "Крупнейший правый приток Волги",
+          "sortValue": 1480000,
+          "displayValue": "1480 км",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ],
+          "note": "Треккани — 1480 км; Википедия приводит 1500 км",
+          "disputed": true
+        },
+        {
+          "cardId": "c3",
+          "title": "Кама",
+          "subtitle": "Главный приток Волги",
+          "sortValue": 1805000,
+          "displayValue": "1805 км",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Волга",
+          "subtitle": "Самая длинная река Европы",
+          "sortValue": 3531000,
+          "displayValue": "3531 км",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Нева коротка потому, что лишь соединяет Ладожское озеро с Балтийским морем. Ока длиннее её в 20 раз, Кама превосходит Оку на 22 %, а Волга — почти вдвое длиннее Камы.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Enciclopedia Treccani: статья «Neva»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/neva",
+          "accessedAt": "2026-09-04",
+          "note": "«Fiume della Russia nord-occidentale (74 km), emissario del Lago Ladoga»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Enciclopedia Treccani: статья «Oka»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/oka",
+          "accessedAt": "2026-09-04",
+          "note": "«Fiume della Russia centrale (1480 km; bacino di 245.000 km2), affluente di destra del Volga»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Enciclopedia Treccani: статья «Kama»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/kama",
+          "accessedAt": "2026-09-04",
+          "note": "«Fiume della Russia (1805 km; bacino di 507.000 km2), principale affluente del Volga»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Enciclopedia Treccani: статья «Volga»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/volga",
+          "accessedAt": "2026-09-04",
+          "note": "«Fiume della Russia (3531 km; bacino di 1.360.000 km2), il più lungo e imponente d’Europa»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Neva",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Neva",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «Length 74 km (46 mi)»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Oka (river)",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Oka_(river)",
+          "accessedAt": "2026-09-04",
+          "note": "«Length 1,500 km (930 mi)» — на 20 км больше значения Треккани"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Kama (river)",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Kama_(river)",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «Length 1,805 km (1,122 mi)»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Volga",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Volga",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «Length 3,531 km (2,194 mi)»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c2-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "geo-glubiny-vodoemov-048",
+      "category": "geography",
+      "prompt": "Расположите водные объекты по наибольшей глубине",
+      "sortKey": "depth",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый мелкий",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Лаго-Маджоре",
+          "subtitle": "Второе по площади озеро Италии",
+          "sortValue": 372,
+          "displayValue": "372 м",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Согне-фьорд",
+          "subtitle": "Самый длинный фьорд Норвегии",
+          "sortValue": 1308,
+          "displayValue": "1308 м",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Северный Ледовитый океан",
+          "subtitle": "Наименьший океан Земли",
+          "sortValue": 5567,
+          "displayValue": "5567 м",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ],
+          "note": "NOAA — 18 264 фута (5567 м); Википедия — около 5550 м в Моллой-Дип",
+          "disputed": true
+        },
+        {
+          "cardId": "c4",
+          "title": "Марианский жёлоб",
+          "subtitle": "Глубочайшее место Мирового океана",
+          "sortValue": 10935,
+          "displayValue": "10 935 м",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ],
+          "note": "Глубина измерена в Бездне Челленджера — южной части жёлоба"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Сравнивается наибольшая известная глубина каждого объекта. Согне-фьорд глубже Лаго-Маджоре примерно в 3,5 раза, Северный Ледовитый океан глубже фьорда в 4,3 раза, а Марианский жёлоб почти вдвое глубже самой глубокой точки Арктики.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Enciclopedia Treccani: статья «Lago Maggiore»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/lago-maggiore",
+          "accessedAt": "2026-09-04",
+          "note": "«il punto di massima profondità (372 m) si trova in prossimità di Ghiffa»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Havforskningsinstituttet (Институт морских исследований Норвегии): Rapport fra havforskningen 2025-21",
+          "kind": "academic",
+          "url": "https://www.hi.no/hi/nettrapporter/rapport-fra-havforskningen-2025-21",
+          "accessedAt": "2026-09-04",
+          "note": "«Sognefjorden er Norges lengste (205 km) og dypeste (1308 m) fjord»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Национальная океаническая служба NOAA: What is the world’s smallest ocean?",
+          "kind": "official",
+          "url": "https://oceanservice.noaa.gov/facts/smallestocean.html",
+          "accessedAt": "2026-09-04",
+          "note": "«it is 18,264 feet at its deepest point», то есть 5567 м"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Национальная океаническая служба NOAA: How deep is the ocean?",
+          "kind": "official",
+          "url": "https://oceanservice.noaa.gov/facts/oceandepth.html",
+          "accessedAt": "2026-09-04",
+          "note": "«Challenger Deep is approximately 10,935 meters (35,876 feet) deep»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Lake Maggiore",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Lake_Maggiore",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «Max. depth 372 m (1,220 ft)»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Sognefjord",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Sognefjord",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «Max. depth 1,308 m (4,291 ft)»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Arctic Ocean",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Arctic_Ocean",
+          "accessedAt": "2026-09-04",
+          "note": "«The deepest point is Molloy Hole in the Fram Strait, at about 5,550 m»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Challenger Deep",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Challenger_Deep",
+          "accessedAt": "2026-09-04",
+          "note": "Независимое подтверждение: «Max. depth 10,935 ± 6 m»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-04",
+      "verifiedBy": "agent-4c2-precheck",
+      "retiredIn": null
     }
   ]
 }
