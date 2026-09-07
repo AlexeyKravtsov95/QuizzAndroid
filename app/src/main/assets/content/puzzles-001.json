@@ -4526,6 +4526,2313 @@
       "verifiedAt": "2026-09-04",
       "verifiedBy": "agent-4c2-precheck",
       "retiredIn": null
+    },
+    {
+      "puzzleId": "geo-gornye-sistemy-dlina-049",
+      "category": "geography",
+      "prompt": "Расположите горные системы по протяжённости",
+      "sortKey": "length",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая короткая",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Кавказ",
+          "subtitle": "Между Чёрным и Каспийским морями",
+          "sortValue": 1200000,
+          "displayValue": "1200 км",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Гималаи",
+          "subtitle": "От Инда на западе до Брахмапутры",
+          "sortValue": 2400000,
+          "displayValue": "2400 км",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Скалистые горы",
+          "subtitle": "От Аляски до Нью-Мексико",
+          "sortValue": 4500000,
+          "displayValue": "более 4500 км",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Анды",
+          "subtitle": "Вдоль всего запада Южной Америки",
+          "sortValue": 7500000,
+          "displayValue": "7500 км",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ],
+          "note": "Треккани — 7500 км; Википедия — 8900 км",
+          "disputed": true
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Длину горной системы измеряют по её оси. Анды тянутся вдоль всего материка и более чем вшестеро длиннее Кавказа, а Гималаи при всей их высоте почти вдвое короче Скалистых гор: высота и протяжённость — независимые характеристики.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Enciclopedia Treccani: статья «Caucaso»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/caucaso",
+          "accessedAt": "2026-09-05",
+          "note": "«per una lunghezza di oltre 1200 km»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Enciclopedia Treccani: статья «Himalaya»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/himalaya",
+          "accessedAt": "2026-09-05",
+          "note": "«Si sviluppa per 2400 km»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Enciclopedia Treccani: статья «Montagne Rocciose»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/montagne-rocciose",
+          "accessedAt": "2026-09-05",
+          "note": "«si allunga dall’Alaska al New Mexico per oltre 4.500 km»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Enciclopedia Treccani: статья «Ande»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/ande",
+          "accessedAt": "2026-09-05",
+          "note": "«si sviluppa per 7500 km dal Golfo di Paria … al Capo Horn»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Caucasus Mountains",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Caucasus_Mountains",
+          "accessedAt": "2026-09-05",
+          "note": "Независимое подтверждение: «Length: 1,200 km (750 mi)»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Himalayas",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Himalayas",
+          "accessedAt": "2026-09-05",
+          "note": "«in an arc 2,400 km (1,500 mi) long»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Rocky Mountains",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Rocky_Mountains",
+          "accessedAt": "2026-09-05",
+          "note": "«stretch 3,000 mi (4,800 km)»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Andes",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Andes",
+          "accessedAt": "2026-09-05",
+          "note": "«The range is 8,900 kilometres (5,500 mi) long»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-05",
+      "verifiedBy": "agent-4c3-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "nat-kitoobraznye-dlina-052",
+      "category": "nature",
+      "prompt": "Расположите китообразных по наибольшей длине взрослой особи",
+      "sortKey": "length",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый короткий",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Белуха",
+          "subtitle": "Полярный кит без спинного плавника",
+          "sortValue": 4.88,
+          "displayValue": "4,88 м",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ],
+          "note": "NOAA — до 16 футов (4,88 м); Википедия — до 5,5 м",
+          "disputed": true
+        },
+        {
+          "cardId": "c2",
+          "title": "Косатка",
+          "subtitle": "Самый крупный из дельфинов",
+          "sortValue": 9.75,
+          "displayValue": "9,75 м",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Горбатый кит",
+          "subtitle": "Узнаётся по длинным грудным плавникам",
+          "sortValue": 18.29,
+          "displayValue": "18,29 м",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Финвал",
+          "subtitle": "Второе по величине животное планеты",
+          "sortValue": 25.91,
+          "displayValue": "25,91 м",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Разница в длине внутри одного отряда — более чем пятикратная. Белуха и косатка относятся к зубатым китам и схватывают добычу поштучно, а горбатый кит и финвал — к усатым: вместо зубов у них цедильный аппарат, которым они процеживают воду.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NOAA Fisheries: Beluga Whale",
+          "kind": "official",
+          "url": "https://www.fisheries.noaa.gov/species/beluga-whale",
+          "accessedAt": "2026-09-05",
+          "note": "Quick Facts, Length: «Up to 16 feet»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NOAA Fisheries: Killer Whale",
+          "kind": "official",
+          "url": "https://www.fisheries.noaa.gov/species/killer-whale",
+          "accessedAt": "2026-09-05",
+          "note": "Quick Facts, Length: «Up to 32 feet»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NOAA Fisheries: Humpback Whale",
+          "kind": "official",
+          "url": "https://www.fisheries.noaa.gov/species/humpback-whale",
+          "accessedAt": "2026-09-05",
+          "note": "Quick Facts, Length: «Up to about 60 feet»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "NOAA Fisheries: Fin Whale",
+          "kind": "official",
+          "url": "https://www.fisheries.noaa.gov/species/fin-whale",
+          "accessedAt": "2026-09-05",
+          "note": "Quick Facts, Length: «75 to 85 feet»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Beluga whale",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Beluga_whale",
+          "accessedAt": "2026-09-05",
+          "note": "«Adult male belugas can range from 3.5 to 5.5 m (11 to 18 ft)»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Orca",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Orca",
+          "accessedAt": "2026-09-05",
+          "note": "Независимое подтверждение порядка величины: «females at 8.5 m (28 ft)»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Humpback whale",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Humpback_whale",
+          "accessedAt": "2026-09-05",
+          "note": "«The longest recorded lengths were 17.4 m … and 18.6 m»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Fin whale",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Fin_whale",
+          "accessedAt": "2026-09-05",
+          "note": "«The record length was measured at 27.3 m (90 ft)»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-05",
+      "verifiedBy": "agent-4c3-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "nat-pogruzhenie-glubina-050",
+      "category": "nature",
+      "prompt": "Расположите животных по наибольшей зарегистрированной глубине погружения",
+      "sortKey": "depth",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самое мелкое погружение",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Пингвин Адели",
+          "subtitle": "Гнездится по берегам Антарктиды",
+          "sortValue": 175,
+          "displayValue": "175 м",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Тюлень Уэдделла",
+          "subtitle": "Держится у припайного льда",
+          "sortValue": 720,
+          "displayValue": "720 м",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ],
+          "note": "Австралийская антарктическая программа — 720 м; Википедия — 600 м",
+          "disputed": true
+        },
+        {
+          "cardId": "c3",
+          "title": "Нарвал",
+          "subtitle": "Кит с бивнем из левого клыка",
+          "sortValue": 1200,
+          "displayValue": "1200 м",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ],
+          "note": "NOAA — 3937 футов (1200 м); Википедия — рекорд 2370 м",
+          "disputed": true
+        },
+        {
+          "cardId": "c4",
+          "title": "Кювьеров клюворыл",
+          "subtitle": "Рекордсмен среди млекопитающих",
+          "sortValue": 2992,
+          "displayValue": "2992 м",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Разброс в этом ряду семнадцатикратный. Пингвин Адели кормится в верхнем слое воды, а кювьеров клюворыл держит рекорд среди млекопитающих: 2992 метра — глубже, чем зарегистрировано у любого другого кита, тюленя или пингвина.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Австралийская антарктическая программа: Adélie penguins",
+          "kind": "official",
+          "url": "https://www.antarctica.gov.au/about-antarctica/animals/penguins/adelie-penguins/",
+          "accessedAt": "2026-09-05",
+          "note": "«Some Adélie penguins are capable of diving to depths of up to 175 m»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Австралийская антарктическая программа: Weddell seal",
+          "kind": "official",
+          "url": "https://www.antarctica.gov.au/about-antarctica/animals/seals/weddell-seal/",
+          "accessedAt": "2026-09-05",
+          "note": "«reaching depths as great as 720 m in search of prey»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NOAA Fisheries: Narwhal",
+          "kind": "official",
+          "url": "https://www.fisheries.noaa.gov/species/narwhal",
+          "accessedAt": "2026-09-05",
+          "note": "«known to dive down to depths of 3,937 feet», то есть 1200 м"
+        },
+        {
+          "sourceId": "s4",
+          "title": "NOAA Fisheries: Cuvier’s Beaked Whale",
+          "kind": "official",
+          "url": "https://www.fisheries.noaa.gov/species/cuviers-beaked-whale",
+          "accessedAt": "2026-09-05",
+          "note": "«The deepest known dive for a Cuvier’s beaked whale was 9,816 feet»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Penguin",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Penguin",
+          "accessedAt": "2026-09-05",
+          "note": "«They are also able to dive to depths of 170–200 meters» — о пингвинах Адели"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Weddell seal",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Weddell_seal",
+          "accessedAt": "2026-09-05",
+          "note": "«They have been observed to dive as deep as 600 m»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Narwhal",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Narwhal",
+          "accessedAt": "2026-09-05",
+          "note": "«The greatest dive depth recorded is 2,370 m (7,780 ft)»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Cuvier’s beaked whale",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Cuvier%27s_beaked_whale",
+          "accessedAt": "2026-09-05",
+          "note": "Независимое подтверждение: «2,992 m (9,816 ft)»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-05",
+      "verifiedBy": "agent-4c3-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "nat-cherepahi-massa-051",
+      "category": "nature",
+      "prompt": "Расположите морских черепах по наибольшей массе взрослой особи",
+      "sortKey": "mass",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая лёгкая",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Черепаха Кемпа",
+          "subtitle": "Самая мелкая из морских черепах",
+          "sortValue": 45.4,
+          "displayValue": "45 кг",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Бисса",
+          "subtitle": "Её панцирь веками шёл на украшения",
+          "sortValue": 68,
+          "displayValue": "68 кг",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ],
+          "note": "NOAA — до 150 фунтов (68 кг); Википедия — в среднем около 80 кг",
+          "disputed": true
+        },
+        {
+          "cardId": "c3",
+          "title": "Зелёная черепаха",
+          "subtitle": "Взрослые особи питаются водорослями",
+          "sortValue": 181.4,
+          "displayValue": "181 кг",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Кожистая черепаха",
+          "subtitle": "Крупнейшая современная черепаха",
+          "sortValue": 453.6,
+          "displayValue": "454 кг",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ],
+          "note": "NOAA — 750–1000 фунтов; Википедия — 250–700 кг",
+          "disputed": true
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Кожистая черепаха отличается от остальных морских черепах строением спины: вместо рогового панциря её покрывает плотная кожа с мелкими костными пластинками. Она же и самая тяжёлая в этом ряду — примерно вдесятеро тяжелее черепахи Кемпа.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NOAA Fisheries: Kemp’s Ridley Turtle",
+          "kind": "official",
+          "url": "https://www.fisheries.noaa.gov/species/kemps-ridley-turtle",
+          "accessedAt": "2026-09-05",
+          "note": "Quick Facts, Weight: «Adult: 70 to 100 pounds»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NOAA Fisheries: Hawksbill Turtle",
+          "kind": "official",
+          "url": "https://www.fisheries.noaa.gov/species/hawksbill-turtle",
+          "accessedAt": "2026-09-05",
+          "note": "Quick Facts, Weight: «Adult: 100 to 150 pounds»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NOAA Fisheries: Green Turtle",
+          "kind": "official",
+          "url": "https://www.fisheries.noaa.gov/species/green-turtle",
+          "accessedAt": "2026-09-05",
+          "note": "Quick Facts, Weight: «Adult: 250 to 400 pounds»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "NOAA Fisheries: Leatherback Turtle",
+          "kind": "official",
+          "url": "https://www.fisheries.noaa.gov/species/leatherback-turtle",
+          "accessedAt": "2026-09-05",
+          "note": "Quick Facts, Weight: «750 to 1,000 pounds»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Kemp’s ridley sea turtle",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Kemp%27s_ridley_sea_turtle",
+          "accessedAt": "2026-09-05",
+          "note": "«a maximum of 50 kg (110 lb)»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Hawksbill sea turtle",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Hawksbill_sea_turtle",
+          "accessedAt": "2026-09-05",
+          "note": "«weighing around 80 kg (180 lb) on average»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Green sea turtle",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Green_sea_turtle",
+          "accessedAt": "2026-09-05",
+          "note": "«68–190 kg (150–419 lb)»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Leatherback sea turtle",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Leatherback_sea_turtle",
+          "accessedAt": "2026-09-05",
+          "note": "«250 to 700 kg (550 to 1,540 lb) in weight»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-05",
+      "verifiedBy": "agent-4c3-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "nat-pingviny-massa-053",
+      "category": "nature",
+      "prompt": "Расположите пингвинов по наибольшей массе взрослой птицы",
+      "sortKey": "mass",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый лёгкий",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Антарктический пингвин",
+          "subtitle": "Тонкая тёмная полоска под клювом",
+          "sortValue": 5.5,
+          "displayValue": "5,5 кг",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Субантарктический пингвин",
+          "subtitle": "Белое пятно над глазом",
+          "sortValue": 8,
+          "displayValue": "8 кг",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Королевский пингвин",
+          "subtitle": "Оранжевые пятна по бокам головы",
+          "sortValue": 15,
+          "displayValue": "15 кг",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Императорский пингвин",
+          "subtitle": "Самый тяжёлый из современных пингвинов",
+          "sortValue": 40,
+          "displayValue": "40 кг",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Пингвины различаются по массе более чем в семь раз. Императорский — самый тяжёлый из современных пингвинов, он почти втрое тяжелее королевского; между антарктическим и субантарктическим разница куда скромнее — около полутора раз.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Австралийская антарктическая программа: Chinstrap penguins",
+          "kind": "official",
+          "url": "https://www.antarctica.gov.au/about-antarctica/animals/penguins/chinstrap-penguins/",
+          "accessedAt": "2026-09-05",
+          "note": "«Adult chinstraps weigh 3.5 to 5.5 kg»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Австралийская антарктическая программа: Gentoo penguins",
+          "kind": "official",
+          "url": "https://www.antarctica.gov.au/about-antarctica/animals/penguins/gentoo-penguins/",
+          "accessedAt": "2026-09-05",
+          "note": "«Adults weigh 5–8 kg»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Австралийская антарктическая программа: King penguins",
+          "kind": "official",
+          "url": "https://www.antarctica.gov.au/about-antarctica/animals/penguins/king-penguins/",
+          "accessedAt": "2026-09-05",
+          "note": "«When the birds return to their colonies and start courting they weigh 10–15 kg»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Австралийская антарктическая программа: Emperor penguins",
+          "kind": "official",
+          "url": "https://www.antarctica.gov.au/about-antarctica/animals/penguins/emperor-penguins/",
+          "accessedAt": "2026-09-05",
+          "note": "«Adults can weigh up to 40 kg at the start of the breeding season»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Chinstrap penguin",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Chinstrap_penguin",
+          "accessedAt": "2026-09-05",
+          "note": "«3.2–5.3 kg (7.1–11.7 lb), varying with the time of year»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Gentoo penguin",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Gentoo_penguin",
+          "accessedAt": "2026-09-05",
+          "note": "«Males have a maximum weight around 8.5 kg (19 lb)»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): King penguin",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/King_penguin",
+          "accessedAt": "2026-09-05",
+          "note": "«weighs from 9.3 to 18 kg (21 to 40 lb)»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Emperor penguin",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Emperor_penguin",
+          "accessedAt": "2026-09-05",
+          "note": "«weighing from 22 to 45 kg (49 to 99 lb)»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-05",
+      "verifiedBy": "agent-4c3-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "sci-apparaty-zapusk-god-054",
+      "category": "science",
+      "prompt": "Расположите космические аппараты по году запуска",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый ранний",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "«Аполлон-11»",
+          "subtitle": "Первая высадка людей на Луну",
+          "sortValue": 1969,
+          "displayValue": "1969 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "«Вояджер»",
+          "subtitle": "Две станции к внешним планетам",
+          "sortValue": 1977,
+          "displayValue": "1977 год",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "«Кассини»",
+          "subtitle": "Орбитальная станция у Сатурна",
+          "sortValue": 1997,
+          "displayValue": "1997 год",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "«Кьюриосити»",
+          "subtitle": "Марсоход в кратере Гейла",
+          "sortValue": 2011,
+          "displayValue": "2011 год",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Порядок повторяет смену задач космонавтики: сначала пилотируемые полёты к Луне, затем пролётные станции к дальним планетам, потом долгие орбитальные миссии и, наконец, тяжёлые планетоходы.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NASA: Apollo 11 Mission Overview",
+          "kind": "official",
+          "url": "https://www.nasa.gov/history/apollo-11-mission-overview/",
+          "accessedAt": "2026-09-05",
+          "note": "Раздел Launch: «July 16, 1969; 9:32 a.m. EDT»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NASA Science: Voyager",
+          "kind": "official",
+          "url": "https://science.nasa.gov/mission/voyager/",
+          "accessedAt": "2026-09-05",
+          "note": "Карточка миссии: «launch 1977»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NASA Science: Cassini",
+          "kind": "official",
+          "url": "https://science.nasa.gov/mission/cassini/",
+          "accessedAt": "2026-09-05",
+          "note": "Карточка миссии, Launch: «Oct. 15, 1997»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "NASA Science: Curiosity (MSL)",
+          "kind": "official",
+          "url": "https://science.nasa.gov/mission/msl-curiosity/",
+          "accessedAt": "2026-09-05",
+          "note": "Карточка миссии: «Launch / Landing: Nov. 26, 2011 / Aug. 6, 2012»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-05",
+      "verifiedBy": "agent-4c3-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "sci-orbity-vysota-055",
+      "category": "science",
+      "prompt": "Расположите орбиты по высоте над поверхностью Земли",
+      "sortKey": "height",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая низкая орбита",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Орбита МКС",
+          "subtitle": "Низкая орбита пилотируемой станции",
+          "sortValue": 402000,
+          "displayValue": "402 км",
+          "sourceIds": [
+            "s1",
+            "s3"
+          ],
+          "note": "NASA — 250 миль (402 км); Википедия — «about 400 kilometres»"
+        },
+        {
+          "cardId": "c2",
+          "title": "Орбита спутника «Аква»",
+          "subtitle": "Солнечно-синхронная орбита наблюдения",
+          "sortValue": 705000,
+          "displayValue": "705 км",
+          "sourceIds": [
+            "s2",
+            "s4"
+          ],
+          "note": "NASA — около 705 км; Википедия — перигей 702 км, апогей 703 км"
+        },
+        {
+          "cardId": "c3",
+          "title": "Орбита спутников GPS",
+          "subtitle": "Среднеорбитальная навигационная группировка",
+          "sortValue": 20200000,
+          "displayValue": "20 200 км",
+          "sourceIds": [
+            "s2",
+            "s5"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Геостационарная орбита",
+          "subtitle": "Период обращения равен земным суткам",
+          "sortValue": 36000000,
+          "displayValue": "около 36 000 км",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ],
+          "note": "NASA — около 36 000 км; Википедия — 35 786 км"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Все четыре высоты отсчитаны от поверхности Земли, а не от её центра. Между низкой орбитой станции и геостационарной разница почти в девяносто раз: спутник, который должен оставаться над одной точкой экватора, обязан обращаться ровно за сутки, а этому периоду отвечает единственный радиус орбиты.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NASA: International Space Station",
+          "kind": "official",
+          "url": "https://www.nasa.gov/international-space-station/",
+          "accessedAt": "2026-09-05",
+          "note": "«Orbiting 250 miles above Earth», то есть около 402 км"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NASA Earth Observatory: Catalog of Earth Satellite Orbits",
+          "kind": "official",
+          "url": "https://science.nasa.gov/earth/earth-observatory/catalog-of-earth-satellite-orbits",
+          "accessedAt": "2026-09-05",
+          "note": "«at about 705 kilometers up»; «about 20,200 kilometers above the surface»; «about 36,000 kilometers from Earth’s surface»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Википедия (проверочный источник): International Space Station",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/International_Space_Station",
+          "accessedAt": "2026-09-05",
+          "note": "«at about 400 kilometres (250 miles) above Earth»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Википедия (проверочный источник): Aqua (satellite)",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Aqua_(satellite)",
+          "accessedAt": "2026-09-05",
+          "note": "«Perigee altitude: 702 kilometers»; «Apogee altitude: 703 kilometers»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Global Positioning System",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Global_Positioning_System",
+          "accessedAt": "2026-09-05",
+          "note": "Независимое подтверждение: «approximately 20,200 km (12,600 mi)»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Geostationary orbit",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Geostationary_orbit",
+          "accessedAt": "2026-09-05",
+          "note": "«35,786 km (22,236 mi) in altitude above Earth’s equator»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-05",
+      "verifiedBy": "agent-4c3-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "sci-uskoriteli-dlina-056",
+      "category": "science",
+      "prompt": "Расположите кольцевые установки ЦЕРН по длине окружности",
+      "sortKey": "length",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самое короткое кольцо",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "ELENA",
+          "subtitle": "Замедляет антипротоны перед опытами",
+          "sortValue": 30,
+          "displayValue": "30 м",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Протонный синхротрон",
+          "subtitle": "Работает с 1959 года",
+          "sortValue": 628,
+          "displayValue": "628 м",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Протонный суперсинхротрон",
+          "subtitle": "Разгоняет протоны до 450 ГэВ",
+          "sortValue": 7000,
+          "displayValue": "около 7 км",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Большой адронный коллайдер",
+          "subtitle": "Крупнейший ускоритель в мире",
+          "sortValue": 26659,
+          "displayValue": "26 659 м",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Длина окружности этих колец различается почти в девятьсот раз. Протонный синхротрон, суперсинхротрон и Большой адронный коллайдер образуют ступени разгона: каждая следующая длиннее предыдущей. ELENA в разгоне не участвует — она входит в комплекс замедлителя антипротонов и, наоборот, тормозит частицы.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "CERN: The Antiproton Decelerator",
+          "kind": "official",
+          "url": "https://home.cern/science/accelerators/antiproton-decelerator",
+          "accessedAt": "2026-09-05",
+          "note": "Об ELENA: «This synchrotron, with a circumference of 30 metres»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "CERN: The Proton Synchrotron",
+          "kind": "official",
+          "url": "https://home.cern/science/accelerators/proton-synchrotron",
+          "accessedAt": "2026-09-05",
+          "note": "«With a circumference of 628 metres»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "CERN: The Super Proton Synchrotron",
+          "kind": "official",
+          "url": "https://home.cern/science/accelerators/super-proton-synchrotron",
+          "accessedAt": "2026-09-05",
+          "note": "«nearly 7 kilometres in circumference»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "CERN: The Large Hadron Collider",
+          "kind": "official",
+          "url": "https://home.cern/science/accelerators/large-hadron-collider/",
+          "accessedAt": "2026-09-05",
+          "note": "Таблица ключевых цифр: «Circumference: 26 659 m»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-05",
+      "verifiedBy": "agent-4c3-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "sci-chasticy-massa-057",
+      "category": "science",
+      "prompt": "Расположите частицы по массе покоя",
+      "sortKey": "mass",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая лёгкая",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Электрон",
+          "subtitle": "Лёгкий заряженный лептон",
+          "sortValue": 9.1093837139e-31,
+          "displayValue": "9,11·10⁻³¹ кг",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Мюон",
+          "subtitle": "Тяжёлый родственник электрона",
+          "sortValue": 1.883531627e-28,
+          "displayValue": "1,88·10⁻²⁸ кг",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Протон",
+          "subtitle": "Ядро атома водорода",
+          "sortValue": 1.67262192595e-27,
+          "displayValue": "1,673·10⁻²⁷ кг",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Альфа-частица",
+          "subtitle": "Ядро атома гелия-4",
+          "sortValue": 6.644657345e-27,
+          "displayValue": "6,645·10⁻²⁷ кг",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Электрон и мюон — фундаментальные частицы: их масса ни из чего не складывается, мюон просто тяжелее электрона примерно в 207 раз. Протон и альфа-частица составные, и для них счёт работает: альфа-частица — это четыре нуклона, и она тяжелее протона почти вчетверо.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NIST, значения фундаментальных констант CODATA: масса электрона",
+          "kind": "official",
+          "url": "https://physics.nist.gov/cgi-bin/cuu/Value?me",
+          "accessedAt": "2026-09-05",
+          "note": "«9.109 383 7139 x 10⁻³¹ kg»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NIST, значения фундаментальных констант CODATA: масса мюона",
+          "kind": "official",
+          "url": "https://physics.nist.gov/cgi-bin/cuu/Value?mmu",
+          "accessedAt": "2026-09-05",
+          "note": "«1.883 531 627(42) x 10⁻²⁸ kg»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NIST, значения фундаментальных констант CODATA: масса протона",
+          "kind": "official",
+          "url": "https://physics.nist.gov/cgi-bin/cuu/Value?mp",
+          "accessedAt": "2026-09-05",
+          "note": "«1.672 621 925 95 x 10⁻²⁷ kg»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "NIST, значения фундаментальных констант CODATA: масса альфа-частицы",
+          "kind": "official",
+          "url": "https://physics.nist.gov/cgi-bin/cuu/Value?mal",
+          "accessedAt": "2026-09-05",
+          "note": "«6.644 657 3450(21) x 10⁻²⁷ kg»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 3,
+      "verifiedAt": "2026-09-05",
+      "verifiedBy": "agent-4c3-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "cult-kino-god-058",
+      "category": "culture",
+      "prompt": "Расположите фильмы по году выхода",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый ранний",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "«Броненосец „Потёмкин“»",
+          "subtitle": "Режиссёр Сергей Эйзенштейн",
+          "sortValue": 1925,
+          "displayValue": "1925 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "«Унесённые ветром»",
+          "subtitle": "Режиссёр Виктор Флеминг",
+          "sortValue": 1939,
+          "displayValue": "1939 год",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "«2001: Космическая одиссея»",
+          "subtitle": "Режиссёр Стэнли Кубрик",
+          "sortValue": 1968,
+          "displayValue": "1968 год",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "«Титаник»",
+          "subtitle": "Режиссёр Джеймс Кэмерон",
+          "sortValue": 1997,
+          "displayValue": "1997 год",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Порядок совпадает со сменой кинотехнологий: немой монтажный фильм, ранний трёхцветный звуковой, широкоформатная фантастика с макетными съёмками и картина, где натурные сцены уже дополнены компьютерной графикой.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Enciclopedia del Cinema Treccani: «Bronenosec Potëmkin»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/bronenosec-potemkin_(Enciclopedia-del-Cinema)/",
+          "accessedAt": "2026-09-05",
+          "note": "«(URSS 1925, La corazzata Potëmkin, bianco e nero, 72m a 18 fps)»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Enciclopedia del Cinema Treccani: «Gone with the wind»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/gone-with-the-wind_(Enciclopedia-del-Cinema)/",
+          "accessedAt": "2026-09-05",
+          "note": "«(USA 1938-39, 1939, Via col vento, colore, 225m)»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Enciclopedia del Cinema Treccani: «2001: a space odyssey»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/2001-a-space-odyssey_(Enciclopedia-del-Cinema)/",
+          "accessedAt": "2026-09-05",
+          "note": "«(USA/GB 1965-68, 1968, 2001: Odissea nello spazio, colore, 141m)»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Enciclopedia del Cinema Treccani: «Titanic»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/titanic_(Enciclopedia-del-Cinema)/",
+          "accessedAt": "2026-09-05",
+          "note": "«(USA 1995-97, 1997, colore, 194m)»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-05",
+      "verifiedBy": "agent-4c3-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "cult-mayaki-vysota-059",
+      "category": "culture",
+      "prompt": "Расположите маяки по высоте башни",
+      "sortKey": "height",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый низкий",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Маяк Пиджен-Пойнт",
+          "subtitle": "Калифорния, побережье Тихого океана",
+          "sortValue": 35.1,
+          "displayValue": "35 м",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Маяк Боди-Айленд",
+          "subtitle": "Северная Каролина, США",
+          "sortValue": 47.5,
+          "displayValue": "47,5 м",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Маяк Кейп-Хаттерас",
+          "subtitle": "Самый высокий кирпичный маяк США",
+          "sortValue": 60,
+          "displayValue": "60 м",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Ла Лантерна",
+          "subtitle": "Генуя, самый высокий маяк Средиземноморья",
+          "sortValue": 77,
+          "displayValue": "77 м",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Высота башни и высота огня над водой — разные величины: в этом ряду сравнивается только башня. Кейп-Хаттерас — самый высокий кирпичный маяк США, а генуэзская Лантерна, самый высокий маяк Средиземноморья, выше него ещё на семнадцать метров.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "California State Parks: Pigeon Point Light Station SHP",
+          "kind": "official",
+          "url": "https://www.parks.ca.gov/?page_id=533",
+          "accessedAt": "2026-09-05",
+          "note": "«115-foot» — высота башни, то есть 35,1 м"
+        },
+        {
+          "sourceId": "s2",
+          "title": "National Park Service: Bodie Island Lighthouse",
+          "kind": "official",
+          "url": "https://www.nps.gov/places/000/bodie-island-lighthouse.htm",
+          "accessedAt": "2026-09-05",
+          "note": "«Standing 156-feet tall, the current Bodie Island Lighthouse…», то есть 47,5 м"
+        },
+        {
+          "sourceId": "s3",
+          "title": "National Park Service: Cape Hatteras Light Station",
+          "kind": "official",
+          "url": "https://www.nps.gov/places/cape-hatteras-light-station.htm",
+          "accessedAt": "2026-09-05",
+          "note": "«197 ft tall» и «the tallest brick lighthouse in the US», то есть 60 м"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Официальный сайт маяка Ла Лантерна (Генуя)",
+          "kind": "official",
+          "url": "https://www.lanternadigenova.com/",
+          "accessedAt": "2026-09-05",
+          "note": "«la Lanterna, con i suoi 77 metri di altezza è il faro più alto del Mediterraneo»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-05",
+      "verifiedBy": "agent-4c3-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "cult-kartiny-god-060",
+      "category": "culture",
+      "prompt": "Расположите картины по году создания",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая ранняя",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "«Ночной дозор»",
+          "subtitle": "Рембрандт, Рейксмузеум",
+          "sortValue": 1642,
+          "displayValue": "1642 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "«Менины»",
+          "subtitle": "Диего Веласкес, Прадо",
+          "sortValue": 1656,
+          "displayValue": "1656 год",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "«Крик»",
+          "subtitle": "Эдвард Мунк, цикл «Фриз жизни»",
+          "sortValue": 1893,
+          "displayValue": "1893 год",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "«Герника»",
+          "subtitle": "Пабло Пикассо, Рейна-София",
+          "sortValue": 1937,
+          "displayValue": "1937 год",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Порядок отражает смену задач живописи: парадный групповой портрет и придворная сцена барокко, символистский образ тревоги на исходе XIX века и антивоенное полотно XX века.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Enciclopedia Treccani: «Rembrandt Harmenszoon van Rijn»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/harmenszoon-van-rijn-rembrandt/",
+          "accessedAt": "2026-09-05",
+          "note": "«un’opera straordinaria come la cosiddetta Ronda di notte (1642, Amsterdam, Rijksmuseum)»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Enciclopedia Treccani: «Diego Rodríguez de Silva y Velázquez»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/diego-rodriguez-de-silva-y-velazquez",
+          "accessedAt": "2026-09-05",
+          "note": "«L’attività di V. culminò nel capolavoro del 1656, Las meninas (Prado)»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Enciclopedia Treccani: «Edvard Munch»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/edvard-munch",
+          "accessedAt": "2026-09-05",
+          "note": "В перечне работ цикла «Fregio della vita»: «Il grido, 1893»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Enciclopedia Treccani: «Pablo Picasso»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/pablo-picasso_(Enciclopedia-dei-ragazzi)/",
+          "accessedAt": "2026-09-05",
+          "note": "«celebre è la sua grande tela Guernica (1937)»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-05",
+      "verifiedBy": "agent-4c3-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "mix-mosty-prolet-061",
+      "category": "mixed",
+      "prompt": "Расположите мосты по длине главного пролёта",
+      "sortKey": "length",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый короткий пролёт",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Бруклинский мост",
+          "subtitle": "Нью-Йорк, открыт в 1883 году",
+          "sortValue": 486.3,
+          "displayValue": "486 м",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Мост Золотые Ворота",
+          "subtitle": "Сан-Франциско",
+          "sortValue": 1280,
+          "displayValue": "1280 м",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Мост Большой Бельт",
+          "subtitle": "Дания, между Зеландией и Фюном",
+          "sortValue": 1624,
+          "displayValue": "1624 м",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Мост Акаси-Кайкё",
+          "subtitle": "Япония, пролив Акаси",
+          "sortValue": 1991,
+          "displayValue": "1991 м",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Мосты сравнивают по главному пролёту — расстоянию между опорами, а не по полной длине: у Акаси-Кайкё полная длина 3911 метров при пролёте 1991 метр. За век, отделяющий Бруклинский мост от Акаси-Кайкё, пролёт вырос вчетверо.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Департамент транспорта Нью-Йорка: Brooklyn Bridge",
+          "kind": "official",
+          "url": "https://www.nyc.gov/html/dot/html/infrastructure/brooklyn-bridge.shtml",
+          "accessedAt": "2026-09-05",
+          "note": "Brooklyn Bridge facts, Main span: «1,595.5 feet», то есть 486,3 м"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Golden Gate Bridge Highway and Transportation District",
+          "kind": "official",
+          "url": "https://www.goldengate.org/bridge/history-research/statistics-data/design-construction-stats/",
+          "accessedAt": "2026-09-05",
+          "note": "«Length of main span portion of suspended structure … is 4,200 ft (1,280 m)»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Sund & Bælt: The Storebælt Bridge",
+          "kind": "official",
+          "url": "https://sundogbaelt.dk/en/road-and-rail-links/storebaelt/",
+          "accessedAt": "2026-09-05",
+          "note": "«with its main span of 1,624m, is the world’s second longest suspension bridge»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Honshu-Shikoku Bridge Expressway: Bridge World",
+          "kind": "official",
+          "url": "https://www.jb-honshi.co.jp/english/bridgeworld/bridge.html",
+          "accessedAt": "2026-09-05",
+          "note": "«The total and central span lengths are 3,911m and 1991m respectively»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-05",
+      "verifiedBy": "agent-4c3-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "mix-tonneli-dlina-062",
+      "category": "mixed",
+      "prompt": "Расположите тоннели по длине",
+      "sortKey": "length",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый короткий",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Тоннель Мон-Блан",
+          "subtitle": "Автодорожный, Франция — Италия",
+          "sortValue": 11611,
+          "displayValue": "11 611 м",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Лердальский тоннель",
+          "subtitle": "Автодорожный, Норвегия",
+          "sortValue": 24509,
+          "displayValue": "24 509 м",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Лёчбергский базисный тоннель",
+          "subtitle": "Железнодорожный, Швейцария",
+          "sortValue": 35000,
+          "displayValue": "около 35 км",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Готардский базисный тоннель",
+          "subtitle": "Железнодорожный, Швейцария",
+          "sortValue": 57000,
+          "displayValue": "57 км",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Два нижних тоннеля — базисные: их прокладывают у подножия хребта, а не на перевале, и потому они длиннее автодорожных Мон-Блана и Лердальского. Готардский базисный — самый длинный железнодорожный тоннель в мире.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "ATMB (Autoroutes et Tunnel du Mont-Blanc): вопросы о тоннеле",
+          "kind": "official",
+          "url": "https://www.atmb.com/aide-et-contact/vos-questions-autour-du-tunnel-du-mont-blanc/",
+          "accessedAt": "2026-09-05",
+          "note": "«La longueur du Tunnel du Mont-Blanc est de 11,611 km»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Statens vegvesen: E16 Lærdal Tunnel",
+          "kind": "official",
+          "url": "https://www.vegvesen.no/en/road-projects/project/e16lardalstunnelen/",
+          "accessedAt": "2026-09-05",
+          "note": "«24.5 km» и «24,509 metres»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "BLS: NEAT, Лёчбергский базисный тоннель",
+          "kind": "official",
+          "url": "https://www.bls.ch/en/unternehmen/projekte-und-hintergruende/neat",
+          "accessedAt": "2026-09-05",
+          "note": "«approximately 35 kilometre-long tunnel»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "AlpTransit Portal (SBB): Tunnels of the world",
+          "kind": "official",
+          "url": "https://www.alptransit-portal.ch/en/overview/society/events/ereignis/tunnels-of-the-world/",
+          "accessedAt": "2026-09-05",
+          "note": "«57 kilometres, the longest rail tunnel in the world»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-05",
+      "verifiedBy": "agent-4c3-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "mix-teleskopy-diametr-063",
+      "category": "mixed",
+      "prompt": "Расположите телескопы по диаметру главного зеркала",
+      "sortKey": "length",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самое малое зеркало",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "«Хаббл»",
+          "subtitle": "Орбитальный телескоп с 1990 года",
+          "sortValue": 2.4,
+          "displayValue": "2,4 м",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "«Джеймс Уэбб»",
+          "subtitle": "Инфракрасный телескоп в точке L2",
+          "sortValue": 6.5,
+          "displayValue": "6,5 м",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Телескопы Кека",
+          "subtitle": "Гавайи, два одинаковых телескопа",
+          "sortValue": 10,
+          "displayValue": "10 м",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Телескоп ELT",
+          "subtitle": "Строится в чилийской пустыне",
+          "sortValue": 39,
+          "displayValue": "39 м",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Площадь зеркала растёт как квадрат диаметра: у ELT поперечник больше, чем у «Хаббла», в шестнадцать раз, а собирающая площадь — более чем в двести раз. Два самых крупных зеркала в этом ряду наземные, два меньших работают в космосе.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NASA Science: Hubble by the Numbers",
+          "kind": "official",
+          "url": "https://science.nasa.gov/mission/hubble/overview/hubble-by-the-numbers/",
+          "accessedAt": "2026-09-05",
+          "note": "Диаметр главного зеркала: «7.8 feet (2.4 m)»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NASA Science: Webb’s Mirrors",
+          "kind": "official",
+          "url": "https://science.nasa.gov/mission/webb/webbs-mirrors/",
+          "accessedAt": "2026-09-05",
+          "note": "«Webb’s primary mirror is 6.5 meters (21 feet 4 inches) across»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "W. M. Keck Observatory: Telescopes and Instrumentation",
+          "kind": "official",
+          "url": "https://keckobservatory.org/about/telescopes-instrumentation/",
+          "accessedAt": "2026-09-05",
+          "note": "«each 10-meter Keck telescope»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "ESO: Extremely Large Telescope",
+          "kind": "official",
+          "url": "https://elt.eso.org/about/",
+          "accessedAt": "2026-09-05",
+          "note": "«a 39-metre main mirror»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-05",
+      "verifiedBy": "agent-4c3-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "mix-observatorii-vysota-064",
+      "category": "mixed",
+      "prompt": "Расположите обсерватории по высоте над уровнем моря",
+      "sortKey": "height",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая низкая",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Обсерватория Ла-Силья",
+          "subtitle": "Чили, первая площадка ESO",
+          "sortValue": 2400,
+          "displayValue": "2400 м",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Обсерватория Паранал",
+          "subtitle": "Чили, Очень большой телескоп",
+          "sortValue": 2635,
+          "displayValue": "2635 м",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Обсерватория Мауна-Лоа",
+          "subtitle": "Гавайи, следит за составом воздуха",
+          "sortValue": 3397,
+          "displayValue": "3397 м",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Комплекс ALMA",
+          "subtitle": "Плато Чахнантор, Чили",
+          "sortValue": 5000,
+          "displayValue": "5000 м",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Три площадки из четырёх — астрономические, а Мауна-Лоа ведёт наблюдения за составом атмосферы. Общее у них одно: чем выше площадка, тем меньше воздуха над приборами. Выше всех поднят ALMA — комплекс антенн на плато Чахнантор.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "ESO: La Silla Observatory",
+          "kind": "official",
+          "url": "https://www.eso.org/public/teles-instr/lasilla/",
+          "accessedAt": "2026-09-05",
+          "note": "«at an altitude of 2400 metres»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "ESO: Paranal Observatory",
+          "kind": "official",
+          "url": "https://www.eso.org/public/teles-instr/paranal-observatory/",
+          "accessedAt": "2026-09-05",
+          "note": "«At 2635 metres above sea level in the Atacama Desert of Chile»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NOAA Global Monitoring Laboratory: Mauna Loa Observatory",
+          "kind": "official",
+          "url": "https://gml.noaa.gov/obop/mlo/",
+          "accessedAt": "2026-09-05",
+          "note": "«3397 meters, or 11,135 feet above sea level»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "ALMA Observatory: About ALMA",
+          "kind": "official",
+          "url": "https://www.almaobservatory.org/en/about-alma/",
+          "accessedAt": "2026-09-05",
+          "note": "«5000-metre-high Chajnantor Plateau»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-05",
+      "verifiedBy": "agent-4c3-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "hist-vojny-dlitelnost-065",
+      "category": "history",
+      "prompt": "Расположите войны по продолжительности",
+      "sortKey": "duration",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая короткая",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Шестидневная война",
+          "subtitle": "Ближний Восток, июнь 1967 года",
+          "sortValue": 518400.0,
+          "displayValue": "6 дней",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Первая мировая война",
+          "subtitle": "1914–1918",
+          "sortValue": 126227808.0,
+          "displayValue": "4 года",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Тридцатилетняя война",
+          "subtitle": "1618–1648, Центральная Европа",
+          "sortValue": 946708560.0,
+          "displayValue": "30 лет",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Столетняя война",
+          "subtitle": "1337–1453, Англия и Франция",
+          "sortValue": 3660606432.0,
+          "displayValue": "116 лет",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Шестидневная война уложилась в неделю, а Столетняя была не единым конфликтом, а чередой походов, разделённых многолетними перемириями. Отсюда и разрыв между крайними значениями ряда — семь тысяч раз.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Enciclopedia Treccani: «guerre arabo-israeliane»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/guerre-arabo-israeliane/",
+          "accessedAt": "2026-09-05",
+          "note": "«Il 5 giugno 1967 Israele aprì le ostilità, protrattesi fino al 10 giugno successivo»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Enciclopedia Treccani: «prima guerra mondiale»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/prima-guerra-mondiale_(Dizionario-di-Storia)/",
+          "accessedAt": "2026-09-05",
+          "note": "«Conflitto di dimensioni intercontinentali, combattuto dal 1914 al 1918»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Большая российская энциклопедия: статья «Тридцатилетняя война 1618–1648»",
+          "kind": "encyclopedia",
+          "url": "https://bre.ruwiki.ru/wiki/Тридцатилетняя_война_1618–1648",
+          "accessedAt": "2026-09-05",
+          "note": "«серия военных конфликтов, протекавших преимущественно в Центральной Европе … в 1618–1648 гг.»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Enciclopedia Treccani: «Cent’anni, guerra dei»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/guerra-dei-cent-anni/",
+          "accessedAt": "2026-09-05",
+          "note": "«Conflitto che tra il 1337 e il 1453 impegnò Inghilterra e Francia»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-05",
+      "verifiedBy": "agent-4c3-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "hist-pravleniya-dlitelnost-066",
+      "category": "history",
+      "prompt": "Расположите монархов по продолжительности правления",
+      "sortKey": "duration",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самое короткое правление",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Елизавета I",
+          "subtitle": "Англия, 1558–1603",
+          "sortValue": 1420062840.0,
+          "displayValue": "45 лет",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Георг III",
+          "subtitle": "Великобритания, 1760–1820",
+          "sortValue": 1893417120.0,
+          "displayValue": "почти 60 лет",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Виктория",
+          "subtitle": "Великобритания, 1837–1901",
+          "sortValue": 2019644928.0,
+          "displayValue": "почти 64 года",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Людовик XIV",
+          "subtitle": "Франция, 1643–1715",
+          "sortValue": 2272100544.0,
+          "displayValue": "72 года",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Разница между крайними значениями ряда — двадцать семь лет: правление Людовика XIV оказалось более чем в полтора раза длиннее правления Елизаветы I. Долгий срок на троне складывается из двух независимых величин — возраста вступления на престол и числа прожитых лет.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Официальный сайт британской монархии: Elizabeth I",
+          "kind": "official",
+          "url": "https://www.royal.uk/elizabeth-i",
+          "accessedAt": "2026-09-05",
+          "note": "«Her 45-year reign is generally considered one of the most glorious in English history»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Официальный сайт британской монархии: George III",
+          "kind": "official",
+          "url": "https://www.royal.uk/george-iii",
+          "accessedAt": "2026-09-05",
+          "note": "«He died at Windsor Castle on 29 January 1820, after a reign of almost 60 years»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Официальный сайт британской монархии: Queen Victoria",
+          "kind": "official",
+          "url": "https://www.royal.uk/queen-victoria",
+          "accessedAt": "2026-09-05",
+          "note": "«after a reign which lasted almost 64 years, then the longest in British history»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Enciclopedia Treccani: «Luigi XIV re di Francia»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/luigi-xiv-re-di-francia-detto-il-grande-o-il-re-sole/",
+          "accessedAt": "2026-09-05",
+          "note": "«Figlio (Saint-Germain-en-Laye 1638 - Versailles 1715) … re dal 1643»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 3,
+      "verifiedAt": "2026-09-05",
+      "verifiedBy": "agent-4c3-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "russia-goroda-god-067",
+      "category": "russia",
+      "prompt": "Расположите города по году, с которого они ведут историю",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый старый",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Москва",
+          "subtitle": "Первое упоминание в летописи",
+          "sortValue": 1147,
+          "displayValue": "1147 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Санкт-Петербург",
+          "subtitle": "Основан Петром I на Балтике",
+          "sortValue": 1703,
+          "displayValue": "1703 год",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Владивосток",
+          "subtitle": "Тихоокеанский порт и конец Транссиба",
+          "sortValue": 1860,
+          "displayValue": "1860 год",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Новосибирск",
+          "subtitle": "Вырос у моста через Обь",
+          "sortValue": 1893,
+          "displayValue": "1893 год",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Порядок повторяет направление, в котором расширялась страна: сначала центр Восточно-Европейской равнины, затем выход к Балтике, следом тихоокеанский порт и, наконец, город, выросший вокруг железнодорожного моста.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "«Узнай Москву», проект Правительства Москвы: «Основание Москвы»",
+          "kind": "official",
+          "url": "https://um.mos.ru/exhibits/osnovanie-moskvy/",
+          "accessedAt": "2026-09-05",
+          "note": "«Ипатьевская летопись гласит, что в 1147 году Юрий Долгорукий пригласил к себе … князя»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Enciclopedia Treccani: «San Pietroburgo»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/san-pietroburgo",
+          "accessedAt": "2026-09-05",
+          "note": "«Fondata da Pietro il Grande nel maggio 1703»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Enciclopedia Treccani: «Vladivostok»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/vladivostok",
+          "accessedAt": "2026-09-05",
+          "note": "«Fondata nel 1860, la città si sviluppò rapidamente»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Enciclopedia Treccani: «Novosibirsk»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/novosibirsk",
+          "accessedAt": "2026-09-05",
+          "note": "«Fondata nel 1893, sulla riva destra dell’Ob’, presso il ponte della Transiberiana»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-05",
+      "verifiedBy": "agent-4c3-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "russia-ozera-glubina-068",
+      "category": "russia",
+      "prompt": "Расположите озёра по наибольшей глубине",
+      "sortKey": "depth",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самое мелкое",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Чудское озеро",
+          "subtitle": "Мелководное озеро на северо-западе",
+          "sortValue": 17.6,
+          "displayValue": "17,6 м",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ],
+          "note": "Треккани — 17,6 м; Википедия — 15,3 м",
+          "disputed": true
+        },
+        {
+          "cardId": "c2",
+          "title": "Онежское озеро",
+          "subtitle": "Второе по площади озеро Европы",
+          "sortValue": 120,
+          "displayValue": "около 120 м",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Ладожское озеро",
+          "subtitle": "Крупнейшее озеро Европы",
+          "sortValue": 225,
+          "displayValue": "225 м",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Байкал",
+          "subtitle": "Самое глубокое озеро планеты",
+          "sortValue": 1620,
+          "displayValue": "1620 м",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Байкал глубже Ладожского более чем в семь раз и остаётся самым глубоким озером планеты. Остальные три озера ряда мелкие по сравнению с ним: у Чудского наибольшая глубина не достигает и двадцати метров.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Enciclopedia Treccani: «Ciudi, Lago dei»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/lago-dei-ciudi/",
+          "accessedAt": "2026-09-05",
+          "note": "Максимальная глубина — 17,6 м"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Enciclopedia Treccani: «Onega, Lago»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/lago-onega/",
+          "accessedAt": "2026-09-05",
+          "note": "«Lago della Russia settentrionale (9610 km2) … la profondità massima è di 120 m circa»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Enciclopedia Treccani: «Ladoga»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/ladoga/",
+          "accessedAt": "2026-09-05",
+          "note": "«La profondità media è di 75-100 m, la massima di 225 m»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Enciclopedia Treccani: «Bajkal, Lago»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/lago-bajkal/",
+          "accessedAt": "2026-09-05",
+          "note": "«Con una profondità massima di 1620 m, è il più profondo del mondo»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Lake Peipus",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Lake_Peipus",
+          "accessedAt": "2026-09-05",
+          "note": "«Max. depth: 15.3 m (50 ft)»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Lake Onega",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Lake_Onega",
+          "accessedAt": "2026-09-05",
+          "note": "«the deepest spot of 127 m (417 ft) is located in the northern part»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Lake Ladoga",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Lake_Ladoga",
+          "accessedAt": "2026-09-05",
+          "note": "«Max. depth: 230–260 m (750–850 ft)»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Lake Baikal",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Lake_Baikal",
+          "accessedAt": "2026-09-05",
+          "note": "Независимое подтверждение: «1,642 m (5,387 ft)»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-05",
+      "verifiedBy": "agent-4c3-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "russia-basseyny-rek-069",
+      "category": "russia",
+      "prompt": "Расположите реки по площади водосборного бассейна",
+      "sortKey": "area",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый малый бассейн",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Волга",
+          "subtitle": "Самая длинная река Европы",
+          "sortValue": 1360000,
+          "displayValue": "1 360 000 км²",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Амур",
+          "subtitle": "Течёт по югу Дальнего Востока",
+          "sortValue": 2050000,
+          "displayValue": "2 050 000 км²",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ],
+          "note": "Треккани — 2 050 000 км²; Википедия — 1 855 000 км²",
+          "disputed": true
+        },
+        {
+          "cardId": "c3",
+          "title": "Лена",
+          "subtitle": "Главная река Восточной Сибири",
+          "sortValue": 2490000,
+          "displayValue": "2 490 000 км²",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Обь",
+          "subtitle": "Собирает воду Западной Сибири",
+          "sortValue": 2915000,
+          "displayValue": "2 915 000 км²",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Площадь бассейна и длина реки — разные величины. Волга длиннее Амура (3531 км против 2000), но собирает воду с вдвое меньшей площади, а бассейн Оби превосходит волжский более чем вдвое.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Enciclopedia Treccani: «Volga»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/volga",
+          "accessedAt": "2026-09-05",
+          "note": "«Fiume della Russia (3531 km; bacino di 1.360.000 km2), il più lungo e imponente d’Europa»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Enciclopedia Treccani: «Amur»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/amur",
+          "accessedAt": "2026-09-05",
+          "note": "«bacino idrografico di 2.050.000 km2»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Enciclopedia Treccani: «Lena»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/lena",
+          "accessedAt": "2026-09-05",
+          "note": "«Fiume della Siberia centro-orientale (4400 km; bacino di 2.490.000 km2)»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Enciclopedia Treccani: «Ob’»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/ob",
+          "accessedAt": "2026-09-05",
+          "note": "«Fiume della Russia (5570 km ca.; bacino di 2.915.000 km2), nella Siberia occidentale»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Volga",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Volga",
+          "accessedAt": "2026-09-05",
+          "note": "Независимое подтверждение: «1,360,000 km2 (530,000 sq mi)»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Amur",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Amur",
+          "accessedAt": "2026-09-05",
+          "note": "«1,855,000 km2 (716,000 sq mi)»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Lena (river)",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Lena_(river)",
+          "accessedAt": "2026-09-05",
+          "note": "Независимое подтверждение: «2,490,000 km2 (960,000 mi2)»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Ob (river)",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Ob_(river)",
+          "accessedAt": "2026-09-05",
+          "note": "«Basin size: 2,972,497 km2 … to 2,994,238 km2»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-05",
+      "verifiedBy": "agent-4c3-precheck",
+      "retiredIn": null
     }
   ]
 }
