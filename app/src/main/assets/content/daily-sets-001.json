@@ -169,6 +169,62 @@
         "nat-cherepahi-massa-051",
         "mix-teleskopy-diametr-063"
       ]
+    },
+    {
+      "setIndex": 21,
+      "puzzleIds": [
+        "russia-zapovedniki-ploshchad-070",
+        "cult-opery-god-086",
+        "hist-apollon-dlitelnost-083"
+      ]
+    },
+    {
+      "setIndex": 22,
+      "puzzleIds": [
+        "nat-lastonogie-massa-076",
+        "hist-antichnye-goroda-god-084",
+        "sci-sputniki-yupitera-rasstoyanie-080"
+      ]
+    },
+    {
+      "setIndex": 23,
+      "puzzleIds": [
+        "sci-planetohody-rasstoyanie-079",
+        "nat-ledniki-ploshchad-077",
+        "geo-prolivy-shirina-072"
+      ]
+    },
+    {
+      "setIndex": 24,
+      "puzzleIds": [
+        "cult-knigi-god-087",
+        "russia-ostrova-ploshchad-071",
+        "nat-akuly-dlina-078"
+      ]
+    },
+    {
+      "setIndex": 25,
+      "puzzleIds": [
+        "hist-pervye-polety-dlitelnost-082",
+        "geo-reki-yuzhnoy-ameriki-dlina-075",
+        "mix-parki-ploshchad-090"
+      ]
+    },
+    {
+      "setIndex": 26,
+      "puzzleIds": [
+        "geo-morya-naibolshaya-glubina-073",
+        "mix-zatmeniya-dlitelnost-089",
+        "sci-sputniki-saturna-diametr-081"
+      ]
+    },
+    {
+      "setIndex": 27,
+      "puzzleIds": [
+        "mix-gejzery-vysota-088",
+        "geo-ozera-afriki-ploshchad-074",
+        "hist-plavaniya-god-085"
+      ]
     }
   ]
 }
