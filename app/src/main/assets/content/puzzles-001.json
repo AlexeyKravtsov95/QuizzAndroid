@@ -9247,6 +9247,2145 @@
       "verifiedAt": "2026-09-10",
       "verifiedBy": "agent-4c4-precheck",
       "retiredIn": null
+    },
+    {
+      "puzzleId": "geo-zheloba-glubina-091",
+      "category": "geography",
+      "prompt": "Расположите океанские жёлоба по наибольшей глубине",
+      "sortKey": "depth",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый мелкий",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Алеутский жёлоб",
+          "subtitle": "Северная часть Тихого океана",
+          "sortValue": 7822,
+          "displayValue": "7822 м",
+          "sourceIds": [
+            "s1",
+            "s4"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Жёлоб Пуэрто-Рико",
+          "subtitle": "Атлантический океан",
+          "sortValue": 9218,
+          "displayValue": "9218 м",
+          "sourceIds": [
+            "s2",
+            "s5"
+          ],
+          "disputed": true,
+          "note": "Ларусс — 9218 м; Википедия — от 8376 до 8740 м"
+        },
+        {
+          "cardId": "c3",
+          "title": "Жёлоб Кермадек",
+          "subtitle": "Южная часть Тихого океана",
+          "sortValue": 10047,
+          "displayValue": "10 047 м",
+          "sourceIds": [
+            "s3",
+            "s6"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Жёлоб Тонга",
+          "subtitle": "Южная часть Тихого океана",
+          "sortValue": 10882,
+          "displayValue": "10 882 м",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ],
+          "disputed": true,
+          "note": "Ларусс — 10 882 м; Википедия — 10 823 ± 10 м"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Жёлоб Пуэрто-Рико — самое глубокое место Атлантики, но Кермадек и Тонга на юге Тихого океана — две части одной системы жёлобов — глубже его как минимум на 800 м. Алеутский жёлоб у Аляски мельче всех четырёх.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Larousse: fosse des Aléoutiennes",
+          "kind": "encyclopedia",
+          "url": "https://www.larousse.fr/encyclopedie/divers/fosse_des_Al%C3%A9outiennes/104710",
+          "accessedAt": "2026-09-10",
+          "note": "«Grande fosse océanique (longueur : 3 700 km ; profondeur maximale : 7 822 m)»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Larousse: fosse de Porto Rico",
+          "kind": "encyclopedia",
+          "url": "https://www.larousse.fr/encyclopedie/divers/fosse_de_Porto_Rico/139321",
+          "accessedAt": "2026-09-10",
+          "note": "«Fosse (9 218 m) de l'Atlantique occidental tropical»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Larousse: fosse des Tonga-Kermadec",
+          "kind": "encyclopedia",
+          "url": "https://www.larousse.fr/encyclopedie/divers/fosse_des_Tonga-Kermadec/147046",
+          "accessedAt": "2026-09-10",
+          "note": "«Ensemble de deux fosses océaniques du Pacifique sud, parmi les plus profondes du monde (Tonga 10 882 m ; Kermadec 10 047 m).»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Википедия (проверочный источник): Aleutian Trench",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Aleutian_Trench",
+          "accessedAt": "2026-09-10",
+          "note": "Независимое подтверждение: «has been measured at 7,822 metres (25,663 ft)»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Puerto Rico Trench",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Puerto_Rico_Trench",
+          "accessedAt": "2026-09-10",
+          "note": "Расхождение: «a maximum documented depth between 8,376 metres (27,480 ft) and 8,740 metres»; «the deepest points in the Atlantic Ocean»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Kermadec Trench",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Kermadec_Trench",
+          "accessedAt": "2026-09-10",
+          "note": "Независимое подтверждение: «reaching a depth of 10,047 metres (32,963 ft)»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Tonga Trench",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Tonga_Trench",
+          "accessedAt": "2026-09-10",
+          "note": "Расхождение: «A depth of 10,823 m (35,509 ft) ±10 m (33 ft) was obtained by direct CTD pressure»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 3,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c5-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "russia-atomnye-suda-massa-092",
+      "category": "russia",
+      "prompt": "Расположите атомные суда по водоизмещению",
+      "sortKey": "mass",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — наименьшее водоизмещение",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Ледокол «Ленин»",
+          "subtitle": "Атомный ледокол, 1959 год",
+          "sortValue": 19240000,
+          "displayValue": "19 240 т",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Ледокол «Ямал»",
+          "subtitle": "Атомный ледокол типа «Арктика», 1992 год",
+          "sortValue": 23000000,
+          "displayValue": "23 000 т",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Ледокол «Сибирь»",
+          "subtitle": "Атомный ледокол проекта 22220, 2022 год",
+          "sortValue": 33540000,
+          "displayValue": "33 540 т",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "«Севморпуть»",
+          "subtitle": "Атомный лихтеровоз",
+          "sortValue": 61000000,
+          "displayValue": "61 000 т",
+          "sourceIds": [
+            "s3"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Водоизмещение — масса воды, вытесняемой судном, то есть масса самого судна. Ледокол проекта 22220 «Сибирь» тяжелее «Ленина» больше чем в полтора раза, а самое тяжёлое из четырёх — транспортный лихтеровоз «Севморпуть», а не ледокол.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Росатомфлот: атомные ледоколы, выведенные из эксплуатации",
+          "kind": "official",
+          "url": "https://www.rosatomflot.ru/flot/atomnye-ledokoly/vyvedennye-iz-ekspluatacii/",
+          "accessedAt": "2026-09-10",
+          "note": "«Тип ЛЕНИН («Ленин» 1959 г.) Длина: 134 м … Водоизмещение: 19 240 т»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Росатомфлот: действующие атомные ледоколы",
+          "kind": "official",
+          "url": "https://www.rosatomflot.ru/flot/atomnye-ledokoly/deystvuyushie/",
+          "accessedAt": "2026-09-10",
+          "note": "«Тип АРКТИКА (1992 г. «Ямал», …) … Водоизмещение: 23 000 т»; проект 22220 («2022 г. СУАЛ \"Сибирь\"») — «Водоизмещение: 33 540 т»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Росатомфлот: атомный лихтеровоз «Севморпуть»",
+          "kind": "official",
+          "url": "https://www.rosatomflot.ru/flot/atomnyy-lihterovoz-sevmorput/",
+          "accessedAt": "2026-09-10",
+          "note": "«Длина: 260,3 м Ширина: 32,2 м Высота борта: 18,3 м Водоизмещение: 61 000 т»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c5-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "sci-komety-period-093",
+      "category": "science",
+      "prompt": "Расположите кометы по периоду обращения вокруг Солнца",
+      "sortKey": "duration",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый короткий",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Комета Энке",
+          "subtitle": "Короткопериодическая комета",
+          "sortValue": 104137942,
+          "displayValue": "3,3 года",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Комета Галлея",
+          "subtitle": "Периодическая комета",
+          "sortValue": 2398328352,
+          "displayValue": "около 76 лет",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ],
+          "disputed": true,
+          "note": "NASA — в среднем 76 лет; Википедия — 74,7 года"
+        },
+        {
+          "cardId": "c3",
+          "title": "Комета Свифта — Туттля",
+          "subtitle": "Периодическая комета",
+          "sortValue": 4197074616,
+          "displayValue": "133 года",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Комета Хейла — Боппа",
+          "subtitle": "Видна глазом в 1996–1997 годах",
+          "sortValue": 79965316368,
+          "displayValue": "около 2534 лет",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ],
+          "disputed": true,
+          "note": "NASA — около 2534 лет; Википедия — около 2399 лет"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "У кометы Энке самый короткий период среди известных комет — 3,3 года. Галлея и Свифта — Туттля возвращаются через десятилетия, а яркая комета Хейла — Боппа, которую видели в 1996–1997 годах, придёт снова лишь через тысячелетия.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NASA: Comet 2P/Encke",
+          "kind": "official",
+          "url": "https://science.nasa.gov/solar-system/comets/2p-encke/",
+          "accessedAt": "2026-09-10",
+          "note": "«It takes 3.30 years for Enke to orbit the sun once. Comet Encke has the shortest orbital period of any known comet»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NASA: Comet 1P/Halley",
+          "kind": "official",
+          "url": "https://science.nasa.gov/solar-system/comets/1p-halley/",
+          "accessedAt": "2026-09-10",
+          "note": "«Halley's orbit period is, on average, 76 Earth years.»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NASA: Comet 109P/Swift-Tuttle",
+          "kind": "official",
+          "url": "https://science.nasa.gov/solar-system/comets/109p-swift-tuttle/",
+          "accessedAt": "2026-09-10",
+          "note": "«Comet 109P/Swift-Tuttle takes 133 years to orbit the Sun once.»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "NASA: Comet C/1995 O1 (Hale-Bopp)",
+          "kind": "official",
+          "url": "https://science.nasa.gov/solar-system/comets/c-1995-o1-hale-bopp/",
+          "accessedAt": "2026-09-10",
+          "note": "«It takes about 2,534 years for Hale-Bopp to orbit the sun once.»; «visible to the naked eye for 18 months in 1996 and 1997»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Comet Encke",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Comet_Encke",
+          "accessedAt": "2026-09-10",
+          "note": "Независимое подтверждение: «completes an orbit of the Sun once every 3.3 years»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Halley's Comet",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Halley%27s_Comet",
+          "accessedAt": "2026-09-10",
+          "note": "Расхождение: «Orbital period 74.7 years»; «appearing roughly every 74–79 years»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Comet Swift–Tuttle",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Comet_Swift%E2%80%93Tuttle",
+          "accessedAt": "2026-09-10",
+          "note": "Независимое подтверждение: «Orbital period 133.28 years»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Comet Hale–Bopp",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Comet_Hale%E2%80%93Bopp",
+          "accessedAt": "2026-09-10",
+          "note": "Расхождение: «The comet's orbit was shortened considerably to a period of roughly 2,399 years»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c5-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "mix-sport-distancii-094",
+      "category": "mixed",
+      "prompt": "Расположите соревновательные дистанции по длине",
+      "sortKey": "distance",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая короткая",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Полумарафон",
+          "subtitle": "Бег по шоссе",
+          "sortValue": 21097.5,
+          "displayValue": "21,0975 км",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Марафон",
+          "subtitle": "Бег по шоссе",
+          "sortValue": 42195,
+          "displayValue": "42,195 км",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Васалоппет",
+          "subtitle": "Лыжная гонка в Швеции",
+          "sortValue": 90000,
+          "displayValue": "90 км",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Ironman",
+          "subtitle": "Плавание, велогонка и бег подряд",
+          "sortValue": 226000,
+          "displayValue": "226 км",
+          "sourceIds": [
+            "s4"
+          ],
+          "note": "3,8 км + 180 км + 42,2 км"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Полумарафон ровно вдвое короче марафона, длина которого — 42,195 км — закреплена в 1921 году. Лыжный Васалоппет длиннее марафона больше чем вдвое, а Ironman складывает 3,8 км плавания, 180 км велогонки и 42,2 км бега.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "World Athletics: Half Marathon",
+          "kind": "official",
+          "url": "https://worldathletics.org/disciplines/road-running/half-marathon",
+          "accessedAt": "2026-09-10",
+          "note": "«a half marathon is exactly half the length of a marathon, at 13.1094 miles or 21.0975km»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "World Athletics: Marathon",
+          "kind": "official",
+          "url": "https://worldathletics.org/disciplines/road-running/marathon",
+          "accessedAt": "2026-09-10",
+          "note": "«This distance was standardised at 26 miles 385 yards (42.195km) in 1921.»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Vasaloppet: Vasaloppet",
+          "kind": "official",
+          "url": "https://www.vasaloppet.se/en/vasaloppet/",
+          "accessedAt": "2026-09-10",
+          "note": "«Vasaloppet 2027 Date March 07 Start Time 08:00 Length 90 km Start Location Sälen»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "IRONMAN: About IRONMAN",
+          "kind": "official",
+          "url": "https://www.ironman.com/about-ironman",
+          "accessedAt": "2026-09-10",
+          "note": "«swimming 2.4 miles (3.8km), biking 112 miles (180km), and running 26.2 miles (42.2km), totaling 140.6 miles (226km)»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c5-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "russia-balety-god-095",
+      "category": "russia",
+      "prompt": "Расположите балеты по году первой постановки",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый ранний",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "«Лебединое озеро»",
+          "subtitle": "Пётр Чайковский",
+          "sortValue": 1877,
+          "displayValue": "1877 год",
+          "sourceIds": [
+            "s1"
+          ],
+          "note": "Первая постановка — Большой театр, Москва"
+        },
+        {
+          "cardId": "c2",
+          "title": "«Спящая красавица»",
+          "subtitle": "Пётр Чайковский",
+          "sortValue": 1890,
+          "displayValue": "1890 год",
+          "sourceIds": [
+            "s2"
+          ],
+          "note": "Первая постановка — Мариинский театр"
+        },
+        {
+          "cardId": "c3",
+          "title": "«Бахчисарайский фонтан»",
+          "subtitle": "Борис Асафьев",
+          "sortValue": 1934,
+          "displayValue": "1934 год",
+          "sourceIds": [
+            "s3"
+          ],
+          "note": "Первая постановка — Мариинский театр"
+        },
+        {
+          "cardId": "c4",
+          "title": "«Спартак»",
+          "subtitle": "Арам Хачатурян",
+          "sortValue": 1956,
+          "displayValue": "1956 год",
+          "sourceIds": [
+            "s4"
+          ],
+          "note": "Первая постановка — Театр им. Кирова (Мариинский)"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Сравнивается самая первая постановка, а не нынешняя редакция: «Лебединое озеро» впервые показали в Москве в 1877 году, а версия Петипа и Иванова вышла только в 1895-м. Между «Спящей красавицей» и «Бахчисарайским фонтаном» — 44 года.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Мариинский театр: «Лебединое озеро»",
+          "kind": "official",
+          "url": "https://www.mariinsky.ru/playbill/repertoire/ballet/swan_lake1/",
+          "accessedAt": "2026-09-10",
+          "note": "«Премьера балета Петра Чайковского в хореографии Юлиуса Рейзингера – 20 февраля 1877 года, Большой театр, Москва»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Мариинский театр: «Спящая красавица»",
+          "kind": "official",
+          "url": "https://www.mariinsky.ru/playbill/repertoire/ballet/spkras1/",
+          "accessedAt": "2026-09-10",
+          "note": "«Премьера – 3 января 1890 года, Мариинский театр»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Мариинский театр: «Бахчисарайский фонтан»",
+          "kind": "official",
+          "url": "https://www.mariinsky.ru/playbill/repertoire/ballet/bahfon/",
+          "accessedAt": "2026-09-10",
+          "note": "«Премьера – 28 сентября 1934 года, Государственный академический театр оперы и балета (Мариинский)»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Мариинский театр: «Спартак»",
+          "kind": "official",
+          "url": "https://www.mariinsky.ru/playbill/repertoire/ballet/spartacus/",
+          "accessedAt": "2026-09-10",
+          "note": "«Премьера – 27 декабря 1956 года, Театр оперы и балета им. С. М. Кирова (Мариинский)»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c5-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "hist-raketoplany-skorost-096",
+      "category": "history",
+      "prompt": "Расположите ракетопланы по наибольшей скорости, достигнутой в полёте",
+      "sortKey": "speed",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый медленный",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "D-558-II «Скайрокет»",
+          "subtitle": "Скотт Кроссфилд, 1953 год",
+          "sortValue": 2078,
+          "displayValue": "2078 км/ч",
+          "sourceIds": [
+            "s1"
+          ],
+          "note": "1291 миля/ч × 1,609 = 2078 км/ч"
+        },
+        {
+          "cardId": "c2",
+          "title": "Bell X-1A",
+          "subtitle": "Чак Йегер, 1953 год",
+          "sortValue": 2594,
+          "displayValue": "2594 км/ч",
+          "sourceIds": [
+            "s2"
+          ],
+          "note": "1612 миль/ч × 1,609 = 2594 км/ч"
+        },
+        {
+          "cardId": "c3",
+          "title": "Bell X-2",
+          "subtitle": "Милберн Апт, 1956 год",
+          "sortValue": 3370,
+          "displayValue": "3370 км/ч",
+          "sourceIds": [
+            "s3"
+          ],
+          "note": "2094 мили/ч × 1,609 = 3370 км/ч"
+        },
+        {
+          "cardId": "c4",
+          "title": "North American X-15",
+          "subtitle": "Пит Найт, 1967 год",
+          "sortValue": 7274,
+          "displayValue": "7274 км/ч",
+          "sourceIds": [
+            "s4"
+          ],
+          "note": "4520 миль/ч × 1,609 = 7274 км/ч"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Скотт Кроссфилд на D-558-II первым превысил две скорости звука, но через 22 дня Чак Йегер разогнал X-1A ещё быстрее. X-2 первым перешагнул три скорости звука, а X-15 достиг 6,7 Маха — в три с половиной раза быстрее «Скайрокета».",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NASA: D-558-II Skyrocket",
+          "kind": "official",
+          "url": "https://www.nasa.gov/aeronautics/d-558-ii-transonic-aircraft/",
+          "accessedAt": "2026-09-10",
+          "note": "«Crossfield made aviation history on November 20, 1953, when he flew to Mach 2.005 (1,291 miles per hour).»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NASA: Dryden Celebrates 60th Anniversary of First Mach 2 Flight",
+          "kind": "official",
+          "url": "https://www.nasa.gov/aeronautics/nasa-dryden-celebrates-60th-anniversary-of-first-mach-2-flight/",
+          "accessedAt": "2026-09-10",
+          "note": "«Only 22 days later, Air Force Capt. Charles E. “Chuck” Yeager flew the Bell X-1A rocket plane to 1,612 mph, almost Mach 2.5.»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NASA: Bell X-2 Starbuster",
+          "kind": "official",
+          "url": "https://www.nasa.gov/aeronautics/bell-x-2/",
+          "accessedAt": "2026-09-10",
+          "note": "«allowing him to reach a speed of 2,094 mph (Mach 3.196)»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "NASA: X-15",
+          "kind": "official",
+          "url": "https://www.nasa.gov/reference/x-15/",
+          "accessedAt": "2026-09-10",
+          "note": "«unofficial world speed and altitude records: 4,520 mph (Mach 6.7) on Oct. 3, 1967, piloted by Air Force pilot Pete Knight»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c5-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "cult-kompozitory-god-097",
+      "category": "culture",
+      "prompt": "Расположите композиторов по году рождения",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — родился раньше всех",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Антонио Вивальди",
+          "subtitle": "Родился в Венеции",
+          "sortValue": 1678,
+          "displayValue": "1678 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Вольфганг Амадей Моцарт",
+          "subtitle": "Родился в Зальцбурге",
+          "sortValue": 1756,
+          "displayValue": "1756 год",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Пётр Чайковский",
+          "subtitle": "Родился в Воткинске",
+          "sortValue": 1840,
+          "displayValue": "1840 год",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Дмитрий Шостакович",
+          "subtitle": "Родился в Санкт-Петербурге",
+          "sortValue": 1906,
+          "displayValue": "1906 год",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Вивальди умер в 1741 году — за 15 лет до рождения Моцарта. Чайковский родился через 84 года после Моцарта и умер в 1893 году, за 13 лет до рождения Шостаковича.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Larousse: Antonio Vivaldi",
+          "kind": "encyclopedia",
+          "url": "https://www.larousse.fr/encyclopedie/personnage/Antonio_Vivaldi/149173",
+          "accessedAt": "2026-09-10",
+          "note": "«Compositeur et violoniste italien (Venise 1678-Vienne 1741).»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Larousse: Wolfgang Amadeus Mozart",
+          "kind": "encyclopedia",
+          "url": "https://www.larousse.fr/encyclopedie/personnage/Wolfgang_Amadeus_Mozart/134270",
+          "accessedAt": "2026-09-10",
+          "note": "«Compositeur allemand (Salzbourg 1756-Vienne 1791)"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Larousse: Petr Ilitch Tchaïkovski",
+          "kind": "encyclopedia",
+          "url": "https://www.larousse.fr/encyclopedie/personnage/Petr_Ilitch_Tcha%C3%AFkovski/146138",
+          "accessedAt": "2026-09-10",
+          "note": "«Compositeur russe (Votkinsk 1840-Saint-Pétersbourg 1893).»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Larousse: Dmitri Dmitrievitch Chostakovitch",
+          "kind": "encyclopedia",
+          "url": "https://www.larousse.fr/encyclopedie/personnage/Dmitri_Dmitrievitch_Chostakovitch/113518",
+          "accessedAt": "2026-09-10",
+          "note": "«Compositeur soviétique (Saint-Pétersbourg 1906-Moscou 1975).»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c5-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "russia-polyarnyy-den-dlitelnost-098",
+      "category": "russia",
+      "prompt": "Расположите российские антарктические станции по длительности полярного дня",
+      "sortKey": "duration",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый короткий",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Мирный",
+          "subtitle": "Побережье моря Дейвиса",
+          "sortValue": 2592000,
+          "displayValue": "30 суток",
+          "sourceIds": [
+            "s1"
+          ],
+          "note": "С 7 декабря по 5 января включительно"
+        },
+        {
+          "cardId": "c2",
+          "title": "Прогресс",
+          "subtitle": "Залив Прюдс, холмы Ларсеманн",
+          "sortValue": 5443200,
+          "displayValue": "63 суток",
+          "sourceIds": [
+            "s2"
+          ],
+          "note": "С 21 ноября по 22 января включительно"
+        },
+        {
+          "cardId": "c3",
+          "title": "Новолазаревская",
+          "subtitle": "Оазис Ширмахера, Земля Королевы Мод",
+          "sortValue": 6480000,
+          "displayValue": "75 суток",
+          "sourceIds": [
+            "s3"
+          ],
+          "note": "С 15 ноября по 28 января включительно"
+        },
+        {
+          "cardId": "c4",
+          "title": "Восток",
+          "subtitle": "Ледниковое плато в глубине материка",
+          "sortValue": 10713600,
+          "displayValue": "124 суток",
+          "sourceIds": [
+            "s4"
+          ],
+          "note": "С 21 октября по 21 февраля включительно"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Чем ближе станция к Южному полюсу, тем дольше солнце не заходит: Мирный стоит у полярного круга, на 66° 33′ ю. ш., а Восток — на 78° 28′. Длительность посчитана включительно по датам начала и конца полярного дня, которые указывает ААНИИ.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "ААНИИ: станция Мирный",
+          "kind": "official",
+          "url": "https://www.aari.ru/ekspeditsii/rossiyskaya-antarkticheskaya-ekspeditsiya-(rae)/mirnyy",
+          "accessedAt": "2026-09-10",
+          "note": "«Полярный день 7.12 – 5.01 Координаты S 66°33` E 93°01`»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "ААНИИ: станция Прогресс",
+          "kind": "official",
+          "url": "https://www.aari.ru/ekspeditsii/rossiyskaya-antarkticheskaya-ekspeditsiya-(rae)/progress",
+          "accessedAt": "2026-09-10",
+          "note": "«Полярный день 21 ноября – 22 января Полярная ночь 28 мая – 16 июля Координаты S 69°23` E 76°23`»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "ААНИИ: станция Новолазаревская",
+          "kind": "official",
+          "url": "https://www.aari.ru/ekspeditsii/rossiyskaya-antarkticheskaya-ekspeditsiya-(rae)/novolazarevskaya",
+          "accessedAt": "2026-09-10",
+          "note": "«Полярный день 15 ноября – 28 января Полярная ночь 21 мая – 23 июля Координаты S 70°46` E 11°52`»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "ААНИИ: станция Восток",
+          "kind": "official",
+          "url": "https://www.aari.ru/ekspeditsii/rossiyskaya-antarkticheskaya-ekspeditsiya-(rae)/vostok",
+          "accessedAt": "2026-09-10",
+          "note": "«Полярный день: 21 октября – 21 февраля Полярная ночь: 23 апреля – 21 августа Координаты: S 78°28` E 106°48`»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c5-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "cult-arki-vysota-099",
+      "category": "culture",
+      "prompt": "Расположите арки и ворота по полной высоте",
+      "sortKey": "height",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самое низкое",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Бранденбургские ворота",
+          "subtitle": "Берлин, вместе с квадригой",
+          "sortValue": 26,
+          "displayValue": "26 м",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ],
+          "note": "Без квадриги — 20,3 м"
+        },
+        {
+          "cardId": "c2",
+          "title": "Ворота Индии",
+          "subtitle": "Нью-Дели",
+          "sortValue": 42,
+          "displayValue": "42 м",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Триумфальная арка",
+          "subtitle": "Париж, площадь Звезды",
+          "sortValue": 50,
+          "displayValue": "50 м",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Арка «Ворота на Запад»",
+          "subtitle": "Сент-Луис, США",
+          "sortValue": 192,
+          "displayValue": "192 м",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Сравнивается полная высота сооружения; у Бранденбургских ворот — вместе с квадригой, но и без неё, с 20,3 м, они остаются самыми низкими. Арка в Сент-Луисе выше парижской Триумфальной арки почти в четыре раза.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "visitBerlin: Brandenburger Tor",
+          "kind": "official",
+          "url": "https://www.visitberlin.de/de/brandenburger-tor",
+          "accessedAt": "2026-09-10",
+          "note": "«Die Höhe des Brandenburger Tores beträgt 20,30 Meter, die Quadriga mit ihrer Spitze erreicht eine Höhe von etwa 26 Metern.»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Администрация округа Нью-Дели: India Gate",
+          "kind": "official",
+          "url": "https://dmnewdelhi.delhi.gov.in/tourist-place/india-gate/",
+          "accessedAt": "2026-09-10",
+          "note": "«At the centre of New Delhi stands the 42 m high India Gate"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Larousse: arc de triomphe de l'Étoile",
+          "kind": "encyclopedia",
+          "url": "https://www.larousse.fr/encyclopedie/divers/arc_de_triomphe_de_l%C3%89toile/105969",
+          "accessedAt": "2026-09-10",
+          "note": "«Construit d'après les plans de Chalgrin, il fut inauguré en 1836. Haut de 50 m»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "National Park Service: Gateway Arch — FAQ",
+          "kind": "official",
+          "url": "https://www.nps.gov/jeff/planyourvisit/arch-faq.htm",
+          "accessedAt": "2026-09-10",
+          "note": "«The Arch is 630 feet (192 meters) tall»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Brandenburg Gate",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Brandenburg_Gate",
+          "accessedAt": "2026-09-10",
+          "note": "Независимое подтверждение: ворота высотой 26 м вместе с квадригой"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c5-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "hist-korabli-dlina-100",
+      "category": "history",
+      "prompt": "Расположите корабли ВМС США по длине",
+      "sortKey": "length",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый короткий",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "«Монитор»",
+          "subtitle": "Броненосец, 1862 год",
+          "sortValue": 52.4,
+          "displayValue": "52,4 м",
+          "sourceIds": [
+            "s1"
+          ],
+          "note": "172 фута × 0,3048 = 52,4 м"
+        },
+        {
+          "cardId": "c2",
+          "title": "«Наутилус»",
+          "subtitle": "Первая атомная подводная лодка",
+          "sortValue": 98.7,
+          "displayValue": "98,7 м",
+          "sourceIds": [
+            "s2"
+          ],
+          "note": "323 фута 9 дюймов = 98,7 м"
+        },
+        {
+          "cardId": "c3",
+          "title": "«Аризона»",
+          "subtitle": "Линкор типа «Пенсильвания»",
+          "sortValue": 185.3,
+          "displayValue": "185,3 м",
+          "sourceIds": [
+            "s3"
+          ],
+          "note": "608 футов × 0,3048 = 185,3 м"
+        },
+        {
+          "cardId": "c4",
+          "title": "«Энтерпрайз»",
+          "subtitle": "Атомный авианосец CVAN-65",
+          "sortValue": 335.6,
+          "displayValue": "335,6 м",
+          "sourceIds": [
+            "s4"
+          ],
+          "note": "1101 фут × 0,3048 = 335,6 м"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Справочник кораблей ВМС США приводит длину каждого из них. Подлодка «Наутилус» почти вдвое длиннее броненосца «Монитор» 1862 года, а атомный авианосец «Энтерпрайз» длиннее «Монитора» больше чем в шесть раз.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NHHC, DANFS: Monitor I",
+          "kind": "official",
+          "url": "https://www.history.navy.mil/research/histories/ship-histories/danfs/m/monitor-i.html",
+          "accessedAt": "2026-09-10",
+          "note": "«(Monitor: tonnage 987; … length 172'; beam 41'6\"; …)»; «launched on 30 January 1862»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NHHC, DANFS: Nautilus (SSN-571) IV",
+          "kind": "official",
+          "url": "https://www.history.navy.mil/research/histories/ship-histories/danfs/n/nautilus-ssn-571-iv.html",
+          "accessedAt": "2026-09-10",
+          "note": "«the first nuclear powered submarine»; «displacement 3,533 tons (surface); … length 323'9\"»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NHHC, DANFS: Arizona (Battleship No. 39) II",
+          "kind": "official",
+          "url": "https://www.history.navy.mil/research/histories/ship-histories/danfs/a/arizona-battleship-no-39-ii.html",
+          "accessedAt": "2026-09-10",
+          "note": "«displacement 31,400 tons; length 608 feet; beam 97 feet 1 inch; … class Pennsylvania»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "NHHC, DANFS: Enterprise (CVAN-65) VIII, 1961–1965",
+          "kind": "official",
+          "url": "https://www.history.navy.mil/research/histories/ship-histories/danfs/e/enterprise-cvan-65-viii-1961-1965.html",
+          "accessedAt": "2026-09-10",
+          "note": "«(CVA(N)-65: displacement 85,600 tons (full load); length 1101'; beam 133'»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c5-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "russia-kartiny-vysota-101",
+      "category": "russia",
+      "prompt": "Расположите картины по высоте полотна",
+      "sortKey": "height",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самое низкое",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "«Утро стрелецкой казни»",
+          "subtitle": "Василий Суриков, 1881",
+          "sortValue": 2.23,
+          "displayValue": "2,23 м",
+          "sourceIds": [
+            "s1"
+          ],
+          "note": "Размер по каталогу ГТГ — 223 × 383,5 см"
+        },
+        {
+          "cardId": "c2",
+          "title": "«Боярыня Морозова»",
+          "subtitle": "Василий Суриков, 1887",
+          "sortValue": 3.04,
+          "displayValue": "3,04 м",
+          "sourceIds": [
+            "s2"
+          ],
+          "note": "Размер по каталогу ГТГ — 304 × 587,5 см"
+        },
+        {
+          "cardId": "c3",
+          "title": "«Последний день Помпеи»",
+          "subtitle": "Карл Брюллов, 1833",
+          "sortValue": 4.565,
+          "displayValue": "4,565 м",
+          "sourceIds": [
+            "s3"
+          ],
+          "note": "Размер по каталогу ГРМ — 456,5 × 651 см"
+        },
+        {
+          "cardId": "c4",
+          "title": "«Явление Христа народу»",
+          "subtitle": "Александр Иванов, 1837–1857",
+          "sortValue": 5.4,
+          "displayValue": "5,4 м",
+          "sourceIds": [
+            "s4"
+          ],
+          "note": "Размер по каталогу ГТГ — 540 × 750 см"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Музейные каталоги записывают размер холста как «высота × ширина», и здесь сравнивается первое число. Полотно Иванова, над которым он работал с 1837 по 1857 год, самое высокое из четырёх: оно почти в два с половиной раза выше «Утра стрелецкой казни».",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Третьяковская галерея: Суриков, «Утро стрелецкой казни»",
+          "kind": "official",
+          "url": "https://my.tretyakov.ru/app/masterpiece/8414",
+          "accessedAt": "2026-09-10",
+          "note": "«Утро стрелецкой казни 1881 Размер - 223 x 383,5 Материал - холст»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Третьяковская галерея: Суриков, «Боярыня Морозова»",
+          "kind": "official",
+          "url": "https://my.tretyakov.ru/app/masterpiece/8452",
+          "accessedAt": "2026-09-10",
+          "note": "«Боярыня Морозова 1887 Размер - 304 x 587,5 Материал - холст»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Виртуальный Русский музей: Брюллов, «Последний день Помпеи»",
+          "kind": "official",
+          "url": "https://rusmuseumvrm.ru/data/collections/painting/18_19/zh_5084_bryullov_kp_posledniy_den_pompei/",
+          "accessedAt": "2026-09-10",
+          "note": "«Последний день Помпеи 1833 Холст, масло. 456,5 x 651 Ж-5084»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Третьяковская галерея: Иванов, «Явление Христа народу»",
+          "kind": "official",
+          "url": "https://my.tretyakov.ru/app/masterpiece/8710",
+          "accessedAt": "2026-09-10",
+          "note": "«Явление Христа народу (Явление Мессии) 1837–1857 Размер - 540 x 750 Материал - холст»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c5-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "cult-skazki-god-102",
+      "category": "culture",
+      "prompt": "Расположите сборники сказок по году выхода первого издания",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый ранний",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Сказки Шарля Перро",
+          "subtitle": "«Сказки матушки Гусыни»",
+          "sortValue": 1697,
+          "displayValue": "1697 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Сказки братьев Гримм",
+          "subtitle": "«Детские и семейные сказки»",
+          "sortValue": 1812,
+          "displayValue": "1812 год",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Сказки Андерсена",
+          "subtitle": "Ханс Кристиан Андерсен, Дания",
+          "sortValue": 1835,
+          "displayValue": "1835 год",
+          "sourceIds": [
+            "s3"
+          ],
+          "note": "Первый выпуск — 1835 год"
+        },
+        {
+          "cardId": "c4",
+          "title": "Сказки Афанасьева",
+          "subtitle": "«Народные русские сказки»",
+          "sortValue": 1855,
+          "displayValue": "1855 год",
+          "sourceIds": [
+            "s4"
+          ],
+          "note": "Издание выходило в 1855–1864 годах"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Сборник Перро вышел ещё в XVII веке, в 1697 году, — за 115 лет до сборника братьев Гримм. Андерсен начал выпускать свои сказки в 1835 году, а собрание Афанасьева, более 600 народных текстов, стало выходить в 1855-м.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Larousse: Contes (Charles Perrault)",
+          "kind": "encyclopedia",
+          "url": "https://www.larousse.fr/encyclopedie/oeuvre/Contes/114530",
+          "accessedAt": "2026-09-10",
+          "note": "«1697 Contes, ouvrage de Charles Perrault, connu aussi sous le nom de Contes de ma mère l'Oye»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Larousse: Jacob Grimm",
+          "kind": "encyclopedia",
+          "url": "https://www.larousse.fr/encyclopedie/personnage/Jacob_Grimm/122346",
+          "accessedAt": "2026-09-10",
+          "note": "«Ensemble, ils publièrent … les Contes d'enfants et du foyer (1812)»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Larousse: Hans Christian Andersen",
+          "kind": "encyclopedia",
+          "url": "https://www.larousse.fr/encyclopedie/personnage/Hans_Christian_Andersen/105372",
+          "accessedAt": "2026-09-10",
+          "note": "«… et surtout de ses Contes (1835-1872).»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Larousse: Aleksandr Nikolaïevitch Afanassiev",
+          "kind": "encyclopedia",
+          "url": "https://www.larousse.fr/encyclopedie/litterature/Aleksandr_Nikola%C3%AFevitch_Afanassiev/170806",
+          "accessedAt": "2026-09-10",
+          "note": "«il est surtout connu pour ses Contes populaires russes (1855-1864) … (plus de 600 textes)»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c5-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "cult-gazety-god-103",
+      "category": "culture",
+      "prompt": "Расположите газеты по году основания",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая старая",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "The Times",
+          "subtitle": "Лондон",
+          "sortValue": 1785,
+          "displayValue": "1785 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "The New York Times",
+          "subtitle": "Нью-Йорк",
+          "sortValue": 1851,
+          "displayValue": "1851 год",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "«Известия»",
+          "subtitle": "Первый номер вышел в Петрограде",
+          "sortValue": 1917,
+          "displayValue": "1917 год",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "El País",
+          "subtitle": "Мадрид",
+          "sortValue": 1976,
+          "displayValue": "1976 год",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "The Times основал Джон Уолтер в 1785 году — на 66 лет раньше The New York Times. «Известия» вышли 13 марта 1917 года в Петрограде, а испанская El País появилась только в 1976 году и моложе The Times почти на два века.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Larousse: The Times",
+          "kind": "encyclopedia",
+          "url": "https://www.larousse.fr/encyclopedie/oeuvre/The_Times/146811",
+          "accessedAt": "2026-09-10",
+          "note": "«Quotidien britannique fondé par John Walter en 1785.»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Larousse: New York Times",
+          "kind": "encyclopedia",
+          "url": "https://www.larousse.fr/encyclopedie/oeuvre/New_York_Times/135144",
+          "accessedAt": "2026-09-10",
+          "note": "«Quotidien américain fondé en 1851 par Henry J. Raymond"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Larousse: Izvestia",
+          "kind": "encyclopedia",
+          "url": "https://www.larousse.fr/encyclopedie/oeuvre/Izvestia/125420",
+          "accessedAt": "2026-09-10",
+          "note": "«Quotidien russe. Fondé le 13 mars 1917 à Petrograd"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Larousse: El País",
+          "kind": "encyclopedia",
+          "url": "https://www.larousse.fr/encyclopedie/oeuvre/El_Pa%C3%ADs/136784",
+          "accessedAt": "2026-09-10",
+          "note": "«Quotidien espagnol, créé à Madrid en 1976"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c5-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "nat-ryby-vozrast-104",
+      "category": "nature",
+      "prompt": "Расположите рыб по наибольшей известной продолжительности жизни",
+      "sortKey": "duration",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый короткий век",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Тихоокеанский голубой тунец",
+          "subtitle": "Северная часть Тихого океана",
+          "sortValue": 820480752,
+          "displayValue": "до 26 лет",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Тихоокеанский палтус",
+          "subtitle": "Крупная камбалообразная рыба",
+          "sortValue": 1735632360,
+          "displayValue": "до 55 лет",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Атлантический осётр",
+          "subtitle": "Осетровые, запад Атлантики",
+          "sortValue": 1893417120,
+          "displayValue": "до 60 лет",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Желтоглазый морской окунь",
+          "subtitle": "Скорпеновые, северо-восток Тихого океана",
+          "sortValue": 4733542800,
+          "displayValue": "до 150 лет",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ],
+          "disputed": true,
+          "note": "NOAA — до 150 лет; Википедия — до 147 лет"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Сравнивается наибольший известный возраст по данным NOAA. Тунец доживает до 26 лет, палтус и осётр — до 55 и 60, а желтоглазый морской окунь, один из самых долгоживущих морских окуней, — до 150 лет, почти в шесть раз дольше тунца.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NOAA Fisheries: Pacific Bluefin Tuna",
+          "kind": "official",
+          "url": "https://www.fisheries.noaa.gov/species/pacific-bluefin-tuna",
+          "accessedAt": "2026-09-10",
+          "note": "«Pacific bluefin tunas reach maturity at approximately 5 years of age and can live up to 26 years»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NOAA Fisheries: Pacific Halibut",
+          "kind": "official",
+          "url": "https://www.fisheries.noaa.gov/species/pacific-halibut",
+          "accessedAt": "2026-09-10",
+          "note": "«Lifespan Up to 55 years»; «the oldest halibut on record was 55 years old»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NOAA Fisheries: Atlantic Sturgeon",
+          "kind": "official",
+          "url": "https://www.fisheries.noaa.gov/species/atlantic-sturgeon",
+          "accessedAt": "2026-09-10",
+          "note": "«Quick Facts Weight Up to 800 pounds Length Up to 14 feet Lifespan Up to 60 years»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "NOAA Fisheries: Yelloweye Rockfish",
+          "kind": "official",
+          "url": "https://www.fisheries.noaa.gov/species/yelloweye-rockfish",
+          "accessedAt": "2026-09-10",
+          "note": "«Lifespan Up to 150 years»; «among the longest lived of rockfishes»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Pacific bluefin tuna",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Pacific_bluefin_tuna",
+          "accessedAt": "2026-09-10",
+          "note": "Независимое подтверждение: «the longevity is 15 years or 26 years»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Pacific halibut",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Pacific_halibut",
+          "accessedAt": "2026-09-10",
+          "note": "Независимое подтверждение: «The oldest recorded female and male were 55 years old»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Atlantic sturgeon",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Atlantic_sturgeon",
+          "accessedAt": "2026-09-10",
+          "note": "Независимое подтверждение: «a lifespan ranging from ten years to sixty years»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Yelloweye rockfish",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Yelloweye_rockfish",
+          "accessedAt": "2026-09-10",
+          "note": "Расхождение: «the oldest ones reach as much as 147 years»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c5-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "russia-skvazhiny-glubina-105",
+      "category": "russia",
+      "prompt": "Расположите сверхглубокие скважины по глубине",
+      "sortKey": "depth",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — наименьшая глубина",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Воротиловская скважина",
+          "subtitle": "Древняя платформа",
+          "sortValue": 5374,
+          "displayValue": "5374 м",
+          "sourceIds": [
+            "s1",
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Уральская скважина СГ-4",
+          "subtitle": "Складчатый Урал",
+          "sortValue": 6015,
+          "displayValue": "6015 м",
+          "sourceIds": [
+            "s2",
+            "s1"
+          ],
+          "disputed": true,
+          "note": "Обзор 2016 года — 6015 м; статья 2017 года — 6001 м"
+        },
+        {
+          "cardId": "c3",
+          "title": "Тюменская скважина СГ-6",
+          "subtitle": "Западно-Сибирская плита",
+          "sortValue": 7502,
+          "displayValue": "7502 м",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Кольская скважина СГ-3",
+          "subtitle": "Балтийский щит",
+          "sortValue": 12262,
+          "displayValue": "12 262 м",
+          "sourceIds": [
+            "s3",
+            "s1",
+            "s2"
+          ],
+          "note": "В двух других публикациях — 12 261 м"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Кольская скважина в 1990 году достигла мировой рекордной глубины 12 262 м — в полтора с лишним раза глубже Тюменской. Уральская пройдена в складчатых горах, Тюменская — на молодой плите, Воротиловская — на древней платформе.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Сверхглубокие и глубокие скважины как объект исследования скважинной магнитометрии (2017)",
+          "kind": "academic",
+          "url": "https://cyberleninka.ru/article/n/sverhglubokie-i-glubokie-skvazhiny-kak-obekt-issledovaniya-skvazhinnoy-magnitometrii",
+          "accessedAt": "2026-09-10",
+          "note": "«Кольская СГ-3, 12261 м; … 14-Воротиловская, 5374 м … 4-Уральская, 6001 м … 6 -Тюменская СГ- 6, 7502 м»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Государственная сеть опорных геолого-геофизических профилей, параметрических и сверхглубоких скважин (2016)",
+          "kind": "academic",
+          "url": "https://cyberleninka.ru/article/n/gosudarstvennaya-set-opornyh-geologo-geofizicheskih-profiley-parametricheskih-i-sverhglubokih-skvazhin-osnova-glubinnogo-3d",
+          "accessedAt": "2026-09-10",
+          "note": "«Завершена проходка Кольской (12261 м), Уральской (6015 м) … Воротиловской (5374 м)»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Полувековой юбилей Кольской сверхглубокой буровой скважины СГ-3 (2021)",
+          "kind": "academic",
+          "url": "https://cyberleninka.ru/article/n/poluvekovoy-yubiley-kolskoy-sverhglubokoy-burovoy-skvazhiny-sg-3",
+          "accessedAt": "2026-09-10",
+          "note": "«Кольской сверхглубокой скважины, достигшей в 1990 г. рекордной глубины 12 262 м»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c5-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "mix-razmah-kryla-106",
+      "category": "mixed",
+      "prompt": "Расположите самолёты по размаху крыла",
+      "sortKey": "length",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — наименьший размах",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "«Флайер» братьев Райт",
+          "subtitle": "Первый самолёт, 1903 год",
+          "sortValue": 12.3,
+          "displayValue": "12,3 м",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Lockheed SR-71",
+          "subtitle": "Сверхзвуковой разведчик",
+          "sortValue": 16.94,
+          "displayValue": "16,94 м",
+          "sourceIds": [
+            "s2"
+          ],
+          "note": "55 футов 7 дюймов = 16,94 м"
+        },
+        {
+          "cardId": "c3",
+          "title": "Hughes H-4 Hercules",
+          "subtitle": "Летающая лодка «Спрус Гус»",
+          "sortValue": 97.51,
+          "displayValue": "97,51 м",
+          "sourceIds": [
+            "s3"
+          ],
+          "note": "319 футов 11 дюймов = 97,51 м"
+        },
+        {
+          "cardId": "c4",
+          "title": "Stratolaunch Roc",
+          "subtitle": "Самолёт-носитель",
+          "sortValue": 117.35,
+          "displayValue": "117,35 м",
+          "sourceIds": [
+            "s4"
+          ],
+          "note": "385 футов × 0,3048 = 117,35 м"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Размах крыла «Флайера» — 12,3 м, у сверхзвукового SR-71 — меньше 17 м. Летающая лодка H-4 Hercules с размахом почти 98 м держала рекорд до 2019 года, пока его не отобрал Stratolaunch Roc — его крыло больше «Флайера» почти в десять раз.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Smithsonian National Air and Space Museum: 1903 Wright Flyer",
+          "kind": "official",
+          "url": "https://airandspace.si.edu/collection-objects/1903-wright-flyer/nasm_A19610048000",
+          "accessedAt": "2026-09-10",
+          "note": "«Dimensions Wingspan: 12.3 m (40 ft 4 in) Length: 6.4 m (21 ft 1 in)»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Smithsonian National Air and Space Museum: Lockheed SR-71 Blackbird",
+          "kind": "official",
+          "url": "https://airandspace.si.edu/collection-objects/lockheed-sr-71-blackbird/nasm_A19920072000",
+          "accessedAt": "2026-09-10",
+          "note": "«Wingspan: 55'7\" Length: 107'5\" Height: 18'6\"»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Evergreen Aviation & Space Museum: The Spruce Goose",
+          "kind": "official",
+          "url": "https://www.evergreenmuseum.org/exhibit/the-spruce-goose/",
+          "accessedAt": "2026-09-10",
+          "note": "«319′ 11″ Wingspan»; «held the title of the largest plane ever built until 2019»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Stratolaunch: Roc",
+          "kind": "official",
+          "url": "https://www.stratolaunch.com/vehicles/roc/",
+          "accessedAt": "2026-09-10",
+          "note": "«Roc is the world's largest fixed-wing aircraft by wingspan»; «385 Feet Total Wingspan»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c5-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "hist-korablekrusheniya-glubina-107",
+      "category": "history",
+      "prompt": "Расположите затонувшие корабли по глубине, на которой они легли на дно",
+      "sortKey": "depth",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — наименьшая глубина",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "«Васа»",
+          "subtitle": "Шведский военный корабль, 1628 год",
+          "sortValue": 32,
+          "displayValue": "32 м",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "«Титаник»",
+          "subtitle": "Британский лайнер, 1912 год",
+          "sortValue": 3800,
+          "displayValue": "3800 м",
+          "sourceIds": [
+            "s2"
+          ],
+          "note": "NOAA — 12 500 футов, или 3800 м"
+        },
+        {
+          "cardId": "c3",
+          "title": "«Индианаполис»",
+          "subtitle": "Крейсер ВМС США, 1945 год",
+          "sortValue": 5500,
+          "displayValue": "5500 м",
+          "sourceIds": [
+            "s3"
+          ],
+          "note": "Обломки найдены в 2017 году"
+        },
+        {
+          "cardId": "c4",
+          "title": "«Джонстон»",
+          "subtitle": "Эсминец ВМС США, 1944 год",
+          "sortValue": 6456,
+          "displayValue": "6456 м",
+          "sourceIds": [
+            "s4"
+          ],
+          "note": "Около 21 180 футов; 21 180 × 0,3048 = 6456 м"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "«Васа» затонул в стокгольмской гавани через несколько минут после выхода в первое плавание, на глубине всего 32 м. Остальные легли на дно открытого океана: «Титаник» — на 3800 м, крейсер «Индианаполис» — на 5500 м, а носовую часть эсминца «Джонстон» нашли ещё глубже.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Vasamuseet: The disaster",
+          "kind": "official",
+          "url": "https://www.vasamuseet.se/en/vasa-history/disaster",
+          "accessedAt": "2026-09-10",
+          "note": "«Within minutes, the ship was on the sea bed at a depth of 32 metres.»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NOAA: RMS Titanic — History and Significance",
+          "kind": "official",
+          "url": "https://www.noaa.gov/office-of-general-counsel/gc-international-section/rms-titanic-history-and-significance",
+          "accessedAt": "2026-09-10",
+          "note": "«two and a half miles below the ocean surface (depth of 12,500 feet or 3,800 meters)»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NHHC: Indianapolis II (CA-35)",
+          "kind": "official",
+          "url": "https://www.history.navy.mil/research/histories/ship-histories/danfs/i/indianapolis-ii.html",
+          "accessedAt": "2026-09-10",
+          "note": "«On 18 August 2017, Paul G. Allen's research vessel Petrel located wreckage from Indianapolis some 5,500 meters below the surface»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "NHHC: Wreckage Confirmed as Heroic USS Johnston (DD-557)",
+          "kind": "official",
+          "url": "https://www.history.navy.mil/news-and-events/news/2021/wreckage-confirmed-as-heroic-uss-johnston--dd-557-.html",
+          "accessedAt": "2026-09-10",
+          "note": "«Vescovo located Johnston’s bow further down the cliff face to about 21,180 feet.»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c5-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "russia-zapovedniki-god-108",
+      "category": "russia",
+      "prompt": "Расположите заповедники по году основания",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый старый",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Астраханский заповедник",
+          "subtitle": "Астраханская область",
+          "sortValue": 1919,
+          "displayValue": "1919 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Кавказский заповедник",
+          "subtitle": "Западный Кавказ",
+          "sortValue": 1924,
+          "displayValue": "1924 год",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Алтайский заповедник",
+          "subtitle": "Республика Алтай",
+          "sortValue": 1932,
+          "displayValue": "1932 год",
+          "sourceIds": [
+            "s3"
+          ],
+          "note": "Образован 16 апреля 1932 года"
+        },
+        {
+          "cardId": "c4",
+          "title": "Саяно-Шушенский заповедник",
+          "subtitle": "Красноярский край",
+          "sortValue": 1976,
+          "displayValue": "1976 год",
+          "sourceIds": [
+            "s4"
+          ],
+          "note": "Учреждён 17 марта 1976 года"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Первые три заповедника появились в первые пятнадцать лет советской власти: Астраханский — в 1919 году, Кавказский — в 1924-м, Алтайский — в 1932-м. Саяно-Шушенский моложе Алтайского на 44 года: его учредили постановлением Совета Министров РСФСР в 1976 году.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Астраханский биосферный заповедник: официальный сайт",
+          "kind": "official",
+          "url": "https://www.astrakhanzapoved.ru/",
+          "accessedAt": "2026-09-10",
+          "note": "«Астраханский биосферный заповедник Основан в 1919 году»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Кавказский биосферный заповедник: официальный сайт",
+          "kind": "official",
+          "url": "https://www.kavkazzapoved.ru/",
+          "accessedAt": "2026-09-10",
+          "note": "«Кавказский государственный природный биосферный заповедник имени Х.Г. Шапошникова основан в 1924 году»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Алтайский биосферный заповедник: официальный сайт",
+          "kind": "official",
+          "url": "https://www.altzapovednik.ru/",
+          "accessedAt": "2026-09-10",
+          "note": "«Образован 16 апреля 1932 года»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Саяно-Шушенский заповедник: история",
+          "kind": "official",
+          "url": "https://sayanzapoved.ru/istorija",
+          "accessedAt": "2026-09-10",
+          "note": "«Заповедник был учрежден постановлением Совета Министров РСФСР № 179 от 17 марта 1976 года на площади 389570 га»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c5-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "nat-veter-skorost-109",
+      "category": "nature",
+      "prompt": "Расположите ветры шкалы Бофорта по нижней границе скорости",
+      "sortKey": "speed",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый слабый",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Свежий ветер",
+          "subtitle": "Качаются тонкие стволы деревьев",
+          "sortValue": 28.8,
+          "displayValue": "от 28,8 км/ч",
+          "sourceIds": [
+            "s1"
+          ],
+          "note": "8,0 м/с × 3,6 = 28,8 км/ч"
+        },
+        {
+          "cardId": "c2",
+          "title": "Крепкий ветер",
+          "subtitle": "Идти против ветра трудно",
+          "sortValue": 50.04,
+          "displayValue": "от 50 км/ч",
+          "sourceIds": [
+            "s1"
+          ],
+          "note": "13,9 м/с × 3,6 = 50,04 км/ч"
+        },
+        {
+          "cardId": "c3",
+          "title": "Очень крепкий ветер",
+          "subtitle": "Ломает сучья деревьев",
+          "sortValue": 61.92,
+          "displayValue": "от 61,9 км/ч",
+          "sourceIds": [
+            "s1"
+          ],
+          "note": "17,2 м/с × 3,6 = 61,92 км/ч"
+        },
+        {
+          "cardId": "c4",
+          "title": "Шторм",
+          "subtitle": "Срывает черепицу и дымовые колпаки",
+          "sortValue": 74.88,
+          "displayValue": "от 74,9 км/ч",
+          "sourceIds": [
+            "s1"
+          ],
+          "note": "20,8 м/с × 3,6 = 74,88 км/ч"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Каждый балл шкалы Бофорта — диапазон скоростей, и здесь сравнивается его нижняя граница. Гидрометцентр России даёт её в метрах в секунду: свежий ветер начинается с 8,0 м/с, а шторм — с 20,8 м/с, то есть при скорости в 2,6 раза выше.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Гидрометцентр России: шкала Бофорта",
+          "kind": "official",
+          "url": "https://meteoinfo.ru/bofort",
+          "accessedAt": "2026-09-10",
+          "note": "«5 Свежий 8,0-10,7 … 7 Крепкий 13,9-17,1 … 8 Очень крепкий 17,2-20,7 … 9 Шторм 20,8-24,4» (м/с)"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c5-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "sci-sverhnovye-god-110",
+      "category": "science",
+      "prompt": "Расположите сверхновые по году, когда их вспышку увидели с Земли",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая ранняя",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Сверхновая в Волке",
+          "subtitle": "Созвездие Волк",
+          "sortValue": 1006,
+          "displayValue": "1006 год",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Крабовидная туманность",
+          "subtitle": "Созвездие Телец",
+          "sortValue": 1054,
+          "displayValue": "1054 год",
+          "sourceIds": [
+            "s2"
+          ],
+          "note": "Остаток вспышки, которую наблюдали в 1054 году"
+        },
+        {
+          "cardId": "c3",
+          "title": "Сверхновая Тихо",
+          "subtitle": "Созвездие Кассиопея",
+          "sortValue": 1572,
+          "displayValue": "1572 год",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Сверхновая Кеплера",
+          "subtitle": "Созвездие Змееносец",
+          "sortValue": 1604,
+          "displayValue": "1604 год",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Все четыре вспышки записали очевидцы: в 1006 году «новая звезда» стала ярче Венеры, Крабовидная туманность — остаток вспышки 1054 года. Сверхновые 1572 и 1604 годов названы в честь Тихо Браге и Иоганна Кеплера, которые их наблюдали.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Chandra X-ray Center: SN 1006",
+          "kind": "official",
+          "url": "https://chandra.harvard.edu/photo/2013/sn1006/",
+          "accessedAt": "2026-09-10",
+          "note": "«In 1006 AD, what was thought to be a \"new star\" suddenly appeared in the sky and over the course of a few days became brighter than the planet Venus.»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Chandra X-ray Center: Crab Nebula",
+          "kind": "official",
+          "url": "https://chandra.harvard.edu/photo/2018/crab/",
+          "accessedAt": "2026-09-10",
+          "note": "«The star that exploded to create the Crab Nebula was reportedly first seen from Earth in 1054 A.D.»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Chandra X-ray Center: Tycho's Supernova Remnant",
+          "kind": "official",
+          "url": "https://chandra.harvard.edu/photo/2023/tycho/",
+          "accessedAt": "2026-09-10",
+          "note": "«ejected material still propagating from a star that exploded in 1572, as seen from Earth»; «named for Danish astronomer Tycho Brahe»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Chandra X-ray Center: Kepler's Supernova Remnant",
+          "kind": "official",
+          "url": "https://chandra.harvard.edu/photo/2026/kepler/",
+          "accessedAt": "2026-09-10",
+          "note": "«German astronomer Johannes Kepler was among those who saw the star’s explosion in 1604 A.D.»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c5-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "mix-kolesa-obozreniya-vysota-111",
+      "category": "mixed",
+      "prompt": "Расположите колёса обозрения по высоте",
+      "sortKey": "height",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самое низкое",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Большое колесо Сиэтла",
+          "subtitle": "Сиэтл, США",
+          "sortValue": 60,
+          "displayValue": "60 м",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Колесо обозрения в Пратере",
+          "subtitle": "Вена, Австрия",
+          "sortValue": 64.75,
+          "displayValue": "64,75 м",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "«Лондонский глаз»",
+          "subtitle": "Лондон, Великобритания",
+          "sortValue": 135,
+          "displayValue": "135 м",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "«Солнце Москвы»",
+          "subtitle": "Москва, ВДНХ",
+          "sortValue": 140,
+          "displayValue": "140 м",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Венское колесо в Пратере выше сиэтлского почти на 5 м. «Лондонский глаз» — крупнейшее колесо консольного типа — поднимается на 135 м, а «Солнце Москвы» на ВДНХ выше его ещё на 5 м.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Seattle Great Wheel: FAQ",
+          "kind": "official",
+          "url": "https://seattlegreatwheel.com/faq/",
+          "accessedAt": "2026-09-10",
+          "note": "«The Seattle Great Wheel is the largest observation wheel on the west coast, standing 60 meters tall.»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Wiener Riesenrad: Technical data",
+          "kind": "official",
+          "url": "https://www.wienerriesenrad.com/en/technical-data",
+          "accessedAt": "2026-09-10",
+          "note": "«Highest point of the Ferris wheel 64.75 m above the ground»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "The London Eye: Interesting facts",
+          "kind": "official",
+          "url": "https://www.londoneye.com/AboutUs/InterestingFacts/Default.aspx",
+          "accessedAt": "2026-09-10",
+          "note": "«It is the world’s largest cantilever observation wheel and is 135m tall.»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "ВДНХ: колесо обозрения «Солнце Москвы»",
+          "kind": "official",
+          "url": "https://vdnh.ru/places/koleso-obozreniya-solntse-moskvy/",
+          "accessedAt": "2026-09-10",
+          "note": "«Колесо обозрения открылось у Южного входа ВДНХ, оно стало крупнейшим в Европе и имеет высоту 140 метров.»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 3,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c5-precheck",
+      "retiredIn": null
     }
   ]
 }
