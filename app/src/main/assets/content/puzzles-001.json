@@ -6833,6 +6833,2420 @@
       "verifiedAt": "2026-09-05",
       "verifiedBy": "agent-4c3-precheck",
       "retiredIn": null
+    },
+    {
+      "puzzleId": "russia-zapovedniki-ploshchad-070",
+      "category": "russia",
+      "prompt": "Расположите заповедники по общей площади",
+      "sortKey": "area",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый малый",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Баргузинский",
+          "subtitle": "Северо-восточный берег Байкала",
+          "sortValue": 3669,
+          "displayValue": "3669 км²",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ],
+          "note": "Сайт заповедника — 366 868 га; Википедия — 374 322 га",
+          "disputed": true
+        },
+        {
+          "cardId": "c2",
+          "title": "Кроноцкий",
+          "subtitle": "Восточная Камчатка",
+          "sortValue": 11476,
+          "displayValue": "11 476 км²",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ],
+          "note": "1 147 619,37 га, включая 135 000 га морской акватории"
+        },
+        {
+          "cardId": "c3",
+          "title": "Путоранский",
+          "subtitle": "Плато Путорана, Красноярский край",
+          "sortValue": 18873,
+          "displayValue": "18 873 км²",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ],
+          "note": "1 887 251 га"
+        },
+        {
+          "cardId": "c4",
+          "title": "Большой Арктический",
+          "subtitle": "Побережье и острова Таймыра",
+          "sortValue": 41692,
+          "displayValue": "41 692 км²",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ],
+          "note": "4 169 222 га"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Заповедники объявляют площадь в гектарах; здесь она переведена в квадратные километры. Разрыв между соседями — от 39 до 68 %, поэтому порядок не зависит от округления. Большой Арктический — самый крупный заповедник России.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Заповедное Подлеморье: Баргузинский биосферный заповедник",
+          "kind": "official",
+          "url": "https://zapovednoe-podlemorye.ru/save/biosphere/",
+          "accessedAt": "2026-09-07",
+          "note": "«Площадь заповедника составляет 366868 га, в том числе биосферный полигон – 111146 га»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Кроноцкий государственный заповедник",
+          "kind": "official",
+          "url": "https://kronoki.ru/",
+          "accessedAt": "2026-09-07",
+          "note": "«1 147 619,37 га», включая «135 000 га» морской акватории"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Заповедники Таймыра: Путоранский заповедник",
+          "kind": "official",
+          "url": "https://zapovedsever.ru/other/putoransky",
+          "accessedAt": "2026-09-07",
+          "note": "«Общая площадь заповедника: 1 887 251 га»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Заповедники Таймыра: Большой Арктический заповедник",
+          "kind": "official",
+          "url": "https://zapovedsever.ru/other/arctic",
+          "accessedAt": "2026-09-07",
+          "note": "«Общая площадь заповедника» — «4 169 222,0 га»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Баргузинский заповедник",
+          "kind": "other",
+          "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%B0%D1%80%D0%B3%D1%83%D0%B7%D0%B8%D0%BD%D1%81%D0%BA%D0%B8%D0%B9_%D0%B7%D0%B0%D0%BF%D0%BE%D0%B2%D0%B5%D0%B4%D0%BD%D0%B8%D0%BA",
+          "accessedAt": "2026-09-07",
+          "note": "Расхождение: в карточке статьи указано «374 322 га»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Кроноцкий заповедник",
+          "kind": "other",
+          "url": "https://ru.wikipedia.org/wiki/%D0%9A%D1%80%D0%BE%D0%BD%D0%BE%D1%86%D0%BA%D0%B8%D0%B9_%D0%B7%D0%B0%D0%BF%D0%BE%D0%B2%D0%B5%D0%B4%D0%BD%D0%B8%D0%BA",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «1 147 619,37 га»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Путоранский заповедник",
+          "kind": "other",
+          "url": "https://ru.wikipedia.org/wiki/%D0%9F%D1%83%D1%82%D0%BE%D1%80%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9_%D0%B7%D0%B0%D0%BF%D0%BE%D0%B2%D0%B5%D0%B4%D0%BD%D0%B8%D0%BA",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «1 887 251 га»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Большой Арктический заповедник",
+          "kind": "other",
+          "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%BE%D0%BB%D1%8C%D1%88%D0%BE%D0%B9_%D0%90%D1%80%D0%BA%D1%82%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B9_%D0%B7%D0%B0%D0%BF%D0%BE%D0%B2%D0%B5%D0%B4%D0%BD%D0%B8%D0%BA",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «Площадь 4169222 га»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c4-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "russia-ostrova-ploshchad-071",
+      "category": "russia",
+      "prompt": "Расположите острова и архипелаги России по площади",
+      "sortKey": "area",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый малый",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Остров Врангеля",
+          "subtitle": "Чукотское море",
+          "sortValue": 7608,
+          "displayValue": "7608 км²",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ],
+          "note": "7608,7 км² — сам остров, без острова Геральд и акватории"
+        },
+        {
+          "cardId": "c2",
+          "title": "Северная Земля",
+          "subtitle": "Архипелаг к северу от Таймыра",
+          "sortValue": 37180,
+          "displayValue": "37 180 км²",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Сахалин",
+          "subtitle": "Охотское море",
+          "sortValue": 76400,
+          "displayValue": "76 400 км²",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ],
+          "note": "Треккани — 76 400 км²; Википедия — 72 492 км²",
+          "disputed": true
+        },
+        {
+          "cardId": "c4",
+          "title": "Новая Земля",
+          "subtitle": "Между Баренцевым и Карским морями",
+          "sortValue": 82600,
+          "displayValue": "82 600 км²",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Врангеля и Сахалин — отдельные острова, Северная Земля и Новая Земля — архипелаги; везде взята площадь суши без прилегающей акватории. Разрыв между Сахалином и Новой Землёй — 7,5 %, он сохраняется и при значениях Википедии.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "UNESCO World Heritage Centre: номинационное досье «Natural System of Wrangel Island Reserve»",
+          "kind": "official",
+          "url": "https://whc.unesco.org/uploads/nominations/1023rev.pdf",
+          "accessedAt": "2026-09-10",
+          "note": "«the Natural System of Wrangel Island Reserve is made up of Wrangel Island 7608.7 km2, Herald Island 11.3 km2 and a marine area 11,543 km2»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Enciclopedia Treccani: «Nord, Terra del»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/terra-del-nord/",
+          "accessedAt": "2026-09-07",
+          "note": "«Arcipelago del Mar Glaciale Artico (37.180 km2)»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Enciclopedia Treccani: «Sahalin»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/sahalin/",
+          "accessedAt": "2026-09-07",
+          "note": "«Isola del Mar di Ohotsk (76.400 km2), appartenente alla Russia»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Enciclopedia Treccani: «Novaja zemlja»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/novaja-zemlja/",
+          "accessedAt": "2026-09-07",
+          "note": "«Arcipelago del Mar Glaciale Artico (82.600 km2)»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Wrangel Island",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Wrangel_Island",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «Area: 7,600 km2 (2,900 sq mi)»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Severnaya Zemlya",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Severnaya_Zemlya",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «37,000 km2 (14,000 sq mi)»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Sakhalin",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Sakhalin",
+          "accessedAt": "2026-09-07",
+          "note": "Расхождение: «72,492 km2 (27,989 sq mi)»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Novaya Zemlya",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Novaya_Zemlya",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «about 83,000 square kilometers (32,000 sq mi)»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c4-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "geo-prolivy-shirina-072",
+      "category": "geography",
+      "prompt": "Расположите проливы по наименьшей ширине",
+      "sortKey": "length",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый узкий",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Босфор",
+          "subtitle": "Соединяет Чёрное и Мраморное моря",
+          "sortValue": 600,
+          "displayValue": "600 м",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ],
+          "note": "Треккани — 600 м; Википедия — 700 м",
+          "disputed": true
+        },
+        {
+          "cardId": "c2",
+          "title": "Гибралтарский пролив",
+          "subtitle": "Между Европой и Африкой",
+          "sortValue": 13000,
+          "displayValue": "13 км",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ],
+          "note": "Треккани — 13 км; Википедия — 14,2 км",
+          "disputed": true
+        },
+        {
+          "cardId": "c3",
+          "title": "Па-де-Кале",
+          "subtitle": "Между Англией и Францией",
+          "sortValue": 32000,
+          "displayValue": "32 км",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Берингов пролив",
+          "subtitle": "Между Азией и Америкой",
+          "sortValue": 92000,
+          "displayValue": "92 км",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ],
+          "note": "Треккани — 92 км; Википедия — 82 км",
+          "disputed": true
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Сравнивается ширина в самом узком месте, а не длина пролива. Наименьший разрыв между соседями — 59 %, поэтому расхождения источников в сотни метров и даже километры порядок не меняют.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Enciclopedia Treccani: «Bosforo»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/bosforo",
+          "accessedAt": "2026-09-07",
+          "note": "«appena 600 nei punti più stretti»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Enciclopedia Treccani: «GIBILTERRA, Stretto di»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/stretto-di-gibilterra_(Enciclopedia-Italiana)/",
+          "accessedAt": "2026-09-07",
+          "note": "«nel punto più angusto, tra la Punta Canares e la Punta Cires, misura 13 km. di larghezza»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Enciclopedia Treccani: «Calais, Passo di»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/passo-di-calais/",
+          "accessedAt": "2026-09-07",
+          "note": "«misura 32 km di larghezza, con fondali di poche decine di metri»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Enciclopedia Treccani: «BERING, Mare e Stretto di»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/mare-e-stretto-di-bering_(Enciclopedia-Italiana)/",
+          "accessedAt": "2026-09-07",
+          "note": "«ha 92 km. di larghezza tra il Capo Orientale e il Capo Principe di Galles»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Bosporus",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Bosporus",
+          "accessedAt": "2026-09-07",
+          "note": "Расхождение: «minimum width is 700 m (0.38 nmi)»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Strait of Gibraltar",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Strait_of_Gibraltar",
+          "accessedAt": "2026-09-07",
+          "note": "Расхождение: «Min. width: 14.2 km (8.8 mi)»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Strait of Dover",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Strait_of_Dover",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «The shortest distance across the strait, at 20.6 miles (33.2 km)»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Bering Strait",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Bering_Strait",
+          "accessedAt": "2026-09-07",
+          "note": "Расхождение: «about 82 kilometers (51 mi) wide at its narrowest point»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-07",
+      "verifiedBy": "agent-4c4-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "geo-morya-naibolshaya-glubina-073",
+      "category": "geography",
+      "prompt": "Расположите моря по наибольшей глубине",
+      "sortKey": "depth",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самое мелкое",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Белое море",
+          "subtitle": "Внутреннее море на севере Европы",
+          "sortValue": 427,
+          "displayValue": "427 м",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ],
+          "note": "Треккани — 427 м; Википедия — 340 м",
+          "disputed": true
+        },
+        {
+          "cardId": "c2",
+          "title": "Балтийское море",
+          "subtitle": "Северная Европа",
+          "sortValue": 469,
+          "displayValue": "469 м",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Чёрное море",
+          "subtitle": "Между Европой и Малой Азией",
+          "sortValue": 2245,
+          "displayValue": "2245 м",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Средиземное море",
+          "subtitle": "Между Европой, Африкой и Азией",
+          "sortValue": 5121,
+          "displayValue": "5121 м",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Сравнивается наибольшая измеренная глубина, а не средняя. У Белого и Балтийского морей разрыв всего 9 %, но он сохраняется и по данным Википедии; глубочайшая точка Средиземного моря — впадина Калипсо в Ионическом море.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Enciclopedia Treccani: «Bianco, Mar»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/mar-bianco/",
+          "accessedAt": "2026-09-07",
+          "note": "«Profondità max 427 m.»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Enciclopedia Treccani: «BALTICO, MARE»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/mare-baltico_(Enciclopedia-Italiana)/",
+          "accessedAt": "2026-09-07",
+          "note": "«la massima profondità, 469 m., si trova a circa 100 km. a NNE. di Gottland»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Enciclopedia Treccani: «Nero, Mar»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/mar-nero/",
+          "accessedAt": "2026-09-07",
+          "note": "«profondità massima di 2245 m»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Enciclopedia Treccani: «Mediterraneo, Mare»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/mare-mediterraneo/",
+          "accessedAt": "2026-09-07",
+          "note": "«una massima, presso le coste sud-occidentali del Peloponneso, di 5121 m»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): White Sea",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/White_Sea",
+          "accessedAt": "2026-09-07",
+          "note": "Расхождение: «Max. depth: 340 m (1,115 ft)»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Baltic Sea",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Baltic_Sea",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «459 m (1,506 ft)»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Black Sea",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Black_Sea",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «has a maximum depth of 2,212 m (7,257 ft)»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Mediterranean Sea",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Mediterranean_Sea",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «5,109 ± 1 m … in the Calypso Deep»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-07",
+      "verifiedBy": "agent-4c4-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "geo-ozera-afriki-ploshchad-074",
+      "category": "geography",
+      "prompt": "Расположите африканские озёра по площади зеркала",
+      "sortKey": "area",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самое малое",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Туркана",
+          "subtitle": "Кения и Эфиопия",
+          "sortValue": 8500,
+          "displayValue": "8500 км²",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ],
+          "note": "Треккани — 8500 км²; Википедия — 6405 км²",
+          "disputed": true
+        },
+        {
+          "cardId": "c2",
+          "title": "Ньяса",
+          "subtitle": "Малави, Мозамбик и Танзания",
+          "sortValue": 26500,
+          "displayValue": "26 500 км²",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ],
+          "note": "Треккани — 26 500 км²; Википедия — 29 600 км²",
+          "disputed": true
+        },
+        {
+          "cardId": "c3",
+          "title": "Танганьика",
+          "subtitle": "Четыре страны Восточной Африки",
+          "sortValue": 31900,
+          "displayValue": "31 900 км²",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Виктория",
+          "subtitle": "Танзания, Уганда и Кения",
+          "sortValue": 68000,
+          "displayValue": "68 000 км²",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ],
+          "note": "Треккани — 68 000 км²; Википедия — 59 947 км²",
+          "disputed": true
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Сравнивается площадь водного зеркала, а не объём и не глубина: по объёму Танганьика превосходит Викторию. Наименьший разрыв — 17 % между Ньясой и Танганьикой; он сохраняется и при значениях Википедии.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Enciclopedia Treccani: «Turkana, Lago»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/lago-turkana/",
+          "accessedAt": "2026-09-07",
+          "note": "«Grande lago dell'Africa orientale (8500 km2)»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Enciclopedia Treccani: «NIASSA, Lago»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/lago-niassa_(Enciclopedia-Italiana)/",
+          "accessedAt": "2026-09-07",
+          "note": "«ha una superficie di 26.500 kmq.»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Enciclopedia Treccani: «TANGANICA, Lago»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/lago-tanganica_(Enciclopedia-Italiana)/",
+          "accessedAt": "2026-09-07",
+          "note": "«il secondo per superficie (31.900 kmq.)»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Enciclopedia Treccani: «Vittoria, Lago»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/lago-vittoria/",
+          "accessedAt": "2026-09-07",
+          "note": "«un'area di 68.000 km2»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Lake Turkana",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Lake_Turkana",
+          "accessedAt": "2026-09-07",
+          "note": "Расхождение: «6,405 km2 (2,473 sq mi)»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Lake Malawi",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Lake_Malawi",
+          "accessedAt": "2026-09-07",
+          "note": "Расхождение: «29,600 km2 (11,400 sq mi)»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Lake Tanganyika",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Lake_Tanganyika",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «32,900 km2 (12,700 sq mi)»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Lake Victoria",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Lake_Victoria",
+          "accessedAt": "2026-09-07",
+          "note": "Расхождение: «59,947 km2 (23,146 sq mi)»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-07",
+      "verifiedBy": "agent-4c4-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "geo-reki-yuzhnoy-ameriki-dlina-075",
+      "category": "geography",
+      "prompt": "Расположите реки Южной Америки по длине",
+      "sortKey": "length",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая короткая",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Магдалена",
+          "subtitle": "Колумбия",
+          "sortValue": 1550000,
+          "displayValue": "1550 км",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Ориноко",
+          "subtitle": "Венесуэла и Колумбия",
+          "sortValue": 2140000,
+          "displayValue": "2140 км",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Сан-Франсиску",
+          "subtitle": "Бразилия",
+          "sortValue": 2900000,
+          "displayValue": "2900 км",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Амазонка",
+          "subtitle": "Перу, Колумбия и Бразилия",
+          "sortValue": 7100000,
+          "displayValue": "7100 км",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ],
+          "note": "Треккани — 7100 км от истоков Укаяли; Википедия — 6575 км",
+          "disputed": true
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Длина реки зависит от того, какой приток считают истоком: Треккани отсчитывает Амазонку от истоков Укаяли и получает 7100 км, Википедия — 6575 км. При любом из двух значений Амазонка остаётся самой длинной в этом ряду.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Enciclopedia Treccani: «Magdalena»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/magdalena/",
+          "accessedAt": "2026-09-07",
+          "note": "«Fiume dell'America Meridionale (1550 km; bacino: 250.000 km2)»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Enciclopedia Treccani: «Orinoco»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/orinoco/",
+          "accessedAt": "2026-09-07",
+          "note": "«Fiume del Venezuela (2140 km; bacino di 948.000 km2)»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Enciclopedia Treccani: «São Francisco»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/sao-francisco/",
+          "accessedAt": "2026-09-07",
+          "note": "«Fiume del Brasile (2900 km; bacino di 652.000 km2)»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Enciclopedia Treccani: «Rio delle Amazzoni»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/rio-delle-amazzoni/",
+          "accessedAt": "2026-09-07",
+          "note": "«Complessivamente è lungo 7100 km (dalle sorgenti dell'Ucayali)»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Magdalena River",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Magdalena_River",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «a length of 1,528 km»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Orinoco",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Orinoco",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «one of the longest rivers in South America at 2,140 km (1,330 mi)»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): São Francisco River",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/S%C3%A3o_Francisco_River",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «With a length of 2,914 kilometres (1,811 mi)»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Amazon River",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Amazon_River",
+          "accessedAt": "2026-09-07",
+          "note": "Расхождение: «6,575 km (4,086 mi)»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-07",
+      "verifiedBy": "agent-4c4-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "nat-lastonogie-massa-076",
+      "category": "nature",
+      "prompt": "Расположите ластоногих по наибольшей массе взрослой особи",
+      "sortKey": "mass",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самое лёгкое",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Обыкновенный тюлень",
+          "subtitle": "Побережья Северной Атлантики",
+          "sortValue": 129,
+          "displayValue": "129 кг",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ],
+          "note": "NOAA — 285 фунтов (129 кг); Википедия — 168 кг",
+          "disputed": true
+        },
+        {
+          "cardId": "c2",
+          "title": "Гавайский тюлень-монах",
+          "subtitle": "Гавайские острова",
+          "sortValue": 272,
+          "displayValue": "272 кг",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ],
+          "note": "600 фунтов = 272 кг"
+        },
+        {
+          "cardId": "c3",
+          "title": "Сивуч",
+          "subtitle": "Северная часть Тихого океана",
+          "sortValue": 1134,
+          "displayValue": "1134 кг",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ],
+          "note": "2500 фунтов = 1134 кг, самцы"
+        },
+        {
+          "cardId": "c4",
+          "title": "Северный морской слон",
+          "subtitle": "Тихоокеанское побережье Америки",
+          "sortValue": 1996,
+          "displayValue": "1996 кг",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ],
+          "note": "NOAA — 4400 фунтов (1996 кг); Википедия — до 3700 кг",
+          "disputed": true
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Во всех четырёх карточках взята верхняя граница массы взрослой особи по NOAA и пересчитана из фунтов в килограммы. Наименьший разрыв — 43 % между сивучом и морским слоном, поэтому расхождения источников порядок не меняют.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NOAA Fisheries: Harbor Seal",
+          "kind": "official",
+          "url": "https://www.fisheries.noaa.gov/species/harbor-seal",
+          "accessedAt": "2026-09-07",
+          "note": "Quick Facts, Weight: «24 pounds (birth) to 180 to 285 pounds (adult)»; 285 фунтов = 129,3 кг"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NOAA Fisheries: Hawaiian Monk Seal",
+          "kind": "official",
+          "url": "https://www.fisheries.noaa.gov/species/hawaiian-monk-seal",
+          "accessedAt": "2026-09-07",
+          "note": "Quick Facts, Weight: «400 to 600 pounds»; 600 фунтов = 272,2 кг"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NOAA Fisheries: Steller Sea Lion",
+          "kind": "official",
+          "url": "https://www.fisheries.noaa.gov/species/steller-sea-lion",
+          "accessedAt": "2026-09-07",
+          "note": "Quick Facts, Weight: «Up to 2,500 pounds (males) or 800 pounds (females)»; 2500 фунтов = 1134 кг"
+        },
+        {
+          "sourceId": "s4",
+          "title": "NOAA Fisheries: Northern Elephant Seal",
+          "kind": "official",
+          "url": "https://www.fisheries.noaa.gov/species/northern-elephant-seal",
+          "accessedAt": "2026-09-07",
+          "note": "Quick Facts, Weight: «1,300 to 4,400 pounds»; 4400 фунтов = 1995,8 кг"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Harbor seal",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Harbor_seal",
+          "accessedAt": "2026-09-07",
+          "note": "Расхождение: «weigh up to 168 kg (370 lb)»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Hawaiian monk seal",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Hawaiian_monk_seal",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «400 to 600 lb (180 to 270 kg)»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Steller sea lion",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Steller_sea_lion",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «Males can weigh between 450–1,120 kg (990–2,470 lb)»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Northern elephant seal",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Northern_elephant_seal",
+          "accessedAt": "2026-09-07",
+          "note": "Расхождение: «some males can weigh up to 3,700 kg (8,200 lb)»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-07",
+      "verifiedBy": "agent-4c4-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "nat-ledniki-ploshchad-077",
+      "category": "nature",
+      "prompt": "Расположите ледники и ледниковые щиты по площади",
+      "sortKey": "area",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый малый",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Ледник Малеспина",
+          "subtitle": "Аляска, США",
+          "sortValue": 3363,
+          "displayValue": "3363 км²",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ],
+          "note": "NSIDC — 3363 км²; Википедия — 3900 км²",
+          "disputed": true
+        },
+        {
+          "cardId": "c2",
+          "title": "Ледник Селлера",
+          "subtitle": "Антарктический полуостров",
+          "sortValue": 7000,
+          "displayValue": "7000 км²",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Гренландский щит",
+          "subtitle": "Гренландия",
+          "sortValue": 1710000,
+          "displayValue": "1 710 000 км²",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Антарктический щит",
+          "subtitle": "Антарктида",
+          "sortValue": 14000000,
+          "displayValue": "14 000 000 км²",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "В одном ряду стоят два отдельных ледника и два ледниковых щита: величина у всех одна — площадь ледового покрова. Между ледником Селлера и Гренландским щитом разрыв больше двух порядков.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NSIDC: Glacier Quick Facts",
+          "kind": "official",
+          "url": "https://nsidc.org/learn/parts-cryosphere/glaciers/glacier-quick-facts",
+          "accessedAt": "2026-09-07",
+          "note": "«an area of 3,363 square kilometers (1,298 square miles)» — Malaspina-Seward"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NSIDC: Glacier Quick Facts (Seller Glacier)",
+          "kind": "official",
+          "url": "https://nsidc.org/learn/parts-cryosphere/glaciers/glacier-quick-facts",
+          "accessedAt": "2026-09-07",
+          "note": "«measuring over 7,000 square kilometers (2,700 square miles)»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NSIDC: Glacier Quick Facts (Greenland Ice Sheet)",
+          "kind": "official",
+          "url": "https://nsidc.org/learn/parts-cryosphere/glaciers/glacier-quick-facts",
+          "accessedAt": "2026-09-07",
+          "note": "«extends about 1.7 million square kilometers (656,000 square miles)»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "NSIDC: Glacier Quick Facts (Antarctic Ice Sheet)",
+          "kind": "official",
+          "url": "https://nsidc.org/learn/parts-cryosphere/glaciers/glacier-quick-facts",
+          "accessedAt": "2026-09-07",
+          "note": "«extends almost 14 million square kilometers (5.4 million square miles)»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Malaspina Glacier",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Malaspina_Glacier",
+          "accessedAt": "2026-09-07",
+          "note": "Расхождение: «3,900 km2 (1,500 sq mi)»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Seller Glacier",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Seller_Glacier",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «measuring 7,000 square kilometres or 2,700 square miles wide»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Greenland ice sheet",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Greenland_ice_sheet",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «The ice sheet covers 1,710,000 square kilometres (660,000 sq mi)»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Antarctic ice sheet",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Antarctic_ice_sheet",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «with an area of 14 million square kilometres (5.4 million square miles)»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c4-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "nat-akuly-dlina-078",
+      "category": "nature",
+      "prompt": "Расположите акул по наибольшей длине",
+      "sortKey": "length",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая короткая",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Песчаная акула",
+          "subtitle": "Прибрежные воды Атлантики",
+          "sortValue": 3.2,
+          "displayValue": "3,2 м",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ],
+          "note": "10,5 фута = 3,2 м"
+        },
+        {
+          "cardId": "c2",
+          "title": "Синяя акула",
+          "subtitle": "Открытый океан",
+          "sortValue": 3.8,
+          "displayValue": "3,8 м",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ],
+          "note": "12,5 фута = 3,8 м"
+        },
+        {
+          "cardId": "c3",
+          "title": "Белая акула",
+          "subtitle": "Умеренные воды всех океанов",
+          "sortValue": 6.4,
+          "displayValue": "6,4 м",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ],
+          "note": "21 фут = 6,4 м"
+        },
+        {
+          "cardId": "c4",
+          "title": "Китовая акула",
+          "subtitle": "Тёплые воды всех океанов",
+          "sortValue": 12.2,
+          "displayValue": "12,2 м",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ],
+          "note": "NOAA — 40 футов (12,2 м); Википедия — 18,8 м",
+          "disputed": true
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Все четыре значения взяты из определителя акул NOAA в одной формулировке «To about X ft» и пересчитаны в метры. Китовая акула — не хищник-охотник, а фильтратор, и при любом из двух значений остаётся самой длинной.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NOAA Fisheries: Shark Identification (S–W)",
+          "kind": "official",
+          "url": "https://www.fisheries.noaa.gov/new-england-mid-atlantic/atlantic-highly-migratory-species/shark-identification-cooperative-shark-0",
+          "accessedAt": "2026-09-07",
+          "note": "Sand Tiger: «To about 10.5 ft (3.2 m).»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NOAA Fisheries: Shark Identification (A–B)",
+          "kind": "official",
+          "url": "https://www.fisheries.noaa.gov/new-england-mid-atlantic/atlantic-highly-migratory-species/shark-identification-cooperative-shark",
+          "accessedAt": "2026-09-07",
+          "note": "Blue Shark: «To about 12.5 ft (3.8 m).»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NOAA Fisheries: Shark Identification (S–W), White Shark",
+          "kind": "official",
+          "url": "https://www.fisheries.noaa.gov/new-england-mid-atlantic/atlantic-highly-migratory-species/shark-identification-cooperative-shark-0",
+          "accessedAt": "2026-09-07",
+          "note": "White Shark: «To about 21 ft (6.4 m).»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "NOAA Fisheries: Shark Identification (S–W), Whale Shark",
+          "kind": "official",
+          "url": "https://www.fisheries.noaa.gov/new-england-mid-atlantic/atlantic-highly-migratory-species/shark-identification-cooperative-shark-0",
+          "accessedAt": "2026-09-07",
+          "note": "Whale Shark: «To about 40 ft (12.2 m).»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Sand tiger shark",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Sand_tiger_shark",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «The sand tiger's length can reach 3.2 m (10.5 ft)»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Blue shark",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Blue_shark",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «Large specimens can grow to 3.8 m (12 ft) long.»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Great white shark",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Great_white_shark",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «the longest reliably measured shark to be 6.02 m (19.8 ft)»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Whale shark",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Whale_shark",
+          "accessedAt": "2026-09-07",
+          "note": "Расхождение: «An individual with a length of 18.8 m (61.7 ft) has been considered the largest reliably recorded»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-07",
+      "verifiedBy": "agent-4c4-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "sci-planetohody-rasstoyanie-079",
+      "category": "science",
+      "prompt": "Расположите самоходные аппараты по пути, пройденному вне Земли",
+      "sortKey": "distance",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый короткий путь",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "«Соджорнер»",
+          "subtitle": "Марс, 1997 год",
+          "sortValue": 100.6,
+          "displayValue": "101 м",
+          "sourceIds": [
+            "s1"
+          ],
+          "note": "330 футов = 100,6 м"
+        },
+        {
+          "cardId": "c2",
+          "title": "«Спирит»",
+          "subtitle": "Марс, 2004–2010 годы",
+          "sortValue": 7730,
+          "displayValue": "7,73 км",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Лунный ровер «Аполлона-17»",
+          "subtitle": "Луна, 1972 год",
+          "sortValue": 30500,
+          "displayValue": "30,5 км",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "«Оппортьюнити»",
+          "subtitle": "Марс, 2004–2018 годы",
+          "sortValue": 45160,
+          "displayValue": "45,16 км",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Сравнивается путь по поверхности другого небесного тела, и он измерен одинаково для трёх роботов и одной машины с экипажем. «Соджорнер» уступает «Оппортьюнити» более чем в четыреста раз; все четыре миссии завершены, поэтому значения окончательны.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NASA: 25 Years Ago: Mars Pathfinder Launches to Mars",
+          "kind": "official",
+          "url": "https://www.nasa.gov/history/25-years-ago-mars-pathfinder-launches-to-mars-to-deploy-sojourner-the-first-planetary-rover/",
+          "accessedAt": "2026-09-07",
+          "note": "«the rover traveled a total distance of 330 feet»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NASA Science: Spirit (Mars Exploration Rover)",
+          "kind": "official",
+          "url": "https://science.nasa.gov/mission/mer-spirit/",
+          "accessedAt": "2026-09-07",
+          "note": "«The rover traveled 4.8 miles (7.73 kilometers) across the Martian plains.»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NASA: Apollo 17 Mission Details",
+          "kind": "official",
+          "url": "https://www.nasa.gov/missions/apollo/apollo-17-mission-details/",
+          "accessedAt": "2026-09-07",
+          "note": "«The lunar rover vehicle traversed a total of 30.5 kilometers.»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "NASA Science: Opportunity (Mars Exploration Rover)",
+          "kind": "official",
+          "url": "https://science.nasa.gov/mission/mer-opportunity/",
+          "accessedAt": "2026-09-07",
+          "note": "«total rover odometry was 28.06 miles (45.16 kilometers)»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-07",
+      "verifiedBy": "agent-4c4-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "sci-sputniki-yupitera-rasstoyanie-080",
+      "category": "science",
+      "prompt": "Расположите галилеевы спутники по расстоянию от Юпитера",
+      "sortKey": "distance",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый близкий",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Ио",
+          "subtitle": "Самый вулканически активный мир",
+          "sortValue": 422000000,
+          "displayValue": "422 000 км",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Европа",
+          "subtitle": "Океан подо льдом",
+          "sortValue": 671000000,
+          "displayValue": "671 000 км",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Ганимед",
+          "subtitle": "Крупнейший спутник Солнечной системы",
+          "sortValue": 1070000000,
+          "displayValue": "1 070 000 км",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "Каллисто",
+          "subtitle": "Самая изрытая кратерами поверхность",
+          "sortValue": 1883000000,
+          "displayValue": "1 883 000 км",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Сравнивается радиус орбиты вокруг Юпитера, а не размер спутника. Соседние орбиты различаются не менее чем на 37 %, а Ио, Европа и Ганимед связаны резонансом: на один оборот Ганимеда приходится два оборота Европы и четыре — Ио.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NASA Science: Io Facts",
+          "kind": "official",
+          "url": "https://science.nasa.gov/jupiter/jupiter-moons/io/facts/",
+          "accessedAt": "2026-09-07",
+          "note": "«a cozy 262,000 miles (422,000 kilometers) from Jupiter»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NASA Science: Europa Facts",
+          "kind": "official",
+          "url": "https://science.nasa.gov/jupiter/jupiter-moons/europa/europa-facts/",
+          "accessedAt": "2026-09-07",
+          "note": "«Europa orbits Jupiter at about 417,000 miles (671,000 kilometers) from the planet»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NASA Science: Ganymede Facts",
+          "kind": "official",
+          "url": "https://science.nasa.gov/jupiter/jupiter-moons/ganymede/facts/",
+          "accessedAt": "2026-09-07",
+          "note": "«Ganymede is about 665,000 miles (1.07 million kilometers) from Jupiter»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "NASA Science: Callisto Facts",
+          "kind": "official",
+          "url": "https://science.nasa.gov/jupiter/jupiter-moons/callisto/facts/",
+          "accessedAt": "2026-09-07",
+          "note": "«Callisto orbits about 1,170,000 miles (1,883,000 kilometers) from Jupiter»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-07",
+      "verifiedBy": "agent-4c4-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "sci-sputniki-saturna-diametr-081",
+      "category": "science",
+      "prompt": "Расположите спутники Сатурна по среднему диаметру",
+      "sortKey": "length",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый малый",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Мимас",
+          "subtitle": "Кратер Гершель на треть диаметра",
+          "sortValue": 394000,
+          "displayValue": "394 км",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Энцелад",
+          "subtitle": "Гейзеры из подлёдного океана",
+          "sortValue": 500000,
+          "displayValue": "500 км",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Рея",
+          "subtitle": "Второй по величине спутник Сатурна",
+          "sortValue": 1528000,
+          "displayValue": "1528 км",
+          "sourceIds": [
+            "s3"
+          ],
+          "note": "Радиус 764 км по NASA, диаметр — вдвое больше"
+        },
+        {
+          "cardId": "c4",
+          "title": "Титан",
+          "subtitle": "Плотная атмосфера и озёра метана",
+          "sortValue": 5150000,
+          "displayValue": "5150 км",
+          "sourceIds": [
+            "s4"
+          ],
+          "note": "Радиус 2575 км по NASA, диаметр — вдвое больше"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "NASA приводит для Мимаса и Энцелада диаметр, а для Реи и Титана — радиус; здесь всё сведено к диаметру. Титан крупнее Мимаса в тринадцать раз; именно у него NASA отмечает плотную атмосферу и озёра из метана.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NASA Science: Mimas",
+          "kind": "official",
+          "url": "https://science.nasa.gov/saturn/moons/mimas/",
+          "accessedAt": "2026-09-07",
+          "note": "«mean diameter of about 245 miles (394 kilometers)»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NASA Science: Enceladus",
+          "kind": "official",
+          "url": "https://science.nasa.gov/saturn/moons/enceladus/",
+          "accessedAt": "2026-09-07",
+          "note": "«only about 310 miles (500 kilometers) across»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NASA Science: Rhea",
+          "kind": "official",
+          "url": "https://science.nasa.gov/saturn/moons/rhea/",
+          "accessedAt": "2026-09-07",
+          "note": "«a mean radius of 475 miles (764 kilometers)»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "NASA Science: Titan Facts",
+          "kind": "official",
+          "url": "https://science.nasa.gov/saturn/moons/titan/facts/",
+          "accessedAt": "2026-09-07",
+          "note": "«Titan has a radius of about 1,600 miles (2,575 kilometers).»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 3,
+      "verifiedAt": "2026-09-07",
+      "verifiedBy": "agent-4c4-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "hist-pervye-polety-dlitelnost-082",
+      "category": "history",
+      "prompt": "Расположите ранние пилотируемые космические полёты по длительности",
+      "sortKey": "duration",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый короткий",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "«Фридом-7»",
+          "subtitle": "Алан Шепард, май 1961 года",
+          "sortValue": 922,
+          "displayValue": "15 мин 22 с",
+          "sourceIds": [
+            "s1"
+          ],
+          "note": "Суборбитальный полёт без выхода на орбиту"
+        },
+        {
+          "cardId": "c2",
+          "title": "«Восток-1»",
+          "subtitle": "Юрий Гагарин, апрель 1961 года",
+          "sortValue": 6480,
+          "displayValue": "108 мин",
+          "sourceIds": [
+            "s2"
+          ],
+          "note": "Один виток вокруг Земли"
+        },
+        {
+          "cardId": "c3",
+          "title": "«Френдшип-7»",
+          "subtitle": "Джон Гленн, февраль 1962 года",
+          "sortValue": 17723,
+          "displayValue": "4 ч 55 мин 23 с",
+          "sourceIds": [
+            "s3"
+          ],
+          "note": "Три витка вокруг Земли"
+        },
+        {
+          "cardId": "c4",
+          "title": "«Фейт-7»",
+          "subtitle": "Гордон Купер, май 1963 года",
+          "sortValue": 123589,
+          "displayValue": "1 сут 10 ч 19 мин",
+          "sourceIds": [
+            "s4"
+          ],
+          "note": "Последний полёт программы «Меркурий»"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Год полёта и его длительность здесь не совпадают: «Восток-1» стартовал раньше «Фридом-7», но продлился в семь раз дольше, потому что вышел на орбиту, а полёт Шепарда был суборбитальным. Каждый следующий полёт длиннее предыдущего не менее чем на 63 %.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NASA: 60 Years Ago: Alan Shepard Becomes the First American in Space",
+          "kind": "official",
+          "url": "https://www.nasa.gov/history/60-years-ago-alan-shepard-becomes-the-first-american-in-space/",
+          "accessedAt": "2026-09-07",
+          "note": "«after a flight of 15 minutes 22 seconds, Freedom 7 splashed down in the Atlantic Ocean»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NASA: April 1961 — First Human Entered Space",
+          "kind": "official",
+          "url": "https://www.nasa.gov/image-article/april-1961-first-human-entered-space/",
+          "accessedAt": "2026-09-07",
+          "note": "«His vehicle, Vostok 1 circled Earth … with the flight lasting 108 minutes.»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NASA: Mercury-Atlas 6 — Friendship 7",
+          "kind": "official",
+          "url": "https://www.nasa.gov/mission/mercury-atlas-6-friendship-7/",
+          "accessedAt": "2026-09-07",
+          "note": "«The flight lasted a total of 4 hours, 55 minutes, and 23 seconds»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "NASA: Mercury-Atlas 9 — Faith 7",
+          "kind": "official",
+          "url": "https://www.nasa.gov/mission/mercury-atlas-9-faith-7/",
+          "accessedAt": "2026-09-07",
+          "note": "«Duration: 1 Day, 10 hours, 19 minutes, 49 seconds»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c4-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "hist-apollon-dlitelnost-083",
+      "category": "history",
+      "prompt": "Расположите высадки «Аполлонов» по времени пребывания на Луне",
+      "sortKey": "duration",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая короткая",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "«Аполлон-11»",
+          "subtitle": "Море Спокойствия, 1969 год",
+          "sortValue": 77760,
+          "displayValue": "21 ч 36 мин",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "«Аполлон-15»",
+          "subtitle": "Хэдли — Апеннины, 1971 год",
+          "sortValue": 240900,
+          "displayValue": "66 ч 55 мин",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "«Аполлон-16»",
+          "subtitle": "Плато Декарта, 1972 год",
+          "sortValue": 255720,
+          "displayValue": "71 ч 2 мин",
+          "sourceIds": [
+            "s3"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "«Аполлон-17»",
+          "subtitle": "Тавр — Литтров, 1972 год",
+          "sortValue": 270000,
+          "displayValue": "75 ч",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Считается время от посадки до старта с Луны, а не длительность выходов наружу. «Аполлон-11» пробыл на поверхности менее суток, три последние экспедиции — около трёх суток каждая, и различаются они уже всего на 5–6 %.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NASA: Apollo 11 Mission Overview",
+          "kind": "official",
+          "url": "https://www.nasa.gov/history/apollo-11-mission-overview/",
+          "accessedAt": "2026-09-07",
+          "note": "«Armstrong and Aldrin spent 21 hours, 36 minutes on the moon's surface.»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "NASA: Apollo 15 Mission Details",
+          "kind": "official",
+          "url": "https://www.nasa.gov/missions/apollo/apollo-15-mission-details/",
+          "accessedAt": "2026-09-07",
+          "note": "«during the three days (66 hours, 55 minutes) on the lunar surface»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "NASA: Apollo 16 Mission Details",
+          "kind": "official",
+          "url": "https://www.nasa.gov/missions/apollo/apollo-16-mission-details/",
+          "accessedAt": "2026-09-07",
+          "note": "«During 71 hours, two minutes surface stay, astronauts explored region on three EVAs»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "NASA: Apollo 17 Mission Details",
+          "kind": "official",
+          "url": "https://www.nasa.gov/missions/apollo/apollo-17-mission-details/",
+          "accessedAt": "2026-09-07",
+          "note": "«Lunar surface-stay time was 75 hours, and lunar orbit time 17 hours.»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 3,
+      "verifiedAt": "2026-09-07",
+      "verifiedBy": "agent-4c4-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "hist-antichnye-goroda-god-084",
+      "category": "history",
+      "prompt": "Расположите античные города по традиционной дате основания",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый древний",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Карфаген",
+          "subtitle": "Финикийская колония в Северной Африке",
+          "sortValue": -814,
+          "displayValue": "814 до н. э.",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "Рим",
+          "subtitle": "Латинское поселение на Тибре",
+          "sortValue": -753,
+          "displayValue": "753 до н. э.",
+          "sourceIds": [
+            "s2",
+            "s5"
+          ],
+          "note": "Треккани — «754 или 753 до н. э.»; принята варроновская дата",
+          "disputed": true
+        },
+        {
+          "cardId": "c3",
+          "title": "Сиракузы",
+          "subtitle": "Коринфская колония на Сицилии",
+          "sortValue": -734,
+          "displayValue": "734 до н. э.",
+          "sourceIds": [
+            "s3"
+          ],
+          "note": "Треккани — «734–733 до н. э.»"
+        },
+        {
+          "cardId": "c4",
+          "title": "Массалия",
+          "subtitle": "Фокейская колония, нынешний Марсель",
+          "sortValue": -600,
+          "displayValue": "около 600 до н. э.",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Это даты письменной традиции, а не археологические слои: античные авторы называли их сами. Между Карфагеном и Массалией — 214 лет, и разрыв между любыми соседями не меньше девятнадцати лет.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Enciclopedia Treccani: «Cartagine»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/cartagine/",
+          "accessedAt": "2026-09-07",
+          "note": "«Fu fondata nell'814 a.C., secondo la tradizione da Elissa (Didone).»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Enciclopedia Treccani: «Roma»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/roma/",
+          "accessedAt": "2026-09-07",
+          "note": "«La tradizione annalistica romana faceva risalire la fondazione di Roma … al 754 o 753 a.C.»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Enciclopedia Treccani: «Siracusa»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/siracusa/",
+          "accessedAt": "2026-09-07",
+          "note": "«S. fu fondata nel 734-33 a.C. da coloni greci di Corinto»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Enciclopedia Treccani: «Marsiglia»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/marsiglia/",
+          "accessedAt": "2026-09-07",
+          "note": "«M. (gr. Μασσαλία, lat. Massilĭa) fu fondata intorno al 600 a.C.»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Founding of Rome",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Founding_of_Rome",
+          "accessedAt": "2026-09-07",
+          "note": "«it is the 753 BC date that continues to form the basis for most modern calculations»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-07",
+      "verifiedBy": "agent-4c4-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "hist-plavaniya-god-085",
+      "category": "history",
+      "prompt": "Расположите морские экспедиции по году выхода в плавание",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая ранняя",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Экспедиция Колумба",
+          "subtitle": "Из Палоса через Атлантику",
+          "sortValue": 1492,
+          "displayValue": "1492 год",
+          "sourceIds": [
+            "s1"
+          ],
+          "note": "Вышла из Палоса 3 августа 1492 года"
+        },
+        {
+          "cardId": "c2",
+          "title": "Экспедиция Васко да Гамы",
+          "subtitle": "Из Белена вокруг Африки в Индию",
+          "sortValue": 1497,
+          "displayValue": "1497 год",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "Экспедиция Магеллана",
+          "subtitle": "Из Санлукара вокруг света",
+          "sortValue": 1519,
+          "displayValue": "1519 год",
+          "sourceIds": [
+            "s3"
+          ],
+          "note": "Вышла из Санлукара в сентябре 1519 года"
+        },
+        {
+          "cardId": "c4",
+          "title": "Первое плавание Кука",
+          "subtitle": "Из Плимута в южную часть Тихого океана",
+          "sortValue": 1768,
+          "displayValue": "1768 год",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Считается год выхода в плавание, а не год возвращения или открытия: экспедиция Магеллана вернулась в Испанию уже без него. Между плаваниями Колумба и Васко да Гамы всего пять лет, а до первой экспедиции Кука — ещё 249.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Enciclopedia Treccani: «Cristoforo Colombo»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/cristoforo-colombo/",
+          "accessedAt": "2026-09-07",
+          "note": "«la spedizione partì da Palos il 3 agosto 1492»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Enciclopedia Treccani: «Vasco da Gama»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/vasco-da-gama/",
+          "accessedAt": "2026-09-07",
+          "note": "«Partito con quattro navi da Belem, presso Lisbona (1497)»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Enciclopedia Treccani: «Ferdinando Magellano»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/ferdinando-magellano/",
+          "accessedAt": "2026-09-07",
+          "note": "«partì da San Lucar (sett. 1519)»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Enciclopedia Treccani: «James Cook»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/james-cook/",
+          "accessedAt": "2026-09-07",
+          "note": "«Salpato da Plymouth (1768)»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-07",
+      "verifiedBy": "agent-4c4-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "cult-opery-god-086",
+      "category": "culture",
+      "prompt": "Расположите оперы по году первой постановки",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самая ранняя",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "«Травиата»",
+          "subtitle": "Джузеппе Верди",
+          "sortValue": 1853,
+          "displayValue": "1853 год",
+          "sourceIds": [
+            "s1"
+          ],
+          "note": "Первая постановка — театр «Ла Фениче», Венеция"
+        },
+        {
+          "cardId": "c2",
+          "title": "«Аида»",
+          "subtitle": "Джузеппе Верди",
+          "sortValue": 1871,
+          "displayValue": "1871 год",
+          "sourceIds": [
+            "s2"
+          ],
+          "note": "Первая постановка — Каир"
+        },
+        {
+          "cardId": "c3",
+          "title": "«Сельская честь»",
+          "subtitle": "Пьетро Масканьи",
+          "sortValue": 1890,
+          "displayValue": "1890 год",
+          "sourceIds": [
+            "s3"
+          ],
+          "note": "Первая постановка — Рим"
+        },
+        {
+          "cardId": "c4",
+          "title": "«Турандот»",
+          "subtitle": "Джакомо Пуччини",
+          "sortValue": 1926,
+          "displayValue": "1926 год",
+          "sourceIds": [
+            "s4",
+            "s5",
+            "s6"
+          ],
+          "note": "Премьера — 25 апреля 1926 года, «Ла Скала», Милан"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Считается год первой постановки, а не год окончания работы композитора: «Турандот» была поставлена уже после смерти Пуччини. Между соседними премьерами здесь не меньше восемнадцати лет, а между «Травиатой» и «Турандот» — семьдесят три.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Enciclopedia Treccani: «La traviata»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/la-traviata/",
+          "accessedAt": "2026-09-07",
+          "note": "«Fu rappresentata per la prima volta al teatro La Fenice di Venezia nel 1853.»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Enciclopedia Treccani: «Aida»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/aida/",
+          "accessedAt": "2026-09-07",
+          "note": "«rappresentata per la prima volta al Cairo nel 1871»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Enciclopedia Treccani: «Cavalleria rusticana»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/cavalleria-rusticana/",
+          "accessedAt": "2026-09-10",
+          "note": "«rappresentata la prima volta a Roma nel 1890»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Enciclopedia Treccani: «Turandot»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/turandot/",
+          "accessedAt": "2026-09-07",
+          "note": "«eseguita nel 1926 alla Scala di Milano»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Enciclopedia Treccani: «Giacomo Puccini»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/giacomo-puccini/",
+          "accessedAt": "2026-09-10",
+          "note": "В перечне произведений: «Turandot (libr. di R. Simoni e G. Adami; Milano 1926)»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (подтверждение премьеры): Turandot",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Turandot",
+          "accessedAt": "2026-09-10",
+          "note": "Прямая формулировка первой постановки: «Turandot premiered at the La Scala opera house in Milan, Italy, on 25 April 1926»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c4-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "cult-knigi-god-087",
+      "category": "culture",
+      "prompt": "Расположите романы по году первого издания",
+      "sortKey": "year",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый ранний",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "«Дон Кихот»",
+          "subtitle": "Мигель де Сервантес",
+          "sortValue": 1605,
+          "displayValue": "1605 год",
+          "sourceIds": [
+            "s1"
+          ],
+          "note": "Первая часть; вторая вышла в 1615 году"
+        },
+        {
+          "cardId": "c2",
+          "title": "«Робинзон Крузо»",
+          "subtitle": "Даниель Дефо",
+          "sortValue": 1719,
+          "displayValue": "1719 год",
+          "sourceIds": [
+            "s2"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "«Моби Дик»",
+          "subtitle": "Герман Мелвилл",
+          "sortValue": 1851,
+          "displayValue": "1851 год",
+          "sourceIds": [
+            "s3"
+          ],
+          "note": "В Лондоне вышел под заглавием «The Whale»"
+        },
+        {
+          "cardId": "c4",
+          "title": "«Госпожа Бовари»",
+          "subtitle": "Гюстав Флобер",
+          "sortValue": 1857,
+          "displayValue": "1857 год",
+          "sourceIds": [
+            "s4"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Считается год первого издания, а не год написания. «Дон Кихот» отделён от «Робинзона Крузо» 114 годами, а «Моби Дик» и «Госпожа Бовари» вышли с разницей всего в шесть лет — по разные стороны Атлантики.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "Enciclopedia Treccani: «Don Chisciotte»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/don-chisciotte/",
+          "accessedAt": "2026-09-07",
+          "note": "«pubblicato in due parti nel 1605 e nel 1615»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "Enciclopedia Treccani: «Robinson Crusoe»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/robinson-crusoe/",
+          "accessedAt": "2026-09-07",
+          "note": "«The life and strange surprising adventures of Robinson Crusoe, of York, mariner, 1719»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "Enciclopedia Treccani: «Moby Dick»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/moby-dick/",
+          "accessedAt": "2026-09-07",
+          "note": "«apparve a Londra col titolo The whale (1851) e subito dopo a New York»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "Enciclopedia Treccani: «Madame Bovary»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/madame-bovary/",
+          "accessedAt": "2026-09-07",
+          "note": "«Romanzo (1857) del romanziere G. Flaubert»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-07",
+      "verifiedBy": "agent-4c4-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "mix-lunnye-zatmeniya-dlitelnost-088",
+      "category": "mixed",
+      "prompt": "Расположите полные лунные затмения по длительности полной фазы",
+      "sortKey": "duration",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самое короткое",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "4 апреля 2015 года",
+          "subtitle": "Тихий океан, Америка и Азия",
+          "sortValue": 283,
+          "displayValue": "4 мин 43 с",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "26 мая 2021 года",
+          "subtitle": "Тихий океан, Австралия и Америка",
+          "sortValue": 883,
+          "displayValue": "14 мин 43 с",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "14 марта 2025 года",
+          "subtitle": "Америка и Тихий океан",
+          "sortValue": 3924,
+          "displayValue": "1 ч 5 мин 24 с",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "27 июля 2018 года",
+          "subtitle": "Европа, Африка, Азия и Австралия",
+          "sortValue": 6177,
+          "displayValue": "1 ч 42 мин 57 с",
+          "sourceIds": [
+            "s1"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Длительность полной фазы взята из одной колонки каталога NASA и зависит от того, насколько близко к центру земной тени проходит Луна. Затмение 2018 года длилось почти в двадцать два раза дольше, чем затмение 2015 года, хотя оба полные.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NASA GSFC: Five Millennium Catalog of Lunar Eclipses, 2001–2100",
+          "kind": "official",
+          "url": "https://eclipse.gsfc.nasa.gov/LEcat5/LE2001-2100.html",
+          "accessedAt": "2026-09-10",
+          "note": "Колонка длительности полной фазы: 2015 Apr 04 — «00h04m43s»; 2021 May 26 — «00h14m43s»; 2025 Mar 14 — «01h05m24s»; 2018 Jul 27 — «01h42m57s»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 1,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c4-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "mix-zatmeniya-dlitelnost-089",
+      "category": "mixed",
+      "prompt": "Расположите полные солнечные затмения по длительности полной фазы",
+      "sortKey": "duration",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самое короткое",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "21 августа 2017 года",
+          "subtitle": "Полоса через США",
+          "sortValue": 160,
+          "displayValue": "2 мин 40 с",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c2",
+          "title": "8 апреля 2024 года",
+          "subtitle": "Мексика, США и Канада",
+          "sortValue": 268,
+          "displayValue": "4 мин 28 с",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c3",
+          "title": "11 июля 2010 года",
+          "subtitle": "Южная часть Тихого океана",
+          "sortValue": 320,
+          "displayValue": "5 мин 20 с",
+          "sourceIds": [
+            "s1"
+          ]
+        },
+        {
+          "cardId": "c4",
+          "title": "22 июля 2009 года",
+          "subtitle": "Индия, Китай и Тихий океан",
+          "sortValue": 399,
+          "displayValue": "6 мин 39 с",
+          "sourceIds": [
+            "s1"
+          ]
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Длительность полной фазы измеряется на центральной линии полосы затмения и от календарного порядка не зависит: затмение 2009 года длилось дольше всех четырёх, хотя произошло раньше трёх из них.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "NASA GSFC: Five Millennium Catalog of Solar Eclipses, 2001–2100",
+          "kind": "official",
+          "url": "https://eclipse.gsfc.nasa.gov/SEcat5/SE2001-2100.html",
+          "accessedAt": "2026-09-07",
+          "note": "Central Duration: 2017 Aug 21 — «02m40s»; 2024 Apr 08 — «04m28s»; 2010 Jul 11 — «05m20s»; 2009 Jul 22 — «06m39s»"
+        }
+      ],
+      "volatility": "stable",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-07",
+      "verifiedBy": "agent-4c4-precheck",
+      "retiredIn": null
+    },
+    {
+      "puzzleId": "mix-parki-ploshchad-090",
+      "category": "mixed",
+      "prompt": "Расположите объекты системы национальных парков США по общей площади",
+      "sortKey": "area",
+      "sortDirection": "ascending",
+      "directionLabel": "Сверху — самый малый",
+      "cards": [
+        {
+          "cardId": "c1",
+          "title": "Гранд-Каньон",
+          "subtitle": "Аризона",
+          "sortValue": 4931,
+          "displayValue": "4931 км²",
+          "sourceIds": [
+            "s1",
+            "s5"
+          ],
+          "note": "1 218 375 акров = 4931 км²"
+        },
+        {
+          "cardId": "c2",
+          "title": "Эверглейдс",
+          "subtitle": "Флорида",
+          "sortValue": 6242,
+          "displayValue": "6242 км²",
+          "sourceIds": [
+            "s2",
+            "s6"
+          ],
+          "note": "1 542 526 акров = 2410 квадратных миль"
+        },
+        {
+          "cardId": "c3",
+          "title": "Глейшер-Бей",
+          "subtitle": "Аляска, парк и заповедник",
+          "sortValue": 13277,
+          "displayValue": "13 277 км²",
+          "sourceIds": [
+            "s3",
+            "s7"
+          ],
+          "note": "3 280 840 акров = 5126 квадратных миль"
+        },
+        {
+          "cardId": "c4",
+          "title": "Врангеля — Святого Ильи",
+          "subtitle": "Аляска, парк и заповедник",
+          "sortValue": 53420,
+          "displayValue": "53 420 км²",
+          "sourceIds": [
+            "s4",
+            "s8"
+          ],
+          "note": "13,2 млн акров"
+        }
+      ],
+      "correctOrder": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "explanation": "Гранд-Каньон и Эверглейдс — национальные парки, а Глейшер-Бей и Врангеля — Святого Ильи учтены целиком, вместе с прилегающим заповедником (preserve): именно такую общую площадь объявляет Служба национальных парков США. Врангеля — Святого Ильи превосходит Гранд-Каньон почти в одиннадцать раз.",
+      "sources": [
+        {
+          "sourceId": "s1",
+          "title": "National Park Service: Grand Canyon — Park Statistics",
+          "kind": "official",
+          "url": "https://www.nps.gov/grca/learn/management/statistics.htm",
+          "accessedAt": "2026-09-07",
+          "note": "«1,218,375 acres (493,059 ha)», «1,904 square miles (4,931 km2)»"
+        },
+        {
+          "sourceId": "s2",
+          "title": "National Park Service: Everglades — Park Statistics",
+          "kind": "official",
+          "url": "https://www.nps.gov/ever/learn/news/parkstatistics.htm",
+          "accessedAt": "2026-09-07",
+          "note": "«Total acreage including expansion (land and water): 1,542,526 acres … 2,410 square miles»"
+        },
+        {
+          "sourceId": "s3",
+          "title": "National Park Service: Glacier Bay Fact Sheet",
+          "kind": "official",
+          "url": "https://www.nps.gov/glba/learn/management/glacier-bay-fact-sheet.htm",
+          "accessedAt": "2026-09-07",
+          "note": "«= 3,280,840 acres», «5,126 square miles»"
+        },
+        {
+          "sourceId": "s4",
+          "title": "National Park Service: Wrangell-St. Elias National Park & Preserve",
+          "kind": "official",
+          "url": "https://www.nps.gov/wrst/index.htm",
+          "accessedAt": "2026-09-07",
+          "note": "«At 13.2 million acres, the park is the same size as Yellowstone National Park, Yosemite National Park, and Switzerland combined!»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Википедия (проверочный источник): Grand Canyon National Park",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Grand_Canyon_National_Park",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «1,217,262 acres (4,926.08 km2)»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (проверочный источник): Everglades National Park",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Everglades_National_Park",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «covers 1,508,976 acres (2,357.8 sq mi; 6,106.6 km2)»"
+        },
+        {
+          "sourceId": "s7",
+          "title": "Википедия (проверочный источник): Glacier Bay National Park and Preserve",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Glacier_Bay_National_Park_and_Preserve",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «3,223,384 acres (13,044.57 km2)»"
+        },
+        {
+          "sourceId": "s8",
+          "title": "Википедия (проверочный источник): Wrangell–St. Elias National Park and Preserve",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Wrangell%E2%80%93St._Elias_National_Park_and_Preserve",
+          "accessedAt": "2026-09-07",
+          "note": "Независимое подтверждение: «13,175,799 acres (53,320.57 km2)»"
+        }
+      ],
+      "volatility": "slow",
+      "difficulty": 2,
+      "verifiedAt": "2026-09-10",
+      "verifiedBy": "agent-4c4-precheck",
+      "retiredIn": null
     }
   ]
 }

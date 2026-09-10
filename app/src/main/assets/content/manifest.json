@@ -3,16 +3,16 @@
   "contentVersion": 1,
   "packId": "core-ru",
   "packTitle": "Основной набор",
-  "setCount": 21,
-  "puzzleCount": 63,
+  "setCount": 28,
+  "puzzleCount": 84,
   "files": [
     {
       "path": "puzzles-001.json",
-      "sha256": "ad251aaa7a6f373287989cbac9042a9360c194eef8d79672016de39b16fd26de"
+      "sha256": "0a6b9ad85c33cdce0ad731775990769390a6a1016323bf9bb603411c0eb79599"
     },
     {
       "path": "daily-sets-001.json",
-      "sha256": "ced6238e6f2b12359d058c911f9fbc839a516d18eda326283b1fedac783ce00f"
+      "sha256": "bf21afde5466587848f47d5db5ee4a0fa8440176f5b35ec49f6b68e001032434"
     }
   ]
 }
