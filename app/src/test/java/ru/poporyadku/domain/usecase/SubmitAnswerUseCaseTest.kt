@@ -279,8 +279,9 @@ class SubmitAnswerUseCaseTest {
 
     @Test
     fun `I3-U27 - a Skip without its DailySet writes nothing`() = runTest {
-        db.dailySetDao().deleteOutside(packId, keep = listOf(99))
-        assertEquals(0, db.dailySetDao().setIndexes(packId).size)
+        // Диапазон [0, 0) пуст: удаляются все наборы пакета.
+        db.dailySetDao().deleteOutsideRange(packId, setCount = 0)
+        assertEquals(0, db.dailySetDao().countSets(packId))
 
         val result = useCase()(date, 0, Submission.Skip)
 

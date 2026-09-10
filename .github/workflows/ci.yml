@@ -60,12 +60,14 @@ jobs:
       - name: Validator self-check
         run: python3 -m pytest tools/validate-content/tests -q
 
-      # ITERATION_4_DESIGN.md, §12.4: CI проверяет настоящий пакет целиком и БЕЗ
-      # --expect-*. Накопительный объём батча (7/21 в 4C-1) живёт в описании PR и в
-      # чек-листе, а не в конфигурации, которую пришлось бы править пять раз;
-      # постоянное ожидание 35/105 добавляется сюда в PR 4D.
+      # ITERATION_4_DESIGN.md, §12.4: CI проверяет настоящий пакет целиком. С PR 4D
+      # объём 35 наборов / 105 головоломок — постоянный критерий релиза (I4-D21):
+      # любое уменьшение пакета роняет сборку кодом M10_EXPECTED_VOLUME.
       - name: Validate content pack
-        run: python3 tools/validate-content/validate.py app/src/main/assets/content
+        run: |
+          python3 tools/validate-content/validate.py app/src/main/assets/content \
+              --expect-sets 35 \
+              --expect-puzzles 105
 
       - name: Assemble debug APK
         run: ./gradlew assembleDebug

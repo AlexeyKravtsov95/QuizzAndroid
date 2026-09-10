@@ -9,7 +9,11 @@ import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasClickAction
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 
@@ -29,6 +33,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import ru.poporyadku.R
+import ru.poporyadku.debug.ContentResetAction
 import ru.poporyadku.domain.model.CompletedDaySummary
 import ru.poporyadku.domain.model.TodayFailureKind
 import ru.poporyadku.domain.model.TodayStats
@@ -37,7 +42,7 @@ import ru.poporyadku.ui.theme.PoPoRyadkuTheme
 
 /**
  * `HomeScreen` — ITERATION_3_DESIGN.md, `I3-C1`, `I3-C2`, `I3-C14`, `I3-C18`–`I3-C22`
- * и Home-части `I3-C11`–`I3-C13`.
+ * и Home-части `I3-C11`–`I3-C13`; экранная часть `I4-V2` (ITERATION_4_DESIGN.md, §17).
  *
  * Экран stateless, поэтому Hilt в тестах не участвует (I3-D31): рендерится готовое
  * состояние. Ширина, масштаб шрифта и тема задаются Robolectric-квалификаторами
@@ -211,6 +216,72 @@ class HomeScreenTest {
 
         rule.onNodeWithTag(HomeTestTags.RETRY_BUTTON).assertIsDisplayed()
         rule.onNodeWithTag(HomeTestTags.recoveryAction(RESET_ACTION.id)).assertDoesNotExist()
+    }
+
+    // --- I4-V2: непригодный пакет ----------------------------------------------------
+
+    /**
+     * `I4-V2`. `ContentUnusable` — вариант `Error.updateRequired`: текст «Требуется
+     * обновление приложения», ни «Повторить», ни восстановления, ни основной кнопки.
+     * Прочитанная статистика показывается: прогресс цел.
+     */
+    @Test
+    fun `I4-V2 content unusable shows update required without retry or recovery`() {
+        rule.setContent { Home(error(kind = TodayFailureKind.ContentUnusable)) }
+
+        rule.onNodeWithText(UPDATE_REQUIRED).assertIsDisplayed()
+        rule.onNodeWithText(LOAD_FAILED).assertDoesNotExist()
+        rule.onNodeWithTag(HomeTestTags.RETRY_BUTTON).assertDoesNotExist()
+        rule.onNodeWithTag(HomeTestTags.recoveryAction(RESET_ACTION.id)).assertDoesNotExist()
+        rule.onNodeWithTag(HomeTestTags.PRIMARY_BUTTON).assertDoesNotExist()
+        rule.onNodeWithTag(HomeTestTags.STATISTICS_BLOCK).assertExists()
+    }
+
+    /**
+     * `I4-V2`. Экран — второй рубеж после фильтра во ViewModel: даже доехавший
+     * дескриптор сброса при `ContentUnusable` не рисуется. В области содержимого нет ни
+     * одного нажимаемого узла, поэтому ни ретрай, ни восстановление отправить нечем.
+     */
+    @Test
+    fun `I4-V2 content unusable renders no action even if a descriptor arrives`() {
+        val events = mutableListOf<HomeEvent>()
+        rule.setContent {
+            Home(
+                state = error(kind = TodayFailureKind.ContentUnusable, actions = listOf(RESET_ACTION)),
+                onEvent = { events += it },
+            )
+        }
+
+        rule.onNodeWithTag(HomeTestTags.recoveryAction(RESET_ACTION.id)).assertDoesNotExist()
+        rule.onNodeWithTag(HomeTestTags.RETRY_BUTTON).assertDoesNotExist()
+        rule.onAllNodes(hasClickAction() and hasAnyAncestor(hasTestTag(HomeTestTags.CONTENT)))
+            .assertCountEquals(0)
+        assertTrue("событий не было и быть не могло: $events", events.isEmpty())
+    }
+
+    /** `I4-V2`. Без прочитанного прогресса под текстом нет ничего — ни статистики, ни кнопок. */
+    @Test
+    fun `I4-V2 content unusable without progress shows only the text`() {
+        rule.setContent { Home(error(kind = TodayFailureKind.ContentUnusable, stats = null)) }
+
+        rule.onNodeWithText(UPDATE_REQUIRED).assertIsDisplayed()
+        rule.onNodeWithTag(HomeTestTags.STATISTICS_BLOCK).assertDoesNotExist()
+        rule.onNodeWithTag(HomeTestTags.RETRY_BUTTON).assertDoesNotExist()
+    }
+
+    /** `I4-V2`. `Generic` и `ContentConflict` сохраняют прежний текст и «Повторить». */
+    @Test
+    fun `I4-V2 generic and conflict keep the retryable contract`() {
+        val state = mutableStateOf(error(kind = TodayFailureKind.Generic))
+        rule.setContent { Home(state.value) }
+
+        for (kind in listOf(TodayFailureKind.Generic, TodayFailureKind.ContentConflict)) {
+            rule.runOnUiThread { state.value = error(kind = kind) }
+            rule.waitForIdle()
+            rule.onNodeWithText(LOAD_FAILED).assertIsDisplayed()
+            rule.onNodeWithText(UPDATE_REQUIRED).assertDoesNotExist()
+            rule.onNodeWithTag(HomeTestTags.RETRY_BUTTON).assertIsDisplayed()
+        }
     }
 
     // --- I3-C22: блокировка на время восстановления ----------------------------------
@@ -482,15 +553,18 @@ class HomeScreenTest {
         const val FONT_SCALE_200 = 2f
 
         /**
-         * Дескриптор доезжает до экрана уже отфильтрованным; строки взяты из `src/main`,
-         * потому что тест общий для debug- и release-варианта, а настоящий вклад
-         * (`TemporaryContentResetAction`) живёт только в `src/debug`.
+         * Дескриптор настоящего debug-вклада (`ContentResetAction`, `src/debug`): тест
+         * живёт в `testDebug`, поэтому видит и его идентификатор, и его строки. До экрана
+         * дескриптор доезжает уже отфильтрованным во ViewModel.
          */
         val RESET_ACTION = RecoveryActionUi(
-            id = "temporary_content_reset",
-            labelRes = R.string.home_recovery_dialog_confirm,
-            confirmationRes = R.string.home_error_message,
+            id = ContentResetAction.ACTION_ID,
+            labelRes = R.string.debug_content_reset,
+            confirmationRes = R.string.debug_content_reset_message,
         )
+
+        const val LOAD_FAILED = "Не удалось загрузить задания"
+        const val UPDATE_REQUIRED = "Требуется обновление приложения"
 
         const val IN_PROGRESS_DESCRIPTION = "Выпуск 24. Задание 2 из 3"
         const val OF_18 = "из 18"

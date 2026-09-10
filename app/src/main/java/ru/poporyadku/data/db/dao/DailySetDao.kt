@@ -22,21 +22,9 @@ interface DailySetDao {
     @Query("SELECT COUNT(*) FROM daily_sets WHERE pack_id = :packId")
     suspend fun countSets(packId: String): Int
 
-    // ITERATION_3_DESIGN.md, I3-D41 / I3-D50 (PR 3A): сверка состава наборов активного
-    // пакета внутри транзакции reconcile.
-
-    /** Какие наборы реально лежат в базе. Второй обязательный SELECT reconcile. */
-    @Query("SELECT set_index FROM daily_sets WHERE pack_id = :packId ORDER BY set_index")
-    suspend fun setIndexes(packId: String): List<Int>
-
-    /** Единственный DELETE установщика, и бьёт он строго по daily_sets: прогресс
-     *  (day_assignments, puzzle_attempts, day_results) не удаляется никогда. */
-    @Query("DELETE FROM daily_sets WHERE pack_id = :packId AND set_index NOT IN (:keep)")
-    suspend fun deleteOutside(packId: String, keep: List<Int>)
-
-    // ITERATION_4_DESIGN.md, §10.3 (PR 4B): диапазонные предикаты настоящего импортёра.
-    // Списочные setIndexes/deleteOutside выше остаются: их единственный вызывающий —
-    // TemporaryContentInstaller, который живёт до PR 4D.
+    // ITERATION_4_DESIGN.md, §10.3 (PR 4B): диапазонные предикаты импортёра. Списочные
+    // предикаты по перечню индексов удалены в PR 4D вместе с временным установщиком —
+    // их единственным вызывающим (**I4-D27**): перечень параметров рос бы с пакетом.
 
     /** Что реально лежит в daily_sets пакета. Предикат (1) быстрого пути сравнивает
      *  этот список с PackHeader.expectedSetRows целиком, а не по числу строк. */
@@ -44,7 +32,7 @@ interface DailySetDao {
     suspend fun byPack(packId: String): List<DailySetEntity>
 
     /** ЕДИНСТВЕННЫЙ DELETE настоящего импортёра, и бьёт он строго по daily_sets
-     *  активного пакета. Диапазон, а не NOT IN (:keep): ожидаемые индексы непрерывны
+     *  активного пакета. Диапазон, а не перечень индексов: ожидаемые индексы непрерывны
      *  по R19, поэтому предикат точен и не растёт со списком параметров.
      *  @return число удалённых строк — тест «ни одной записи» иначе не проверить. */
     @Query("DELETE FROM daily_sets WHERE pack_id = :packId AND (set_index < 0 OR set_index >= :setCount)")

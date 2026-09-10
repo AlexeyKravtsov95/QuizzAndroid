@@ -7,21 +7,31 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import ru.poporyadku.core.model.ContentPack
+import ru.poporyadku.core.model.SLOTS_PER_DAY
+import ru.poporyadku.core.model.isPlayable
+import ru.poporyadku.core.model.puzzleIdAt
 import ru.poporyadku.data.content.dto.ParsedPack
 import ru.poporyadku.data.content.mapper.toEntity
 import ru.poporyadku.data.content.validation.ContentValidator
 import ru.poporyadku.data.db.AppDatabase
+import ru.poporyadku.data.db.dao.DailySetDao
+import ru.poporyadku.data.db.dao.PuzzleDao
+import ru.poporyadku.data.repository.DailySetRepositoryImpl
+import ru.poporyadku.data.repository.PuzzleRepositoryImpl
 import ru.poporyadku.di.ContentModule
+import ru.poporyadku.domain.repository.DailySetRepository
+import ru.poporyadku.domain.repository.PuzzleRepository
 import ru.poporyadku.domain.shuffle.DeterministicShuffler
 
 /**
- * НАСТОЯЩИЙ пакет из `app/src/main/assets/content` — `I4-C1`…`I4-C3`
+ * НАСТОЯЩИЙ пакет из `app/src/main/assets/content` — `I4-C1`…`I4-C6`
  * (ITERATION_4_DESIGN.md, §17, группа `I4-C`; §12.2).
  *
  * Читается именно каталог ассетов приложения, а не общая фикстура валидатора:
@@ -29,12 +39,10 @@ import ru.poporyadku.domain.shuffle.DeterministicShuffler
  * `src/main/assets` (`testOptions.unitTests.isIncludeAndroidResources`). Копии пакета
  * в `src/test/resources` не заводится — две копии разошлись бы молча.
  *
- * Пакет этими тестами НЕ активируется: продуктовый граф до PR 4D связывает временный
- * источник, и ни один из тестов ниже в граф Hilt не заглядывает.
- *
- * Ожидаемый объём батча (`7 / 21`) здесь НЕ фиксируется: он проверяется отдельно
- * командой CLI `--expect-sets/--expect-puzzles` и записан в чек-листе батча. Тесты
- * сверяют пакет сам с собой, поэтому переживают батчи 4C-2…4C-5 без правок.
+ * `I4-C1`–`I4-C3` сверяют пакет сам с собой и литералов объёма не содержат. Объём
+ * `35 / 105` закрепляет ровно один тест — `I4-C4`, критерий релиза (**I4-D21**); тот же
+ * критерий держит CI флагами `--expect-sets 35 --expect-puzzles 105`. 35 дней подряд
+ * через use cases — `I4-C7` (`ThirtyFiveDaysTest`).
  */
 @RunWith(RobolectricTestRunner::class)
 class ContentPackTest {
@@ -59,6 +67,24 @@ class ContentPackTest {
     /** Тот же читатель, что в продуктовом графе; целостность включена, как в debug. */
     private fun reader() =
         ContentPackReader(source, ContentModule.assetJson(), verifyIntegrity = true)
+
+    /** Настоящий импортёр над настоящими ассетами; DAO можно обернуть счётчиками. */
+    private fun importer(
+        prefs: FakeUserPreferencesRepository,
+        database: AppDatabase = db,
+        puzzleDao: PuzzleDao = database.puzzleDao(),
+        setDao: DailySetDao = database.dailySetDao(),
+    ) = ContentImporter(
+        db = database,
+        puzzleDao = puzzleDao,
+        setDao = setDao,
+        assignmentDao = database.assignmentDao(),
+        reader = reader(),
+        validator = ContentValidator(),
+        prefs = prefs,
+        storageJson = ContentModule.storageJson(),
+        activePackId = packId,
+    )
 
     private suspend fun readPack(): ParsedPack {
         val reader = reader()
@@ -120,17 +146,7 @@ class ContentPackTest {
         val prefs = FakeUserPreferencesRepository()
         val puzzleDao = CountingPuzzleDao(db.puzzleDao())
         val setDao = CountingDailySetDao(db.dailySetDao())
-        val importer = ContentImporter(
-            db = db,
-            puzzleDao = puzzleDao,
-            setDao = setDao,
-            assignmentDao = db.assignmentDao(),
-            reader = reader(),
-            validator = ContentValidator(),
-            prefs = prefs,
-            storageJson = ContentModule.storageJson(),
-            activePackId = packId,
-        )
+        val importer = importer(prefs, puzzleDao = puzzleDao, setDao = setDao)
 
         importer.ensureInstalled()
 
@@ -217,5 +233,119 @@ class ContentPackTest {
                 start,
             )
         }
+    }
+
+    // ---------- I4-C4 ----------
+
+    /**
+     * `I4-C4`. **Критерий релиза**: пакет альфы — ровно 35 наборов и 105 головоломок
+     * первой настоящей версии контента, и манифест говорит о пакете то же, что его файлы.
+     *
+     * Литералы здесь — сам критерий (**I4-D21**), а не описание батча: уменьшение пакета
+     * обязано красить сборку так же, как `--expect-*` в CI. Остальной контракт пакета —
+     * работа валидатора CLI и `I4-C1`; здесь он не дублируется.
+     */
+    @Test
+    fun `I4-C4 финальный пакет — ровно 35 наборов и 105 головоломок версии 1`() = runBlocking {
+        val pack = readPack()
+
+        assertEquals("setCount манифеста", RELEASE_SET_COUNT, pack.manifest.setCount)
+        assertEquals("puzzleCount манифеста", RELEASE_PUZZLE_COUNT, pack.manifest.puzzleCount)
+        assertEquals("наборов в файле", pack.manifest.setCount, pack.sets.size)
+        assertEquals("головоломок в файле", pack.manifest.puzzleCount, pack.puzzles.size)
+        assertEquals("contentVersion", RELEASE_CONTENT_VERSION, pack.manifest.contentVersion)
+    }
+
+    // ---------- I4-C5 ----------
+
+    /**
+     * `I4-C5`. После импорта каждый из наборов читается через [DailySetRepository],
+     * каждая ссылка слота разрешается через [PuzzleRepository] — теми же реализациями,
+     * что связаны в продуктовом графе, — и каждая из 105 головоломок играбельна.
+     *
+     * Room DAO тест не читает: предмет проверки — продуктовые границы, а не таблицы.
+     * Число наборов берётся из манифеста ассетов, а не из базы.
+     */
+    @Test
+    fun `I4-C5 наборы и головоломки читаются через продуктовые репозитории`() = runBlocking {
+        importer(FakeUserPreferencesRepository()).ensureInstalled()
+        val setCount = reader().readHeader(packId).manifest.setCount
+        val sets: DailySetRepository = DailySetRepositoryImpl(db.dailySetDao())
+        val puzzles: PuzzleRepository = PuzzleRepositoryImpl(db.puzzleDao(), ContentModule.storageJson())
+
+        val seen = mutableSetOf<String>()
+        for (setIndex in 0 until setCount) {
+            val set = sets.getSet(packId, setIndex)
+            assertNotNull("набор $setIndex не читается через DailySetRepository", set)
+            for (slot in 0 until SLOTS_PER_DAY) {
+                val puzzleId = set!!.puzzleIdAt(slot)
+                val puzzle = puzzles.getPuzzle(puzzleId)
+                assertNotNull("набор $setIndex, слот $slot: '$puzzleId' не разрешается", puzzle)
+                assertEquals(puzzleId, puzzle!!.puzzleId)
+                assertEquals(packId, puzzle.packId)
+                assertTrue("'$puzzleId' не играбельна", puzzle.isPlayable())
+                assertTrue("'$puzzleId' встречается в пакете дважды", seen.add(puzzleId))
+            }
+        }
+        assertNull("за последним набором пакета наборов нет", sets.getSet(packId, setCount))
+        assertEquals("уникальных головоломок", RELEASE_PUZZLE_COUNT, seen.size)
+    }
+
+    // ---------- I4-C6 ----------
+
+    /**
+     * `I4-C6`. ДИАГНОСТИЧЕСКИЙ замер полного импорта настоящего пакета в чистую базу.
+     *
+     * Порога нет и не будет: время общего раннера невоспроизводимо, и порог давал бы
+     * плавающие падения (§16, §17). Решение о выносе установки из `mapLatest`
+     * принимается только по замеру на реальном устройстве при ручной приёмке, а не по
+     * этому числу. Значение печатается в вывод теста (`system-out` отчёта JUnit).
+     *
+     * Меряется именно полный путь, а не ранний выход: каждый прогон — новая in-memory
+     * база, новый импортёр (заголовок пакета не закэширован) и пустая отметка; после
+     * вызова проверяется, что тело пакета действительно записано. Проверка целостности
+     * включена, как в debug. Первый прогон — «холодный» (загрузка классов, JIT хоста).
+     */
+    @Test
+    fun `I4-C6 длительность полного импорта измеряется без порога`() = runBlocking {
+        val millis = (1..TIMING_RUNS).map {
+            val database = Room.inMemoryDatabaseBuilder(
+                ApplicationProvider.getApplicationContext(),
+                AppDatabase::class.java,
+            ).allowMainThreadQueries().build()
+            try {
+                val puzzleDao = CountingPuzzleDao(database.puzzleDao())
+                val importer = importer(FakeUserPreferencesRepository(), database, puzzleDao)
+
+                val started = System.nanoTime()
+                importer.ensureInstalled()
+                val elapsed = (System.nanoTime() - started) / NANOS_PER_MILLI
+
+                assertEquals("полный путь: тело пакета записано", 1, puzzleDao.upsertCalls)
+                assertEquals(RELEASE_PUZZLE_COUNT, database.puzzleDao().countByPack(packId))
+                elapsed
+            } finally {
+                database.close()
+            }
+        }
+
+        println(
+            "I4-C6: полный импорт настоящего пакета ($RELEASE_SET_COUNT наборов / " +
+                "$RELEASE_PUZZLE_COUNT головоломок) в чистую базу, JVM + Robolectric, " +
+                "целостность включена: холодный ${"%.1f".format(millis.first())} мс; " +
+                "тёплые ${millis.drop(1).joinToString { "%.1f".format(it) }} мс",
+        )
+    }
+
+    private companion object {
+        /** Критерий релиза пакета альфы (`IMPLEMENTATION_PLAN.md`, итерация 4; **I4-D21**). */
+        const val RELEASE_SET_COUNT = 35
+        const val RELEASE_PUZZLE_COUNT = 105
+
+        /** Начальная настоящая версия контента (ITERATION_4_DESIGN.md, §4.2). */
+        const val RELEASE_CONTENT_VERSION = 1
+
+        const val TIMING_RUNS = 4
+        const val NANOS_PER_MILLI = 1_000_000.0
     }
 }

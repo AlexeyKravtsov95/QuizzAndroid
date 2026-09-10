@@ -278,12 +278,35 @@ private fun ColumnScope.HomeBody(
             HomeStatistics(state.stats)
         }
 
-        is HomeState.Error -> ErrorContent(state = state, onEvent = onEvent)
+        is HomeState.Error -> when (state.kind) {
+            TodayFailureKind.ContentUnusable -> UpdateRequiredContent(state = state)
+            TodayFailureKind.Generic,
+            TodayFailureKind.ContentConflict,
+            -> ErrorContent(state = state, onEvent = onEvent)
+        }
     }
 }
 
 /**
- * `Error.retryable` + опциональное восстановление (I3-D47).
+ * `Error.updateRequired` — пакет внутри приложения непригоден (ITERATION_4_DESIGN.md,
+ * **I4-D19**, §11.3; `CONTENT_MODEL.md` §7).
+ *
+ * Ни «Повторить», ни восстановления, ни предложения что-либо очистить: повтор
+ * воспроизведёт тот же отказ, а прогресс ни при чём — помочь может только обновление
+ * приложения. Дескрипторы восстановления здесь не рисуются, даже если бы доехали:
+ * это второй рубеж после фильтра `isApplicableTo` во ViewModel.
+ */
+@Composable
+private fun ColumnScope.UpdateRequiredContent(state: HomeState.Error) {
+    ErrorBlock(message = stringResource(R.string.home_error_update_required))
+
+    // Прогресс цел и, если прочитан, показывается как в любом другом отказе.
+    state.stats?.let { HomeStatistics(it) }
+}
+
+/**
+ * `Error.retryable` + опциональное восстановление (I3-D47) — для `Generic`
+ * и `ContentConflict`.
  *
  * Основная кнопка — «Повторить». Кнопка восстановления показывается **только** если
  * набор дескрипторов непуст: при `Generic` он отфильтрован по `isApplicableTo` и пуст,
@@ -407,7 +430,8 @@ private fun HomeStatistics(stats: TodayStats) {
  * экрану (UI_REVIEW_CHECKLIST.md, «Edge-to-edge»).
  *
  * `AwaitingFirstDay` кнопки не имеет вовсе, `Loading` — тоже; на `Error` основное
- * действие («Повторить») живёт рядом с текстом ошибки, как требует state sheet.
+ * действие («Повторить») живёт рядом с текстом ошибки, как требует state sheet, а у
+ * варианта `updateRequired` его нет вовсе.
  */
 @Composable
 private fun PinnedCta(
@@ -608,6 +632,20 @@ private fun HomeErrorPreview() = PreviewHome(
         today = PreviewToday,
         stats = PreviewStats,
         kind = TodayFailureKind.Generic,
+        recoveryActions = emptyList(),
+        runningRecoveryId = null,
+        recomputeGeneration = 1L,
+        isArchiveVisible = true,
+    ),
+)
+
+@Preview(name = "Home — Error update required light 390×844", widthDp = 390, heightDp = 844)
+@Composable
+private fun HomeErrorUpdateRequiredPreview() = PreviewHome(
+    HomeState.Error(
+        today = PreviewToday,
+        stats = PreviewStats,
+        kind = TodayFailureKind.ContentUnusable,
         recoveryActions = emptyList(),
         runningRecoveryId = null,
         recomputeGeneration = 1L,

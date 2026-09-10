@@ -5,8 +5,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.poporyadku.data.db.AppDatabase
 import ru.poporyadku.domain.content.ContentInstaller
+import ru.poporyadku.domain.repository.DailySetRepository
 import ru.poporyadku.domain.repository.DayAssignmentRepository
 import ru.poporyadku.domain.repository.ProgressRepository
+import ru.poporyadku.domain.repository.PuzzleRepository
 
 /**
  * Доступ к продуктовым синглтонам графа приложения из debug-сборки.
@@ -15,6 +17,10 @@ import ru.poporyadku.domain.repository.ProgressRepository
  * instrumented-тестах — навигации (`AppNavHostTest`) и сквозного дня (`FullDayFlowTest`):
  * без этого они зависели бы от того, что уже накопило устройство, а порядок выполнения
  * тестов JUnit не гарантирует.
+ *
+ * [sets] и [puzzles] — те же продуктовые репозитории, которыми читает приложение
+ * (ITERATION_4_DESIGN.md, `I4-E2`): сквозной тест выводит порядок ходов из того, что
+ * приложение само импортировало из `assets`, а не из литералов теста.
  *
  * Живёт в `src/debug`, а не в `androidTest`, потому что `@EntryPoint` обязан быть
  * обработан вместе с графом САМОГО приложения: интерфейс, объявленный в `androidTest`,
@@ -36,4 +42,6 @@ interface DebugGraphEntryPoint {
     fun content(): ContentInstaller
     fun assignments(): DayAssignmentRepository
     fun progress(): ProgressRepository
+    fun puzzles(): PuzzleRepository
+    fun sets(): DailySetRepository
 }
