@@ -61,24 +61,11 @@ interface AssignmentDao {
     @Query("SELECT MAX(set_index) FROM day_assignments WHERE pack_id = :packId")
     suspend fun maxSetIndex(packId: String): Int?
 
-    // ITERATION_3_DESIGN.md, I3-D50 (PR 3A): назначения на set_index вне ожидаемого
-    // состава читаются ВСЕГДА и ПЕРВЫМИ, независимо от содержимого daily_sets —
-    // строки набора может уже не быть, а назначение на неё есть. Оба запроса read-only.
-
-    /** Индексы для ContentInstallException.Conflict.staleSetIndexes. Непустой
-     *  результат — безусловный конфликт, ранний выход установщика после него запрещён. */
-    @Query("SELECT set_index FROM day_assignments WHERE pack_id = :packId AND set_index NOT IN (:keep)")
-    suspend fun setIndexesOutside(packId: String, keep: List<Int>): List<Int>
-
-    /** Даты, на которых стоит прогресс пользователя, — Conflict.blockedDates.
-     *  Читается только в терминальной ветке конфликта. ISO-строка, как и всюду
-     *  в этом DAO: TypeConverter'ов у базы нет (ITERATION_2_DESIGN.md, D-8). */
-    @Query("SELECT local_date FROM day_assignments WHERE pack_id = :packId AND set_index NOT IN (:keep) ORDER BY local_date")
-    suspend fun datesOutside(packId: String, keep: List<Int>): List<String>
-
     // ITERATION_4_DESIGN.md, §3.3 и §10.3 (PR 4B): диапазонные предикаты и проекции
-    // настоящего импортёра. Списочные setIndexesOutside/datesOutside выше остаются:
-    // их единственный вызывающий — TemporaryContentInstaller, который живёт до PR 4D.
+    // импортёра. Назначения вне диапазона пакета читаются ВСЕГДА, независимо от
+    // содержимого daily_sets (I3-D50): строки набора может уже не быть, а назначение
+    // на неё есть. Списочные предикаты временного установщика (по перечню индексов)
+    // удалены в PR 4D вместе с ним (**I4-D27**).
 
     /** Свидетельство A: индексы назначений вне диапазона пакета — staleSetIndexes. */
     @Query(

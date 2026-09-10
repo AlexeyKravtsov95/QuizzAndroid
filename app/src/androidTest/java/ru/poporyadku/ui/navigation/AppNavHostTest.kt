@@ -27,6 +27,7 @@ import org.junit.runner.RunWith
 import ru.poporyadku.MainActivity
 import ru.poporyadku.core.model.PuzzleAttempt
 import ru.poporyadku.core.model.SLOTS_PER_DAY
+import ru.poporyadku.core.model.puzzleIdAt
 import ru.poporyadku.debug.DebugGraphEntryPoint
 import ru.poporyadku.ui.home.HomeTestTags
 import ru.poporyadku.ui.puzzle.PuzzleTestTags
@@ -99,17 +100,23 @@ class AppNavHostTest {
      * Пустой `submittedOrder` — это пропуск: итог дня получает три строки
      * `SlotOutcome.Unavailable` и «0 из 18». Для навигационных проверок важен сам факт
      * завершённого дня, а не его счёт.
+     *
+     * `puzzleId` каждой попытки — головоломка своего слота в выданном наборе, как пишет
+     * её `SubmitAnswerUseCase`: сыгранный идентификатор, чужой своему слоту, настоящий
+     * импортёр справедливо объявил бы конфликтом (ITERATION_4_DESIGN.md, I4-D4, C).
      */
     private fun seedCompletedToday(): LocalDate = runBlocking {
         deps.content().ensureInstalled()
         val date = deps.assignments().startSession().localDate
+        val assignment = requireNotNull(deps.assignments().getAssignment(date))
+        val set = requireNotNull(deps.sets().getSet(assignment.packId, assignment.setIndex))
         repeat(SLOTS_PER_DAY) { slot ->
             deps.progress().recordAttempt(
                 PuzzleAttempt(
                     id = 0L,
                     localDate = date,
                     slotIndex = slot,
-                    puzzleId = "nav-test-slot-$slot",
+                    puzzleId = set.puzzleIdAt(slot),
                     submittedOrder = emptyList(),
                     score = 0,
                     // Игнорируется: фактическую метку ставит репозиторий из ClockProvider.
@@ -159,10 +166,11 @@ class AppNavHostTest {
 
     /**
      * Home начинает с `Loading` и получает CTA только после чтения базы. Ждём именно
-     * появления кнопки: при крупном системном шрифте первый кадр приходит заметно позже.
+     * появления кнопки: при крупном системном шрифте первый кадр приходит заметно позже,
+     * а на чистой базе первый расчёт включает полный импорт пакета.
      */
     private fun awaitHomeCta() {
-        composeTestRule.waitUntil(ROUTE_TIMEOUT_MS) {
+        composeTestRule.waitUntil(HOME_TIMEOUT_MS) {
             composeTestRule.onAllNodes(hasTestTag(HomeTestTags.PRIMARY_BUTTON))
                 .fetchSemanticsNodes().isNotEmpty()
         }
@@ -182,6 +190,7 @@ class AppNavHostTest {
     @Test
     fun startDestinationIsRealHome() {
         startApp()
+        awaitHomeCta()
 
         assertEquals(Destinations.HOME, currentRoute())
         composeTestRule.onNodeWithTag(HomeTestTags.SCREEN).assertExists()
@@ -344,6 +353,8 @@ class AppNavHostTest {
     fun homeToArchiveToRecapByIsoDate() {
         seedCompletedToday()
         startApp()
+        // Иконка «Архив» появляется только после расчёта Home (Completed).
+        awaitHomeCta()
 
         composeTestRule.onNodeWithContentDescription(ARCHIVE).performClick()
         awaitRoute(Destinations.ARCHIVE)
@@ -383,6 +394,9 @@ class AppNavHostTest {
 
         /** Экраны читают базу; секунды хватает с запасом и на медленном эмуляторе. */
         const val ROUTE_TIMEOUT_MS = 5_000L
+
+        /** Первый расчёт Home на чистой базе включает полный импорт пакета. */
+        const val HOME_TIMEOUT_MS = 20_000L
 
         const val ARCHIVE = "Архив"
         const val SETTINGS = "Настройки"

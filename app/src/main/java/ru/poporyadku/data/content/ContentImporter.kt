@@ -28,8 +28,7 @@ import ru.poporyadku.domain.repository.UserPreferencesRepository
 /**
  * Импорт пакета из `assets` в Room (ITERATION_4_DESIGN.md, §10).
  *
- * В продуктовый граф НЕ привязан: до PR 4D `ContentModule` связывает
- * `TemporaryContentInstaller`, и этот класс вызывается только тестами.
+ * Продуктовая реализация [ContentInstaller] с PR 4D (`ContentModule`, **I4-D23**).
  *
  * **Форма кода — часть гарантий, а не стиль:**
  *

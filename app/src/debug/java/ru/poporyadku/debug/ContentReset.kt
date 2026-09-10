@@ -7,7 +7,8 @@ import ru.poporyadku.data.db.AppDatabase
 
 /**
  * Debug-only восстановление после конфликта установки контента
- * (ITERATION_3_DESIGN.md, I3-D48). В release не компилируется: живёт в `src/debug`.
+ * (ITERATION_3_DESIGN.md, I3-D48; ITERATION_4_DESIGN.md, **I4-D20**, §11.3).
+ * В release не компилируется: живёт в `src/debug`.
  *
  * Действие очищает **весь Room целиком** — `daily_sets`, `puzzles`, `day_assignments`,
  * `puzzle_attempts`, `day_results`, всех пакетов, а не только активного. Обещать
@@ -15,12 +16,16 @@ import ru.poporyadku.data.db.AppDatabase
  * потребовало бы четырёх DELETE, два из них — с подзапросом по `day_assignments`.
  *
  * `UserPreferences` (DataStore) не трогается: настройки и флаги обучения — не Room
- * и не часть конфликта.
+ * и не часть конфликта. Совпавшая отметка установленного контента раннего выхода после
+ * сброса не даёт — его подтверждает база (ITERATION_4_DESIGN.md, §10.4), поэтому
+ * следующий `ensureInstalled()` импортирует пакет заново, и устройство возвращается
+ * в состояние первого запуска.
  *
- * После очистки следующий `ensureInstalled()` видит пустую `daily_sets` и
- * переустанавливает наборы (I3-D41): устройство возвращается в состояние первого запуска.
+ * Единственный законный повод — предрелизный hard cutover с временной фикстуры
+ * итерации 3 (**I4-D3**, ARCHITECTURE.md ADR-016): автоматическая потеря прогресса
+ * запрещена, поэтому сброс выполняется только по явному подтверждению человека.
  */
-class TemporaryContentReset @Inject constructor(
+class ContentReset @Inject constructor(
     private val db: AppDatabase,
 ) {
 

@@ -10,21 +10,18 @@ import kotlinx.serialization.json.Json
 import ru.poporyadku.BuildConfig
 import ru.poporyadku.data.content.AssetContentSource
 import ru.poporyadku.data.content.ContentAssetSource
-import ru.poporyadku.data.content.temporary.TemporaryContentInstaller
-import ru.poporyadku.data.content.temporary.TemporaryPuzzleRepository
+import ru.poporyadku.data.content.ContentImporter
+import ru.poporyadku.data.repository.PuzzleRepositoryImpl
 import ru.poporyadku.domain.content.ContentInstaller
 import ru.poporyadku.domain.repository.PuzzleRepository
 
 /**
  * Границы контента (ITERATION_3_DESIGN.md, I3-D1, I3-D2; ITERATION_4_DESIGN.md, §8.7).
  *
- * Замена временного источника на настоящий стоит ровно ДВЕ строки в этом файле, и они
- * меняются в PR 4D: у обоих продуктовых `@Binds` меняется правая часть, левая остаётся.
- * Ни один use case, ни один ViewModel и ни один экран не правится.
- *
- * **В PR 4B продуктовые привязки остаются временными.** `ContentImporter` и
- * `PuzzleRepositoryImpl` существуют, собираются и покрыты тестами, но в граф
- * не подключены: поведение приложения этим PR не меняется ни в одном сценарии.
+ * Продуктовый граф связан с НАСТОЯЩИМ контентом: головоломки читаются из Room, установку
+ * выполняет импортёр пакета из `assets/content/`. Переход с временного источника
+ * итерации 3 стоил ровно две правые части `@Binds` ниже (PR 4D, **I4-D23**) — левые
+ * стороны контрактов не менялись, и ни один use case, ViewModel и экран не правился.
  *
  * Обе привязки — в `src/main`: реализация в `src/debug` оставила бы граф Hilt релизной
  * сборки без привязки, и `assembleRelease` падал бы на компиляции Dagger.
@@ -34,14 +31,13 @@ import ru.poporyadku.domain.repository.PuzzleRepository
 abstract class ContentModule {
 
     @Binds
-    abstract fun puzzleRepository(impl: TemporaryPuzzleRepository): PuzzleRepository
+    abstract fun puzzleRepository(impl: PuzzleRepositoryImpl): PuzzleRepository
 
     /** Экземпляр — @Singleton по аннотации самого класса: один Mutex на процесс. */
     @Binds
-    abstract fun contentInstaller(impl: TemporaryContentInstaller): ContentInstaller
+    abstract fun contentInstaller(impl: ContentImporter): ContentInstaller
 
-    /** Источник байтов пакета. Продуктовой привязкой контента не является: до PR 4D
-     *  его единственный потребитель — `ContentPackReader`, который никто не вызывает. */
+    /** Источник байтов пакета; единственный потребитель — `ContentPackReader`. */
     @Binds
     abstract fun contentAssetSource(impl: AssetContentSource): ContentAssetSource
 

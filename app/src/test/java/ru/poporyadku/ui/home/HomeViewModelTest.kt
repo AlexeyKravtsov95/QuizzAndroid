@@ -428,6 +428,24 @@ class HomeViewModelTest {
         assertFalse("прогресс не прочитан — «Архив» скрыт", error.isArchiveVisible)
     }
 
+    /**
+     * `I4-V2` (ITERATION_4_DESIGN.md, §11.4): маппер переносит причину отказа без потери —
+     * по ней экран выбирает текст и наличие «Повторить». Статистика прочитанного
+     * прогресса доезжает и до `ContentUnusable`: прогресс цел.
+     */
+    @Test
+    fun `I4-V2 mapper carries every failure kind unchanged`() {
+        val stats = stats(completedDayCount = 3)
+
+        for (kind in TodayFailureKind.entries) {
+            val error = TodayState.Failure(today, stats, kind).map() as HomeState.Error
+
+            assertEquals(kind, error.kind)
+            assertEquals(stats, error.stats)
+            assertTrue("$kind: прогресс прочитан — «Архив» виден", error.isArchiveVisible)
+        }
+    }
+
     /** `I3-V19` (продолжение): при непрочитанном прогрессе Home не выдумывает статистику. */
     @Test
     fun `awaiting first day keeps stats and hides archive when nothing is completed`() {
@@ -661,6 +679,33 @@ class HomeViewModelTest {
         }
     }
 
+    /**
+     * `I4-V2` (ITERATION_4_DESIGN.md, §11.3): при непригодном пакете действие
+     * восстановления не предлагается, а устаревшее или подделанное подтверждение
+     * не выполняет его — прогресс ни при чём, стирать его нельзя.
+     */
+    @Test
+    fun `I4-V2 content unusable filters the recovery descriptor out`() = homeTest {
+        content.failure = ContentInstallException.UnsupportedSchema(manifest = 2, supported = 1)
+        assignments.decision = Decision.NewSet(PACK, setIndex = 0)
+        val action = FakeRecoveryAction()
+        val viewModel = createViewModel(recoveryActions = setOf(action))
+
+        viewModel.uiState.test {
+            skipItems(1)
+            val error = awaitItem() as HomeState.Error
+            assertEquals(TodayFailureKind.ContentUnusable, error.kind)
+            assertTrue(error.recoveryActions.isEmpty())
+
+            viewModel.onEvent(
+                HomeEvent.RecoveryConfirmed(FakeRecoveryAction.ID, error.recomputeGeneration),
+            )
+            runCurrent()
+            assertEquals(0, action.calls)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
     // --- I3-V35: устойчивость поколения ----------------------------------------------
 
     /**
@@ -812,7 +857,7 @@ class HomeViewModelTest {
         const val PACK = "core-ru"
 
         val RECOVERY_DESCRIPTOR = RecoveryActionUi(
-            id = "temporary_content_reset",
+            id = "content_reset",
             labelRes = 1,
             confirmationRes = 2,
         )
@@ -944,6 +989,6 @@ private class FakeRecoveryAction : HomeErrorRecoveryAction {
     }
 
     companion object {
-        const val ID = "temporary_content_reset"
+        const val ID = "content_reset"
     }
 }

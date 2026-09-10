@@ -193,6 +193,8 @@ interface ContentInstaller {
 
 ### I3-D41. Установлен ли контент, решает база, а не флаг в процессе
 
+> **Итерация 4, PR 4D.** Механизм пережил итерацию 4 и продолжен решениями **I4-D4**, **I4-D11**, **I4-D20** (`ITERATION_4_DESIGN.md`): настоящий `ContentImporter` тоже не хранит ни одного флага готовности, а его единственный ранний выход требует подтверждения базой (I4-D11). `TemporaryContentReset` переименован в `ContentReset`. Листинг `TemporaryContentInstaller` ниже — исторический: класс удалён в PR 4D вместе с `data/content/temporary/`.
+
 В ревизии 1 установка гасилась полем `@Volatile installed`. Это ломается штатным действием: кнопка «Очистить базу» на debug-экране вызывает `db.clearAllTables()` **в том же процессе**, флаг остаётся `true`, `daily_sets` пуст — и приложение до перезапуска показывает `ContentExhausted`, хотя контент «установлен». Флаг снимается: единственный источник истины — содержимое таблицы.
 
 ```kotlin
@@ -241,6 +243,8 @@ class TemporaryContentInstaller @Inject constructor(
 ```
 
 ### I3-D50. Проверка назначений идёт до раннего выхода и не зависит от `daily_sets`
+
+> **Итерация 4, PR 4D.** Механизм пережил итерацию 4 и продолжен решениями **I4-D4**, **I4-D11**, **I4-D20** (`ITERATION_4_DESIGN.md`): у `ContentImporter` назначения вне пакета — свидетельство A, проверяемое независимо от `daily_sets` и на пути импорта, и на быстром пути; к нему добавлены состав назначенного набора (B) и сыгранные `puzzle_id` (C, I4-D4, I4-D11). Списочные запросы `setIndexes`/`deleteOutside`/`setIndexesOutside`/`datesOutside` удалены в PR 4D вместе с `TemporaryContentInstaller` — их заменили диапазонные (I4-D27). `TemporaryContentReset` переименован в `ContentReset`.
 
 В ревизии 2.3 первым шагом стоял ранний выход `if (present.toSet() == expected.toSet()) return@withTransaction`, а проверка назначений выполнялась **после** него и только по `stale`, выведенному из `daily_sets`. Отсюда дыра: если строки лишнего набора в `daily_sets` **уже нет**, а назначение на него **есть**, то `present == expected`, ранний выход срабатывает, конфликт не поднимается и `ensureInstalled()` молча возвращает успех.
 
@@ -303,6 +307,8 @@ class TemporaryContentInstaller @Inject constructor(
 - пользователь релизной сборки в этот случай попасть не может: `DebugContentFixture` в release не компилируется (`src/debug`), а другого способа получить набор `set_index ≥ 3` у пакета `core-ru` не существует.
 
 ### I3-D47. Причина конфликта — доменный тип; восстановление — `@Multibinds`-набор, пустой в release
+
+> **Итерация 4, PR 4D.** Механизм пережил итерацию 4 и продолжен решениями **I4-D4**, **I4-D11**, **I4-D20** (`ITERATION_4_DESIGN.md`): `Home.Error`, `@Multibinds`-набор, машина восстановления и защита поколением не изменились. `TemporaryContentReset` переименован в `ContentReset`, `TemporaryContentResetAction` — в `ContentResetAction` с идентификатором `content_reset` и надписью «Сбросить контент»; действие применимо только к `ContentConflict` — при `ContentUnusable` (I4-D19) и `Generic` оно не предлагается. В release набор по-прежнему пуст.
 
 Ревизия 2.1 предлагала «`ErrorRecoveryAction` в `src/debug`, в release — `null`». Это нереализуемо тремя способами сразу: `domain` пришлось бы импортировать `StaleContentConflictException` из `data`; `HomeScreen` в `src/main` не может ссылаться на тип, существующий только в `src/debug`; а nullable-binding в Hilt требует `@BindsOptionalOf` либо `@Provides` c `null` в **каждом** варианте, то есть той самой release-заглушки, от которой отказался `ITERATION_2_DESIGN.md` (D-10).
 
@@ -640,6 +646,8 @@ abstract class DebugHomeRecoveryModule {
 Тесты: `I3-C18` (debug-набор + `ContentConflict` → действие показано), `I3-C19` (`Generic` при том же непустом наборе → действие **не** показано), `I3-C20` (пустой набор, то есть release-конфигурация, при `ContentConflict` → действия нет), **`I3-V32`** (полный цикл восстановления и защита от устаревших подтверждений — одиннадцать проверок, см. тестовую матрицу), **`I3-C22`** (обе кнопки `disabled`, пока идёт восстановление).
 
 ### I3-D48. `TemporaryContentReset` очищает базу целиком и говорит об этом прямо
+
+> **Итерация 4, PR 4D.** Механизм пережил итерацию 4 и продолжен решениями **I4-D4**, **I4-D11**, **I4-D20** (`ITERATION_4_DESIGN.md`). `TemporaryContentReset` переименован в `ContentReset`; семантика прежняя: `clearAllTables()` на `Dispatchers.IO`, вся база всех пакетов, DataStore не трогается, код только в `src/debug`. После сброса следующий `ensureInstalled()` импортирует настоящий пакет: совпавшая отметка раннего выхода не даёт без подтверждения базой (I4-D11). Единственный законный повод — предрелизный hard cutover с временной фикстуры (I4-D3, `ARCHITECTURE.md` ADR-016).
 
 Ревизия 2.1 обещала одновременно «только активный пакет», «одна внешняя `withTransaction`» и `clearAllTables()`. Три обещания несовместимы: `clearAllTables()` чистит **все** таблицы всех пакетов, он не `suspend`, блокирующий, запускает собственную транзакцию и не может быть вложен во внешнюю.
 

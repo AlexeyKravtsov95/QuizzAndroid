@@ -6,6 +6,7 @@ import java.time.Clock
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneOffset
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -15,18 +16,25 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import ru.poporyadku.core.model.ContentPack
 import ru.poporyadku.core.model.PuzzleAttempt
+import ru.poporyadku.core.model.TestContent
 import ru.poporyadku.core.time.FakeClockProvider
-import ru.poporyadku.data.content.temporary.TemporaryContentInstaller
 import ru.poporyadku.data.db.AppDatabase
+import ru.poporyadku.data.db.mapper.toEntity
 import ru.poporyadku.data.progress.ProgressRepositoryImpl
 import ru.poporyadku.data.repository.DailySetRepositoryImpl
 import ru.poporyadku.data.repository.DayAssignmentRepositoryImpl
+import ru.poporyadku.domain.content.ContentInstaller
 
 /**
  * ITERATION_3_DESIGN.md, §19: `I3-U10`, `I3-U11`.
  *
- * Настоящие репозитории и настоящий установщик контента: «второго назначения не
- * появилось» проверяется по строкам базы, а не по возврату подставного репозитория.
+ * Настоящие репозитории на in-memory Room: «второго назначения не появилось»
+ * проверяется по строкам базы, а не по возврату подставного репозитория.
+ *
+ * Наборы — независимой фикстуры (**I4-D22**), записанные в базу до теста; установщик —
+ * пустышка. Тест проверяет ПРАВИЛА выдачи, а не контент: попытки здесь пишутся с
+ * синтетическими `puzzleId`, и настоящий импортёр справедливо объявил бы их конфликтом.
+ * Его собственное поведение проверяет `ContentImporterTest`.
  */
 @RunWith(RobolectricTestRunner::class)
 class StartDailySessionUseCaseTest {
@@ -39,15 +47,21 @@ class StartDailySessionUseCaseTest {
     private val today = LocalDate.of(2026, 9, 1)
     private val zone = ZoneOffset.UTC
 
+    private object NoopInstaller : ContentInstaller {
+        override suspend fun ensureInstalled() = Unit
+    }
+
     @Before
     fun setUp() {
         db = Room.inMemoryDatabaseBuilder(ApplicationProvider.getApplicationContext(), AppDatabase::class.java)
             .allowMainThreadQueries()
             .build()
+        // Три настоящих строки daily_sets: политике нужен setCountInActivePack, а не установщик.
+        runBlocking { db.dailySetDao().upsertAll(TestContent.sets.map { it.toEntity() }) }
         clock = FakeClockProvider(Clock.fixed(today.atTime(LocalTime.NOON).atZone(zone).toInstant(), zone))
         progress = ProgressRepositoryImpl(db, db.attemptDao(), db.dayResultDao(), clock)
         useCase = StartDailySessionUseCase(
-            content = TemporaryContentInstaller(db, db.dailySetDao(), db.assignmentDao(), ContentPack.CORE_RU),
+            content = NoopInstaller,
             assignments = DayAssignmentRepositoryImpl(
                 db, db.assignmentDao(), db.dailySetDao(), clock, ContentPack.CORE_RU,
             ),

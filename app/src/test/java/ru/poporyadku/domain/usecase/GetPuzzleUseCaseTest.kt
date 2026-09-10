@@ -35,8 +35,8 @@ import ru.poporyadku.domain.shuffle.DeterministicShuffler
  * ITERATION_3_DESIGN.md, §19: `I3-U18`, `I3-U19`, `I3-U33`, `I3-U34`.
  *
  * Установщик контента подменён на пустышку: этот тест ставит наборы и назначения
- * руками, в том числе заведомо сломанные, а `TemporaryContentInstaller` объявил бы их
- * конфликтом. Его собственное поведение проверяет `TemporaryContentInstallerTest`.
+ * руками, в том числе заведомо сломанные, а настоящий `ContentImporter` объявил бы их
+ * конфликтом. Его собственное поведение проверяет `ContentImporterTest`.
  */
 @RunWith(RobolectricTestRunner::class)
 class GetPuzzleUseCaseTest {

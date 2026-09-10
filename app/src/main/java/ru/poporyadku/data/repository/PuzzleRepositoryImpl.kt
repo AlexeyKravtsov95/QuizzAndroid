@@ -11,8 +11,7 @@ import ru.poporyadku.domain.repository.PuzzleRepository
 /**
  * Настоящая реализация [PuzzleRepository] поверх Room (ITERATION_4_DESIGN.md, §8.6).
  *
- * В продуктовый граф НЕ привязана: до PR 4D `ContentModule` связывает
- * `TemporaryPuzzleRepository`, и эта реализация используется только тестами.
+ * Продуктовая привязка с PR 4D (`ContentModule`, **I4-D23**).
  *
  * Отозванная головоломка читается наравне с активной: `retiredIn` — пометка контента,
  * а не признак «строки нет», и архив обязан её открывать (`CONTENT_MODEL.md` §7).

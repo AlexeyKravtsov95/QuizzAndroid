@@ -64,6 +64,8 @@
     <string name="home_content_exhausted">Новые задания готовятся. Ваш архив и лучшая серия сохранены</string>
     <string name="home_error_message">Не удалось загрузить задания</string>
     <string name="home_error_retry">Повторить</string>
+    <!-- ITERATION_4_DESIGN.md, I4-D19; CONTENT_MODEL.md §7: пакет внутри приложения непригоден. -->
+    <string name="home_error_update_required">Требуется обновление приложения</string>
 
     <string name="home_recovery_dialog_confirm">Подтвердить</string>
     <string name="home_recovery_dialog_cancel">Отмена</string>
