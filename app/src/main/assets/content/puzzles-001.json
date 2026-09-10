@@ -8801,9 +8801,10 @@
           "displayValue": "1926 год",
           "sourceIds": [
             "s4",
-            "s5"
+            "s5",
+            "s6"
           ],
-          "note": "Первая постановка — «Ла Скала», Милан"
+          "note": "Премьера — 25 апреля 1926 года, «Ла Скала», Милан"
         }
       ],
       "correctOrder": [
@@ -8853,6 +8854,14 @@
           "url": "https://www.treccani.it/enciclopedia/giacomo-puccini/",
           "accessedAt": "2026-09-10",
           "note": "В перечне произведений: «Turandot (libr. di R. Simoni e G. Adami; Milano 1926)»"
+        },
+        {
+          "sourceId": "s6",
+          "title": "Википедия (подтверждение премьеры): Turandot",
+          "kind": "other",
+          "url": "https://en.wikipedia.org/wiki/Turandot",
+          "accessedAt": "2026-09-10",
+          "note": "Прямая формулировка первой постановки: «Turandot premiered at the La Scala opera house in Milan, Italy, on 25 April 1926»"
         }
       ],
       "volatility": "stable",
