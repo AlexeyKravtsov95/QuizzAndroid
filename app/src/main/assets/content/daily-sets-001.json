@@ -225,6 +225,62 @@
         "geo-ozera-afriki-ploshchad-074",
         "hist-plavaniya-god-085"
       ]
+    },
+    {
+      "setIndex": 28,
+      "puzzleIds": [
+        "cult-arki-vysota-099",
+        "russia-atomnye-suda-massa-092",
+        "sci-komety-period-093"
+      ]
+    },
+    {
+      "setIndex": 29,
+      "puzzleIds": [
+        "mix-sport-distancii-094",
+        "russia-balety-god-095",
+        "hist-raketoplany-skorost-096"
+      ]
+    },
+    {
+      "setIndex": 30,
+      "puzzleIds": [
+        "cult-kompozitory-god-097",
+        "russia-polyarnyy-den-dlitelnost-098",
+        "geo-zheloba-glubina-091"
+      ]
+    },
+    {
+      "setIndex": 31,
+      "puzzleIds": [
+        "hist-korabli-dlina-100",
+        "russia-kartiny-vysota-101",
+        "cult-skazki-god-102"
+      ]
+    },
+    {
+      "setIndex": 32,
+      "puzzleIds": [
+        "cult-gazety-god-103",
+        "nat-ryby-vozrast-104",
+        "russia-skvazhiny-glubina-105"
+      ]
+    },
+    {
+      "setIndex": 33,
+      "puzzleIds": [
+        "mix-razmah-kryla-106",
+        "hist-korablekrusheniya-glubina-107",
+        "russia-zapovedniki-god-108"
+      ]
+    },
+    {
+      "setIndex": 34,
+      "puzzleIds": [
+        "nat-veter-skorost-109",
+        "sci-sverhnovye-god-110",
+        "mix-kolesa-obozreniya-vysota-111"
+      ]
     }
   ]
 }
