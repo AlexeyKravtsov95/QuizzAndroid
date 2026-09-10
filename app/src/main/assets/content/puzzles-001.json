@@ -6882,7 +6882,7 @@
         {
           "cardId": "c4",
           "title": "Большой Арктический",
-          "subtitle": "Побережье и острова моря Лаптевых",
+          "subtitle": "Побережье и острова Таймыра",
           "sortValue": 41692,
           "displayValue": "41 692 км²",
           "sourceIds": [
@@ -6967,7 +6967,7 @@
       ],
       "volatility": "slow",
       "difficulty": 1,
-      "verifiedAt": "2026-09-07",
+      "verifiedAt": "2026-09-10",
       "verifiedBy": "agent-4c4-precheck",
       "retiredIn": null
     },
@@ -6983,14 +6983,13 @@
           "cardId": "c1",
           "title": "Остров Врангеля",
           "subtitle": "Чукотское море",
-          "sortValue": 4700,
-          "displayValue": "4700 км²",
+          "sortValue": 7608,
+          "displayValue": "7608 км²",
           "sourceIds": [
             "s1",
             "s5"
           ],
-          "note": "Треккани — 4700 км²; Википедия — 7600 км²",
-          "disputed": true
+          "note": "7608,7 км² — сам остров, без острова Геральд и акватории"
         },
         {
           "cardId": "c2",
@@ -7034,15 +7033,15 @@
         "c3",
         "c4"
       ],
-      "explanation": "Сахалин — остров, Северная Земля и Новая Земля — архипелаги, и в обоих случаях приведена суммарная площадь суши. Разрыв между Сахалином и Новой Землёй — 7,5 %, он сохраняется и при значениях Википедии.",
+      "explanation": "Врангеля и Сахалин — отдельные острова, Северная Земля и Новая Земля — архипелаги; везде взята площадь суши без прилегающей акватории. Разрыв между Сахалином и Новой Землёй — 7,5 %, он сохраняется и при значениях Википедии.",
       "sources": [
         {
           "sourceId": "s1",
-          "title": "Enciclopedia Treccani: «Wrangel»",
-          "kind": "encyclopedia",
-          "url": "https://www.treccani.it/enciclopedia/wrangel_(Enciclopedia-Italiana)/",
-          "accessedAt": "2026-09-07",
-          "note": "«ha una superficie di 4700 kmq.»"
+          "title": "UNESCO World Heritage Centre: номинационное досье «Natural System of Wrangel Island Reserve»",
+          "kind": "official",
+          "url": "https://whc.unesco.org/uploads/nominations/1023rev.pdf",
+          "accessedAt": "2026-09-10",
+          "note": "«the Natural System of Wrangel Island Reserve is made up of Wrangel Island 7608.7 km2, Herald Island 11.3 km2 and a marine area 11,543 km2»"
         },
         {
           "sourceId": "s2",
@@ -7074,7 +7073,7 @@
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Wrangel_Island",
           "accessedAt": "2026-09-07",
-          "note": "Расхождение: «Area: 7,600 km2 (2,900 sq mi)»"
+          "note": "Независимое подтверждение: «Area: 7,600 km2 (2,900 sq mi)»"
         },
         {
           "sourceId": "s6",
@@ -7103,7 +7102,7 @@
       ],
       "volatility": "slow",
       "difficulty": 2,
-      "verifiedAt": "2026-09-07",
+      "verifiedAt": "2026-09-10",
       "verifiedBy": "agent-4c4-precheck",
       "retiredIn": null
     },
@@ -7850,7 +7849,7 @@
         "c3",
         "c4"
       ],
-      "explanation": "В одном ряду стоят два долинных ледника и два покровных щита: величина у всех одна — площадь ледового покрова. Между ледником Селлера и Гренландским щитом разрыв больше двух порядков.",
+      "explanation": "В одном ряду стоят два отдельных ледника и два ледниковых щита: величина у всех одна — площадь ледового покрова. Между ледником Селлера и Гренландским щитом разрыв больше двух порядков.",
       "sources": [
         {
           "sourceId": "s1",
@@ -7919,7 +7918,7 @@
       ],
       "volatility": "slow",
       "difficulty": 2,
-      "verifiedAt": "2026-09-07",
+      "verifiedAt": "2026-09-10",
       "verifiedBy": "agent-4c4-precheck",
       "retiredIn": null
     },
@@ -8354,7 +8353,7 @@
     {
       "puzzleId": "hist-pervye-polety-dlitelnost-082",
       "category": "history",
-      "prompt": "Расположите первые пилотируемые космические полёты по длительности",
+      "prompt": "Расположите ранние пилотируемые космические полёты по длительности",
       "sortKey": "duration",
       "sortDirection": "ascending",
       "directionLabel": "Сверху — самый короткий",
@@ -8447,7 +8446,7 @@
       ],
       "volatility": "stable",
       "difficulty": 1,
-      "verifiedAt": "2026-09-07",
+      "verifiedAt": "2026-09-10",
       "verifiedBy": "agent-4c4-precheck",
       "retiredIn": null
     },
@@ -8785,13 +8784,14 @@
         },
         {
           "cardId": "c3",
-          "title": "«Кармен»",
-          "subtitle": "Жорж Бизе",
-          "sortValue": 1875,
-          "displayValue": "1875 год",
+          "title": "«Сельская честь»",
+          "subtitle": "Пьетро Масканьи",
+          "sortValue": 1890,
+          "displayValue": "1890 год",
           "sourceIds": [
             "s3"
-          ]
+          ],
+          "note": "Первая постановка — Рим"
         },
         {
           "cardId": "c4",
@@ -8800,7 +8800,8 @@
           "sortValue": 1926,
           "displayValue": "1926 год",
           "sourceIds": [
-            "s4"
+            "s4",
+            "s5"
           ],
           "note": "Первая постановка — «Ла Скала», Милан"
         }
@@ -8811,7 +8812,7 @@
         "c3",
         "c4"
       ],
-      "explanation": "Считается год первой постановки, а не год окончания работы композитора: «Турандот» была поставлена уже после смерти Пуччини. Между «Аидой» и «Кармен» всего четыре года, между «Кармен» и «Турандот» — пятьдесят один.",
+      "explanation": "Считается год первой постановки, а не год окончания работы композитора: «Турандот» была поставлена уже после смерти Пуччини. Между соседними премьерами здесь не меньше восемнадцати лет, а между «Травиатой» и «Турандот» — семьдесят три.",
       "sources": [
         {
           "sourceId": "s1",
@@ -8831,11 +8832,11 @@
         },
         {
           "sourceId": "s3",
-          "title": "Enciclopedia Treccani: «Carmen»",
+          "title": "Enciclopedia Treccani: «Cavalleria rusticana»",
           "kind": "encyclopedia",
-          "url": "https://www.treccani.it/enciclopedia/carmen/",
-          "accessedAt": "2026-09-07",
-          "note": "«l'omonima opera in musica (1875) del musicista G. Bizet»"
+          "url": "https://www.treccani.it/enciclopedia/cavalleria-rusticana/",
+          "accessedAt": "2026-09-10",
+          "note": "«rappresentata la prima volta a Roma nel 1890»"
         },
         {
           "sourceId": "s4",
@@ -8844,11 +8845,19 @@
           "url": "https://www.treccani.it/enciclopedia/turandot/",
           "accessedAt": "2026-09-07",
           "note": "«eseguita nel 1926 alla Scala di Milano»"
+        },
+        {
+          "sourceId": "s5",
+          "title": "Enciclopedia Treccani: «Giacomo Puccini»",
+          "kind": "encyclopedia",
+          "url": "https://www.treccani.it/enciclopedia/giacomo-puccini/",
+          "accessedAt": "2026-09-10",
+          "note": "В перечне произведений: «Turandot (libr. di R. Simoni e G. Adami; Milano 1926)»"
         }
       ],
       "volatility": "stable",
       "difficulty": 2,
-      "verifiedAt": "2026-09-07",
+      "verifiedAt": "2026-09-10",
       "verifiedBy": "agent-4c4-precheck",
       "retiredIn": null
     },
@@ -8951,61 +8960,52 @@
       "retiredIn": null
     },
     {
-      "puzzleId": "mix-gejzery-vysota-088",
+      "puzzleId": "mix-lunnye-zatmeniya-dlitelnost-088",
       "category": "mixed",
-      "prompt": "Расположите гейзеры Йеллоустона по наибольшей высоте выброса",
-      "sortKey": "height",
+      "prompt": "Расположите полные лунные затмения по длительности полной фазы",
+      "sortKey": "duration",
       "sortDirection": "ascending",
-      "directionLabel": "Сверху — самый низкий",
+      "directionLabel": "Сверху — самое короткое",
       "cards": [
         {
           "cardId": "c1",
-          "title": "Фонтан",
-          "subtitle": "Бассейн Нижних гейзеров",
-          "sortValue": 15,
-          "displayValue": "15 м",
+          "title": "4 апреля 2015 года",
+          "subtitle": "Тихий океан, Америка и Азия",
+          "sortValue": 283,
+          "displayValue": "4 мин 43 с",
           "sourceIds": [
-            "s1",
-            "s5"
-          ],
-          "note": "NPS — до 50 футов (15 м); Википедия — 23 м",
-          "disputed": true
+            "s1"
+          ]
         },
         {
           "cardId": "c2",
-          "title": "Замок",
-          "subtitle": "Бассейн Верхних гейзеров",
-          "sortValue": 24,
-          "displayValue": "24 м",
+          "title": "26 мая 2021 года",
+          "subtitle": "Тихий океан, Австралия и Америка",
+          "sortValue": 883,
+          "displayValue": "14 мин 43 с",
           "sourceIds": [
-            "s2",
-            "s6"
-          ],
-          "note": "75 футов = 24 м"
+            "s1"
+          ]
         },
         {
           "cardId": "c3",
-          "title": "Старый Служака",
-          "subtitle": "Самый известный гейзер парка",
-          "sortValue": 55,
-          "displayValue": "55 м",
+          "title": "14 марта 2025 года",
+          "subtitle": "Америка и Тихий океан",
+          "sortValue": 3924,
+          "displayValue": "1 ч 5 мин 24 с",
           "sourceIds": [
-            "s3",
-            "s7"
-          ],
-          "note": "Верхняя граница диапазона 106–184 фута"
+            "s1"
+          ]
         },
         {
           "cardId": "c4",
-          "title": "Пароход",
-          "subtitle": "Самый высокий действующий гейзер мира",
-          "sortValue": 91,
-          "displayValue": "91 м",
+          "title": "27 июля 2018 года",
+          "subtitle": "Европа, Африка, Азия и Австралия",
+          "sortValue": 6177,
+          "displayValue": "1 ч 42 мин 57 с",
           "sourceIds": [
-            "s4",
-            "s8"
-          ],
-          "note": "Более 300 футов (91 м) при крупных извержениях"
+            "s1"
+          ]
         }
       ],
       "correctOrder": [
@@ -9014,76 +9014,20 @@
         "c3",
         "c4"
       ],
-      "explanation": "Взята наибольшая высота выброса, которую называет Служба национальных парков США. У «Фонтана» и «Старого Служаки» она указана как верхняя граница диапазона, у «Замка» и «Парохода» — как достигаемая при крупных извержениях. Разрыв между соседями — не меньше 37 %.",
+      "explanation": "Длительность полной фазы взята из одной колонки каталога NASA и зависит от того, насколько близко к центру земной тени проходит Луна. Затмение 2018 года длилось почти в двадцать два раза дольше, чем затмение 2015 года, хотя оба полные.",
       "sources": [
         {
           "sourceId": "s1",
-          "title": "National Park Service: Fountain Geyser",
+          "title": "NASA GSFC: Five Millennium Catalog of Lunar Eclipses, 2001–2100",
           "kind": "official",
-          "url": "https://www.nps.gov/places/000/fountain-geyser.htm",
-          "accessedAt": "2026-09-07",
-          "note": "«It erupts 10–50 feet (3–15 m) into the air for 20 minutes or more»"
-        },
-        {
-          "sourceId": "s2",
-          "title": "National Park Service: Castle Geyser",
-          "kind": "official",
-          "url": "https://www.nps.gov/places/000/castle-geyser.htm",
-          "accessedAt": "2026-09-07",
-          "note": "«The water eruption frequently reaches 75 feet (24 m)»"
-        },
-        {
-          "sourceId": "s3",
-          "title": "National Park Service: Old Faithful Geyser",
-          "kind": "official",
-          "url": "https://www.nps.gov/places/old-faithful-geyser.htm",
-          "accessedAt": "2026-09-07",
-          "note": "«a height of 106–184 feet (30–55 m)»"
-        },
-        {
-          "sourceId": "s4",
-          "title": "National Park Service: Steamboat Geyser",
-          "kind": "official",
-          "url": "https://www.nps.gov/yell/learn/nature/steamboat-geyser.htm",
-          "accessedAt": "2026-09-07",
-          "note": "«Its major eruptions shoot water more than 300 feet (91 m).»"
-        },
-        {
-          "sourceId": "s5",
-          "title": "Википедия (проверочный источник): Fountain Geyser",
-          "kind": "other",
-          "url": "https://en.wikipedia.org/wiki/Fountain_Geyser",
-          "accessedAt": "2026-09-07",
-          "note": "Расхождение: «Eruption height: 75 feet (23 m)»"
-        },
-        {
-          "sourceId": "s6",
-          "title": "Википедия (проверочный источник): Castle Geyser",
-          "kind": "other",
-          "url": "https://en.wikipedia.org/wiki/Castle_Geyser",
-          "accessedAt": "2026-09-07",
-          "note": "Независимое подтверждение: «Eruption height: 90 feet (27 m)»"
-        },
-        {
-          "sourceId": "s7",
-          "title": "Википедия (проверочный источник): Old Faithful",
-          "kind": "other",
-          "url": "https://en.wikipedia.org/wiki/Old_Faithful",
-          "accessedAt": "2026-09-07",
-          "note": "Независимое подтверждение: «106 to 185 ft (32 to 56 m)»"
-        },
-        {
-          "sourceId": "s8",
-          "title": "Википедия (проверочный источник): Steamboat Geyser",
-          "kind": "other",
-          "url": "https://en.wikipedia.org/wiki/Steamboat_Geyser",
-          "accessedAt": "2026-09-07",
-          "note": "Независимое подтверждение: «Eruption height: 300 to 400 feet (91 to 122 m)»"
+          "url": "https://eclipse.gsfc.nasa.gov/LEcat5/LE2001-2100.html",
+          "accessedAt": "2026-09-10",
+          "note": "Колонка длительности полной фазы: 2015 Apr 04 — «00h04m43s»; 2021 May 26 — «00h14m43s»; 2025 Mar 14 — «01h05m24s»; 2018 Jul 27 — «01h42m57s»"
         }
       ],
-      "volatility": "slow",
+      "volatility": "stable",
       "difficulty": 1,
-      "verifiedAt": "2026-09-07",
+      "verifiedAt": "2026-09-10",
       "verifiedBy": "agent-4c4-precheck",
       "retiredIn": null
     },
@@ -9162,7 +9106,7 @@
     {
       "puzzleId": "mix-parki-ploshchad-090",
       "category": "mixed",
-      "prompt": "Расположите национальные парки США по площади",
+      "prompt": "Расположите объекты системы национальных парков США по общей площади",
       "sortKey": "area",
       "sortDirection": "ascending",
       "directionLabel": "Сверху — самый малый",
@@ -9222,7 +9166,7 @@
         "c3",
         "c4"
       ],
-      "explanation": "Во всех четырёх случаях взята площадь, которую объявляет Служба национальных парков США, вместе с прилегающим заповедником там, где он есть. Врангеля — Святого Ильи превосходит Гранд-Каньон почти в одиннадцать раз.",
+      "explanation": "Гранд-Каньон и Эверглейдс — национальные парки, а Глейшер-Бей и Врангеля — Святого Ильи учтены целиком, вместе с прилегающим заповедником (preserve): именно такую общую площадь объявляет Служба национальных парков США. Врангеля — Святого Ильи превосходит Гранд-Каньон почти в одиннадцать раз.",
       "sources": [
         {
           "sourceId": "s1",
@@ -9291,7 +9235,7 @@
       ],
       "volatility": "slow",
       "difficulty": 2,
-      "verifiedAt": "2026-09-07",
+      "verifiedAt": "2026-09-10",
       "verifiedBy": "agent-4c4-precheck",
       "retiredIn": null
     }
