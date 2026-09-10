@@ -9271,14 +9271,14 @@
           "cardId": "c2",
           "title": "Жёлоб Пуэрто-Рико",
           "subtitle": "Атлантический океан",
-          "sortValue": 9218,
-          "displayValue": "9218 м",
+          "sortValue": 8378,
+          "displayValue": "8378 м",
           "sourceIds": [
             "s2",
             "s5"
           ],
           "disputed": true,
-          "note": "Ларусс — 9218 м; Википедия — от 8376 до 8740 м"
+          "note": "Статья 2021 года — 8378 ± 5 м; Википедия — от 8376 до 8740 м"
         },
         {
           "cardId": "c3",
@@ -9295,14 +9295,13 @@
           "cardId": "c4",
           "title": "Жёлоб Тонга",
           "subtitle": "Южная часть Тихого океана",
-          "sortValue": 10882,
-          "displayValue": "10 882 м",
+          "sortValue": 10816,
+          "displayValue": "10 816 м",
           "sourceIds": [
-            "s3",
+            "s2",
             "s7"
           ],
-          "disputed": true,
-          "note": "Ларусс — 10 882 м; Википедия — 10 823 ± 10 м"
+          "note": "Погрешность ± 16 м; Википедия — 10 823 ± 10 м"
         }
       ],
       "correctOrder": [
@@ -9311,7 +9310,7 @@
         "c3",
         "c4"
       ],
-      "explanation": "Жёлоб Пуэрто-Рико — самое глубокое место Атлантики, но Кермадек и Тонга на юге Тихого океана — две части одной системы жёлобов — глубже его как минимум на 800 м. Алеутский жёлоб у Аляски мельче всех четырёх.",
+      "explanation": "Жёлоб Пуэрто-Рико — самое глубокое место Атлантики, но Кермадек и Тонга на юге Тихого океана — две части одной системы жёлобов — глубже его больше чем на километр. Алеутский жёлоб у Аляски мельче всех четырёх.",
       "sources": [
         {
           "sourceId": "s1",
@@ -9323,11 +9322,11 @@
         },
         {
           "sourceId": "s2",
-          "title": "Larousse: fosse de Porto Rico",
-          "kind": "encyclopedia",
-          "url": "https://www.larousse.fr/encyclopedie/divers/fosse_de_Porto_Rico/139321",
+          "title": "Bongiovanni et al. High-resolution multibeam sonar bathymetry of the deepest place in each ocean. Geoscience Data Journal, 2021",
+          "kind": "academic",
+          "url": "https://nora.nerc.ac.uk/id/eprint/530930/1/Geoscience%20Data%20Journal%20-%202021%20-%20Bongiovanni%20-%20High%E2%80%90resolution%20multibeam%20sonar%20bathymetry%20of%20the%20deepest%20place%20in%20each.pdf",
           "accessedAt": "2026-09-10",
-          "note": "«Fosse (9 218 m) de l'Atlantique occidental tropical»"
+          "note": "«Puerto Rico Trench/Brownson Deep 19.712°N 67.311°W 8,378 ± 5» … «Tonga Trench/Horizon Deep 23.270°S 174.740°W 10,816 ± 16» (Table 1)"
         },
         {
           "sourceId": "s3",
@@ -9367,7 +9366,7 @@
           "kind": "other",
           "url": "https://en.wikipedia.org/wiki/Tonga_Trench",
           "accessedAt": "2026-09-10",
-          "note": "Расхождение: «A depth of 10,823 m (35,509 ft) ±10 m (33 ft) was obtained by direct CTD pressure»"
+          "note": "Независимое подтверждение в пределах погрешности: «A depth of 10,823 m (35,509 ft) ±10 m (33 ft) was obtained by direct CTD pressure»"
         }
       ],
       "volatility": "slow",
@@ -9968,7 +9967,7 @@
           "kind": "encyclopedia",
           "url": "https://www.larousse.fr/encyclopedie/personnage/Wolfgang_Amadeus_Mozart/134270",
           "accessedAt": "2026-09-10",
-          "note": "«Compositeur allemand (Salzbourg 1756-Vienne 1791)"
+          "note": "«Compositeur allemand (Salzbourg 1756-Vienne 1791), fils de Leopold Mozart…»"
         },
         {
           "sourceId": "s3",
@@ -10166,7 +10165,7 @@
           "kind": "official",
           "url": "https://dmnewdelhi.delhi.gov.in/tourist-place/india-gate/",
           "accessedAt": "2026-09-10",
-          "note": "«At the centre of New Delhi stands the 42 m high India Gate"
+          "note": "«At the centre of New Delhi stands the 42 m high India Gate…»"
         },
         {
           "sourceId": "s3",
@@ -10568,7 +10567,7 @@
           "kind": "encyclopedia",
           "url": "https://www.larousse.fr/encyclopedie/oeuvre/New_York_Times/135144",
           "accessedAt": "2026-09-10",
-          "note": "«Quotidien américain fondé en 1851 par Henry J. Raymond"
+          "note": "«Quotidien américain fondé en 1851 par Henry J. Raymond…»"
         },
         {
           "sourceId": "s3",
@@ -10576,7 +10575,7 @@
           "kind": "encyclopedia",
           "url": "https://www.larousse.fr/encyclopedie/oeuvre/Izvestia/125420",
           "accessedAt": "2026-09-10",
-          "note": "«Quotidien russe. Fondé le 13 mars 1917 à Petrograd"
+          "note": "«Quotidien russe. Fondé le 13 mars 1917 à Petrograd…»"
         },
         {
           "sourceId": "s4",
@@ -10584,7 +10583,7 @@
           "kind": "encyclopedia",
           "url": "https://www.larousse.fr/encyclopedie/oeuvre/El_Pa%C3%ADs/136784",
           "accessedAt": "2026-09-10",
-          "note": "«Quotidien espagnol, créé à Madrid en 1976"
+          "note": "«Quotidien espagnol, créé à Madrid en 1976…»"
         }
       ],
       "volatility": "stable",
@@ -10924,7 +10923,7 @@
     {
       "puzzleId": "hist-korablekrusheniya-glubina-107",
       "category": "history",
-      "prompt": "Расположите затонувшие корабли по глубине, на которой они легли на дно",
+      "prompt": "Расположите затонувшие корабли по глубине обнаружения их обломков",
       "sortKey": "depth",
       "sortDirection": "ascending",
       "directionLabel": "Сверху — наименьшая глубина",
@@ -10964,13 +10963,13 @@
         {
           "cardId": "c4",
           "title": "«Джонстон»",
-          "subtitle": "Эсминец ВМС США, 1944 год",
+          "subtitle": "Эсминец ВМС США, 1944 год, носовая часть",
           "sortValue": 6456,
           "displayValue": "6456 м",
           "sourceIds": [
             "s4"
           ],
-          "note": "Около 21 180 футов; 21 180 × 0,3048 = 6456 м"
+          "note": "Носовая часть — около 21 180 футов (× 0,3048 = 6456 м)"
         }
       ],
       "correctOrder": [
@@ -10979,7 +10978,7 @@
         "c3",
         "c4"
       ],
-      "explanation": "«Васа» затонул в стокгольмской гавани через несколько минут после выхода в первое плавание, на глубине всего 32 м. Остальные легли на дно открытого океана: «Титаник» — на 3800 м, крейсер «Индианаполис» — на 5500 м, а носовую часть эсминца «Джонстон» нашли ещё глубже.",
+      "explanation": "Сравнивается глубина, на которой обнаружены обломки. «Васа» затонул в стокгольмской гавани через несколько минут после выхода в первое плавание и лёг на дно всего на 32 м. Обломки «Титаника» найдены на 3800 м, крейсера «Индианаполис» — на 5500 м, а носовая часть эсминца «Джонстон» — ещё глубже.",
       "sources": [
         {
           "sourceId": "s1",
