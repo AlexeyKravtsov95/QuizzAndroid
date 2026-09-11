@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -19,9 +20,11 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import ru.poporyadku.core.model.AppBuildInfo
 import ru.poporyadku.core.model.StreakCache
 import ru.poporyadku.core.model.ThemeMode
 import ru.poporyadku.core.model.UserPreferences
+import ru.poporyadku.domain.model.InstalledContentVersion
 import ru.poporyadku.domain.repository.UserPreferencesRepository
 import ru.poporyadku.domain.usecase.GetInstalledContentVersionUseCase
 import ru.poporyadku.domain.usecase.GetPuzzleResultUseCase
@@ -33,11 +36,13 @@ import ru.poporyadku.ui.puzzle.FakeProgress
 import ru.poporyadku.ui.puzzle.FakePuzzles
 import ru.poporyadku.ui.puzzle.PuzzleFixtures
 import ru.poporyadku.ui.puzzle.RouteArgError
+import ru.poporyadku.ui.report.ReportContext
 
 /**
  * `PuzzleResultViewModel` — ITERATION_3_DESIGN.md, `I3-V16` плюс все четыре исхода
  * `PuzzleResultLoad` и навигация последнего слота; ITERATION_5_DESIGN.md, §3.7, §4.4:
- * архивный режим `I5-V16`…`I5-V18` и разбор `origin`.
+ * архивный режим `I5-V16`…`I5-V18` и разбор `origin`; PR 5C — «Сообщить о неточности»
+ * `I5-V26`.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class PuzzleResultViewModelTest {
@@ -256,6 +261,8 @@ class PuzzleResultViewModelTest {
         val viewModel = PuzzleResultViewModel(
             getPuzzleResult = useCase(),
             preferences = preferences,
+            appBuildInfo = APP,
+            getInstalledContentVersion = GetInstalledContentVersionUseCase(preferences),
             savedStateHandle = SavedStateHandle(mapOf(Destinations.ARG_SLOT_INDEX to 0)),
         )
         advanceUntilIdle()
@@ -434,6 +441,79 @@ class PuzzleResultViewModelTest {
         assertFalse((rolledBack.uiState.value as PuzzleResultState.Content).isRetired)
     }
 
+    // --- I5-V26: «Сообщить о неточности» -------------------------------------------------
+
+    /**
+     * `I5-V26`. `ReportClicked` на показанном результате — ровно один `ComposeReport` с
+     * `puzzleId` из ПОПЫТКИ, версией приложения и установленной версией контента; в
+     * сессии и в архиве одинаково. Навигационных эффектов при этом нет.
+     */
+    @Test
+    fun `I5-V26 report click emits exactly one ComposeReport with the attempt puzzle id`() = runTest(dispatcher) {
+        for (origin in listOf(null, Destinations.ORIGIN_ARCHIVE)) {
+            setUp()
+            preferences.setInstalled(version = 3)
+            givenAnsweredSlot(slotIndex = 1, submittedOrder = listOf("c2", "c1", "c3", "c4"), score = 6)
+            val viewModel = createViewModel(slotIndex = 1, origin = origin)
+            advanceUntilIdle()
+            val content = viewModel.uiState.value as PuzzleResultState.Content
+
+            viewModel.effects.test {
+                viewModel.onEvent(PuzzleResultEvent.ReportClicked)
+                assertEquals(
+                    "origin=$origin",
+                    PuzzleResultEffect.ComposeReport(
+                        ReportContext(
+                            puzzleId = content.puzzleId,
+                            app = APP,
+                            content = InstalledContentVersion.Known(3),
+                        ),
+                    ),
+                    awaitItem(),
+                )
+                expectNoEvents()
+            }
+            assertEquals(PuzzleFixtures.PUZZLE_ID, content.puzzleId)
+            assertTrue("письмо ничего не записывает", progress.recorded.isEmpty())
+        }
+    }
+
+    /** `I5-V26`. Без показанного результата (загрузка, ошибка) действия нет — эффекта тоже. */
+    @Test
+    fun `I5-V26 report click without content emits nothing`() = runTest(dispatcher) {
+        givenAnsweredSlot(slotIndex = 0, submittedOrder = listOf("c2", "c1", "c3", "c4"), score = 6)
+        puzzles.remove(PuzzleFixtures.PUZZLE_ID)
+        val viewModel = createViewModel(slotIndex = 0)
+        advanceUntilIdle()
+        assertEquals(PuzzleResultState.Error(PuzzleErrorKind.PuzzleNotFound), viewModel.uiState.value)
+
+        viewModel.effects.test {
+            viewModel.onEvent(PuzzleResultEvent.ReportClicked)
+            advanceUntilIdle()
+            expectNoEvents()
+        }
+    }
+
+    /**
+     * `I5-V26`. Отказ чтения версии контента не роняет процесс и не отменяет письмо: строка
+     * версии — «не установлена» (`Unknown`).
+     */
+    @Test
+    fun `I5-V26 a failed content version read still composes the report`() = runTest(dispatcher) {
+        givenAnsweredSlot(slotIndex = 0, submittedOrder = listOf("c2", "c1", "c3", "c4"), score = 6)
+        val failingVersion = GetInstalledContentVersionUseCase(ThrowingPreferences())
+        val viewModel = createViewModel(slotIndex = 0, installedContentVersion = failingVersion)
+        advanceUntilIdle()
+
+        viewModel.effects.test {
+            viewModel.onEvent(PuzzleResultEvent.ReportClicked)
+            val effect = awaitItem() as PuzzleResultEffect.ComposeReport
+            assertEquals(InstalledContentVersion.Unknown, effect.context.content)
+            assertEquals(PuzzleFixtures.PUZZLE_ID, effect.context.puzzleId)
+            expectNoEvents()
+        }
+    }
+
     // --- Инфраструктура -----------------------------------------------------------------
 
     private fun givenAnsweredSlot(slotIndex: Int, submittedOrder: List<String>, score: Int) {
@@ -447,9 +527,15 @@ class PuzzleResultViewModelTest {
         getInstalledContentVersion = GetInstalledContentVersionUseCase(preferences),
     )
 
-    private fun createViewModel(slotIndex: Int, origin: String? = null) = PuzzleResultViewModel(
+    private fun createViewModel(
+        slotIndex: Int,
+        origin: String? = null,
+        installedContentVersion: GetInstalledContentVersionUseCase = GetInstalledContentVersionUseCase(preferences),
+    ) = PuzzleResultViewModel(
         getPuzzleResult = useCase(),
         preferences = preferences,
+        appBuildInfo = APP,
+        getInstalledContentVersion = installedContentVersion,
         savedStateHandle = SavedStateHandle(
             buildMap {
                 put(Destinations.ARG_SLOT_INDEX, slotIndex)
@@ -462,7 +548,14 @@ class PuzzleResultViewModelTest {
     private companion object {
         /** C(4,2) — столько пар у четырёх карточек. */
         const val MAX_PAIRS = 6
+
+        val APP = AppBuildInfo(versionName = "9.9.9", versionCode = 99)
     }
+}
+
+/** Настройки, чтение которых падает: версия контента для письма недоступна. */
+private class ThrowingPreferences : UserPreferencesRepository by FakePreferences() {
+    override val preferences: Flow<UserPreferences> = flow { throw IllegalStateException("DataStore недоступен") }
 }
 
 /** Настройки в памяти: важны только флаг подсказки и факт его записи. */

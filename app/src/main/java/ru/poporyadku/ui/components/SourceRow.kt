@@ -1,6 +1,5 @@
 package ru.poporyadku.ui.components
 
-import android.content.Intent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,14 +21,14 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.PathParser
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.core.net.toUri
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import ru.poporyadku.R
 import ru.poporyadku.core.model.Puzzle
+import ru.poporyadku.ui.platform.ExternalApps
+import ru.poporyadku.ui.platform.rememberExternalApps
 import ru.poporyadku.ui.theme.IconSizing
 import ru.poporyadku.ui.theme.Sizing
 import ru.poporyadku.ui.theme.Spacing
@@ -52,36 +51,36 @@ import ru.poporyadku.ui.theme.Spacing
  * Собственного сетевого запроса не выполняется: переход отдаётся внешнему браузеру, и
  * разрешение `INTERNET` для этого не требуется.
  *
- * Видимость обработчика на API 30+ обеспечена объявлением `<queries>` в манифесте:
- * без него `resolveActivity` не увидел бы установленный браузер и строка деградировала
- * бы до `urlPlainText` даже там, где переход возможен.
+ * Доступность обработчика и запуск — через границу [ExternalApps]
+ * (ITERATION_5_DESIGN.md, §8.1, I5-D19): исключения запуска перехватываются там, а
+ * повторное нажатие до возврата на экран отбрасывается. Проверка выполняется лениво —
+ * только для строки, попавшей в композицию, и запоминается по `url`: экран источников
+ * не опрашивает систему о сотнях ссылок при открытии.
  */
 @Composable
 fun SourceRow(
     source: Puzzle.Source,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
+    val externalApps = rememberExternalApps()
     val colors = MaterialTheme.colorScheme
 
-    val intent = remember(source.url) {
-        source.url?.let { Intent(Intent.ACTION_VIEW, it.toUri()) }
-    }
-    // resolveActivity, а не «есть url»: без обработчика строка обязана деградировать
-    // до читаемого текста, а не вести в никуда.
-    val isLink = remember(intent) {
-        intent != null && intent.resolveActivity(context.packageManager) != null
+    val url = source.url
+    // Обработчик, а не «есть url»: без него строка обязана деградировать до читаемого
+    // текста, а не вести в никуда.
+    val isLink = remember(url, externalApps) {
+        url != null && externalApps.canViewUrl(url)
     }
 
     val linkDescription = stringResource(R.string.cd_source_link, source.title)
-    val rowModifier = if (isLink) {
+    val rowModifier = if (isLink && url != null) {
         modifier
             .fillMaxWidth()
             .defaultMinSize(minHeight = Sizing.touchTargetMin)
             // Роль объявляется ЯВНО, а не выводится из наличия обработчика нажатия:
             // TalkBack обязан назвать строку кнопкой, а не прочитать её как текст,
             // за которым почему-то есть действие.
-            .clickable(role = Role.Button) { context.startActivity(intent) }
+            .clickable(role = Role.Button) { externalApps.viewUrl(url) }
             // Описание обязательно включает НАЗВАНИЕ источника: «Открыть источник в
             // браузере» без него не говорит, какой именно источник откроется.
             .semantics(mergeDescendants = true) { contentDescription = linkDescription }

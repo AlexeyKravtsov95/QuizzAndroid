@@ -37,6 +37,9 @@ object Destinations {
     const val ARCHIVE = "archive"
     const val SETTINGS = "settings"
 
+    /** Источники сыгранных головоломок — единственный подэкран настроек (I5-D14, O5-4). */
+    const val SOURCES = "sources"
+
     fun puzzle(slotIndex: Int, date: LocalDate): String =
         "puzzle/$slotIndex?date=${serialize(date)}"
 

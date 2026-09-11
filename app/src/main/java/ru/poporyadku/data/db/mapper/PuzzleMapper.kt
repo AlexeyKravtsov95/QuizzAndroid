@@ -30,7 +30,7 @@ fun PuzzleEntity.toDomain(json: Json): Puzzle = Puzzle(
     // список из одной пустой позиции — форма проверки та же, что у submittedOrder.
     correctOrder = if (correctOrder.isEmpty()) emptyList() else correctOrder.split(","),
     explanation = explanation,
-    sources = json.decodeFromString<List<StoredSource>>(sourcesJson).map { it.toDomain() },
+    sources = decodeStoredSources(json, sourcesJson),
     difficulty = difficulty,
     retiredIn = retiredIn,
     contentVersion = contentVersion,
@@ -46,6 +46,17 @@ private fun StoredCard.toDomain(): Card = Card(
     sourceIds = sourceIds,
     disputed = disputed,
 )
+
+/**
+ * Колонка `sources_json` → доменные источники. Единственный алгоритм разбора и
+ * отображения источников хранения: им пользуются и строка головоломки, и экран
+ * источников сыгранных головоломок (ITERATION_5_DESIGN.md, §5.3).
+ *
+ * @param json ДОЛЖЕН быть `@StorageJson`: повреждённая колонка бросает, а не даёт
+ * частичный список.
+ */
+fun decodeStoredSources(json: Json, sourcesJson: String): List<Puzzle.Source> =
+    json.decodeFromString<List<StoredSource>>(sourcesJson).map { it.toDomain() }
 
 private fun StoredSource.toDomain(): Puzzle.Source = Puzzle.Source(
     sourceId = sourceId,

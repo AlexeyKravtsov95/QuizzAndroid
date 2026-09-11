@@ -1,5 +1,7 @@
 package ru.poporyadku.ui.puzzleresult
 
+import ru.poporyadku.ui.report.ReportContext
+
 /**
  * Одноразовые эффекты экрана результата (ITERATION_3_DESIGN.md, I3-D25, I3-D49;
  * ITERATION_5_DESIGN.md, §4.4).
@@ -35,4 +37,11 @@ sealed interface PuzzleResultEffect {
      * (ITERATION_5_DESIGN.md, §6.11, I5-D24).
      */
     data class NavigateBack(val isRedirect: Boolean) : PuzzleResultEffect
+
+    /**
+     * «Сообщить о неточности» (ITERATION_5_DESIGN.md, §3.12, I5-D18): данные письма без
+     * Android-типов. Шаблоны читает из ресурсов и письмо открывает через `ExternalApps`
+     * route-контейнер — и только с текущей записи, как любое действие по нажатию.
+     */
+    data class ComposeReport(val context: ReportContext) : PuzzleResultEffect
 }

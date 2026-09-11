@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.ResolveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.SemanticsProperties
@@ -25,6 +26,8 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import ru.poporyadku.core.model.Puzzle
+import ru.poporyadku.ui.platform.FakeExternalApps
+import ru.poporyadku.ui.platform.LocalExternalApps
 import ru.poporyadku.ui.theme.PoPoRyadkuTheme
 
 /**
@@ -178,6 +181,43 @@ class SourcesBlockTest {
 
         rule.onNodeWithText("Энциклопедия").assertExists()
         rule.onNodeWithText(linkSource.kind).assertDoesNotExist()
+    }
+
+    // --- Граница ExternalApps (PR 5C) -----------------------------------------------------
+
+    /**
+     * С фейком `ExternalApps` строка `link` открывает ссылку через границу ровно один раз и
+     * сама `Intent` не запускает (ITERATION_5_DESIGN.md, §8.1).
+     */
+    @Test
+    fun `link row opens the url through ExternalApps exactly once`() {
+        val apps = FakeExternalApps()
+        rule.setContent {
+            CompositionLocalProvider(LocalExternalApps provides apps) { Sources(listOf(linkSource)) }
+        }
+        rule.onNodeWithText(SOURCES).performClick()
+
+        rule.onNodeWithContentDescription("${linkSource.title}. Открыть источник в браузере").performClick()
+
+        assertEquals(listOf(linkSource.url), apps.viewedUrls)
+        assertNull(
+            "Intent запускает только граница",
+            shadowOf(ApplicationProvider.getApplicationContext<android.app.Application>()).nextStartedActivity,
+        )
+    }
+
+    /** Фейк без обработчика — `urlPlainText`: URL текстом, действия нет. */
+    @Test
+    fun `without a handler in ExternalApps the row degrades to plain text`() {
+        val apps = FakeExternalApps(canView = { false })
+        rule.setContent {
+            CompositionLocalProvider(LocalExternalApps provides apps) { Sources(listOf(linkSource)) }
+        }
+        rule.onNodeWithText(SOURCES).performClick()
+
+        rule.onNodeWithText(linkSource.title).assertHasNoClickAction()
+        rule.onNodeWithText(linkSource.url!!).assertExists()
+        assertEquals(listOf(linkSource.url), apps.viewQueries)
     }
 
     // --- Инфраструктура -------------------------------------------------------------------

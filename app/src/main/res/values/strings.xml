@@ -2,13 +2,8 @@
 <resources>
     <string name="app_name">По порядку!</string>
 
-    <!-- Итерация 1: заглушка экрана настроек. Настоящий экран появится в PR 5C. -->
-    <string name="stub_placeholder_caption">Заглушка итерации 1 — экран появится в следующих итерациях</string>
-
     <string name="cd_archive">Архив</string>
     <string name="cd_settings">Настройки</string>
-
-    <string name="stub_settings_title">Настройки</string>
 
     <string name="cd_back">Назад</string>
 
@@ -178,6 +173,56 @@
     <!-- Единый contentDescription строки архива: дата, номер дня, счёт, статус. -->
     <string name="cd_archive_row_complete">%1$s. День %2$d. %3$d из 18. Завершён</string>
     <string name="cd_archive_row_incomplete">%1$s. День %2$d. %3$d из 18. Не завершён, пройдено заданий: %4$d из 3</string>
+
+    <!--
+      Итерация 5, PR 5C. Настройки, «О приложении», источники, «Сообщить о неточности»
+      (ITERATION_5_DESIGN.md, §3.9–§3.12, раздел 13.3; формулировки приняты владельцем,
+      O5-8). Подписи вида источника — общие с SourceRow (source_kind_*), заголовок экрана
+      источников — sources_title, «Повторить» — home_error_retry.
+    -->
+    <string name="settings_title">Настройки</string>
+    <string name="settings_group_sound">Звук и вибрация</string>
+    <string name="settings_sound">Звук</string>
+    <string name="settings_vibration">Вибрация</string>
+    <string name="settings_group_theme">Тема</string>
+    <string name="settings_theme_system">Как в системе</string>
+    <string name="settings_theme_light">Светлая</string>
+    <string name="settings_theme_dark">Тёмная</string>
+    <string name="settings_group_about">О приложении</string>
+    <string name="settings_sources">Источники</string>
+    <string name="settings_group_feedback">Обратная связь</string>
+    <!-- Под строкой настройки, чья последняя запись не удалась; значение на экране — из DataStore. -->
+    <string name="settings_write_failed">Не удалось сохранить настройку</string>
+
+    <!-- «О приложении»: версия приложения и код сборки. -->
+    <string name="about_version">Версия %1$s (%2$d)</string>
+    <string name="about_author_label">Автор</string>
+    <!-- O5-2: подпись автора, предоставлена владельцем. -->
+    <string name="about_author" translatable="false">Алексей</string>
+    <string name="about_content_version">Версия контента: %1$d</string>
+    <string name="about_content_version_unknown">Версия контента: не установлена</string>
+    <string name="about_scoring_rule">Баллы даются за каждую пару карточек в правильном порядке: у четырёх карточек шесть пар, максимум 6 баллов за задание и 18 за день</string>
+    <string name="about_feedback_label">Адрес для писем</string>
+    <!-- O5-1: адрес для обратной связи, предоставлен владельцем. Получатель письма и строка «О приложении». -->
+    <string name="feedback_email" translatable="false">alexey.kravtsov95@gmail.com</string>
+    <!-- Действие TalkBack у строки адреса. -->
+    <string name="about_copy_email">Скопировать адрес</string>
+    <!-- Объявление после копирования на API 26–32; на API 33+ подтверждение показывает система. -->
+    <string name="about_email_copied">Адрес скопирован</string>
+
+    <!-- Экран источников сыгранных головоломок. -->
+    <string name="sources_empty">Источники появятся после первого сыгранного задания</string>
+    <string name="sources_error">Не удалось прочитать источники</string>
+
+    <!-- «Сообщить о неточности»: действие и шаблоны письма (UX_FLOW.md §5). -->
+    <string name="report_inaccuracy">Сообщить о неточности</string>
+    <string name="report_subject_puzzle">По порядку! — неточность в задании %1$s</string>
+    <string name="report_subject_general">По порядку! — сообщение о неточности</string>
+    <string name="report_line_puzzle">Задание: %1$s</string>
+    <string name="report_line_app">Версия приложения: %1$s (%2$d)</string>
+    <string name="report_line_content">Версия контента: %1$d</string>
+    <string name="report_line_content_unknown">Версия контента: не установлена</string>
+    <string name="report_prompt">Опишите, что не так:</string>
 
     <!-- Формат счёта: «N из 18» (день) и «N из 6» (одно задание) -->
     <string name="score_of_day">%1$d из 18</string>

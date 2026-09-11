@@ -36,6 +36,8 @@ import ru.poporyadku.ui.components.ErrorBlock
 import ru.poporyadku.ui.components.InvertedPairRow
 import ru.poporyadku.ui.components.OrderableCard
 import ru.poporyadku.ui.components.PrimaryButton
+import ru.poporyadku.ui.components.ReportInaccuracyAction
+import ru.poporyadku.ui.components.ReportInaccuracyStyle
 import ru.poporyadku.ui.components.RetiredNotice
 import ru.poporyadku.ui.components.ScoreBadge
 import ru.poporyadku.ui.components.ScoringHint
@@ -59,6 +61,7 @@ object PuzzleResultTestTags {
     const val INVERTED_PAIRS = "puzzle_result_inverted_pairs"
     const val ALL_CORRECT = "puzzle_result_all_correct"
     const val SOURCES = "puzzle_result_sources"
+    const val REPORT = "puzzle_result_report"
     const val PRIMARY_BUTTON = "puzzle_result_primary_button"
     const val ERROR_BLOCK = "puzzle_result_error_block"
 }
@@ -70,7 +73,9 @@ object PuzzleResultTestTags {
  *
  * Порядок сверху вниз зафиксирован иерархией `DESIGN_PRINCIPLES.md` §3: правильный
  * порядок → объяснение → `ScoreBadge` → `ScoringHint` → перепутанные пары →
- * `SourcesBlock` → основная кнопка. Счёт — не самый заметный элемент экрана. У
+ * `SourcesBlock` → `ReportInaccuracyAction` → основная кнопка. Счёт — не самый заметный
+ * элемент экрана. «Сообщить о неточности» есть только при [isReportAvailable] — наличие
+ * почтового клиента узнаёт route-контейнер (ITERATION_5_DESIGN.md, §3.12). У
  * отозванной головоломки первым элементом контента стоит `RetiredNotice`
  * (ITERATION_5_DESIGN.md, §3.8).
  *
@@ -88,6 +93,7 @@ fun PuzzleResultScreen(
     state: PuzzleResultState,
     onEvent: (PuzzleResultEvent) -> Unit,
     modifier: Modifier = Modifier,
+    isReportAvailable: Boolean = false,
 ) {
     Surface(
         modifier = modifier
@@ -126,7 +132,12 @@ fun PuzzleResultScreen(
                     ) {
                         when (state) {
                             PuzzleResultState.Loading -> ResultSkeleton()
-                            is PuzzleResultState.Content -> ResultContent(state, compact = isCompact)
+                            is PuzzleResultState.Content -> ResultContent(
+                                state = state,
+                                compact = isCompact,
+                                isReportAvailable = isReportAvailable,
+                                onEvent = onEvent,
+                            )
                             is PuzzleResultState.Error -> ErrorBlock(
                                 message = stringResource(state.kind.messageRes),
                                 modifier = Modifier.testTag(PuzzleResultTestTags.ERROR_BLOCK),
@@ -158,7 +169,12 @@ fun PuzzleResultScreen(
 }
 
 @Composable
-private fun ResultContent(state: PuzzleResultState.Content, compact: Boolean) {
+private fun ResultContent(
+    state: PuzzleResultState.Content,
+    compact: Boolean,
+    isReportAvailable: Boolean,
+    onEvent: (PuzzleResultEvent) -> Unit,
+) {
     // Первым элементом контентной колонки — до «Правильный порядок» (I5-D11).
     if (state.isRetired) {
         RetiredNotice(modifier = Modifier.testTag(PuzzleResultTestTags.RETIRED_NOTICE))
@@ -212,6 +228,14 @@ private fun ResultContent(state: PuzzleResultState.Content, compact: Boolean) {
     SourcesBlock(
         sources = state.sources,
         modifier = Modifier.testTag(PuzzleResultTestTags.SOURCES),
+    )
+
+    // Рядом с источниками, второстепенно; без почтового клиента — нет в дереве вовсе.
+    ReportInaccuracyAction(
+        isAvailable = isReportAvailable,
+        style = ReportInaccuracyStyle.Inline,
+        onClick = { onEvent(PuzzleResultEvent.ReportClicked) },
+        modifier = Modifier.testTag(PuzzleResultTestTags.REPORT),
     )
 }
 

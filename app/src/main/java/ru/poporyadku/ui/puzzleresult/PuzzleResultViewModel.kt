@@ -14,12 +14,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import ru.poporyadku.core.model.AppBuildInfo
 import ru.poporyadku.core.model.SLOTS_PER_DAY
+import ru.poporyadku.domain.model.InstalledContentVersion
 import ru.poporyadku.domain.repository.UserPreferencesRepository
+import ru.poporyadku.domain.usecase.GetInstalledContentVersionUseCase
 import ru.poporyadku.domain.usecase.GetPuzzleResultUseCase
 import ru.poporyadku.domain.usecase.PuzzleErrorKind
 import ru.poporyadku.domain.usecase.PuzzleResultLoad
 import ru.poporyadku.ui.navigation.RouteOrigin
+import ru.poporyadku.ui.report.ReportContext
 
 private const val LAST_SLOT_INDEX = SLOTS_PER_DAY - 1
 
@@ -36,11 +40,17 @@ private const val LAST_SLOT_INDEX = SLOTS_PER_DAY - 1
  * отправляет только [PuzzleResultEffect.NavigateBack]: переходы в игровой маршрут
  * `puzzle/{slotIndex}`, к следующему слоту и в сессионный итог в нём не существуют ни при
  * каком исходе — исторический результат никогда не запускает игру прошлого дня.
+ *
+ * **«Сообщить о неточности»** (PR 5C, §3.12): ViewModel собирает только данные письма —
+ * `puzzleId` из попытки, `AppBuildInfo`, установленную версию контента — и отдаёт их
+ * эффектом. Ни `Intent`, ни `Uri`, ни `Resources` здесь нет.
  */
 @HiltViewModel
 class PuzzleResultViewModel @Inject constructor(
     private val getPuzzleResult: GetPuzzleResultUseCase,
     private val preferences: UserPreferencesRepository,
+    private val appBuildInfo: AppBuildInfo,
+    private val getInstalledContentVersion: GetInstalledContentVersionUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -88,8 +98,35 @@ class PuzzleResultViewModel @Inject constructor(
                     RouteOrigin.Session, null -> PuzzleResultEffect.NavigateHome
                 },
             )
+
+            PuzzleResultEvent.ReportClicked -> {
+                // Только при показанном результате: puzzleId — из попытки, в архиве тоже.
+                val content = state.value as? PuzzleResultState.Content ?: return
+                viewModelScope.launch {
+                    val report = ReportContext(
+                        puzzleId = content.puzzleId,
+                        app = appBuildInfo,
+                        content = readInstalledContentVersion(),
+                    )
+                    effectChannel.send(PuzzleResultEffect.ComposeReport(report))
+                }
+            }
         }
     }
+
+    /**
+     * Версия контента для письма. Отказ чтения не роняет процесс и не отменяет письмо:
+     * строка версии честно говорит «не установлена» — то же, что показывает репозиторий
+     * после `IOException` DataStore. Отмена пробрасывается.
+     */
+    private suspend fun readInstalledContentVersion(): InstalledContentVersion =
+        try {
+            getInstalledContentVersion()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            InstalledContentVersion.Unknown
+        }
 
     private fun load(args: ResultRouteArgs.Valid) {
         viewModelScope.launch {
