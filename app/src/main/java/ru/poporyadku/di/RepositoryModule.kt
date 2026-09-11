@@ -7,8 +7,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.poporyadku.core.model.ContentPack
 import ru.poporyadku.data.progress.ProgressRepositoryImpl
+import ru.poporyadku.data.repository.ArchiveRepositoryImpl
 import ru.poporyadku.data.repository.DailySetRepositoryImpl
 import ru.poporyadku.data.repository.DayAssignmentRepositoryImpl
+import ru.poporyadku.domain.repository.ArchiveRepository
 import ru.poporyadku.domain.repository.DailySetRepository
 import ru.poporyadku.domain.repository.DayAssignmentRepository
 import ru.poporyadku.domain.repository.ProgressRepository
@@ -27,6 +29,10 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun dailySetRepository(impl: DailySetRepositoryImpl): DailySetRepository
+
+    // ITERATION_5_DESIGN.md, §5.1 (PR 5A): keyset-разведка и наблюдаемое окно архива.
+    @Binds
+    abstract fun archiveRepository(impl: ArchiveRepositoryImpl): ArchiveRepository
 
     companion object {
         @Provides
