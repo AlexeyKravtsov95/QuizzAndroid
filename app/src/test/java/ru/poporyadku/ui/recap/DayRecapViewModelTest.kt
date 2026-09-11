@@ -2,19 +2,23 @@ package ru.poporyadku.ui.recap
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
+import java.io.IOException
 import java.time.LocalDate
 import java.time.LocalTime
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -36,15 +40,18 @@ import ru.poporyadku.domain.repository.UserPreferencesRepository
 import ru.poporyadku.domain.usecase.GetDayRecapUseCase
 import ru.poporyadku.domain.usecase.GetStreaksUseCase
 import ru.poporyadku.ui.navigation.Destinations
+import ru.poporyadku.ui.navigation.RouteOrigin
 
 /**
- * `DayRecapViewModel` — ITERATION_3_DESIGN.md, `I3-V34` (источник `today`, I3-D51).
+ * `DayRecapViewModel` — ITERATION_3_DESIGN.md, `I3-V34` (источник `today`, I3-D51);
+ * ITERATION_5_DESIGN.md, §6.8: `I5-V11`…`I5-V15`, `I5-V35`.
  *
  * `GetDayRecapUseCase` — final-класс, поэтому подменяется не он, а его репозитории:
  * какие даты в него ушли, видно по записям фейков. `localDate` попадает в
- * `progress.getDayResult`/`getAttempts` и `assignments.getAssignment`, а `today` —
- * единственный параметр, который доезжает до `updateStreakCache`.
+ * `progress.getDayResult`/`getAttempts` и `assignments.getAssignment`; `today` с PR 5B в
+ * use case не входит вовсе и нужен только заголовку сессионного варианта.
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 class DayRecapViewModelTest {
 
     private val dispatcher = StandardTestDispatcher()
@@ -58,7 +65,6 @@ class DayRecapViewModelTest {
     private lateinit var assignments: RecordingAssignments
     private lateinit var progress: RecordingProgress
     private lateinit var puzzles: FakePuzzleRepository
-    private lateinit var preferences: RecordingPreferences
     private lateinit var dateProvider: RecordingDateProvider
 
     @Before
@@ -67,7 +73,6 @@ class DayRecapViewModelTest {
         assignments = RecordingAssignments()
         progress = RecordingProgress()
         puzzles = FakePuzzleRepository()
-        preferences = RecordingPreferences()
         dateProvider = RecordingDateProvider(currentDate)
     }
 
@@ -76,16 +81,17 @@ class DayRecapViewModelTest {
         Dispatchers.resetMain()
     }
 
+    // --- I3-V34 ------------------------------------------------------------------------
+
     /**
-     * `I3-V34`. Маршрут несёт архивную дату D, `DateProvider` отдаёт D + 5:
-     * use case вызывается ровно с `(localDate = D, today = D + 5)`, дата маршрута не
-     * подменяется, `Content` корректно маппится, а `hasCompletedFirstDay`
-     * выставляется на завершённом дне.
+     * `I3-V34`. Маршрут несёт архивную дату D, `DateProvider` отдаёт D + 5: день читается
+     * ровно по дате маршрута, `today` читается ровно один раз и управляет только
+     * заголовком — архивный день показывает дату, а не «Сегодня».
      */
     @Test
     fun `I3-V34 route date is never replaced by today`() = runTest(dispatcher) {
         givenCompletedDay(archiveDate, totalScore = 14)
-        val viewModel = createViewModel(route = Destinations.serialize(archiveDate))
+        val viewModel = createViewModel(date = Destinations.serialize(archiveDate))
 
         viewModel.uiState.test {
             assertEquals(DayRecapState.Loading, awaitItem())
@@ -98,25 +104,20 @@ class DayRecapViewModelTest {
 
             // `today` — только из DateProvider, ровно одно чтение на загрузку.
             assertEquals(1, dateProvider.reads)
-            assertEquals(currentDate, preferences.streakCacheDate)
 
-            // Архивный день показывает дату, а не «Сегодня».
             assertEquals(DayRecapTitle.Date(archiveDate), content.title)
             assertEquals(14, content.totalScore)
             assertEquals(3, content.slots.size)
-
-            // Завершённый день выставляет флаг для итерации 6.
-            assertTrue(preferences.hasCompletedFirstDay == true)
 
             cancelAndIgnoreRemainingEvents()
         }
     }
 
-    /** Сегодняшний итог показывает заголовок «Сегодня». */
+    /** Сегодняшний сессионный итог показывает заголовок «Сегодня». */
     @Test
-    fun `today recap uses the Today title`() = runTest(dispatcher) {
+    fun `today session recap uses the Today title`() = runTest(dispatcher) {
         givenCompletedDay(currentDate, totalScore = 18)
-        val viewModel = createViewModel(route = Destinations.serialize(currentDate))
+        val viewModel = createViewModel(date = Destinations.serialize(currentDate))
 
         viewModel.uiState.test {
             skipItems(1)
@@ -138,14 +139,14 @@ class DayRecapViewModelTest {
             // Отвеченная головоломка, которую нечем показать: счёт обязан быть виден.
             attempt(slot = 2, puzzleId = "missing", order = listOf("a", "b", "c", "d"), score = 4),
         )
-        val viewModel = createViewModel(route = Destinations.serialize(archiveDate))
+        val viewModel = createViewModel(date = Destinations.serialize(archiveDate))
 
         viewModel.uiState.test {
             skipItems(1)
             val content = awaitItem() as DayRecapState.Content
             assertEquals(
                 listOf<SlotResultUi>(
-                    SlotResultUi.Played(0, 6, Category.GEOGRAPHY),
+                    SlotResultUi.Played(0, 6, Category.GEOGRAPHY, isOpenable = false),
                     SlotResultUi.Unavailable(1, 0),
                     SlotResultUi.Unavailable(2, 4),
                 ),
@@ -155,26 +156,24 @@ class DayRecapViewModelTest {
         }
     }
 
-    /** Дня нет в `day_results` → `NotFound`; флаг первого дня не выставляется. */
+    /** Дня нет в `day_results` → `NotFound` своего варианта. */
     @Test
-    fun `missing day publishes NotFound`() = runTest(dispatcher) {
-        val viewModel = createViewModel(route = Destinations.serialize(archiveDate))
+    fun `missing day publishes NotFound of its origin`() = runTest(dispatcher) {
+        val session = createViewModel(date = Destinations.serialize(archiveDate))
+        val archive = createViewModel(date = Destinations.serialize(archiveDate), origin = Destinations.ORIGIN_ARCHIVE)
+        advanceUntilIdle()
 
-        viewModel.uiState.test {
-            skipItems(1)
-            assertEquals(DayRecapState.NotFound, awaitItem())
-            assertEquals(null, preferences.hasCompletedFirstDay)
-            cancelAndIgnoreRemainingEvents()
-        }
+        assertEquals(DayRecapState.NotFound(RouteOrigin.Session), session.uiState.value)
+        assertEquals(DayRecapState.NotFound(RouteOrigin.Archive), archive.uiState.value)
     }
 
     /** Аргумент отсутствует — `NotFound`, а не подстановка сегодняшней даты. */
     @Test
     fun `absent route argument publishes NotFound without touching the date provider`() = runTest(dispatcher) {
-        val viewModel = createViewModel(route = null)
+        val viewModel = createViewModel(date = null)
 
         viewModel.uiState.test {
-            assertEquals(DayRecapState.NotFound, awaitItem())
+            assertEquals(DayRecapState.NotFound(RouteOrigin.Session), awaitItem())
             runCurrent()
             assertEquals("подмены на «сегодня» нет", 0, dateProvider.reads)
             assertTrue(progress.dayResultQueries.isEmpty())
@@ -185,81 +184,229 @@ class DayRecapViewModelTest {
     /** Повреждённый аргумент — тоже `NotFound`. */
     @Test
     fun `malformed route argument publishes NotFound`() = runTest(dispatcher) {
-        val viewModel = createViewModel(route = "вчера")
+        val viewModel = createViewModel(date = "вчера")
 
         viewModel.uiState.test {
-            assertEquals(DayRecapState.NotFound, awaitItem())
+            assertEquals(DayRecapState.NotFound(RouteOrigin.Session), awaitItem())
             runCurrent()
             assertEquals(0, dateProvider.reads)
             cancelAndIgnoreRemainingEvents()
         }
     }
 
-    /** «Готово» создаёт ровно один `NavigateHome`. */
-    @Test
-    fun `done click produces a single NavigateHome effect`() = runTest(dispatcher) {
-        givenCompletedDay(archiveDate, totalScore = 12)
-        val viewModel = createViewModel(route = Destinations.serialize(archiveDate))
-
-        viewModel.effects.test {
-            viewModel.onEvent(DayRecapEvent.DoneClicked)
-            runCurrent()
-            assertEquals(DayRecapEffect.NavigateHome, awaitItem())
-            expectNoEvents()
-        }
-    }
-
-    /** Незавершённый день не выставляет `hasCompletedFirstDay`. */
-    @Test
-    fun `incomplete day does not set the first day flag`() = runTest(dispatcher) {
-        progress.dayResult = DayResult(archiveDate, totalScore = 6, completedCount = 1, isComplete = false, completedAt = null)
-        assignments.assignment = DayAssignment(archiveDate, PACK, setIndex = 1, assignedAt = 0L)
-        progress.attempts = listOf(
-            attempt(slot = 0, puzzleId = "p1", order = listOf("a", "b", "c", "d"), score = 6),
-        )
-        val viewModel = createViewModel(route = Destinations.serialize(archiveDate))
-
-        viewModel.uiState.test {
-            skipItems(1)
-            assertTrue(awaitItem() is DayRecapState.Content)
-            assertEquals(null, preferences.hasCompletedFirstDay)
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
-
     /** Маппер переносит `isRecordUpdated` без изменений и не считает его сам. */
     @Test
-    fun `mapper carries isRecordUpdated as is`() = runTest(dispatcher) {
+    fun `mapper carries isRecordUpdated and the streak of that day as is`() = runTest(dispatcher) {
         givenCompletedDay(archiveDate, totalScore = 18)
         // Единственный завершённый день в истории — рекорд установлен именно им.
         progress.completedDates = listOf(archiveDate)
-        val viewModel = createViewModel(route = Destinations.serialize(archiveDate))
+        val viewModel = createViewModel(date = Destinations.serialize(archiveDate))
 
         viewModel.uiState.test {
             skipItems(1)
             val content = awaitItem() as DayRecapState.Content
             assertTrue(content.isRecordUpdated)
-            assertFalse(content.slots.isEmpty())
+            assertEquals(1, content.streakDays)
+            assertTrue(content.canShare)
             cancelAndIgnoreRemainingEvents()
         }
     }
 
+    // --- I5-V11 / I5-V12: вариант по origin ---------------------------------------------
+
+    /**
+     * `I5-V11`. `origin=archive`: вариант `Archive`, заголовок — дата и для СЕГОДНЯШНЕГО
+     * дня; строки `Played` открываются; «Назад» внизу → `NavigateBack`.
+     */
+    @Test
+    fun `I5-V11 archive origin shows the date even for today and primary goes back`() = runTest(dispatcher) {
+        givenCompletedDay(currentDate, totalScore = 16)
+        val viewModel = createViewModel(date = Destinations.serialize(currentDate), origin = Destinations.ORIGIN_ARCHIVE)
+        advanceUntilIdle()
+
+        val content = viewModel.uiState.value as DayRecapState.Content
+        assertEquals(RouteOrigin.Archive, content.origin)
+        assertEquals("вариант выбирает origin, а не дата", DayRecapTitle.Date(currentDate), content.title)
+        assertTrue(content.slots.all { it is SlotResultUi.Played && it.isOpenable })
+
+        viewModel.effects.test {
+            viewModel.onEvent(DayRecapEvent.PrimaryClicked)
+            assertEquals(DayRecapEffect.NavigateBack, awaitItem())
+            viewModel.onEvent(DayRecapEvent.BackClicked)
+            assertEquals(DayRecapEffect.NavigateBack, awaitItem())
+            expectNoEvents()
+        }
+    }
+
+    /** `I5-V12`. Без `origin`: `Session`, строки не открываются, «Готово» → `NavigateHome` (I3). */
+    @Test
+    fun `I5-V12 no origin is the session variant and primary goes home`() = runTest(dispatcher) {
+        givenCompletedDay(archiveDate, totalScore = 12)
+        val viewModel = createViewModel(date = Destinations.serialize(archiveDate))
+        advanceUntilIdle()
+
+        val content = viewModel.uiState.value as DayRecapState.Content
+        assertEquals(RouteOrigin.Session, content.origin)
+        assertTrue(content.slots.none { it is SlotResultUi.Played && it.isOpenable })
+
+        viewModel.effects.test {
+            viewModel.onEvent(DayRecapEvent.PrimaryClicked)
+            assertEquals(DayRecapEffect.NavigateHome, awaitItem())
+            expectNoEvents()
+        }
+    }
+
+    /** `I5-V13`. Неизвестный `origin` → `NotFound(Session)`, use case не вызывался. */
+    @Test
+    fun `I5-V13 unknown origin is NotFound without calling the use case`() = runTest(dispatcher) {
+        givenCompletedDay(archiveDate, totalScore = 12)
+        val viewModel = createViewModel(date = Destinations.serialize(archiveDate), origin = "settings")
+        advanceUntilIdle()
+
+        assertEquals(DayRecapState.NotFound(RouteOrigin.Session), viewModel.uiState.value)
+        assertTrue("база не читалась", progress.dayResultQueries.isEmpty())
+        assertTrue(assignments.assignmentQueries.isEmpty())
+        assertEquals(0, dateProvider.reads)
+    }
+
+    /** `I5-V14`. Исключение чтения дня → `NotFound(origin)`, процесс не падает. */
+    @Test
+    fun `I5-V14 a failing read becomes NotFound of its origin`() = runTest(dispatcher) {
+        givenCompletedDay(archiveDate, totalScore = 12)
+        progress.failWith = { IOException("база недоступна") }
+
+        val archive = createViewModel(date = Destinations.serialize(archiveDate), origin = Destinations.ORIGIN_ARCHIVE)
+        val session = createViewModel(date = Destinations.serialize(archiveDate))
+        advanceUntilIdle()
+
+        assertEquals(DayRecapState.NotFound(RouteOrigin.Archive), archive.uiState.value)
+        assertEquals(DayRecapState.NotFound(RouteOrigin.Session), session.uiState.value)
+    }
+
+    /** `I5-V14`. Отмена ошибкой не становится: экран остаётся в `Loading`. */
+    @Test
+    fun `I5-V14 cancellation during the read is not NotFound`() = runTest(dispatcher) {
+        givenCompletedDay(archiveDate, totalScore = 12)
+        progress.failWith = { CancellationException("скоуп отменён") }
+
+        val viewModel = createViewModel(date = Destinations.serialize(archiveDate), origin = Destinations.ORIGIN_ARCHIVE)
+        advanceUntilIdle()
+
+        assertEquals(DayRecapState.Loading, viewModel.uiState.value)
+    }
+
+    // --- I5-V15: какие строки нажимаются -------------------------------------------------
+
+    @Test
+    fun `I5-V15 only Played of the archive variant opens a historical result`() = runTest(dispatcher) {
+        progress.dayResult = DayResult(archiveDate, totalScore = 6, completedCount = 2, isComplete = false, completedAt = null)
+        assignments.assignment = DayAssignment(archiveDate, PACK, setIndex = 2, assignedAt = 0L)
+        progress.attempts = listOf(
+            attempt(slot = 0, puzzleId = "p1", order = listOf("a", "b", "c", "d"), score = 6),
+            attempt(slot = 1, puzzleId = "p1", order = emptyList(), score = 0),
+            // Слот 2 без попытки — NotPlayed.
+        )
+
+        val archive = createViewModel(date = Destinations.serialize(archiveDate), origin = Destinations.ORIGIN_ARCHIVE)
+        val session = createViewModel(date = Destinations.serialize(archiveDate))
+        advanceUntilIdle()
+        assertEquals(
+            listOf(
+                SlotResultUi.Played(0, 6, Category.GEOGRAPHY, isOpenable = true),
+                SlotResultUi.Unavailable(1, 0),
+                SlotResultUi.NotPlayed(2),
+            ),
+            (archive.uiState.value as DayRecapState.Content).slots,
+        )
+
+        archive.effects.test {
+            archive.onEvent(DayRecapEvent.SlotClicked(1)) // Unavailable
+            archive.onEvent(DayRecapEvent.SlotClicked(2)) // NotPlayed
+            archive.onEvent(DayRecapEvent.SlotClicked(0)) // Played
+            assertEquals(DayRecapEffect.OpenResult(slotIndex = 0, localDate = archiveDate), awaitItem())
+            expectNoEvents()
+        }
+
+        session.effects.test {
+            session.onEvent(DayRecapEvent.SlotClicked(0))
+            session.onEvent(DayRecapEvent.SlotClicked(1))
+            session.onEvent(DayRecapEvent.SlotClicked(2))
+            expectNoEvents()
+        }
+    }
+
+    /** Незавершённый день: серии нет, «Поделиться» недоступно. */
+    @Test
+    fun `an incomplete day has no streak and cannot be shared`() = runTest(dispatcher) {
+        progress.dayResult = DayResult(archiveDate, totalScore = 6, completedCount = 1, isComplete = false, completedAt = null)
+        assignments.assignment = DayAssignment(archiveDate, PACK, setIndex = 1, assignedAt = 0L)
+        progress.attempts = listOf(attempt(slot = 0, puzzleId = "p1", order = listOf("a", "b", "c", "d"), score = 6))
+        val viewModel = createViewModel(date = Destinations.serialize(archiveDate), origin = Destinations.ORIGIN_ARCHIVE)
+        advanceUntilIdle()
+
+        val content = viewModel.uiState.value as DayRecapState.Content
+        assertEquals(false, content.isComplete)
+        assertNull(content.streakDays)
+        assertEquals(false, content.canShare)
+        assertEquals(listOf(SlotResultUi.NotPlayed(1), SlotResultUi.NotPlayed(2)), content.slots.drop(1))
+    }
+
+    // --- I5-V35: загрузка итога не пишет в DataStore -------------------------------------
+
+    /**
+     * `I5-V35`. Итог завершённого дня загружен и в сессионном, и в архивном варианте;
+     * настройки, чей сеттер флага и запись кэша серии бросают, на загрузку не влияют:
+     * экран остаётся `Content`, в `NotFound` не превращается, ни один сеттер не вызван.
+     *
+     * Настройки здесь — ловушка, а не зависимость: ни `DayRecapViewModel`, ни
+     * `GetDayRecapUseCase` не принимают `UserPreferencesRepository` (I5-D31), поэтому
+     * передать её в путь загрузки просто некуда. Тест фиксирует это наблюдаемо — счётчиком
+     * вызовов — на тех же данных, на которых итерация 3 писала флаг и `StreakCache`.
+     */
+    @Test
+    fun `I5-V35 loading a completed day writes nothing to DataStore and stays Content`() = runTest(dispatcher) {
+        val trap = ThrowingPreferences()
+        givenCompletedDay(archiveDate, totalScore = 18)
+        progress.completedDates = listOf(archiveDate)
+
+        val session = createViewModel(date = Destinations.serialize(archiveDate))
+        val archive = createViewModel(date = Destinations.serialize(archiveDate), origin = Destinations.ORIGIN_ARCHIVE)
+        advanceUntilIdle()
+        // И после публикации состояния ничто не заменяет готовый Content.
+        runCurrent()
+
+        assertTrue(session.uiState.value is DayRecapState.Content)
+        assertTrue(archive.uiState.value is DayRecapState.Content)
+        assertEquals("setHasCompletedFirstDay не вызывался", 0, trap.firstDayFlagCalls)
+        assertEquals("updateStreakCache не вызывался", 0, trap.streakCacheCalls)
+
+        // Путь загрузки не может дотянуться до DataStore: ни ViewModel, ни use case не
+        // принимают ни настроек, ни их единственного писателя кэша серии.
+        val loadPath = listOf(DayRecapViewModel::class.java, GetDayRecapUseCase::class.java)
+        val dependencies = loadPath.flatMap { type -> type.constructors.flatMap { it.parameterTypes.toList() } }
+        assertTrue(
+            "в пути загрузки итога не должно быть записей DataStore: $dependencies",
+            dependencies.none {
+                UserPreferencesRepository::class.java.isAssignableFrom(it) || it == GetStreaksUseCase::class.java
+            },
+        )
+    }
+
     // --- Инфраструктура --------------------------------------------------------------
 
-    private fun createViewModel(route: String?): DayRecapViewModel {
-        val handle = SavedStateHandle(
-            if (route == null) emptyMap() else mapOf(Destinations.ARG_DATE to route),
-        )
+    private fun createViewModel(date: String?, origin: String? = null): DayRecapViewModel {
+        val args = buildMap<String, Any?> {
+            if (date != null) put(Destinations.ARG_DATE, date)
+            if (origin != null) put(Destinations.ARG_ORIGIN, origin)
+        }
         return DayRecapViewModel(
             getDayRecap = GetDayRecapUseCase(
                 assignments = assignments,
                 puzzles = puzzles,
                 progress = progress,
-                streaks = GetStreaksUseCase(progress, preferences),
             ),
-            preferences = preferences,
             dateProvider = dateProvider,
-            savedStateHandle = handle,
+            savedStateHandle = SavedStateHandle(args),
         )
     }
 
@@ -271,6 +418,7 @@ class DayRecapViewModelTest {
             attempt(slot = 1, puzzleId = "p1", order = listOf("a", "b", "c", "d"), score = 4),
             attempt(slot = 2, puzzleId = "p1", order = listOf("a", "b", "c", "d"), score = 4),
         )
+        progress.completedDates = listOf(date)
     }
 
     private fun attempt(slot: Int, puzzleId: String, order: List<String>, score: Int) = PuzzleAttempt(
@@ -321,6 +469,9 @@ private class RecordingProgress : ProgressRepository {
     var attempts: List<PuzzleAttempt> = emptyList()
     var completedDates: List<LocalDate> = emptyList()
 
+    /** Чем ответить на чтение дня вместо чтения; `null` — читать штатно. */
+    var failWith: (() -> Throwable)? = null
+
     val dayResultQueries = mutableListOf<LocalDate>()
     val attemptQueries = mutableListOf<LocalDate>()
 
@@ -328,6 +479,7 @@ private class RecordingProgress : ProgressRepository {
         throw UnsupportedOperationException("DayRecap ничего не пишет")
 
     override suspend fun getDayResult(localDate: LocalDate): DayResult? {
+        failWith?.let { throw it() }
         dayResultQueries += localDate
         return dayResult?.takeIf { it.localDate == localDate }
     }
@@ -384,13 +536,27 @@ private class FakePuzzleRepository : PuzzleRepository {
     }
 }
 
-private class RecordingPreferences : UserPreferencesRepository {
-    var streakCacheDate: LocalDate? = null
+/**
+ * Ловушка `I5-V35`: запись флага первого дня и кэша серии бросает и считается. Итерация 3
+ * писала оба значения в пути загрузки итога; с PR 5B ни одному из них там взяться неоткуда.
+ */
+private class ThrowingPreferences : UserPreferencesRepository {
+    var firstDayFlagCalls = 0
         private set
-    var hasCompletedFirstDay: Boolean? = null
+    var streakCacheCalls = 0
         private set
 
     override val preferences: Flow<UserPreferences> = emptyFlow()
+
+    override suspend fun setHasCompletedFirstDay(completed: Boolean) {
+        firstDayFlagCalls++
+        throw IOException("DataStore недоступен")
+    }
+
+    override suspend fun updateStreakCache(current: Int, best: Int, date: LocalDate) {
+        streakCacheCalls++
+        throw IOException("DataStore недоступен")
+    }
 
     override suspend fun setSoundEnabled(enabled: Boolean) = unsupported()
     override suspend fun setVibrationEnabled(enabled: Boolean) = unsupported()
@@ -400,17 +566,8 @@ private class RecordingPreferences : UserPreferencesRepository {
     override suspend fun setInstalledContent(contentVersion: Int, fingerprint: String) = unsupported()
     override suspend fun setHasSeenDragHint(seen: Boolean) = unsupported()
     override suspend fun setHasSeenScoringHint(seen: Boolean) = unsupported()
-
-    override suspend fun setHasCompletedFirstDay(completed: Boolean) {
-        hasCompletedFirstDay = completed
-    }
-
     override suspend fun setNotificationPromptShown(shown: Boolean) = unsupported()
     override suspend fun setLastSeenDate(date: LocalDate?) = unsupported()
-
-    override suspend fun updateStreakCache(current: Int, best: Int, date: LocalDate) {
-        streakCacheDate = date
-    }
 
     private fun unsupported(): Nothing =
         throw UnsupportedOperationException("не нужен в этом тесте")

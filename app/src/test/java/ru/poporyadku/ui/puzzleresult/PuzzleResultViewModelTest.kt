@@ -23,17 +23,21 @@ import ru.poporyadku.core.model.StreakCache
 import ru.poporyadku.core.model.ThemeMode
 import ru.poporyadku.core.model.UserPreferences
 import ru.poporyadku.domain.repository.UserPreferencesRepository
+import ru.poporyadku.domain.usecase.GetInstalledContentVersionUseCase
 import ru.poporyadku.domain.usecase.GetPuzzleResultUseCase
 import ru.poporyadku.domain.usecase.PuzzleErrorKind
 import ru.poporyadku.ui.navigation.Destinations
+import ru.poporyadku.ui.navigation.RouteOrigin
 import ru.poporyadku.ui.puzzle.FakeAssignments
 import ru.poporyadku.ui.puzzle.FakeProgress
 import ru.poporyadku.ui.puzzle.FakePuzzles
 import ru.poporyadku.ui.puzzle.PuzzleFixtures
+import ru.poporyadku.ui.puzzle.RouteArgError
 
 /**
  * `PuzzleResultViewModel` — ITERATION_3_DESIGN.md, `I3-V16` плюс все четыре исхода
- * `PuzzleResultLoad` и навигация последнего слота.
+ * `PuzzleResultLoad` и навигация последнего слота; ITERATION_5_DESIGN.md, §3.7, §4.4:
+ * архивный режим `I5-V16`…`I5-V18` и разбор `origin`.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class PuzzleResultViewModelTest {
@@ -103,6 +107,8 @@ class PuzzleResultViewModelTest {
         advanceUntilIdle()
 
         val content = viewModel.uiState.value as PuzzleResultState.Content
+        assertEquals(RouteOrigin.Session, content.origin)
+        assertFalse(content.isRetired)
         assertEquals(listOf("c2", "c1", "c3", "c4"), content.correctOrder.map { it.cardId })
         assertEquals(listOf(1, 2, 3, 4), content.correctOrder.map { it.position })
         assertEquals("4808 м", content.correctOrder.first().displayValue)
@@ -248,7 +254,7 @@ class PuzzleResultViewModelTest {
     @Test
     fun `invalid route returns home without touching the use case`() = runTest(dispatcher) {
         val viewModel = PuzzleResultViewModel(
-            getPuzzleResult = GetPuzzleResultUseCase(assignments, puzzles, progress),
+            getPuzzleResult = useCase(),
             preferences = preferences,
             savedStateHandle = SavedStateHandle(mapOf(Destinations.ARG_SLOT_INDEX to 0)),
         )
@@ -265,20 +271,191 @@ class PuzzleResultViewModelTest {
         assertTrue(assignments.queries.isEmpty())
     }
 
+    /** Неизвестный `origin` — тоже невалидный маршрут: ни один режим не угадывается. */
+    @Test
+    fun `unknown origin is an invalid route that returns home`() = runTest(dispatcher) {
+        givenAnsweredSlot(slotIndex = 0, submittedOrder = listOf("c2", "c1", "c3", "c4"), score = 6)
+        val viewModel = createViewModel(slotIndex = 0, origin = "settings")
+        advanceUntilIdle()
+
+        assertEquals(PuzzleResultState.Error(PuzzleErrorKind.InvalidRoute), viewModel.uiState.value)
+        viewModel.effects.test {
+            assertEquals(PuzzleResultEffect.NavigateHome, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+        assertTrue("база не читалась", assignments.queries.isEmpty())
+    }
+
+    /** Разбор маршрута результата: сначала дата и слот, затем `origin`. */
+    @Test
+    fun `readResultRoute parses origin after the strict date and slot`() {
+        fun parse(vararg args: Pair<String, Any?>) = SavedStateHandle(mapOf(*args)).readResultRoute()
+        val date = Destinations.serialize(PuzzleFixtures.date)
+
+        assertEquals(
+            ResultRouteArgs.Valid(1, PuzzleFixtures.date, RouteOrigin.Session),
+            parse(Destinations.ARG_SLOT_INDEX to 1, Destinations.ARG_DATE to date),
+        )
+        assertEquals(
+            ResultRouteArgs.Valid(1, PuzzleFixtures.date, RouteOrigin.Archive),
+            parse(Destinations.ARG_SLOT_INDEX to 1, Destinations.ARG_DATE to date, Destinations.ARG_ORIGIN to "archive"),
+        )
+        assertEquals(
+            ResultRouteArgs.Invalid(ResultRouteError.OriginMalformed),
+            parse(Destinations.ARG_SLOT_INDEX to 1, Destinations.ARG_DATE to date, Destinations.ARG_ORIGIN to "Archive"),
+        )
+        // Порча даты или слота обнаруживается раньше origin — тем же разбором, что у Puzzle.
+        assertEquals(
+            ResultRouteArgs.Invalid(ResultRouteError.Base(RouteArgError.DateMalformed)),
+            parse(Destinations.ARG_SLOT_INDEX to 1, Destinations.ARG_DATE to "вчера", Destinations.ARG_ORIGIN to "bad"),
+        )
+    }
+
+    // --- I5-V16 / I5-V17 / I5-V18: архивный режим ------------------------------------------
+
+    /** `I5-V16`. Архивный результат: CTA «К итогу дня» и «Назад» в шапке → `NavigateBack`. */
+    @Test
+    fun `I5-V16 archive CTA and back both go back to the archived recap`() = runTest(dispatcher) {
+        // Слот 0: в сессии CTA вёл бы к следующему слоту — в архиве только назад.
+        givenAnsweredSlot(slotIndex = 0, submittedOrder = listOf("c2", "c1", "c3", "c4"), score = 6)
+        val viewModel = createViewModel(slotIndex = 0, origin = Destinations.ORIGIN_ARCHIVE)
+        advanceUntilIdle()
+
+        val content = viewModel.uiState.value as PuzzleResultState.Content
+        assertEquals(RouteOrigin.Archive, content.origin)
+
+        viewModel.effects.test {
+            viewModel.onEvent(PuzzleResultEvent.PrimaryAction)
+            assertEquals(PuzzleResultEffect.NavigateBack(isRedirect = false), awaitItem())
+            viewModel.onEvent(PuzzleResultEvent.BackPressed)
+            assertEquals(PuzzleResultEffect.NavigateBack(isRedirect = false), awaitItem())
+            expectNoEvents()
+        }
+    }
+
+    /**
+     * `I5-V17`. Архивный режим ни при каком исходе не отправляет `NavigateToPuzzle`,
+     * `NavigateToNextSlot` и `NavigateToRecap`: `NoAttempt` и `Skipped` — назад без кадра,
+     * `Content` и `Failure` — назад по нажатию. Игра прошлого дня не запускается.
+     */
+    @Test
+    fun `I5-V17 no archive outcome ever leads forward into the day`() = runTest(dispatcher) {
+        val collected = mutableListOf<PuzzleResultEffect>()
+
+        // NoAttempt: слот не сыгран — назад, а не в головоломку.
+        setUp()
+        createViewModel(slotIndex = 1, origin = Destinations.ORIGIN_ARCHIVE).also { vm ->
+            advanceUntilIdle()
+            assertEquals(PuzzleResultState.Loading, vm.uiState.value)
+            vm.effects.test {
+                assertEquals(PuzzleResultEffect.NavigateBack(isRedirect = true), awaitItem())
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+        // Skipped, в том числе последнего слота: назад, а не к следующему слоту и не в итог.
+        for (slot in 0..2) {
+            setUp()
+            progress.close(PuzzleFixtures.date, slotIndex = slot, submittedOrder = emptyList())
+            createViewModel(slotIndex = slot, origin = Destinations.ORIGIN_ARCHIVE).also { vm ->
+                advanceUntilIdle()
+                assertEquals(PuzzleResultState.Loading, vm.uiState.value)
+                vm.effects.test {
+                    assertEquals("Skipped, слот $slot", PuzzleResultEffect.NavigateBack(isRedirect = true), awaitItem())
+                    cancelAndIgnoreRemainingEvents()
+                }
+            }
+        }
+
+        // Content каждого слота и Failure: все действия экрана.
+        for (slot in 0..2) {
+            setUp()
+            givenAnsweredSlot(slotIndex = slot, submittedOrder = listOf("c2", "c1", "c3", "c4"), score = 6)
+            createViewModel(slotIndex = slot, origin = Destinations.ORIGIN_ARCHIVE).also { vm ->
+                advanceUntilIdle()
+                vm.onEvent(PuzzleResultEvent.PrimaryAction)
+                vm.onEvent(PuzzleResultEvent.BackPressed)
+                vm.effects.test {
+                    collected += awaitItem()
+                    collected += awaitItem()
+                    cancelAndIgnoreRemainingEvents()
+                }
+            }
+        }
+        setUp()
+        givenAnsweredSlot(slotIndex = 0, submittedOrder = listOf("c2", "c1", "c3", "c4"), score = 6)
+        puzzles.remove(PuzzleFixtures.PUZZLE_ID)
+        createViewModel(slotIndex = 0, origin = Destinations.ORIGIN_ARCHIVE).also { vm ->
+            advanceUntilIdle()
+            assertEquals(PuzzleResultState.Error(PuzzleErrorKind.PuzzleNotFound), vm.uiState.value)
+            vm.onEvent(PuzzleResultEvent.PrimaryAction) // кнопки нет, событие не принимается
+            vm.onEvent(PuzzleResultEvent.BackPressed)
+            vm.effects.test {
+                collected += awaitItem()
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+        assertEquals(List(7) { PuzzleResultEffect.NavigateBack(isRedirect = false) }, collected)
+        assertTrue(
+            "в архивном режиме нет переходов вперёд: $collected",
+            collected.none {
+                it is PuzzleResultEffect.NavigateToPuzzle ||
+                    it is PuzzleResultEffect.NavigateToNextSlot ||
+                    it == PuzzleResultEffect.NavigateToRecap
+            },
+        )
+        assertTrue("архивный результат ничего не записывает", progress.recorded.isEmpty())
+    }
+
+    /** `I5-V18`. `isRetired` доменного исхода доезжает до `PuzzleResultState.Content`. */
+    @Test
+    fun `I5-V18 the retired flag of the domain outcome reaches the screen state`() = runTest(dispatcher) {
+        preferences.setInstalled(version = 2)
+        puzzles.put(PuzzleFixtures.puzzle.copy(retiredIn = 2, contentVersion = 2))
+        givenAnsweredSlot(slotIndex = 0, submittedOrder = listOf("c2", "c1", "c3", "c4"), score = 6)
+        val archived = createViewModel(slotIndex = 0, origin = Destinations.ORIGIN_ARCHIVE)
+        advanceUntilIdle()
+
+        val content = archived.uiState.value as PuzzleResultState.Content
+        assertTrue(content.isRetired)
+        // Полный результат: правильный порядок, счёт и объяснение на месте.
+        assertEquals(4, content.correctOrder.size)
+        assertEquals(6, content.score)
+        assertEquals(PuzzleFixtures.PUZZLE_ID, content.puzzleId)
+
+        // Та же головоломка при установленной версии 1 (откат) отозванной не считается.
+        setUp()
+        preferences.setInstalled(version = 1)
+        puzzles.put(PuzzleFixtures.puzzle.copy(retiredIn = 2, contentVersion = 2))
+        givenAnsweredSlot(slotIndex = 0, submittedOrder = listOf("c2", "c1", "c3", "c4"), score = 6)
+        val rolledBack = createViewModel(slotIndex = 0)
+        advanceUntilIdle()
+        assertFalse((rolledBack.uiState.value as PuzzleResultState.Content).isRetired)
+    }
+
     // --- Инфраструктура -----------------------------------------------------------------
 
     private fun givenAnsweredSlot(slotIndex: Int, submittedOrder: List<String>, score: Int) {
         progress.close(PuzzleFixtures.date, slotIndex, submittedOrder, score)
     }
 
-    private fun createViewModel(slotIndex: Int) = PuzzleResultViewModel(
-        getPuzzleResult = GetPuzzleResultUseCase(assignments, puzzles, progress),
+    private fun useCase() = GetPuzzleResultUseCase(
+        assignments = assignments,
+        puzzles = puzzles,
+        progress = progress,
+        getInstalledContentVersion = GetInstalledContentVersionUseCase(preferences),
+    )
+
+    private fun createViewModel(slotIndex: Int, origin: String? = null) = PuzzleResultViewModel(
+        getPuzzleResult = useCase(),
         preferences = preferences,
         savedStateHandle = SavedStateHandle(
-            mapOf(
-                Destinations.ARG_SLOT_INDEX to slotIndex,
-                Destinations.ARG_DATE to Destinations.serialize(PuzzleFixtures.date),
-            ),
+            buildMap {
+                put(Destinations.ARG_SLOT_INDEX, slotIndex)
+                put(Destinations.ARG_DATE, Destinations.serialize(PuzzleFixtures.date))
+                if (origin != null) put(Destinations.ARG_ORIGIN, origin)
+            },
         ),
     )
 
@@ -315,6 +492,11 @@ private class FakePreferences : UserPreferencesRepository {
 
     fun setSeen() {
         state.value = state.value.copy(hasSeenScoringHint = true)
+    }
+
+    /** Отметка установленного контента — та, что пишет импортёр одной операцией с отпечатком. */
+    fun setInstalled(version: Int) {
+        state.value = state.value.copy(storedContentVersion = version, storedContentFingerprint = "fingerprint-$version")
     }
 
     override suspend fun setHasSeenScoringHint(seen: Boolean) {

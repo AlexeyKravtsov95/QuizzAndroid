@@ -18,6 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -35,11 +36,13 @@ import ru.poporyadku.ui.components.AppTopBar
 import ru.poporyadku.ui.components.DayResultLeading
 import ru.poporyadku.ui.components.DayResultList
 import ru.poporyadku.ui.components.DayResultRowData
+import ru.poporyadku.ui.components.DayResultTrailing
 import ru.poporyadku.ui.components.ErrorBlock
 import ru.poporyadku.ui.components.PrimaryButton
 import ru.poporyadku.ui.components.ScoreBadge
 import ru.poporyadku.ui.components.SkeletonLine
 import ru.poporyadku.ui.components.StreakRow
+import ru.poporyadku.ui.navigation.RouteOrigin
 import ru.poporyadku.ui.theme.PoPoRyadkuTheme
 import ru.poporyadku.ui.theme.Sizing
 import ru.poporyadku.ui.theme.Spacing
@@ -49,21 +52,28 @@ object DayRecapTestTags {
     const val SCREEN = "recap_screen"
     const val CONTENT = "recap_content"
     const val SCORE_BADGE = "recap_score_badge"
+    const val INCOMPLETE = "recap_day_incomplete"
     const val RESULTS = "recap_results"
     const val STREAK = "recap_streak"
     const val BEST_STREAK = "recap_best_streak"
-    const val DONE_BUTTON = "recap_done_button"
+    const val PRIMARY_BUTTON = "recap_primary_button"
     const val NOT_FOUND = "recap_not_found"
 }
 
 /**
- * Итог дня (ITERATION_3_DESIGN.md, раздел 13; COMPONENTS.md, «DayRecapScreen»).
+ * Итог дня (ITERATION_3_DESIGN.md, раздел 13; ITERATION_5_DESIGN.md, §3.7;
+ * COMPONENTS.md, «AppTopBar», «DayResultRow»).
  *
  * Stateless: состояние и callbacks приходят параметрами.
  *
- * Порядок сверху вниз — заголовок → общий счёт → три результата → серия → «Готово»;
- * общий счёт крупнейший текстовый элемент экрана. «Поделиться», реклама и диалог
- * уведомлений на экране отсутствуют: они относятся к итерациям 5–7.
+ * Порядок сверху вниз — заголовок → общий счёт → («День не завершён») → три результата →
+ * серия → основная кнопка; общий счёт крупнейший текстовый элемент экрана.
+ *
+ * **Два варианта по происхождению** (I5-D8). Сессионный: заголовок «Сегодня» либо дата,
+ * leading-иконки «Назад» нет (граф сессии уже вычищен, и она вела бы туда же, куда
+ * «Готово»), строки не нажимаются, внизу «Готово». Архивный: заголовок — всегда дата,
+ * «Назад» в шапке и внизу, строка `Played` открывает исторический результат.
+ * «Поделиться» (PR 5D), реклама и диалог уведомлений на экране отсутствуют.
  */
 @Composable
 fun DayRecapScreen(
@@ -89,9 +99,17 @@ fun DayRecapScreen(
 
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
                 Column(modifier = columnWidth.fillMaxSize()) {
-                    // Заголовок «Сегодня» либо дата; leading-иконки «Назад» нет —
-                    // граф сессии уже вычищен, и она вела бы туда же, куда «Готово».
-                    AppTopBar(title = rememberTitle(state), horizontalMargin = margin)
+                    AppTopBar(
+                        title = rememberTitle(state),
+                        horizontalMargin = margin,
+                        // «Назад» в шапке — только у архивного варианта, в том числе у
+                        // recapMissing: там это единственный экранный выход.
+                        onBackClick = if (state.origin() == RouteOrigin.Archive) {
+                            { onEvent(DayRecapEvent.BackClicked) }
+                        } else {
+                            null
+                        },
+                    )
 
                     Column(
                         modifier = Modifier
@@ -104,8 +122,8 @@ fun DayRecapScreen(
                     ) {
                         when (state) {
                             DayRecapState.Loading -> RecapSkeleton()
-                            is DayRecapState.Content -> RecapContent(state)
-                            DayRecapState.NotFound -> ErrorBlock(
+                            is DayRecapState.Content -> RecapContent(state, onEvent)
+                            is DayRecapState.NotFound -> ErrorBlock(
                                 // Без кнопки «Повторить»: повторная попытка ничего не
                                 // изменит, данных за прошедший день больше нет.
                                 message = stringResource(R.string.recap_not_found),
@@ -125,9 +143,14 @@ fun DayRecapScreen(
                                 .padding(bottom = Spacing.section),
                         ) {
                             PrimaryButton(
-                                text = stringResource(R.string.recap_done),
-                                onClick = { onEvent(DayRecapEvent.DoneClicked) },
-                                modifier = Modifier.testTag(DayRecapTestTags.DONE_BUTTON),
+                                text = stringResource(
+                                    when (state.origin) {
+                                        RouteOrigin.Session -> R.string.recap_done
+                                        RouteOrigin.Archive -> R.string.recap_back
+                                    },
+                                ),
+                                onClick = { onEvent(DayRecapEvent.PrimaryClicked) },
+                                modifier = Modifier.testTag(DayRecapTestTags.PRIMARY_BUTTON),
                             )
                         }
                     }
@@ -138,48 +161,76 @@ fun DayRecapScreen(
 }
 
 @Composable
-private fun RecapContent(state: DayRecapState.Content) {
+private fun RecapContent(state: DayRecapState.Content, onEvent: (DayRecapEvent) -> Unit) {
     ScoreBadge(
         text = stringResource(R.string.score_of_day, state.totalScore),
         modifier = Modifier.testTag(DayRecapTestTags.SCORE_BADGE),
     )
 
+    if (!state.isComplete) {
+        Text(
+            text = stringResource(R.string.recap_day_incomplete),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.testTag(DayRecapTestTags.INCOMPLETE),
+        )
+    }
+
     DayResultList(
-        rows = state.slots.map { it.toRowData() },
+        rows = state.slots.map { it.toRowData(onEvent) },
         modifier = Modifier.testTag(DayRecapTestTags.RESULTS),
     )
 
-    StreakRow(
-        label = stringResource(R.string.recap_streak),
-        value = streakText(state.currentStreak),
-        modifier = Modifier.testTag(DayRecapTestTags.STREAK),
-    )
-
-    // Вторая строка появляется только тогда, когда ЭТОТ день установил рекорд;
-    // цветом она не выделяется — только присутствием (I3-D46).
-    if (state.isRecordUpdated) {
+    // Незавершённый день серию не продолжал: StreakRow нет вовсе.
+    val streakDays = state.streakDays
+    if (streakDays != null) {
         StreakRow(
-            label = stringResource(R.string.recap_best_streak),
-            value = streakText(state.bestStreak),
-            modifier = Modifier.testTag(DayRecapTestTags.BEST_STREAK),
+            label = stringResource(R.string.recap_streak),
+            value = streakText(streakDays),
+            modifier = Modifier.testTag(DayRecapTestTags.STREAK),
         )
+
+        // Вторая строка появляется только тогда, когда ЭТОТ день установил рекорд, и
+        // показывает то же значение: рекорд, установленный днём, равен его серии (O5-5).
+        // Цветом строка не выделяется — только присутствием (I3-D46).
+        if (state.isRecordUpdated) {
+            StreakRow(
+                label = stringResource(R.string.recap_best_streak),
+                value = streakText(streakDays),
+                modifier = Modifier.testTag(DayRecapTestTags.BEST_STREAK),
+            )
+        }
     }
 }
 
 /**
- * `when` по [SlotResultUi] исчерпывающий: `Unavailable` показывает «Задание N» вместо
- * `CategoryLabel` и **фактический** счёт, а не константный ноль.
+ * `when` по [SlotResultUi] исчерпывающий, без `else`: `Unavailable` показывает «Задание N»
+ * вместо `CategoryLabel` и **фактический** счёт, `NotPlayed` — «Задание N» и «не сыграно»
+ * без счёта. Нажимается только `Played` архивного итога.
  */
 @Composable
-private fun SlotResultUi.toRowData(): DayResultRowData = DayResultRowData(
-    leading = when (this) {
-        is SlotResultUi.Played -> DayResultLeading.CategoryOf(category)
-        is SlotResultUi.Unavailable -> DayResultLeading.Label(
-            stringResource(R.string.recap_slot_unavailable, slotIndex + 1),
-        )
-    },
-    result = stringResource(R.string.score_of_slot, score),
-)
+private fun SlotResultUi.toRowData(onEvent: (DayRecapEvent) -> Unit): DayResultRowData = when (this) {
+    is SlotResultUi.Played -> DayResultRowData(
+        leading = DayResultLeading.CategoryOf(category),
+        trailing = DayResultTrailing.Score(stringResource(R.string.score_of_slot, score)),
+        onClick = if (isOpenable) {
+            { onEvent(DayRecapEvent.SlotClicked(slotIndex)) }
+        } else {
+            null
+        },
+        onClickLabel = if (isOpenable) stringResource(R.string.recap_slot_open) else null,
+    )
+
+    is SlotResultUi.Unavailable -> DayResultRowData(
+        leading = DayResultLeading.Label(stringResource(R.string.recap_slot_unavailable, slotIndex + 1)),
+        trailing = DayResultTrailing.Score(stringResource(R.string.score_of_slot, score)),
+    )
+
+    is SlotResultUi.NotPlayed -> DayResultRowData(
+        leading = DayResultLeading.Label(stringResource(R.string.recap_slot_unavailable, slotIndex + 1)),
+        trailing = DayResultTrailing.NotPlayed(stringResource(R.string.recap_slot_not_played)),
+    )
+}
 
 @Composable
 private fun RecapSkeleton() {
@@ -189,12 +240,29 @@ private fun RecapSkeleton() {
     }
 }
 
+/** Вариант, известный состоянию: у `Loading` его нет — там нет и кнопок. */
+private fun DayRecapState.origin(): RouteOrigin? = when (this) {
+    DayRecapState.Loading -> null
+    is DayRecapState.Content -> origin
+    is DayRecapState.NotFound -> origin
+}
+
+/**
+ * Заголовок показывает только то, что известно: «Сегодня» или дату у `Content`.
+ * У `Loading` и `NotFound` даты в состоянии нет, и заголовок пуст — иначе архивный день
+ * на мгновение назывался бы «Сегодня».
+ */
 @Composable
 private fun rememberTitle(state: DayRecapState): String {
+    val title = (state as? DayRecapState.Content)?.title
     val today = stringResource(R.string.recap_title_today)
-    val date = (state as? DayRecapState.Content)?.title as? DayRecapTitle.Date
-    return remember(date, today) {
-        date?.localDate?.format(DATE_FORMATTER)?.replaceFirstChar { it.titlecase(RUSSIAN) } ?: today
+    return remember(title, today) {
+        when (title) {
+            DayRecapTitle.Today -> today
+            is DayRecapTitle.Date ->
+                title.localDate.format(DATE_FORMATTER).replaceFirstChar { it.titlecase(RUSSIAN) }
+            null -> ""
+        }
     }
 }
 
@@ -212,17 +280,25 @@ private const val SKELETON_ROW_FRACTION = 0.85f
 
 // --- Preview ---------------------------------------------------------------
 
-private fun playedDay(total: Int, scores: List<Int>) = DayRecapState.Content(
-    title = DayRecapTitle.Today,
+private fun playedDay(
+    total: Int,
+    scores: List<Int>,
+    origin: RouteOrigin = RouteOrigin.Session,
+    title: DayRecapTitle = DayRecapTitle.Today,
+) = DayRecapState.Content(
+    origin = origin,
+    title = title,
+    dayNumber = 12,
     totalScore = total,
+    isComplete = true,
     slots = listOf(
-        SlotResultUi.Played(slotIndex = 0, score = scores[0], category = Category.GEOGRAPHY),
-        SlotResultUi.Played(slotIndex = 1, score = scores[1], category = Category.HISTORY),
-        SlotResultUi.Played(slotIndex = 2, score = scores[2], category = Category.SCIENCE),
+        SlotResultUi.Played(0, scores[0], Category.GEOGRAPHY, isOpenable = origin == RouteOrigin.Archive),
+        SlotResultUi.Played(1, scores[1], Category.HISTORY, isOpenable = origin == RouteOrigin.Archive),
+        SlotResultUi.Played(2, scores[2], Category.SCIENCE, isOpenable = origin == RouteOrigin.Archive),
     ),
-    currentStreak = 6,
-    bestStreak = 9,
+    streakDays = 6,
     isRecordUpdated = false,
+    canShare = true,
 )
 
 @Composable
@@ -249,16 +325,19 @@ private fun DayRecapZeroPreview() = PreviewRecap(playedDay(0, listOf(0, 0, 0)))
 @Composable
 private fun DayRecapAllSkippedPreview() = PreviewRecap(
     DayRecapState.Content(
+        origin = RouteOrigin.Session,
         title = DayRecapTitle.Today,
+        dayNumber = 3,
         totalScore = 0,
+        isComplete = true,
         slots = listOf(
             SlotResultUi.Unavailable(slotIndex = 0, score = 0),
             SlotResultUi.Unavailable(slotIndex = 1, score = 0),
             SlotResultUi.Unavailable(slotIndex = 2, score = 0),
         ),
-        currentStreak = 1,
-        bestStreak = 1,
+        streakDays = 1,
         isRecordUpdated = true,
+        canShare = true,
     ),
 )
 
@@ -267,16 +346,51 @@ private fun DayRecapAllSkippedPreview() = PreviewRecap(
 @Composable
 private fun DayRecapMixedPreview() = PreviewRecap(
     DayRecapState.Content(
+        origin = RouteOrigin.Session,
         title = DayRecapTitle.Date(LocalDate.of(2026, 8, 25)),
+        dayNumber = 11,
         totalScore = 14,
+        isComplete = true,
         slots = listOf(
-            SlotResultUi.Played(slotIndex = 0, score = 6, category = Category.NATURE),
+            SlotResultUi.Played(slotIndex = 0, score = 6, category = Category.NATURE, isOpenable = false),
             SlotResultUi.Unavailable(slotIndex = 1, score = 4),
-            SlotResultUi.Played(slotIndex = 2, score = 4, category = Category.RUSSIA),
+            SlotResultUi.Played(slotIndex = 2, score = 4, category = Category.RUSSIA, isOpenable = false),
         ),
-        currentStreak = 3,
-        bestStreak = 9,
+        streakDays = 3,
         isRecordUpdated = false,
+        canShare = true,
+    ),
+)
+
+/** Архивный незавершённый день: «День не завершён», две строки «не сыграно», без серии. */
+@Preview(name = "DayRecap — архив, не завершён 390×844", widthDp = 390, heightDp = 844)
+@Composable
+private fun DayRecapArchivedIncompletePreview() = PreviewRecap(
+    DayRecapState.Content(
+        origin = RouteOrigin.Archive,
+        title = DayRecapTitle.Date(LocalDate.of(2026, 8, 24)),
+        dayNumber = 11,
+        totalScore = 5,
+        isComplete = false,
+        slots = listOf(
+            SlotResultUi.Played(slotIndex = 0, score = 5, category = Category.CULTURE, isOpenable = true),
+            SlotResultUi.NotPlayed(slotIndex = 1),
+            SlotResultUi.NotPlayed(slotIndex = 2),
+        ),
+        streakDays = null,
+        isRecordUpdated = false,
+        canShare = false,
+    ),
+)
+
+@Preview(name = "DayRecap — архив 390×844", widthDp = 390, heightDp = 844)
+@Composable
+private fun DayRecapArchivedPreview() = PreviewRecap(
+    playedDay(
+        total = 15,
+        scores = listOf(6, 5, 4),
+        origin = RouteOrigin.Archive,
+        title = DayRecapTitle.Date(LocalDate.of(2026, 8, 25)),
     ),
 )
 

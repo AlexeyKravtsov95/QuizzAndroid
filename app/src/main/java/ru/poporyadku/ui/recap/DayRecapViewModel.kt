@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
 import javax.inject.Inject
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,27 +16,28 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import ru.poporyadku.core.time.DateProvider
-import ru.poporyadku.domain.repository.UserPreferencesRepository
-import ru.poporyadku.domain.usecase.DayRecapResult
 import ru.poporyadku.domain.usecase.GetDayRecapUseCase
 import ru.poporyadku.ui.navigation.Destinations
+import ru.poporyadku.ui.navigation.RouteOrigin
 
 /**
- * ViewModel итога дня (ITERATION_3_DESIGN.md, раздел 13, I3-D51).
+ * ViewModel итога дня (ITERATION_3_DESIGN.md, §13, I3-D51; ITERATION_5_DESIGN.md, §6.8,
+ * I5-D8, I5-D25, I5-D31).
  *
- * `today` берётся из [DateProvider] и только из него: экрану нужна одна `LocalDate` —
- * обратного отсчёта здесь нет, `Instant` не вычитается, зона в расчёте не участвует.
- * Снимок часов с моментом и зоной был бы избыточен, а системная дата нигде,
- * кроме [DateProvider], не читается.
+ * Зависимости — только чтение: [GetDayRecapUseCase] (Room), [DateProvider] и
+ * `SavedStateHandle`. `UserPreferencesRepository` не инжектируется намеренно: путь
+ * загрузки итога не содержит ни одной записи DataStore, поэтому готовый `Content`
+ * нечему заменить на `NotFound` (флаг первого дня ставит `SubmitAnswerUseCase`,
+ * `StreakCache` — расчёт Home).
  *
- * `localDate` приходит **только** из аргумента маршрута и никогда не подменяется
- * текущей датой: смена системной даты при открытом экране не меняет просматриваемый
- * день — итог дня это свойство дня, а не момента. Минутного тикера здесь нет.
+ * `today` берётся из [DateProvider] и только из него, ровно один раз на загрузку, и
+ * нужен только заголовку сессионного варианта. `localDate` приходит **только** из
+ * аргумента маршрута и никогда не подменяется текущей датой. Вариант экрана — только
+ * из `origin`: отсутствует → сессия, [Destinations.ORIGIN_ARCHIVE] → архив.
  */
 @HiltViewModel
 class DayRecapViewModel @Inject constructor(
     private val getDayRecap: GetDayRecapUseCase,
-    private val preferences: UserPreferencesRepository,
     private val dateProvider: DateProvider,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -48,49 +50,71 @@ class DayRecapViewModel @Inject constructor(
     /** Ровно один коллектор на стороне UI — на уровне route-контейнера (I3-D25). */
     val effects: Flow<DayRecapEffect> = effectChannel.receiveAsFlow()
 
-    /** Аргумент отсутствует или не разбирается — день не показывается, а не подменяется. */
-    private val routeDate: LocalDate? =
-        parseRouteDate(savedStateHandle.get<String>(Destinations.ARG_DATE))
+    /** `null` — маршрут невалиден: день не показывается, а не подменяется. */
+    private val routeArgs: RouteArgs? = parseRoute(
+        rawDate = savedStateHandle.get<String>(Destinations.ARG_DATE),
+        rawOrigin = savedStateHandle.get<String>(Destinations.ARG_ORIGIN),
+    )
 
     init {
         load()
     }
 
     fun onEvent(event: DayRecapEvent) {
+        val args = routeArgs ?: return
         when (event) {
-            DayRecapEvent.DoneClicked -> effectChannel.trySend(DayRecapEffect.NavigateHome)
+            DayRecapEvent.PrimaryClicked, DayRecapEvent.BackClicked -> effectChannel.trySend(
+                when (args.origin) {
+                    RouteOrigin.Session -> DayRecapEffect.NavigateHome
+                    RouteOrigin.Archive -> DayRecapEffect.NavigateBack
+                },
+            )
+
+            is DayRecapEvent.SlotClicked -> {
+                val content = state.value as? DayRecapState.Content ?: return
+                val slot = content.slots.getOrNull(event.slotIndex) as? SlotResultUi.Played ?: return
+                // Сессионный вариант и не-Played — ничего: попытки нет, показать нечего,
+                // а открыть можно было бы только игру прошлого дня.
+                if (!slot.isOpenable) return
+                effectChannel.trySend(DayRecapEffect.OpenResult(slot.slotIndex, args.date))
+            }
         }
     }
 
     private fun load() {
-        val localDate = routeDate
-        if (localDate == null) {
-            state.value = DayRecapState.NotFound
+        val args = routeArgs
+        if (args == null) {
+            // Неизвестный origin или неразбираемая дата: вариант не угадывается, база не
+            // читается, «сегодня» не подставляется.
+            state.value = DayRecapState.NotFound(RouteOrigin.Session)
             return
         }
         viewModelScope.launch {
-            // `today` читается РОВНО ОДИН РАЗ на загрузку, вместе с вызовом use case:
-            // иначе заголовок и серия относились бы к разным моментам.
-            val today = dateProvider.today()
-            val result = getDayRecap(localDate = localDate, today = today)
-            state.value = result.toDayRecapState(today)
-
-            // Флаг понадобится итерации 6 (условие показа запроса на уведомления);
-            // сам запрос POST_NOTIFICATIONS в итерации 3 не выполняется.
-            if (result is DayRecapResult.Content && result.isComplete) {
-                preferences.setHasCompletedFirstDay(true)
+            // Экранную ошибку может дать только чтение дня и его преобразование.
+            val next: DayRecapState = try {
+                val today = dateProvider.today()
+                getDayRecap(args.date).toDayRecapState(today, args.origin)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                // Данных дня нет или они непригодны: recapMissing, процесс не падает.
+                DayRecapState.NotFound(args.origin)
             }
+            state.value = next
+            // После публикации состояния записей нет: готовый Content ничем не заменяется.
         }
     }
 
-    private fun parseRouteDate(raw: String?): LocalDate? =
-        if (raw.isNullOrBlank()) {
-            null
-        } else {
-            try {
-                Destinations.parseDate(raw)
-            } catch (e: DateTimeParseException) {
-                null
-            }
+    private data class RouteArgs(val date: LocalDate, val origin: RouteOrigin)
+
+    private fun parseRoute(rawDate: String?, rawOrigin: String?): RouteArgs? {
+        val origin = RouteOrigin.fromRouteToken(rawOrigin) ?: return null
+        if (rawDate.isNullOrBlank()) return null
+        val date = try {
+            Destinations.parseDate(rawDate)
+        } catch (e: DateTimeParseException) {
+            return null
         }
+        return RouteArgs(date, origin)
+    }
 }

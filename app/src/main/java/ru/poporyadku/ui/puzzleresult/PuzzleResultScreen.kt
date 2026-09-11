@@ -36,10 +36,12 @@ import ru.poporyadku.ui.components.ErrorBlock
 import ru.poporyadku.ui.components.InvertedPairRow
 import ru.poporyadku.ui.components.OrderableCard
 import ru.poporyadku.ui.components.PrimaryButton
+import ru.poporyadku.ui.components.RetiredNotice
 import ru.poporyadku.ui.components.ScoreBadge
 import ru.poporyadku.ui.components.ScoringHint
 import ru.poporyadku.ui.components.SkeletonLine
 import ru.poporyadku.ui.components.SourcesBlock
+import ru.poporyadku.ui.navigation.RouteOrigin
 import ru.poporyadku.ui.theme.PoPoRyadkuTheme
 import ru.poporyadku.ui.theme.ProjectTextStyles
 import ru.poporyadku.ui.theme.Sizing
@@ -49,6 +51,7 @@ import ru.poporyadku.ui.theme.Spacing
 object PuzzleResultTestTags {
     const val SCREEN = "puzzle_result_screen"
     const val CONTENT = "puzzle_result_content"
+    const val RETIRED_NOTICE = "puzzle_result_retired_notice"
     const val CORRECT_ORDER = "puzzle_result_correct_order"
     const val EXPLANATION = "puzzle_result_explanation"
     const val SCORE_BADGE = "puzzle_result_score_badge"
@@ -67,7 +70,12 @@ object PuzzleResultTestTags {
  *
  * Порядок сверху вниз зафиксирован иерархией `DESIGN_PRINCIPLES.md` §3: правильный
  * порядок → объяснение → `ScoreBadge` → `ScoringHint` → перепутанные пары →
- * `SourcesBlock` → основная кнопка. Счёт — не самый заметный элемент экрана.
+ * `SourcesBlock` → основная кнопка. Счёт — не самый заметный элемент экрана. У
+ * отозванной головоломки первым элементом контента стоит `RetiredNotice`
+ * (ITERATION_5_DESIGN.md, §3.8).
+ *
+ * Архивный режим (`origin = Archive`) отличается только основной кнопкой: всегда
+ * «К итогу дня», и она ведёт назад, к архивному итогу (§3.7).
  *
  * Карточки правильного порядка — read-only: ни `MoveButton`, ни custom actions в дереве
  * семантики не существуют, а не показаны disabled (COMPONENTS.md).
@@ -102,8 +110,8 @@ fun PuzzleResultScreen(
                     AppTopBar(
                         title = resultTitle(state),
                         horizontalMargin = margin,
-                        // Ведёт туда же, куда системная «назад», — на Home:
-                        // вернуться в отвеченную головоломку нельзя.
+                        // Ведёт туда же, куда системная «назад»: в сессии — на Home
+                        // (вернуться в отвеченную головоломку нельзя), в архиве — к итогу.
                         onBackClick = { onEvent(PuzzleResultEvent.BackPressed) },
                     )
 
@@ -137,9 +145,7 @@ fun PuzzleResultScreen(
                                 .padding(bottom = Spacing.section),
                         ) {
                             PrimaryButton(
-                                text = stringResource(
-                                    if (state.isLastSlot) R.string.result_to_recap else R.string.result_next,
-                                ),
+                                text = stringResource(primaryActionLabel(state)),
                                 onClick = { onEvent(PuzzleResultEvent.PrimaryAction) },
                                 modifier = Modifier.testTag(PuzzleResultTestTags.PRIMARY_BUTTON),
                             )
@@ -153,6 +159,11 @@ fun PuzzleResultScreen(
 
 @Composable
 private fun ResultContent(state: PuzzleResultState.Content, compact: Boolean) {
+    // Первым элементом контентной колонки — до «Правильный порядок» (I5-D11).
+    if (state.isRetired) {
+        RetiredNotice(modifier = Modifier.testTag(PuzzleResultTestTags.RETIRED_NOTICE))
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -247,6 +258,12 @@ private fun ResultSkeleton() {
     repeat(SKELETON_ROWS) { SkeletonLine(widthFraction = SKELETON_ROW_FRACTION) }
 }
 
+/** Архив — всегда «К итогу дня» (назад); сессия — «Дальше» или «К итогу дня» по слоту. */
+private fun primaryActionLabel(state: PuzzleResultState.Content): Int = when (state.origin) {
+    RouteOrigin.Archive -> R.string.result_to_recap
+    RouteOrigin.Session -> if (state.isLastSlot) R.string.result_to_recap else R.string.result_next
+}
+
 @Composable
 private fun resultTitle(state: PuzzleResultState): String {
     val slot = (state as? PuzzleResultState.Content)?.slotIndex
@@ -315,6 +332,8 @@ private fun previewContent(
     invertedPairs: List<InvertedPair>,
     showScoringHint: Boolean = false,
     slotIndex: Int = 0,
+    origin: RouteOrigin = RouteOrigin.Session,
+    isRetired: Boolean = false,
 ) = PuzzleResultState.Content(
     slotIndex = slotIndex,
     totalSlots = 3,
@@ -328,6 +347,8 @@ private fun previewContent(
     showScoringHint = showScoringHint,
     isLastSlot = slotIndex == 2,
     puzzleId = "tmp-geo-vysota-001",
+    origin = origin,
+    isRetired = isRetired,
 )
 
 private val allPairs = listOf(
@@ -375,3 +396,22 @@ private fun ResultDarkPreview() = PreviewResult(previewContent(4, allPairs.take(
 @Preview(name = "PuzzleResult — 320×844 @200%", widthDp = 320, heightDp = 844, fontScale = 2f)
 @Composable
 private fun ResultCompactLargeFontPreview() = PreviewResult(previewContent(3, allPairs.take(3)))
+
+/** Исторический результат отозванной головоломки: пометка первой строкой, CTA «К итогу дня». */
+@Preview(name = "PuzzleResult — архив, отозвана", widthDp = 390, heightDp = 844)
+@Composable
+private fun ResultArchivedRetiredPreview() = PreviewResult(
+    previewContent(4, allPairs.take(2), origin = RouteOrigin.Archive, isRetired = true),
+)
+
+@Preview(
+    name = "PuzzleResult — архив, отозвана, dark",
+    widthDp = 390,
+    heightDp = 844,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+)
+@Composable
+private fun ResultArchivedRetiredDarkPreview() = PreviewResult(
+    previewContent(4, allPairs.take(2), origin = RouteOrigin.Archive, isRetired = true),
+    darkTheme = true,
+)

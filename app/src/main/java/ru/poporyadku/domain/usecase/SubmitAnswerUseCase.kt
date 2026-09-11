@@ -2,6 +2,8 @@ package ru.poporyadku.domain.usecase
 
 import java.time.LocalDate
 import javax.inject.Inject
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.flow.first
 import ru.poporyadku.core.model.PuzzleAttempt
 import ru.poporyadku.core.model.SLOTS_PER_DAY
 import ru.poporyadku.core.model.isPlayable
@@ -11,6 +13,7 @@ import ru.poporyadku.domain.repository.DailySetRepository
 import ru.poporyadku.domain.repository.DayAssignmentRepository
 import ru.poporyadku.domain.repository.ProgressRepository
 import ru.poporyadku.domain.repository.PuzzleRepository
+import ru.poporyadku.domain.repository.UserPreferencesRepository
 import ru.poporyadku.domain.scoring.PairwiseScoreCalculator
 
 /**
@@ -31,12 +34,18 @@ private const val SUBMITTED_AT_SET_BY_REPOSITORY = 0L
  * перезаписать. Ветвление касается ровно двух шагов: нужен ли `Puzzle` и как считается счёт.
  *
  * Навигации здесь нет: use case возвращает исход, экран выбирает эффект.
+ *
+ * Флаг `hasCompletedFirstDay` ставится здесь — в момент фактического завершения дня,
+ * а не при показе итога (ITERATION_5_DESIGN.md, §6.12, I5-D31): так путь покрывает и
+ * ответ, и пропуск последнего слота, и смерть процесса между записью и переходом на
+ * итог, а загрузка итога не содержит ни одной записи DataStore.
  */
 class SubmitAnswerUseCase @Inject constructor(
     private val assignments: DayAssignmentRepository,
     private val sets: DailySetRepository,
     private val puzzles: PuzzleRepository,
     private val progress: ProgressRepository,
+    private val preferences: UserPreferencesRepository,
 ) {
     suspend operator fun invoke(
         localDate: LocalDate,
@@ -111,10 +120,32 @@ class SubmitAnswerUseCase @Inject constructor(
             return SubmitResult.AlreadyClosed(slotIndex, AttemptKind.of(winner))
         }
 
+        // Попытка создана ЭТИМ вызовом: только он вправе отметить завершение дня.
+        // AlreadyClosed и Failure выше флаг не трогают.
+        markFirstDayCompletedIfNeeded(localDate)
+
         return SubmitResult.Recorded(
             slotIndex = slotIndex,
             score = score,
             kind = if (submission is Submission.Skip) AttemptKind.Skipped else AttemptKind.Answered,
         )
+    }
+
+    /**
+     * Best-effort: попытка к этому моменту уже в базе, и ответ пользователя от флага не
+     * зависит, поэтому отказ записи не меняет `SubmitResult.Recorded`. Флаг останется
+     * `false`, и следующий завершённый день повторит запись. Чтение флага предшествует
+     * записи: после первой удачной записи игровой путь флаг только читает.
+     */
+    private suspend fun markFirstDayCompletedIfNeeded(localDate: LocalDate) {
+        try {
+            if (progress.getDayResult(localDate)?.isComplete != true) return
+            if (preferences.preferences.first().hasCompletedFirstDay) return
+            preferences.setHasCompletedFirstDay(true)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            // Намеренно поглощается: см. KDoc.
+        }
     }
 }

@@ -27,11 +27,12 @@ import org.robolectric.annotation.Config
 import ru.poporyadku.core.model.Puzzle
 import ru.poporyadku.domain.scoring.InvertedPair
 import ru.poporyadku.ui.components.OrderableCardTestTags
+import ru.poporyadku.ui.navigation.RouteOrigin
 import ru.poporyadku.ui.theme.PoPoRyadkuTheme
 
 /**
  * `PuzzleResultScreen` — ITERATION_3_DESIGN.md, `I3-C7`–`I3-C9` и Result-части
- * `I3-C11`–`I3-C13`.
+ * `I3-C11`–`I3-C13`; ITERATION_5_DESIGN.md, §10.4: `I5-C11`.
  *
  * Экран stateless: рендерится готовое состояние, Hilt не участвует (I3-D31).
  */
@@ -262,6 +263,80 @@ class PuzzleResultScreenTest {
         assertEquals("порядок блоков обязан быть возрастающим", tops.sorted(), tops)
     }
 
+    // --- I5-C11: исторический результат и пометка отзыва -------------------------------------
+
+    /**
+     * `I5-C11`. У отозванной головоломки `RetiredNotice` — ПЕРВЫЙ элемент контента, до
+     * «Правильный порядок»: и в дереве семантики (TalkBack читает его сразу после
+     * заголовка экрана), и по вертикали.
+     */
+    @Test
+    fun `I5-C11 the retired notice is the first element of the content`() {
+        rule.setContent { Result(content(score = 4, pairs = allPairs.take(2), isRetired = true)) }
+
+        rule.onNodeWithText(RETIRED_NOTICE).assertIsDisplayed()
+        val notice = rule.onNodeWithTag(PuzzleResultTestTags.RETIRED_NOTICE).fetchSemanticsNode()
+        val firstChild = rule.onNodeWithTag(PuzzleResultTestTags.CONTENT).fetchSemanticsNode().children.first()
+        assertEquals("пометка — первый узел контента", notice.id, firstChild.id)
+        assertTrue(
+            "пометка стоит выше «Правильный порядок»",
+            notice.positionInRoot.y <
+                rule.onNodeWithTag(PuzzleResultTestTags.CORRECT_ORDER).fetchSemanticsNode().positionInRoot.y,
+        )
+        // Полный результат на месте: порядок, счёт, пары.
+        rule.onNodeWithTag(PuzzleResultTestTags.CORRECT_ORDER).assertExists()
+        rule.onNodeWithTag(PuzzleResultTestTags.SCORE_BADGE).assertExists()
+    }
+
+    /** `I5-C11`. Без отзыва пометки нет в дереве вовсе. */
+    @Test
+    fun `I5-C11 an active puzzle has no retired notice`() {
+        rule.setContent { Result(content(score = 4, pairs = allPairs.take(2))) }
+
+        rule.onNodeWithTag(PuzzleResultTestTags.RETIRED_NOTICE).assertDoesNotExist()
+        rule.onNodeWithText(RETIRED_NOTICE).assertDoesNotExist()
+    }
+
+    /**
+     * `I5-C11`. Архивный режим: CTA «К итогу дня» и для слотов 0–1 (в сессии там было бы
+     * «Дальше»), нажатие — то же `PrimaryAction`; «Назад» в шапке на месте.
+     */
+    @Test
+    fun `I5-C11 the archive CTA is back to the recap for every slot`() {
+        val events = mutableListOf<PuzzleResultEvent>()
+        rule.setContent {
+            Result(
+                content(score = 6, pairs = emptyList(), slotIndex = 0, origin = RouteOrigin.Archive, isRetired = true),
+                onEvent = { events += it },
+            )
+        }
+
+        rule.onNodeWithText(TO_RECAP).assertIsDisplayed()
+        rule.onNodeWithText(NEXT).assertDoesNotExist()
+        rule.onNodeWithTag(PuzzleResultTestTags.PRIMARY_BUTTON).performClick()
+        rule.onNodeWithContentDescription(BACK).performClick()
+        assertEquals(listOf(PuzzleResultEvent.PrimaryAction, PuzzleResultEvent.BackPressed), events)
+    }
+
+    /** `I5-C11`. Пометка отзыва при 320 dp и 200 % переносится, горизонтальной прокрутки нет. */
+    @Test
+    @Config(qualifiers = "w320dp-h844dp")
+    fun `I5-C11 the retired notice wraps at 320 dp and font scale 200 percent`() {
+        rule.setContent {
+            WithFontScale(FONT_SCALE_200) {
+                Result(content(score = 4, pairs = allPairs.take(2), origin = RouteOrigin.Archive, isRetired = true))
+            }
+        }
+
+        rule.onNodeWithText(RETIRED_NOTICE).assertIsDisplayed()
+        rule.onNodeWithTag(PuzzleResultTestTags.PRIMARY_BUTTON).assertIsDisplayed()
+        assertTrue(
+            rule.onAllNodes(
+                SemanticsMatcher.keyIsDefined(SemanticsProperties.HorizontalScrollAxisRange),
+            ).fetchSemanticsNodes().isEmpty(),
+        )
+    }
+
     // --- Инфраструктура -------------------------------------------------------------------
 
     @Composable
@@ -314,6 +389,7 @@ class PuzzleResultScreenTest {
         const val TO_RECAP = "К итогу дня"
         const val SOURCES = "Источники"
         const val BACK = "Назад"
+        const val RETIRED_NOTICE = "Задание отозвано: в нём была неточность"
         const val HINT_TEXT =
             "Баллы даются за каждую пару карточек в правильном порядке. У четырёх карточек шесть пар"
         val FORBIDDEN = listOf("выше", "ниже")
@@ -351,6 +427,8 @@ class PuzzleResultScreenTest {
             pairs: List<InvertedPair>,
             hint: Boolean = false,
             slotIndex: Int = 0,
+            origin: RouteOrigin = RouteOrigin.Session,
+            isRetired: Boolean = false,
         ) = PuzzleResultState.Content(
             slotIndex = slotIndex,
             totalSlots = 3,
@@ -363,6 +441,8 @@ class PuzzleResultScreenTest {
             showScoringHint = hint,
             isLastSlot = slotIndex == 2,
             puzzleId = "tmp-geo-vysota-001",
+            origin = origin,
+            isRetired = isRetired,
         )
     }
 }

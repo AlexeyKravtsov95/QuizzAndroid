@@ -19,18 +19,23 @@ import ru.poporyadku.domain.repository.UserPreferencesRepository
 import ru.poporyadku.domain.usecase.GetPuzzleResultUseCase
 import ru.poporyadku.domain.usecase.PuzzleErrorKind
 import ru.poporyadku.domain.usecase.PuzzleResultLoad
-import ru.poporyadku.ui.puzzle.RouteArgs
-import ru.poporyadku.ui.puzzle.readPuzzleRoute
+import ru.poporyadku.ui.navigation.RouteOrigin
 
 private const val LAST_SLOT_INDEX = SLOTS_PER_DAY - 1
 
 /**
- * ViewModel экрана результата (ITERATION_3_DESIGN.md, I3-D21, I3-D49).
+ * ViewModel экрана результата (ITERATION_3_DESIGN.md, I3-D21, I3-D49;
+ * ITERATION_5_DESIGN.md, §3.7, §4.4, I5-D10, I5-D11).
  *
  * Репозиториев контента и прогресса и калькулятора счёта здесь нет: экран восстанавливает
  * себя одним use case по паре `(localDate, slotIndex)`. Отображение доменного
  * `PuzzleResultLoad` в экранную модель делает именно ViewModel — use case про экранные
  * типы не знает.
+ *
+ * **Два режима по `origin`.** Сессионный сохраняет поведение итерации 3. Архивный
+ * отправляет только [PuzzleResultEffect.NavigateBack]: переходы в игровой маршрут
+ * `puzzle/{slotIndex}`, к следующему слоту и в сессионный итог в нём не существуют ни при
+ * каком исходе — исторический результат никогда не запускает игру прошлого дня.
  */
 @HiltViewModel
 class PuzzleResultViewModel @Inject constructor(
@@ -39,8 +44,8 @@ class PuzzleResultViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    /** Тот же разбор аргументов, что и у `Puzzle`: два маршрута — один контракт (I3-D39). */
-    private val route: RouteArgs = savedStateHandle.readPuzzleRoute()
+    /** Тот же строгий разбор даты и слота, что у `Puzzle` (I3-D39), плюс `origin`. */
+    private val route: ResultRouteArgs = savedStateHandle.readResultRoute()
 
     private val state = MutableStateFlow<PuzzleResultState>(PuzzleResultState.Loading)
     val uiState: StateFlow<PuzzleResultState> = state.asStateFlow()
@@ -52,41 +57,65 @@ class PuzzleResultViewModel @Inject constructor(
 
     init {
         when (route) {
-            is RouteArgs.Invalid -> {
+            // Невалидный маршрут (дата, слот или origin): режима нет, и единственный
+            // безопасный исход — существующий Home, как в итерации 3.
+            is ResultRouteArgs.Invalid -> {
                 state.value = PuzzleResultState.Error(PuzzleErrorKind.InvalidRoute)
                 effectChannel.trySend(PuzzleResultEffect.NavigateHome)
             }
 
-            is RouteArgs.Valid -> load(route)
+            is ResultRouteArgs.Valid -> load(route)
         }
     }
 
     fun onEvent(event: PuzzleResultEvent) {
+        val args = route as? ResultRouteArgs.Valid
         when (event) {
             PuzzleResultEvent.PrimaryAction -> {
                 val content = state.value as? PuzzleResultState.Content ?: return
-                effectChannel.trySend(nextStepFor(content.slotIndex))
+                effectChannel.trySend(
+                    when (content.origin) {
+                        RouteOrigin.Session -> nextStepFor(content.slotIndex)
+                        // «К итогу дня» архивного режима — назад, к архивному итогу.
+                        RouteOrigin.Archive -> PuzzleResultEffect.NavigateBack(isRedirect = false)
+                    },
+                )
             }
 
-            PuzzleResultEvent.BackPressed ->
-                effectChannel.trySend(PuzzleResultEffect.NavigateHome)
+            PuzzleResultEvent.BackPressed -> effectChannel.trySend(
+                when (args?.origin) {
+                    RouteOrigin.Archive -> PuzzleResultEffect.NavigateBack(isRedirect = false)
+                    RouteOrigin.Session, null -> PuzzleResultEffect.NavigateHome
+                },
+            )
         }
     }
 
-    private fun load(args: RouteArgs.Valid) {
+    private fun load(args: ResultRouteArgs.Valid) {
         viewModelScope.launch {
             try {
                 when (val load = getPuzzleResult(args.date, args.slotIndex)) {
-                    is PuzzleResultLoad.Content -> state.value = load.toContent(readScoringHint())
+                    is PuzzleResultLoad.Content ->
+                        state.value = load.toContent(args.origin, readScoringHint())
 
                     // Показывать нечего: ни правильного порядка, ни объяснения. Кадра
-                    // не показываем — сразу дальше по таблице I3-D45.
-                    is PuzzleResultLoad.Skipped ->
-                        effectChannel.trySend(nextStepFor(load.slotIndex))
+                    // не показываем: в сессии — дальше по таблице I3-D45, в архиве —
+                    // назад к итогу (достижимо только восстановлением бэкстека).
+                    is PuzzleResultLoad.Skipped -> effectChannel.trySend(
+                        when (args.origin) {
+                            RouteOrigin.Session -> nextStepFor(load.slotIndex)
+                            RouteOrigin.Archive -> PuzzleResultEffect.NavigateBack(isRedirect = true)
+                        },
+                    )
 
-                    // Слот ещё не сыгран: возвращаемся в головоломку.
-                    is PuzzleResultLoad.NoAttempt ->
-                        effectChannel.trySend(PuzzleResultEffect.NavigateToPuzzle(load.slotIndex))
+                    // Слот ещё не сыгран. В сессии — назад в головоломку; в архиве
+                    // игровой маршрут запрещён: доигрывать прошлый день нельзя.
+                    is PuzzleResultLoad.NoAttempt -> effectChannel.trySend(
+                        when (args.origin) {
+                            RouteOrigin.Session -> PuzzleResultEffect.NavigateToPuzzle(load.slotIndex)
+                            RouteOrigin.Archive -> PuzzleResultEffect.NavigateBack(isRedirect = true)
+                        },
+                    )
 
                     is PuzzleResultLoad.Failure ->
                         state.value = PuzzleResultState.Error(load.kind)
@@ -109,7 +138,10 @@ class PuzzleResultViewModel @Inject constructor(
         return show
     }
 
-    private fun PuzzleResultLoad.Content.toContent(showScoringHint: Boolean): PuzzleResultState.Content {
+    private fun PuzzleResultLoad.Content.toContent(
+        origin: RouteOrigin,
+        showScoringHint: Boolean,
+    ): PuzzleResultState.Content {
         val cardsById = puzzle.cards.associateBy { it.cardId }
         return PuzzleResultState.Content(
             slotIndex = slotIndex,
@@ -138,10 +170,13 @@ class PuzzleResultViewModel @Inject constructor(
             // Из попытки, а не из набора: показывать надо ту головоломку, на которую
             // отвечал игрок.
             puzzleId = attempt.puzzleId,
+            origin = origin,
+            // Решение отзыва принял домен; экран только показывает пометку.
+            isRetired = isRetired,
         )
     }
 
-    /** Одна таблица следующего шага для CTA и для редиректа пропущенного слота. */
+    /** Только сессия: одна таблица следующего шага для CTA и для редиректа пропуска. */
     private fun nextStepFor(slotIndex: Int): PuzzleResultEffect =
         if (slotIndex < LAST_SLOT_INDEX) {
             PuzzleResultEffect.NavigateToNextSlot(slotIndex + 1)

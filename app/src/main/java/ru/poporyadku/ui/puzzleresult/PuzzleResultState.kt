@@ -3,6 +3,7 @@ package ru.poporyadku.ui.puzzleresult
 import ru.poporyadku.core.model.Puzzle
 import ru.poporyadku.domain.scoring.InvertedPair
 import ru.poporyadku.domain.usecase.PuzzleErrorKind
+import ru.poporyadku.ui.navigation.RouteOrigin
 
 /**
  * Карточка правильного порядка (ITERATION_3_DESIGN.md, I3-D21).
@@ -43,10 +44,17 @@ sealed interface PuzzleResultState {
         val sources: List<Puzzle.Source>,
         /** `hasSeenScoringHint == false`: первый в жизни результат. */
         val showScoringHint: Boolean,
-        /** `slotIndex == 2` → CTA «К итогу дня». */
+        /** `slotIndex == 2` → CTA «К итогу дня» в сессии. */
         val isLastSlot: Boolean,
-        /** Для «Сообщить о неточности» (итерация 5). */
+        /** Из ПОПЫТКИ, а не из набора: исторический идентификатор и в архивном режиме. */
         val puzzleId: String,
+        /**
+         * [RouteOrigin.Archive] → CTA всегда «К итогу дня» и ведёт назад, к архивному
+         * итогу, а не дальше по дню (ITERATION_5_DESIGN.md, §3.7, I5-D10).
+         */
+        val origin: RouteOrigin,
+        /** Головоломка отозвана: первым элементом контента — `RetiredNotice` (I5-D11). */
+        val isRetired: Boolean,
     ) : PuzzleResultState
 
     data class Error(val kind: PuzzleErrorKind) : PuzzleResultState

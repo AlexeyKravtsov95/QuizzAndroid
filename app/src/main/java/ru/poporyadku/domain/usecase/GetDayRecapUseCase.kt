@@ -3,6 +3,7 @@ package ru.poporyadku.domain.usecase
 import java.time.LocalDate
 import javax.inject.Inject
 import ru.poporyadku.core.model.PuzzleAttempt
+import ru.poporyadku.core.model.SLOTS_PER_DAY
 import ru.poporyadku.core.model.isPlayable
 import ru.poporyadku.domain.repository.DayAssignmentRepository
 import ru.poporyadku.domain.repository.ProgressRepository
@@ -10,24 +11,28 @@ import ru.poporyadku.domain.repository.PuzzleRepository
 import ru.poporyadku.domain.scoring.StreakCalculator
 
 /**
- * Итог дня (ITERATION_3_DESIGN.md, §10, I3-D37, I3-D46).
+ * Итог дня (ITERATION_3_DESIGN.md, §10, I3-D37, I3-D46; ITERATION_5_DESIGN.md, §6.3,
+ * I5-D9, I5-D31).
+ *
+ * **Только чтение Room.** Записей DataStore в пути загрузки итога нет: кэш серии
+ * пишет только расчёт Home, а флаг первого завершённого дня ставит
+ * `SubmitAnswerUseCase` в момент завершения. Поэтому отказ DataStore не может
+ * превратить уже прочитанный день в `NotFound`.
  *
  * Ни установщик контента, ни репозиторий наборов не инжектируются намеренно:
- * `daily_sets` для итога не читается — `puzzleId` берётся из самой попытки, а установка
- * контента к просмотру уже сыгранного дня отношения не имеет.
+ * `daily_sets` для итога не читается — `puzzleId` берётся из самой попытки, и замена
+ * отозванной головоломки в наборе не подменяет то, что пользователь видел (I5-D10).
  */
 class GetDayRecapUseCase @Inject constructor(
     private val assignments: DayAssignmentRepository,
     private val puzzles: PuzzleRepository,
     private val progress: ProgressRepository,
-    private val streaks: GetStreaksUseCase,
 ) {
     /**
-     * @param localDate день, итог которого показывается; приходит из маршрута.
-     * @param today «сегодня» — только для ОТОБРАЖАЕМЫХ серий: экран может быть открыт
-     * для архивной даты, а серия «сейчас» всегда считается на сегодня.
+     * @param localDate день, итог которого показывается; приходит из маршрута. «Сегодня»
+     * здесь не нужно: серия — серия этого дня, а заголовок выбирает экран.
      */
-    suspend operator fun invoke(localDate: LocalDate, today: LocalDate): DayRecapResult {
+    suspend operator fun invoke(localDate: LocalDate): DayRecapResult {
         // totalScore и isComplete читаются из day_results, а не суммируются заново:
         // таблица уже согласована с попытками в рамках одной транзакции (D-5).
         val dayResult = progress.getDayResult(localDate) ?: return DayRecapResult.NotFound
@@ -36,12 +41,13 @@ class GetDayRecapUseCase @Inject constructor(
         // запрещено, поэтому такой день показывается как отсутствующий.
         val assignment = assignments.getAssignment(localDate) ?: return DayRecapResult.NotFound
 
-        val slots = progress.getAttempts(localDate)
-            .sortedBy { it.slotIndex }
-            .map { outcomeOf(it) }
+        val attempts = progress.getAttempts(localDate).associateBy { it.slotIndex }
+        val slots = (0 until SLOTS_PER_DAY).map { slotIndex -> outcomeOf(slotIndex, attempts[slotIndex]) }
 
-        val displayed = streaks(today)
         val completed = progress.getCompletedDates()
+        // Якорь — localDate, а не today: серия, закончившаяся этим днём, — свойство дня.
+        val streakAtDay = StreakCalculator.streaks(completed.filter { it <= localDate }, localDate).current
+        val bestBeforeDay = StreakCalculator.bestStreak(completed.filter { it < localDate })
 
         return DayRecapResult.Content(
             localDate = localDate,
@@ -49,49 +55,44 @@ class GetDayRecapUseCase @Inject constructor(
             totalScore = dayResult.totalScore,
             isComplete = dayResult.isComplete,
             slots = slots,
-            currentStreak = displayed.current,
-            bestStreak = displayed.best,
-            isRecordUpdated = isRecordUpdated(localDate, dayResult.isComplete, completed),
+            streakAtDay = if (dayResult.isComplete) streakAtDay else null,
+            isRecordUpdated = isRecordUpdated(localDate, dayResult.isComplete, completed, streakAtDay, bestBeforeDay),
         )
     }
 
     /**
-     * Строк ровно столько, сколько записанных попыток: незаписанные слоты не
-     * синтезируются. Пустой `submittedOrder` здесь — ФАКТ ХРАНЕНИЯ («порядок не
-     * отправлялся»), а не управляющий сигнал: он влияет только на выбор представления.
+     * Пустой `submittedOrder` здесь — ФАКТ ХРАНЕНИЯ («порядок не отправлялся»), а не
+     * управляющий сигнал: он влияет только на выбор представления.
      */
-    private suspend fun outcomeOf(attempt: PuzzleAttempt): SlotOutcome {
+    private suspend fun outcomeOf(slotIndex: Int, attempt: PuzzleAttempt?): SlotOutcome {
+        if (attempt == null) return SlotOutcome.NotPlayed(slotIndex)
+
+        // Пропуск: показать нечего, головоломка не читается вовсе.
+        if (attempt.submittedOrder.isEmpty()) return SlotOutcome.Unavailable(slotIndex, attempt.score)
+
+        // puzzleId — ИЗ ПОПЫТКИ. Отозванная головоломка остаётся Played: строка не
+        // удаляется, и её результат показывается целиком (I5-D11).
         val puzzle = puzzles.getPuzzle(attempt.puzzleId)
-        val playable = puzzle != null && puzzle.isPlayable() && attempt.submittedOrder.isNotEmpty()
-        return if (playable) {
-            SlotOutcome.Played(attempt.slotIndex, attempt.score, puzzle.category)
+        return if (puzzle != null && puzzle.isPlayable()) {
+            SlotOutcome.Played(slotIndex, attempt.score, puzzle.category)
         } else {
-            // Не «ноль»: тот же вариант получает отвеченная головоломка, которую нечем
-            // показать, и её фактический score обязан быть виден.
-            SlotOutcome.Unavailable(attempt.slotIndex, attempt.score)
+            // Не «ноль»: отвеченная головоломка, которую нечем показать, сохраняет свой
+            // фактический счёт.
+            SlotOutcome.Unavailable(slotIndex, attempt.score)
         }
     }
 
     /**
-     * «Этот день установил рекорд», а не «сегодня повторён прежний» (I3-D46).
-     *
-     * `today` в расчёте НЕ участвует: серия, закончившаяся этим днём, — свойство самого
-     * дня, и от момента просмотра и от более поздних результатов не зависит.
+     * «Этот день установил рекорд», а не «сегодня повторён прежний» (I3-D46): серия,
+     * закончившаяся этим днём, строго длиннее лучшей серии, существовавшей до него.
      */
     private fun isRecordUpdated(
         localDate: LocalDate,
         isComplete: Boolean,
         completed: List<LocalDate>,
-    ): Boolean {
-        val completedThroughDay = completed.filter { it <= localDate }
-        val completedBeforeDay = completed.filter { it < localDate }
-
-        // Якорь — localDate, а не today.
-        val streakAtDay = StreakCalculator.streaks(completedThroughDay, localDate).current
-        val bestBeforeDay = StreakCalculator.bestStreak(completedBeforeDay)
-
-        return isComplete && localDate in completed && streakAtDay > bestBeforeDay
-    }
+        streakAtDay: Int,
+        bestBeforeDay: Int,
+    ): Boolean = isComplete && localDate in completed && streakAtDay > bestBeforeDay
 
     private companion object {
         const val DAY_NUMBER_OFFSET = 1

@@ -79,7 +79,7 @@ class FullDayFlowTest {
         assertEquals("чистая установка начинает с первого набора", 0, setIndex)
         assertEquals("день закрыт ровно тремя попытками", SLOTS_PER_DAY, driver.attemptCount())
 
-        composeTestRule.onNodeWithTag(DayRecapTestTags.DONE_BUTTON).performClick()
+        composeTestRule.onNodeWithTag(DayRecapTestTags.PRIMARY_BUTTON).performClick()
         driver.awaitRoute(Destinations.HOME)
 
         // Completed: основное действие Home — «Посмотреть итог», а не «Играть».

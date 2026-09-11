@@ -48,6 +48,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import java.time.LocalDate
 import ru.poporyadku.R
+import ru.poporyadku.ui.archive.ArchiveEffect
+import ru.poporyadku.ui.archive.ArchiveScreen
+import ru.poporyadku.ui.archive.ArchiveViewModel
 import ru.poporyadku.ui.home.HomeEffect
 import ru.poporyadku.ui.home.HomeScreen
 import ru.poporyadku.ui.home.HomeViewModel
@@ -64,9 +67,13 @@ import ru.poporyadku.ui.theme.Sizing
 import ru.poporyadku.ui.theme.Spacing
 
 /**
- * Граф приложения. После PR 3D настоящие все четыре экрана игрового дня — `Home`,
- * `Puzzle`, `PuzzleResult` и `DayRecap`; заглушками итерации 1 остаются только
- * `Archive` и `Settings`.
+ * Граф приложения. Настоящие экраны — `Home`, `Puzzle`, `PuzzleResult`, `DayRecap` и
+ * (с PR 5B) `Archive`; заглушкой итерации 1 остаётся только `Settings` (PR 5C).
+ *
+ * `DayRecap` и `PuzzleResult` существуют в двух вариантах по аргументу `origin`
+ * (ITERATION_5_DESIGN.md, §3.7, §7): сессионный — игровая цепочка, архивный — бэкстек
+ * `home → archive → recap/{D}?origin=archive → puzzle/{i}/result?date={D}&origin=archive`.
+ * Ни один архивный путь не строит маршрут `puzzle/{slotIndex}?date=`.
  *
  * ViewModel создаются **только здесь**, на route-уровне, через `hiltViewModel()`:
  * сами экраны stateless и в Compose-тестах работают без Hilt (I3-D31).
@@ -104,10 +111,11 @@ fun AppNavHost(
 
         composable(
             route = Destinations.PUZZLE_RESULT,
-            arguments = puzzleArguments(),
+            arguments = puzzleArguments() + originArgument(),
         ) { backStackEntry ->
             PuzzleResultRoute(
                 navController = navController,
+                entry = backStackEntry,
                 slotIndex = backStackEntry.slotIndex(),
                 sessionDate = backStackEntry.sessionDateOrNull(),
             )
@@ -115,16 +123,16 @@ fun AppNavHost(
 
         composable(
             route = Destinations.RECAP,
-            arguments = listOf(navArgument(Destinations.ARG_DATE) { type = NavType.StringType }),
-        ) {
-            DayRecapRoute(navController)
+            arguments = listOf(
+                navArgument(Destinations.ARG_DATE) { type = NavType.StringType },
+                originArgument(),
+            ),
+        ) { backStackEntry ->
+            DayRecapRoute(navController, backStackEntry)
         }
 
-        composable(Destinations.ARCHIVE) {
-            ArchiveStubScreen(
-                onBackClick = { navController.popBackStack() },
-                onOpenRecapClick = { navController.navigate(Destinations.recap(SampleArchiveDate)) },
-            )
+        composable(Destinations.ARCHIVE) { backStackEntry ->
+            ArchiveRoute(navController, backStackEntry)
         }
 
         composable(Destinations.SETTINGS) {
@@ -149,6 +157,17 @@ private fun puzzleArguments() = listOf(
         nullable = true
     },
 )
+
+/**
+ * `origin` итога и результата (ITERATION_5_DESIGN.md, §7.1, I5-D8) — тем же приёмом,
+ * что `date`: `nullable = true` без `defaultValue`. Отсутствие означает сессию, а
+ * значение по умолчанию было бы тихой подстановкой; разбор и отказ неизвестного
+ * значения — во ViewModel экрана.
+ */
+private fun originArgument() = navArgument(Destinations.ARG_ORIGIN) {
+    type = NavType.StringType
+    nullable = true
+}
 
 // --- Home ------------------------------------------------------------------
 
@@ -201,10 +220,58 @@ private fun HomeRoute(navController: NavHostController) {
     )
 }
 
+// --- Archive ---------------------------------------------------------------
+
+/**
+ * Route-контейнер архива (ITERATION_5_DESIGN.md, §6.11): одна ViewModel, ровно один
+ * lifecycle-aware коллектор эффектов, `ON_START` — вызов `onScreenStarted()`, как у Home.
+ */
+@Composable
+private fun ArchiveRoute(navController: NavHostController, entry: NavBackStackEntry) {
+    val viewModel: ArchiveViewModel = hiltViewModel()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner, viewModel) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_START) viewModel.onScreenStarted()
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+
+    LaunchedEffect(viewModel, lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.effects.collect { effect ->
+                // Все эффекты архива — нажатия: второе быстрое нажатие, успевшее попасть в
+                // канал, после первого перехода находит другую запись и отбрасывается.
+                if (!navController.isCurrent(entry)) return@collect
+                when (effect) {
+                    is ArchiveEffect.OpenDay ->
+                        navController.navigate(Destinations.archivedRecap(effect.localDate))
+
+                    ArchiveEffect.NavigateBack -> navController.popBackOrHome()
+
+                    // «К заданию дня» из Empty — существующий Home, а не второй.
+                    ArchiveEffect.NavigateHome -> navController.leaveToHome()
+                }
+            }
+        }
+    }
+
+    ArchiveScreen(state = state, onEvent = viewModel::onEvent)
+}
+
 // --- DayRecap --------------------------------------------------------------
 
+/**
+ * Один экран, два варианта по `origin` (I5-D8). Сессионный выход — существующий Home
+ * (`popBackStack(HOME, false)`), архивный — `popBackStack()` к архиву, лежащему
+ * непосредственно ниже; системная «назад» даёт то же самое сама. Все эффекты итога —
+ * нажатия, поэтому выполняются только с текущей записи.
+ */
 @Composable
-private fun DayRecapRoute(navController: NavHostController) {
+private fun DayRecapRoute(navController: NavHostController, entry: NavBackStackEntry) {
     val viewModel: DayRecapViewModel = hiltViewModel()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -212,11 +279,18 @@ private fun DayRecapRoute(navController: NavHostController) {
     LaunchedEffect(viewModel, lifecycleOwner) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.effects.collect { effect ->
+                if (!navController.isCurrent(entry)) return@collect
                 when (effect) {
                     // «Готово» и системная «назад» дают один и тот же результат — Home,
                     // а не второй его экземпляр.
-                    DayRecapEffect.NavigateHome ->
-                        navController.popBackStack(Destinations.HOME, inclusive = false)
+                    DayRecapEffect.NavigateHome -> navController.leaveToHome()
+
+                    DayRecapEffect.NavigateBack -> navController.popBackOrHome()
+
+                    // Только архив и только Played: исторический результат, а не игра.
+                    is DayRecapEffect.OpenResult -> navController.navigate(
+                        Destinations.archivedPuzzleResult(effect.slotIndex, effect.localDate),
+                    )
                 }
             }
         }
@@ -312,10 +386,18 @@ private fun NavHostController.navigateFromPuzzle(
 
 // --- PuzzleResult ----------------------------------------------------------
 
-/** Тот же контракт, что у [PuzzleRoute]: одна ViewModel, один коллектор эффектов. */
+/**
+ * Тот же контракт, что у [PuzzleRoute]: одна ViewModel, один коллектор эффектов.
+ *
+ * Архивный режим отдаёт только `NavigateBack`: по нажатию он выполняется лишь с текущей
+ * записи (второе быстрое нажатие отбрасывается), а редирект загрузки без кадра
+ * (`Skipped`/`NoAttempt`) этой проверкой не ограничивается (ITERATION_5_DESIGN.md, §6.11).
+ * Сессионные переходы сохраняют поведение итерации 3.
+ */
 @Composable
 private fun PuzzleResultRoute(
     navController: NavHostController,
+    entry: NavBackStackEntry,
     slotIndex: Int,
     sessionDate: LocalDate?,
 ) {
@@ -326,7 +408,12 @@ private fun PuzzleResultRoute(
     LaunchedEffect(viewModel, lifecycleOwner) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.effects.collect { effect ->
-                navController.navigateFromPuzzleResult(effect, slotIndex, sessionDate)
+                if (effect is PuzzleResultEffect.NavigateBack) {
+                    if (!effect.isRedirect && !navController.isCurrent(entry)) return@collect
+                    navController.popBackOrHome()
+                } else {
+                    navController.navigateFromPuzzleResult(effect, slotIndex, sessionDate)
+                }
             }
         }
     }
@@ -334,6 +421,7 @@ private fun PuzzleResultRoute(
     PuzzleResultScreen(state = state, onEvent = viewModel::onEvent)
 }
 
+/** Сессионные переходы результата — правила бэкстека итерации 3 без изменений. */
 private fun NavHostController.navigateFromPuzzleResult(
     effect: PuzzleResultEffect,
     slotIndex: Int,
@@ -360,6 +448,9 @@ private fun NavHostController.navigateFromPuzzleResult(
             }
 
         PuzzleResultEffect.NavigateHome -> leaveToHome()
+
+        // Архивный возврат выполняет route-контейнер до этой функции.
+        is PuzzleResultEffect.NavigateBack -> popBackOrHome()
     }
 }
 
@@ -368,14 +459,23 @@ private fun NavHostController.leaveToHome() {
     popBackStack(Destinations.HOME, false)
 }
 
-// --- Заглушки итерации 1 ---------------------------------------------------
+/**
+ * Возврат на экран ниже. Если снимать нечего (стек повреждён), — существующий Home: он
+ * всегда в основании стека (ITERATION_5_DESIGN.md, §7.2).
+ */
+private fun NavHostController.popBackOrHome() {
+    if (!popBackStack()) leaveToHome()
+}
 
 /**
- * Итерация 1 не имеет архивных данных — эта дата иллюстративна и служит только для
- * проверки перехода `Archive -> recap/{date}`. Реальный список дней появится в
- * итерации 5 вместе с `ArchiveScreen`/`GetArchiveUseCase`.
+ * Пользовательская навигация выполняется, только пока запись экрана — текущая (I5-D24):
+ * эффект второго быстрого нажатия, успевший попасть в канал, после первого перехода
+ * находит другую запись и отбрасывается.
  */
-private val SampleArchiveDate: LocalDate = LocalDate.of(2026, 8, 25)
+private fun NavHostController.isCurrent(entry: NavBackStackEntry): Boolean =
+    currentBackStackEntry?.id == entry.id
+
+// --- Аргументы маршрутов и заглушка итерации 1 -------------------------------
 
 /**
  * Сессионная дата маршрута — **без** запасного варианта: подмены на «сегодня» или на
@@ -489,33 +589,6 @@ private fun StubSecondaryButton(
 /** Стабильные testTag заглушек для `AppNavHostTest` — не производственное поведение. */
 private object TestTags {
     const val GENERIC_BACK_BUTTON = "stub_generic_back_button"
-    const val ARCHIVE_OPEN_RECAP_ROW = "archive_open_recap_row"
-}
-
-@Composable
-private fun ArchiveStubScreen(
-    onBackClick: () -> Unit,
-    onOpenRecapClick: () -> Unit,
-) {
-    StubScaffold(
-        title = stringResource(R.string.stub_archive_title),
-        onBackClick = onBackClick,
-    ) {
-        Text(
-            text = stringResource(R.string.stub_placeholder_caption),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        StubSecondaryButton(
-            // Реальная ISO-дата, без сентинела (I3-D23).
-            text = stringResource(
-                R.string.stub_archive_open_recap,
-                Destinations.serialize(SampleArchiveDate),
-            ),
-            onClick = onOpenRecapClick,
-            modifier = Modifier.testTag(TestTags.ARCHIVE_OPEN_RECAP_ROW),
-        )
-    }
 }
 
 @Composable

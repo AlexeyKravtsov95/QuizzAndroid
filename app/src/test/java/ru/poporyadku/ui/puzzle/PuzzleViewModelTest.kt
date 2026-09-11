@@ -20,6 +20,7 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import ru.poporyadku.data.content.FakeUserPreferencesRepository
 import ru.poporyadku.domain.shuffle.DeterministicShuffler
 import ru.poporyadku.domain.usecase.GetPuzzleUseCase
 import ru.poporyadku.domain.usecase.PuzzleErrorKind
@@ -572,7 +573,9 @@ class PuzzleViewModelTest {
 
     private fun createViewModel(handle: SavedStateHandle) = PuzzleViewModel(
         getPuzzle = GetPuzzleUseCase(content, assignments, sets, puzzles, progress),
-        submitAnswer = SubmitAnswerUseCase(assignments, sets, puzzles, progress),
+        // FakeProgress не хранит day_results: день для флага первого дня никогда не
+        // завершён, и настройки SubmitAnswerUseCase здесь не читаются вовсе.
+        submitAnswer = SubmitAnswerUseCase(assignments, sets, puzzles, progress, FakeUserPreferencesRepository()),
         savedStateHandle = handle,
     )
 
