@@ -42,13 +42,17 @@ app/
         ProgressRepository.kt
       prefs/
         UserPreferencesRepository.kt   // DataStore
+        SettingsWriteQueue.kt          // очередь записи настроек: один worker в scope приложения (ADR-018)
       repository/
         PuzzleRepositoryImpl.kt
         DailySetRepositoryImpl.kt
         ArchiveRepositoryImpl.kt      // строгое отображение строки архива: проверки до модели
+        PlayedSourcesRepositoryImpl.kt // источники сыгранных головоломок: только Room, строгий разбор
     domain/
-      model/                    // TodayState, TodayStats, ArchiveDay, Statistics, InstalledContentVersion
-      repository/               // интерфейсы репозиториев, в том числе ArchiveRepository (probe, observeWindow)
+      model/                    // TodayState, TodayStats, ArchiveDay, Statistics, InstalledContentVersion,
+                                // SettingKey/SettingMutation — команды записи настроек
+      repository/               // интерфейсы репозиториев, в том числе ArchiveRepository (probe, observeWindow),
+                                // SettingsWriter (очередь записи), PlayedSourcesRepository
       usecase/
         GetTodayStateUseCase.kt
         GetPuzzleUseCase.kt
@@ -59,6 +63,8 @@ app/
         GetArchiveUseCase.kt          // разведка страницы LIMIT 51 и наблюдаемое окно архива
         GetStatisticsUseCase.kt       // поток статистики архива поверх observeDayResults()
         GetInstalledContentVersionUseCase.kt  // отметка установленного контента из DataStore
+        GetPlayedSourcesUseCase.kt    // источники сыгранных головоломок одним списком
+        SourceCatalog.kt              // дедупликация по url | (reference, title), русская коллация
       scoring/
         PairwiseScoreCalculator.kt
         StreakCalculator.kt
@@ -69,18 +75,23 @@ app/
       shuffle/
         DeterministicShuffler.kt
     ui/
-      theme/                    // Color, Type, Shape, PoPoRyadkuTheme
+      theme/                    // Color, Type, Shape, PoPoRyadkuTheme, AppThemeViewModel, resolveDark
       components/               // OrderableCard, DragHandle, MoveButtons, ScoreBadge,
-                                // ArchiveRow, DayResultRow (notPlayed), RetiredNotice
-      navigation/               // AppNavHost, Destinations, RouteOrigin (Session | Archive)
+                                // ArchiveRow, DayResultRow (notPlayed), RetiredNotice,
+                                // SourceRow (через ExternalApps), ReportInaccuracyAction
+      navigation/               // AppNavHost, Destinations (+ sources), RouteOrigin (Session | Archive)
+      platform/                 // ExternalApps, AndroidExternalApps, LocalExternalApps — единственное место
+                                // внешних Intent (ADR-018)
+      report/                   // ReportContext, MailDraft, ReportMailComposer, MailtoUri (RFC 6068),
+                                // шаблоны письма из ресурсов
       home/                     // HomeScreen, HomeViewModel, HomeUiState
       puzzle/                   // PuzzleScreen, PuzzleViewModel, PuzzleUiState, PuzzleEvent
       puzzleresult/             // + ResultRoute: date, slotIndex и origin маршрута результата
       recap/                    // один экран, сессионный и архивный варианты по origin
       archive/                  // ArchiveScreen, ArchiveViewModel (keyset-пагинация), State/Event/Effect, ArchiveFormat
-      settings/
-      share/                    // ShareCardBuilder, шеринг через Intent
-      feedback/                 // ReportInaccuracyIntentBuilder (mailto)
+      settings/                 // SettingsScreen, SettingsViewModel, строки настроек, «О приложении»
+      sources/                  // SourcesScreen, SourcesViewModel — источники сыгранных головоломок
+      share/                    // ShareCardBuilder, шеринг через ExternalApps (PR 5D)
     notifications/
       DailyReminderScheduler.kt
       ReminderWorker.kt
@@ -291,6 +302,7 @@ ViewModel   ──▶  Channel<UiEffect>   (навигация, шеринг, т
 - один `StateFlow<UiState>` на экран, собираемый через `collectAsStateWithLifecycle()`;
 - `UiState` — `sealed interface` там, где состояния взаимоисключающие (Home), и `data class` с полями там, где они комбинируются (Settings);
 - побочные однократные действия (навигация, `Intent` шеринга) идут через `Channel`/`SharedFlow` эффектов, а не через поля состояния;
+- **владение Android-интентами** (ADR-018, `ITERATION_5_DESIGN.md`, §8.1): внешние действия — письмо, ссылка, в PR 5D шеринг — создаёт и запускает только `ui/platform/AndroidExternalApps` за интерфейсом `ExternalApps` без Android-типов в сигнатурах. ViewModel отдаёт эффектом только данные (например, `ComposeReport(ReportContext)`), route-контейнер собирает эффект единственным lifecycle-aware коллектором и вызывает `ExternalApps` — только пока запись бэкстека экрана текущая. Единственное исключение — ссылка `SourceRow`: у неё нет данных для ViewModel, и строка вызывает `ExternalApps.viewUrl` из обработчика нажатия. `Intent`, `Uri`, `PackageManager` в `domain` и во ViewModel не появляются;
 - Composable-функции не имеют доступа к ViewModel глубже уровня экрана: вложенные компоненты получают состояние и лямбды.
 
 ### Игровой экран: состояния и события
@@ -495,6 +507,8 @@ object SetAssignmentPolicy {
 | Room-запросы для экранов | `Flow<T>` из DAO |
 | Разовые записи (submit) | `suspend fun` |
 | Настройки | `Flow<UserPreferences>` из DataStore |
+| Запись настроек с экрана | команды `SettingMutation` в application-scoped очереди `SettingsWriteQueue`: `Channel(UNLIMITED)`, один worker в `@ApplicationScope CoroutineScope(SupervisorJob() + Dispatchers.Default)`, строго в порядке `submit`; атомарная граница — один `edit` DataStore одного ключа; ошибки — множество ключей `failedKeys`; `NonCancellable` не используется (ADR-018) |
+| Тема корня | `AppThemeViewModel.themeMode: StateFlow<ThemeMode?>`, `SharingStarted.Eagerly`; до первой эмиссии корень экраны не компонует |
 | Состояние экрана | `stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), Initial)` |
 | Импорт контента | `suspend fun` на `Dispatchers.Default`, вызывается один раз при старте |
 | Планирование уведомлений | WorkManager, без корутин в API |
@@ -997,3 +1011,16 @@ Python-половина сверки с векторами выполнена в
 **Альтернативы.** (а) `LIMIT/OFFSET` — новая строка сверху между подгрузками сдвигает смещения, и последняя строка страницы k приходит ещё раз в странице k + 1 (дубль); стоимость запроса растёт со смещением, а в конце списка нужен лишний пустой запрос. (б) Наблюдаемый префикс с растущим `LIMIT 50·k + 1` — новая строка сверху выталкивает самую старую загруженную строку из списка до следующей подгрузки (пропуск). (в) Paging 3 — новая зависимость, `PagingSource` и адаптер для Compose ради списка в сотни строк; `UX_FLOW.md` §7 прямо говорит, что пагинация в смысле библиотеки не нужна.
 
 **Последствия.** Плюс: ни дублей, ни пропусков, когда день сыгран между подгрузками; пустого запроса в конце нет — на 50 строках одна разведка, на 100 две; повтор после ошибки помнит только нижнюю границу, уже показанное не сбрасывается; оба запроса идут по первичным ключам `local_date`, без новых индексов и без миграции (схема версии 1). Минус: пока экран подписан, окно перечитывается целиком при каждой записи в любую из двух таблиц — за год это соединение ~365 строк по первичным ключам, доли миллисекунды. Закреплено тестами `I5-A6`, `I5-A7`; `rg -n "LIMIT.*OFFSET" app/src/main/java/ru/poporyadku/data/db/dao` пуст.
+
+### ADR-018. Граница внешних Android-действий и очередь записи настроек
+
+**Контекст.** Итерация 5 добавляет первые внешние действия приложения — письмо «Сообщить о неточности» и (уже существовавший) переход по ссылке источника; PR 5D добавит системный шеринг. До PR 5C `SourceRow` вызывал `resolveActivity` и `context.startActivity` прямо в обработчике нажатия, без перехвата `ActivityNotFoundException`/`SecurityException` и без защиты от двойного нажатия. Тогда же появляется первый экран, который пишет настройки: пользователь, выключивший звук и сразу нажавший «Назад», не должен найти звук включённым, а быстрые переключения разных настроек не должны терять или перетирать ошибки друг друга.
+
+**Решение** (`ITERATION_5_DESIGN.md`, §3.9, §5.5, §8.1, **I5-D15**, **I5-D19**).
+
+1. **Внешние действия — только за `ExternalApps`** (`ui/platform`): `canViewUrl`/`viewUrl`, `canComposeEmail`/`composeEmail` (в PR 5D — `shareText`), без Android-типов в сигнатурах. Единственная реализация `AndroidExternalApps` — единственное место `src/main`, где создаются и запускаются внешние `Intent`: перед запуском проверяет обработчик (`resolveActivity`; на API 30+ видимость дают `<queries>` манифеста — `VIEW http/https`, `SENDTO mailto`), перехватывает `ActivityNotFoundException` → `NoHandler`, `SecurityException` и прочие отказы → `Failed`, исключения наружу не выпускает. Второй запуск раньше возврата на экран (`ON_RESUME`) и раньше 1000 мс — `Suppressed`; время фиксирует только успешный `startActivity`. Экземпляр один на Activity: его создаёт `MainActivity` и отдаёт экранам через `LocalExternalApps`; тесты подставляют фейк. ViewModel отдаёт только данные эффектом, запускает route-контейнер при сборе эффекта.
+2. **Запись настроек — application-scoped очередь** `SettingsWriteQueue` (`@Singleton`, `SettingsWriter` в `domain`): одна очередь `Channel<SettingMutation>(UNLIMITED)` и ровно один worker в `@ApplicationScope`-scope процесса. Команда — ровно один существующий сеттер `UserPreferencesRepository`, то есть один `edit` одного ключа; команды выполняются строго в порядке `submit`, не объединяются и не переставляются. Успех снимает ошибку только своего ключа, отказ добавляет только свой ключ в `failedKeys: StateFlow<Set<SettingKey>>`; `CancellationException` пробрасывается и ошибкой не становится. `submit` не `suspend` и не бросает; ViewModel собственных корутин записи не имеет, экран показывает только подтверждённое DataStore значение.
+
+**Альтернативы.** (а) `startActivity` в компонентах и ViewModel — каждый вызов заново решает перехват исключений и двойное нажатие, а ViewModel начинает зависеть от Android. (б) Отдельный PR под границу без потребителя — API без потребителя проект не принимает. (в) Запись настроек корутиной `viewModelScope` под `NonCancellable` — пересекающиеся записи разных ключей завершаются в произвольном порядке и перетирают ошибки друг друга, а `NonCancellable` лишь маскирует владение записью. (г) Оптимистичное переключение с откатом — экран на время показывает значение, которого может не оказаться в хранилище.
+
+**Последствия.** Плюс: одно место для перехвата отказов, защиты от повторного запуска и объявлений `<queries>`; ни одно внешнее действие не роняет экран; Compose-тесты проверяют доступность и запуск фейком без Robolectric-теней; уход с экрана принятую запись не отменяет, ошибки ключей независимы и детерминированы. Минус: ещё один `CompositionLocal` и один application-scoped синглтон; команды, не дошедшие до `edit` к смерти процесса, теряются — после перезапуска экран честно показывает прежнее значение. Закреплено тестами `I5-P1`, `I5-C13`, `I5-C14`, `I5-V20`…`I5-V24`; `rg -n startActivity app/src/main/java/ru/poporyadku/ui` находит только `ui/platform/AndroidExternalApps.kt`, `rg -n NonCancellable` в `ui/settings` и `data/prefs` пуст.
