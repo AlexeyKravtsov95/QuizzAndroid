@@ -1,6 +1,14 @@
 # ITERATION_5_DESIGN.md — «По порядку!»
 
-Техническое проектирование итерации 5 «Архив, статистика, настройки, шеринг». Статус: **ревизия 1.0, готова к архитектурному ревью**, 2026-09-11. Документ не утверждён: решения, вынесенные в раздел 13, требуют ответа владельца проекта до мержа указанных там PR.
+Техническое проектирование итерации 5 «Архив, статистика, настройки, шеринг». Статус: **ревизия 1.1, готова к финальному архитектурному подтверждению**, 2026-09-11. Документ не утверждён: решения, вынесенные в раздел 13, требуют ответа владельца проекта до мержа указанных там PR.
+
+**Что изменилось в ревизии 1.1** (точечные исправления по итогам ревью ревизии 1.0; архитектура итерации и состав PR 5A–5E не меняются):
+
+- **загрузка `DayRecap` отделена от записей DataStore** (новое **I5-D31**, правки I5-D25): `hasCompletedFirstDay` пишет `SubmitAnswerUseCase` в момент фактического завершения первого дня, best-effort; `DayRecapViewModel` не пишет ничего, `GetDayRecapUseCase` больше не вызывает `GetStreaksUseCase`, поэтому отказ DataStore не может заменить готовый итог на `NotFound`; тесты `I5-R6`, `I5-V35` (разделы 3.7, 6.3, 6.8, 6.12);
+- **порядок инициализации `SoundPool`** (I5-D23): listener регистрируется до первого `load()`, воспроизведение — только после `status == 0`, `release()` ровно один раз; логика вынесена в `SoundCueBank` над узкой границей `SoundEngine`; `I5-F2` расширен (разделы 3.14, 8.2);
+- **записи настроек детерминированы** (I5-D15): одна очередь `SettingMutation` с одним worker в application-scoped `SettingsWriteQueue`, ошибки — множеством ключей, снимаются только успешной записью того же ключа, `NonCancellable` не используется; `SettingsState.writeFailures`, `I5-V20`…`I5-V22`, `I5-V24` (разделы 3.9, 4.5, 5.5, 6.9, 8.5);
+- **строгий mapper строки архива**: `setIndex ∈ 0 until Int.MAX_VALUE`, `total_score ≤ 6 × completed_count`, `dayNumber` — только после проверок; `I5-S8` расширен (разделы 3.5, 5.1);
+- синхронизированы тестовая матрица, файлы и критерии PR 5A, 5B, 5C, 5E, риски и план правок документов.
 
 Документ дополняет `IMPLEMENTATION_PLAN.md` (итерация 5) и не заменяет его: план говорит **что** делает итерация, этот документ — **как**, **в каком порядке**, **какими типами и запросами**, и закрывает вопросы, на которые утверждённые документы отвечают противоречиво или не отвечают вовсе.
 
@@ -85,7 +93,7 @@
 | `UserPreferencesRepository` | `preferences: Flow<UserPreferences>`, сеттеры звука, вибрации, темы и др.; `IOException` чтения → значения по умолчанию | используется как есть; дублирующих API не создаётся |
 | `UserPreferences` | `soundEnabled` (умолч. `true`), `vibrationEnabled` (`true`), `themeMode` (`SYSTEM`), `storedContentVersion`, `storedContentFingerprint`, `streakCache` | источник настроек и установленной версии контента |
 | `GetTodayStateUseCase` | `TodayStats(streaks, bestDayScore = max total_score, playedDayCount = строк day_results, completedDayCount)` | статистика архива обязана совпадать с ним; оба считаются одним калькулятором (I5-D5) |
-| `GetStreaksUseCase` | единственный писатель `StreakCache` | архив кэш не пишет |
+| `GetStreaksUseCase` | единственный писатель `StreakCache`; вызывается расчётом Home и `GetDayRecapUseCase` | архив кэш не пишет; из `GetDayRecapUseCase` вызов убирается (I5-D31) — кэш пишет только расчёт Home |
 | `StreakCalculator` | `streaks(completedDates, today)`, будущие даты — вне текущей серии, внутри лучшей | вход — только завершённые даты |
 | `GetDayRecapUseCase` | `slots` — только слоты с попыткой; `currentStreak`/`bestStreak` — на `today`; `isRecordUpdated` — от `localDate` | расширяется: три слота, серия этого дня (I5-D9) |
 | `GetPuzzleResultUseCase` | `puzzleId` берётся из попытки, `daily_sets` не читается | исторический результат уже защищён от подмены ротацией; добавляется признак отзыва (I5-D11) |
@@ -97,7 +105,7 @@
 | `AppNavHost` | реальные `Home`, `Puzzle`, `PuzzleResult`, `DayRecap`; `Archive` и `Settings` — заглушки итерации 1 (`ArchiveStubScreen` с фиксированной датой `2026-08-25`, `SettingsStubScreen`) | заглушки и строки `stub_*` удаляются в 5B/5C |
 | `Destinations` | `home`, `puzzle/{slotIndex}?date=`, `puzzle/{slotIndex}/result?date=`, `recap/{date}`, `archive`, `settings`; сентинела `today` нет | добавляются аргумент `origin` и маршрут `sources` |
 | `HomeViewModel` | `NavigateToArchive` на `ContentExhausted`; иконки архива/настроек — callbacks без ViewModel; иконка архива видна при `completedDayCount > 0` | не меняется |
-| `DayRecapViewModel` | `DateProvider.today()`; `routeDate` из маршрута; эффект только `NavigateHome`; **исключение use case не перехвачено** — отказ базы роняет процесс вместо `recapMissing`, обещанного I3 §18 | чинится в 5B (I5-D25) |
+| `DayRecapViewModel` | `DateProvider.today()`; `routeDate` из маршрута; эффект только `NavigateHome`; **исключение use case не перехвачено** — отказ базы роняет процесс вместо `recapMissing`, обещанного I3 §18; после загрузки в той же корутине пишет `hasCompletedFirstDay` при каждом показе завершённого дня | чинится в 5B (I5-D25, I5-D31) |
 | `DayRecapScreen` | заголовок «Сегодня»/дата по сравнению `localDate == today`; кнопка «Назад» в шапке отсутствует всегда | вариант по происхождению (I5-D8) |
 | `PuzzleResultViewModel` | `readPuzzleRoute()`; `NoAttempt` → `NavigateToPuzzle`; `Skipped` → следующий слот/итог; `puzzleId` в состоянии «для итерации 5» | архивный режим запрещает любой переход в `puzzle/*` |
 | `SourceRow` | три состояния `link`/`urlPlainText`/`referenceOnly`; `resolveActivity` в `remember`, `context.startActivity(intent)` прямо в `clickable` без перехвата исключений | переносится за платформенную границу (I5-D19) |
@@ -145,6 +153,7 @@
 | 15 | `SourceRow` | `startActivity` без перехвата `ActivityNotFoundException`/`SecurityException` | **I5-D19** |
 | 16 | `strings.xml`, `plurals/streak_days` | склонение по правилам локали устройства даёт «21 дней» на английской локали; для текста, уходящего наружу, это недопустимо | **I5-D20**: собственное правило для карточки; экраны не меняются |
 | 17 | `GetPuzzleUseCase` | принимает прошлую дату с незакрытым слотом и отдаёт `Playable`: правило «незавершённый день не доигрывается» держится только навигацией | **I5-D10**: архив никогда не строит `puzzle/*`; запрет прошлой даты в use case невозможен (сессия через полночь законно продолжается на прежней дате, `UX_FLOW.md` §9) |
+| 18 | `DayRecapViewModel.load()`, `GetDayRecapUseCase` | в пути загрузки итога две записи DataStore — `setHasCompletedFirstDay` и `updateStreakCache` через `GetStreaksUseCase`; обёрнутые общим перехватом, они превратили бы отказ DataStore в `NotFound` уже загруженного дня; флаг переписывается при каждом открытии завершённого дня, включая архив | **I5-D31** |
 
 ---
 
@@ -170,7 +179,7 @@
 | I5-D12 | Установленная версия контента — отметка DataStore (`storedContentVersion` при непустом `storedContentFingerprint`), читаемая доменным `GetInstalledContentVersionUseCase` | версия из `manifest.json` в assets; `MAX(content_version)` из Room; константа UI | предложено |
 | I5-D13 | Версия приложения и код сборки — `AppBuildInfo(versionName, versionCode)`, единственный провайдер из `BuildConfig` в `di/AppModule.kt` | чтение `PackageManager.getPackageInfo`; литералы | предложено |
 | I5-D14 | Настройки — один плоский экран: «Звук», «Вибрация», группа «Тема» из трёх строк с радиокнопками, раздел «О приложении» в том же списке, строка «Источники» → отдельный маршрут `sources`, строка «Сообщить о неточности». Напоминания нет | источники встроенным `SourcesBlock` в настройках; «О приложении» отдельным экраном | **требует подтверждения** (O5-4) |
-| I5-D15 | Настройки обновляются по подтверждённой модели: экран показывает только то, что выдал DataStore; сеттер вызывается только из обработчика события; запись — в `NonCancellable`; отказ записи — строка «Не удалось сохранить настройку» под строкой | оптимистичное переключение с откатом | предложено |
+| I5-D15 | Настройки обновляются по подтверждённой модели: экран показывает только то, что выдал DataStore; команды `SettingMutation` уходят в application-scoped очередь `SettingsWriteQueue` с одним worker, который применяет их строго по порядку, по одному `edit` DataStore на команду; ошибки хранятся множеством ключей и снимаются только успешной записью того же ключа; `NonCancellable` не используется; отказ записи — строка «Не удалось сохранить настройку» под строкой своего ключа | оптимистичное переключение с откатом; отдельная корутина `viewModelScope` на запись под `NonCancellable`; одна ошибка на весь экран | предложено |
 | I5-D16 | Тема применяется корнем `MainActivity` через `AppThemeViewModel`; до первой эмиссии настроек корень не компонует экраны (нет вспышки чужой темы); стиль системных панелей переустанавливается при смене разрешённой темы | `isSystemInDarkTheme()` как сейчас; `runBlocking` чтения DataStore | предложено |
 | I5-D17 | Источники — единый дедуплицированный список по **сыгранным (не пропущенным)** головоломкам, включая отозванные; ключ — `url`, при его отсутствии — `reference` + `title`; порядок — русская коллация по `title`, затем ключ; данные — `puzzles.sources_json` из Room | группировка по головоломкам; повторное чтение assets | предложено |
 | I5-D18 | Письмо строит чистый `ReportMailComposer` из шаблонов ресурсов; `mailto:`-URI кодирует чистый `MailtoUri` (RFC 6068, UTF-8, `%20`, `%0D%0A`); получатель — ресурс `feedback_email` | `Uri.Builder`/`URLEncoder` (даёт `+` вместо пробела) | предложено; значение адреса — O5-1 |
@@ -178,14 +187,15 @@
 | I5-D20 | `ShareCardBuilder` — чистый Kotlin в `ui/share`, ровно семь строк, склонение «день» собственным правилом русского языка, формы — из ресурсов, URL передаётся извне. «Поделиться» доступно только у завершённого дня, серия в карточке — серия этого дня | `plurals` по локали устройства; карточка незавершённого дня с «пустыми» слотами | предложено |
 | I5-D21 | Ссылка на приложение — нейтральный непереводимый ресурс `share_app_url` в `res/values/distribution.xml`; в итерации 5 product flavors не вводятся; release input итерации 7 — универсальная landing-страница либо переопределение ресурса в исходниках distribution-сборок | `RU_STORE_URL`; URL в коде builder | предложено; значение — O5-6 |
 | I5-D22 | Отдача: два события (`CardMoved`, `AnswerAccepted`); решение «играть ли звук/вибрацию» принимает `PuzzleViewModel` по настройкам; `AnswerAccepted` — только после `SubmitResult.Recorded(Answered)` | отдача по нажатию «Проверить» до записи; решение в плеере | предложено |
-| I5-D23 | Звук — `SoundPool` (`USAGE_ASSISTANCE_SONIFICATION`) с двумя OGG-ресурсами, объект живёт в `ActivityRetainedComponent` и освобождается при окончательном уничтожении Activity; вибрация — `View.performHapticFeedback` без разрешения `VIBRATE` | `Vibrator`/`VibratorManager`; `ToneGenerator`; экранный `SoundPool` | предложено; звуковые файлы — O5-7 |
+| I5-D23 | Звук — `SoundPool` (`USAGE_ASSISTANCE_SONIFICATION`) с двумя OGG-ресурсами, объект живёт в `ActivityRetainedComponent` и освобождается ровно один раз при окончательном уничтожении Activity; `OnLoadCompleteListener` регистрируется до первого `load()`, звук играет только после `status == 0`; вибрация — `View.performHapticFeedback` без разрешения `VIBRATE` | `Vibrator`/`VibratorManager`; `ToneGenerator`; экранный `SoundPool` | предложено; звуковые файлы — O5-7 |
 | I5-D24 | Эффекты — `Channel(BUFFERED)`, один коллектор на route-контейнер под `repeatOnLifecycle(STARTED)`; пользовательская навигация из новых экранов выполняется только если запись бэкстека экрана — текущая | дебаунс по времени; `SharedFlow` с replay | предложено |
-| I5-D25 | `CancellationException` всегда пробрасывается; отказ первой загрузки — `Error`, отказ следующей страницы или обновления — сохранение уже показанных данных; отказ чтения итога — `recapMissing` | терминальный `catch` потока; очистка списка при ошибке | предложено |
+| I5-D25 | `CancellationException` всегда пробрасывается; отказ первой загрузки — `Error`, отказ следующей страницы или обновления — сохранение уже показанных данных; отказ чтения итога — `recapMissing`, и только он: `NotFound` означает отсутствие или непригодность данных дня, а не отказ DataStore | терминальный `catch` потока; очистка списка при ошибке | предложено |
 | I5-D26 | Все новые пользовательские тексты — в `strings.xml`; строки заглушек `stub_*` удаляются; предлагаемые формулировки, которых нет в утверждённых документах, перечислены в разделе 13.3 | литералы в Compose-коде | предложено; тексты — O5-8 |
 | I5-D27 | Чтение `StreakCache` для первого кадра Home (O-1 итерации 3) не реализуется: архив читает Room, кэш остаётся «только запись» | чтение кэша в `Home.Loading` | предложено |
 | I5-D28 | Идентификаторы тестов итерации 5 несут префикс `I5-` и привязаны к PR и критерию (раздел 10) | общие имена без префикса | предложено |
 | I5-D29 | Замер `I4-C6` остаётся пунктом release-readiness итерации 7 и не входит ни в один критерий итерации 5 | засчитать эмуляторный замер | предложено |
 | I5-D30 | Новые визуальные элементы (строка архива, `notPlayed` и интерактивность `DayResultRow`, пометка отзыва, группа темы, раздел «О приложении», экран источников) добавляются в `COMPONENTS.md` state sheets до кода соответствующего PR | импровизация в коде | **требует подтверждения** (O5-9) |
+| I5-D31 | `hasCompletedFirstDay` устанавливается в момент фактического завершения дня: `SubmitAnswerUseCase` после записи попытки, если `day_results.is_complete` и флаг ещё `false`; запись best-effort и на `SubmitResult` не влияет. `DayRecapViewModel` флаг не пишет и `UserPreferencesRepository` не инжектирует; `GetDayRecapUseCase` не вызывает `GetStreaksUseCase` — путь загрузки итога не содержит записей DataStore | запись флага при каждом показе завершённого дня в `DayRecap`, в том числе из архива | предложено |
 
 ### 3.1 Разрез на PR (I5-D1)
 
@@ -195,6 +205,8 @@
 - **Платформенная граница** `ExternalApps` появляется в **5C** вместе с первыми потребителями — письмом и ссылками источников; 5D добавляет в неё `shareText`.
 - **Применение темы** в `MainActivity` — часть 5C: переключатель темы без применения был бы неработающей настройкой.
 - **Серия этого дня** (`streakAtDay`) вводится в 5B, потому что её показывает архивный итог; 5D берёт то же поле для карточки.
+- **Флаг первого завершённого дня** переезжает в `SubmitAnswerUseCase` в 5B — тем же PR, что убирает записи DataStore из загрузки итога (I5-D31).
+- **Очередь записи настроек** `SettingsWriteQueue` появляется в 5C вместе с первым потребителем — экраном настроек (I5-D15).
 - Каждый PR синхронизирует документы своей области (раздел 12); 5E выполняет финальную сверку и обновляет статус итерации.
 
 Иной разрез не требуется: зависимость 5B → 5A жёсткая (UI читает API архива), 5C/5D/5E зависят от 5B только через общий `AppNavHost` и `DayRecap`, и их можно ревьюировать независимо.
@@ -314,7 +326,7 @@
 4. **«Лучший день» — максимальный фактически записанный дневной балл по всем дням**, включая незавершённые, — ровно как Home (`TodayStats.bestDayScore`). Показывается только значение; дата не показывается и в доменной модели не хранится. Правило ничьей поэтому не нужно: при равенстве баллов показываемое значение одно и то же. Асимметрия с п. 2 намеренна: максимум незавершённым днём почти никогда не определяется (частичный день ≤ 12), а среднее смещается каждым таким днём.
 5. **`StreakCalculator` получает только завершённые даты** (`is_complete = 1`), как Home и I3-D11. Серия «про присутствие», пропуск и незавершённый день её прерывают.
 6. **Будущие даты** (сыграно при переведённых вперёд часах, затем часы вернули): входят в `playedDays`, среднее и лучший день — это реально сыгранные дни; в текущую серию не входят, в лучшую входят (I3-D11). Home считает так же.
-7. **Испорченные данные**: неразбираемая дата, `total_score ∉ 0..18`, `completed_count ∉ 1..3` или `is_complete ≠ (completed_count == 3)` — нарушение инвариантов записи (`ProgressRepositoryImpl`), а не состояние экрана. Отображение строки в доменную модель проверяет их и бросает `IllegalStateException`; ViewModel показывает `Archive.Error` («Не удалось прочитать историю» + «Повторить»). Молча обрезать значения запрещено.
+7. **Испорченные данные**: неразбираемая дата, `set_index < 0` или `set_index = Int.MAX_VALUE` (номер дня `set_index + 1` переполнился бы), `completed_count ∉ 1..3`, `total_score ∉ 0..6 × completed_count` (счёт выше максимума фактически закрытых слотов) или `is_complete ≠ (completed_count == 3)` — нарушение инвариантов записи (`ProgressRepositoryImpl`, политика выдачи), а не состояние экрана. Отображение строки в доменную модель проверяет их **до** построения `ArchiveDay` и бросает `IllegalStateException`; `dayNumber` вычисляется только после проверок (раздел 5.1). ViewModel показывает `Archive.Error` («Не удалось прочитать историю» + «Повторить»). Молча обрезать значения запрещено.
 8. **Согласованность с Home — построением, а не дисциплиной.** `StatisticsCalculator.of(days, today)` — единственная функция; `GetStatisticsUseCase` (архив) и `GetTodayStateUseCase.statsOf` (Home) обе вызывают её, `TodayStats` строится из её результата. Тест `I5-S6` сравнивает оба на одних данных.
 9. **Пустая история** — `Archive.Empty`, а не блок с нулями (`UX_FLOW.md` §2: «пустых нулей не показываем»).
 
@@ -414,7 +426,7 @@
 
 - **Три строки всегда.** `GetDayRecapUseCase` возвращает `SlotOutcome` для каждого из слотов 0..2: `Played` (попытка с порядком, головоломка загружается и проходит `isPlayable()`), `Unavailable` (пропуск либо головоломка отсутствует/неверной формы — фактический счёт попытки), **`NotPlayed`** (попытки нет). `NotPlayed` рисуется как `DayResultRow` в новом состоянии `notPlayed`: слева «Задание N» (`bodyLarge`), справа «не сыграно» (`bodyLarge`, `onSurfaceVariant`) — формулировка `UX_FLOW.md` §9; ни категории, ни «0 из 6». Раскладка `inline`/`stacked` по-прежнему одна на весь список. Закрывает O-3.
 - **Незавершённый день.** Под `ScoreBadge` — строка «День не завершён» (`bodyMedium`, `onSurfaceVariant`); `StreakRow` не показывается (день серию не продолжал); «Поделиться» отсутствует.
-- **Серия — серия этого дня.** `streakAtDay = StreakCalculator.streaks(completedThroughDay, localDate).current` — то же значение, которое `GetDayRecapUseCase` уже считает для `isRecordUpdated` (I3-D46). `StreakRow` показывает `streakAtDay`, вторая строка «Лучшая серия» при `isRecordUpdated` показывает то же значение: рекорд, установленный этим днём, равен его серии. Для сегодняшнего завершённого дня значение совпадает с прежним (`current` на `today` при завершённом сегодня = серия, закончившаяся сегодня). Для архивного дня прежняя формула показала бы сегодняшнюю серию под рекордом прошлого дня — например, «Серия: 30 дней» и «Лучшая серия: 30 дней» у дня, установившего рекорд 5. Правка I3-D51/I3-D12 в части **показываемых** значений вынесена владельцу (O5-5); запись `StreakCache` через `GetStreaksUseCase(today)` остаётся без изменений.
+- **Серия — серия этого дня.** `streakAtDay = StreakCalculator.streaks(completedThroughDay, localDate).current` — то же значение, которое `GetDayRecapUseCase` уже считает для `isRecordUpdated` (I3-D46). `StreakRow` показывает `streakAtDay`, вторая строка «Лучшая серия» при `isRecordUpdated` показывает то же значение: рекорд, установленный этим днём, равен его серии. Для сегодняшнего завершённого дня значение совпадает с прежним (`current` на `today` при завершённом сегодня = серия, закончившаяся сегодня). Для архивного дня прежняя формула показала бы сегодняшнюю серию под рекордом прошлого дня — например, «Серия: 30 дней» и «Лучшая серия: 30 дней» у дня, установившего рекорд 5. Правка I3-D51/I3-D12 в части **показываемых** значений вынесена владельцу (O5-5). `StreakCache` итог дня больше не пишет (I5-D31): серия считается чистым `StreakCalculator` по уже прочитанным датам, а кэш обновляет единственный оставшийся вызывающий `GetStreaksUseCase` — расчёт Home.
 
 **Какие строки нажимаются (I5-D10).** Только в архивном варианте и только `Played`. `Unavailable` и `NotPlayed` не интерактивны: показывать нечего (пропуск), нечем (головоломки нет) или нельзя (попытки нет — открыть можно было бы только игру прошлого дня). В сессионном варианте строки не нажимаются: сегодняшний результат только что показан, а сессионный `PuzzleResult` ведёт по цепочке дня.
 
@@ -447,6 +459,16 @@
 **Бэкстек архива:** `home` → `archive` → `recap/{D}?origin=archive` → `puzzle/{i}/result?date={D}&origin=archive`. «Назад» с результата → итог; с итога → архив; с архива → существующий Home. Диаграмма — раздел 7.3.
 
 **Восстановление процесса.** Все три архивных экрана восстанавливаются из аргументов маршрута (`date`, `slotIndex`, `origin`) и базы; `today` итог читает из `DateProvider` при каждой загрузке (I3-D51), вариант — из `origin`, поэтому восстановленный после полуночи архивный итог сегодняшнего дня остаётся архивным и показывает ту же дату.
+
+**Загрузка итога и флаг первого дня (I5-D25, I5-D31).** В ревизии 1.0 `DayRecapViewModel` после загрузки в той же корутине писал `hasCompletedFirstDay`, а `GetDayRecapUseCase` через `GetStreaksUseCase` писал `StreakCache`. Под общим перехватом исключений отказ любой из этих записей DataStore превращал бы уже полученный итог в `NotFound`, хотя данные дня целы, а флаг переписывался бы при каждом открытии завершённого дня, включая архив. Контракт ревизии 1.1:
+
+- **экранную ошибку формируют только** исключения `GetDayRecapUseCase` и преобразования его результата в `DayRecapState`; `NotFound` означает, что данных дня нет или они непригодны (раздел 8.5);
+- **путь загрузки итога не содержит записей DataStore**: `GetDayRecapUseCase` читает только Room, `DayRecapViewModel` не инжектирует `UserPreferencesRepository`; поэтому после получения `Content` нечему заменить его на `NotFound`;
+- **`hasCompletedFirstDay` ставится в момент фактического завершения дня** — в `SubmitAnswerUseCase` сразу после записи попытки, если строка `day_results` этой даты стала завершённой, а флаг ещё `false` (раздел 6.12). Путь покрывает и ответ, и пропуск последнего слота, и смерть процесса между записью и переходом на итог: флаг ставится до навигации;
+- **запись флага — best-effort**: попытка к этому моменту уже зафиксирована, поэтому отказ записи флага не меняет `SubmitResult.Recorded`; `CancellationException` пробрасывается явно, остальные исключения поглощаются, и следующий завершённый день повторит попытку;
+- **историческое открытие дня ничего не пишет**: ни архивный, ни сессионный итог не вызывают сеттер флага; после первой удачной записи игровой путь тоже не пишет его повторно — флаг читается и пропускается, когда уже `true`.
+
+Потребитель флага — условие `NotificationOptInDialog` итерации 6; смысл флага («пользователь хотя бы раз завершил день») не меняется, меняется только место записи. Тесты: `I5-V35` (итог загружен, сеттер флага бросает, экран остаётся `Content`, сеттер не вызывается вовсе), `I5-R6` (первый завершённый день ставит флаг ровно один раз; открытие архива и повторные завершения — нет; отказ записи не меняет `Recorded`).
 
 ### 3.8 Отозванная головоломка (I5-D11, I5-D12)
 
@@ -513,7 +535,7 @@ referenceVersion =
 
 «О приложении» остаётся разделом списка: это шесть коротких строк, `UX_FLOW.md` §8 требует плоский список, а отдельный экран ради них был бы вложенным экраном без собственного состояния. Если владелец выберет встроенный блок, меняется только хост: `SourcesViewModel` и `GetPlayedSourcesUseCase` остаются, `SourcesScreen` превращается в раскрываемый раздел настроек.
 
-**Использование существующего API.** `UserPreferencesRepository` уже содержит `preferences: Flow<UserPreferences>`, `setSoundEnabled`, `setVibrationEnabled`, `setThemeMode`; `ThemeMode` — `SYSTEM`/`LIGHT`/`DARK`, неизвестное имя в хранилище читается как `SYSTEM`. Новых методов, ключей DataStore и типов настроек итерация 5 не создаёт.
+**Использование существующего API.** `UserPreferencesRepository` уже содержит `preferences: Flow<UserPreferences>`, `setSoundEnabled`, `setVibrationEnabled`, `setThemeMode`; `ThemeMode` — `SYSTEM`/`LIGHT`/`DARK`, неизвестное имя в хранилище читается как `SYSTEM`. Новых методов `UserPreferencesRepository` и новых ключей DataStore итерация 5 не создаёт; поверх существующих сеттеров добавляется только очередь записи `SettingsWriter` (раздел 5.5).
 
 **Поток данных и модель обновления (I5-D15).**
 
@@ -521,12 +543,13 @@ referenceVersion =
 | --- | --- |
 | Начальное состояние | `SettingsState.preferences = null` до первой эмиссии DataStore: строки звука, вибрации и темы рендерятся skeleton-полосами; «О приложении» — сразу (версия приложения синхронна), версия контента — skeleton до чтения |
 | Сбор | `viewModel.uiState.collectAsStateWithLifecycle()` в route-контейнере; `stateIn(viewModelScope, WhileSubscribed(5_000), initial)` |
-| Модель обновления | **подтверждённая**: экран показывает значение только из `preferences`; нажатие шлёт событие, ViewModel вызывает сеттер, DataStore эмитит новое значение, экран перерисовывается. Задержка записи DataStore — единицы миллисекунд, анимация `Switch` стартует с приходом значения |
-| Двойное быстрое нажатие | целевое значение вычисляется из **подтверждённого** состояния: два нажатия до прихода первой записи пишут одно и то же значение — одно изменение, а не «туда-обратно» |
-| Отсутствие цикла | сеттеры вызываются **только** из `onEvent`; `onCheckedChange`/`onClick` вызываются Compose только при пользовательском действии; ни `LaunchedEffect(state)`, ни `snapshotFlow` состояния в сеттер не пишут. Тест `I5-V20`: число вызовов сеттера равно числу событий |
-| Отмена | запись выполняется `withContext(NonCancellable)` внутри `viewModelScope.launch`: нажал и сразу ушёл назад — запись завершится, хотя ViewModel очищается |
+| Модель обновления | **подтверждённая**: экран показывает значение только из `preferences`; нажатие шлёт событие, ViewModel передаёт команду `SettingMutation` в очередь `SettingsWriter`, worker очереди вызывает сеттер, DataStore эмитит новое значение, экран перерисовывается. Необратимого оптимистичного обновления нет: до эмиссии DataStore строка показывает прежнее значение. Задержка записи — единицы миллисекунд, анимация `Switch` стартует с приходом значения |
+| Две быстрые команды одной настройки | один worker применяет команды **строго в порядке поступления**, поэтому в DataStore остаётся последнее выбранное значение: «Тёмная», затем «Светлая» — итог «Светлая». Для переключателя целевое значение вычисляется из **подтверждённого** состояния: два нажатия до прихода первой записи несут одно и то же значение — одно изменение, а не «туда-обратно» |
+| Команды разных настроек | worker последовательный: две записи никогда не выполняются одновременно, и исход каждой применяется только к своему ключу |
+| Отсутствие цикла | команды создаются **только** в `onEvent`; `onCheckedChange`/`onClick` вызываются Compose только при пользовательском действии; ни `LaunchedEffect(state)`, ни `snapshotFlow` состояния команд не создают. Тест `I5-V20`: число вызовов сеттеров репозитория равно числу принятых команд, эмиссии DataStore команд не порождают |
+| Владение записью и отмена | принятая команда должна сохраниться и после ухода со Settings — это жёсткое требование: пользователь, выключивший звук и сразу нажавший «Назад», не должен найти звук включённым. Поэтому очередью владеет **application-scoped** `SettingsWriteQueue` (раздел 5.5); ViewModel только отправляет команду (`submit` не `suspend`) и собственной корутины записи не имеет, так что очистка ViewModel ничего не отменяет. `NonCancellable` не используется: **атомарная граница — один `edit` DataStore одного ключа** на команду, а DataStore пишет её целиком или не пишет вовсе. Отмена scope приложения (конец процесса, тесты) пробрасывается как `CancellationException` и ошибкой ключа не становится; команды, не дошедшие до `edit` к смерти процесса, теряются, и после перезапуска экран честно показывает прежнее значение из DataStore |
 | Ошибка чтения | `IOException` чтения репозиторий уже превращает в значения по умолчанию (`UserPreferencesRepositoryImpl`); экран показывает их, отдельного состояния нет |
-| Ошибка записи | исключение `edit` (кроме `CancellationException`) → `SettingsState.writeFailure = <ключ строки>` → под этой строкой `bodySmall` «Не удалось сохранить настройку» (тот же приём, что строка-подсказка `Settings row` в `COMPONENTS.md`); значение на экране остаётся прежним, потому что DataStore не эмитил нового; флаг снимается следующей успешной записью или уходом с экрана |
+| Ошибка записи | исключение `edit` (кроме `CancellationException`) добавляет **свой** ключ в `SettingsWriter.failedKeys: StateFlow<Set<SettingKey>>`; ошибки других ключей не трогаются; ключ снимается **только** успешной записью того же ключа — успех другого ключа и уход с экрана его не снимают. Под строкой каждого ключа из множества — `bodySmall` «Не удалось сохранить настройку» (тот же приём, что строка-подсказка `Settings row` в `COMPONENTS.md`); значение на экране остаётся прежним, потому что DataStore не эмитил нового. Множество живёт в памяти процесса: после перезапуска его нет, а DataStore показывает фактическое значение |
 | Android/Compose-типы в домене | нет: ViewModel оперирует `ThemeMode` и `Boolean` из `core.model`; `Switch`, `RadioButton`, `Role` — только в `ui/settings` |
 
 **Применение темы (I5-D16).**
@@ -749,10 +772,10 @@ activity.startActivity(Intent.createChooser(send, chooserTitle))
 
 | Канал | API | Поведение |
 | --- | --- | --- |
-| Звук | `SoundPool.Builder().setMaxStreams(2).setAudioAttributes(AudioAttributes(USAGE_ASSISTANCE_SONIFICATION, CONTENT_TYPE_SONIFICATION))`, два ресурса `res/raw/feedback_move.ogg`, `res/raw/feedback_accept.ogg`, `play(id, 1f, 1f, 0, 0, 1f)` | не играет, пока ресурс не загружен (`OnLoadCompleteListener`, статус 0) — очереди нет; не играет при `AudioManager.ringerMode != RINGER_MODE_NORMAL` (беззвучный и вибро-режим) — явная проверка, а не надежда на маршрутизацию потока; громкость — системный поток `STREAM_SYSTEM`, куда направляется `USAGE_ASSISTANCE_SONIFICATION` |
+| Звук | `SoundPool.Builder().setMaxStreams(2).setAudioAttributes(AudioAttributes(USAGE_ASSISTANCE_SONIFICATION, CONTENT_TYPE_SONIFICATION))`, два ресурса `res/raw/feedback_move.ogg`, `res/raw/feedback_accept.ogg`, `play(id, 1f, 1f, 0, 0, 1f)` | `OnLoadCompleteListener` регистрируется **до** первого `load()`; не играет, пока ресурс не загружен (callback со статусом 0) — очереди нет; ошибочный статус звук не разрешает; не играет при `AudioManager.ringerMode != RINGER_MODE_NORMAL` (беззвучный и вибро-режим) — явная проверка, а не надежда на маршрутизацию потока; громкость — системный поток `STREAM_SYSTEM`, куда направляется `USAGE_ASSISTANCE_SONIFICATION` |
 | Вибрация | `View.performHapticFeedback(...)` с `View` экрана (`LocalView.current`): `CardMoved` → `HapticFeedbackConstants.CLOCK_TICK`; `AnswerAccepted` → `HapticFeedbackConstants.CONFIRM` на API 30+, `HapticFeedbackConstants.VIRTUAL_KEY` на API 26–29 | разрешение `VIBRATE` не нужно и не добавляется; флаг `FLAG_IGNORE_GLOBAL_SETTING` не передаётся, поэтому отключённая в системе тактильная отдача отключает и нашу |
 
-**Жизненный цикл звука.** `SoundCues` — `@ActivityRetainedScoped` (Hilt), создаётся при первой инъекции в `MainActivity`, держит только `ApplicationContext` и освобождает `SoundPool` в `ActivityRetainedLifecycle.addOnClearedListener` — при окончательном завершении Activity, но не при повороте экрана (ресурсы не перегружаются). Экранный `SoundPool` отклонён: `AnswerAccepted` звучит в момент ухода с `Puzzle` на `PuzzleResult`, и `release()` в `onDispose` оборвал бы звук. Процессный синглтон отклонён: он держал бы нативные ресурсы и в фоне без точки освобождения.
+**Жизненный цикл звука.** `SoundCues` — `@ActivityRetainedScoped` (Hilt), создаётся при первой инъекции в `MainActivity`, держит только `ApplicationContext`. Порядок инициализации фиксирован (раздел 8.2): создать `SoundPool` → создать коллекцию загруженных ID → зарегистрировать `OnLoadCompleteListener` → только затем `load()` обоих звуков → играть только ID, для которого пришёл callback со `status == 0` → `release()` ровно один раз из `ActivityRetainedLifecycle.addOnClearedListener` — при окончательном завершении Activity, но не при повороте экрана (ресурсы не перегружаются). Предположение «короткий файл не успеет загрузиться до установки listener» не используется. Логика порядка живёт в `SoundCueBank` над узкой границей `SoundEngine`, поэтому проверяется фейком без Android. Экранный `SoundPool` отклонён: `AnswerAccepted` звучит в момент ухода с `Puzzle` на `PuzzleResult`, и `release()` в `onDispose` оборвал бы звук. Процессный синглтон отклонён: он держал бы нативные ресурсы и в фоне без точки освобождения.
 
 **Без повторов.** Отдача — одноразовый эффект в том же `Channel`, что навигация: элемент не реплеится при перекомпозиции, повороте и повторной подписке; после смерти процесса канал не существует, повторного проигрывания нет. В `PuzzleUiState` отдачи нет, поэтому восстановление состояния её не порождает.
 
@@ -833,8 +856,8 @@ sealed interface DayRecapResult {
     ) : DayRecapResult
     data object NotFound : DayRecapResult
 }
-// currentStreak/bestStreak «на сегодня» из результата удаляются (O5-5); GetStreaksUseCase(today)
-// по-прежнему вызывается — ради записи StreakCache.
+// currentStreak/bestStreak «на сегодня» из результата удаляются (O5-5). GetStreaksUseCase из
+// GetDayRecapUseCase удаляется (I5-D31): загрузка итога только читает Room, StreakCache пишет Home.
 
 // domain/usecase/PuzzleResultLoad.kt
 data class Content(
@@ -998,7 +1021,7 @@ sealed interface PuzzleResultEffect {
 data class SettingsState(
     val preferences: PreferencesUi?,          // null — DataStore ещё не эмитил
     val about: AboutUi,
-    val writeFailure: SettingKey?,            // строка, под которой показана ошибка записи
+    val writeFailures: Set<SettingKey>,       // ключи, чья последняя завершённая запись упала (SettingsWriter)
 )
 
 data class PreferencesUi(
@@ -1013,7 +1036,7 @@ data class AboutUi(
     val contentVersion: InstalledContentVersion?,   // null — ещё не прочитано
 )
 
-enum class SettingKey { Sound, Vibration, Theme }
+// SettingKey и SettingMutation — доменные типы очереди записей (раздел 5.5), не экранные.
 
 sealed interface SettingsEvent {
     data class SoundToggled(val enabled: Boolean) : SettingsEvent
@@ -1216,12 +1239,18 @@ interface ArchiveRepository {
 }
 
 // data/repository/ArchiveRepositoryImpl.kt — отображение строки проверяет инварианты (раздел 3.5, п. 7)
+// ДО построения доменной модели; ни одно значение не обрезается и не подменяется.
 private fun ArchiveDayRow.toDomain(): ArchiveDay {
     val date = LocalDate.parse(localDate)                                   // бросает на испорченной дате
-    check(totalScore in 0..18) { "total_score вне 0..18 у $localDate: $totalScore" }
+    check(setIndex >= 0) { "set_index отрицателен у $localDate: $setIndex" }
+    check(setIndex < Int.MAX_VALUE) { "set_index у $localDate не даёт номера дня: $setIndex" }   // +1 без переполнения
     check(completedCount in 1..3) { "completed_count вне 1..3 у $localDate: $completedCount" }
+    check(totalScore in 0..completedCount * PairwiseScoreCalculator.MAX_PER_PUZZLE) {
+        "total_score $totalScore выше максимума для $completedCount закрытых слотов у $localDate"
+    }
     check(isComplete == (completedCount == 3)) { "is_complete расходится с completed_count у $localDate" }
-    return ArchiveDay(date, setIndex + 1, totalScore, completedCount, isComplete)
+    val dayNumber = setIndex + 1                                            // только после проверок
+    return ArchiveDay(date, dayNumber, totalScore, completedCount, isComplete)
 }
 
 // domain/usecase/GetArchiveUseCase.kt — имя из ARCHITECTURE.md §1
@@ -1354,6 +1383,76 @@ class ObserveFeedbackSettingsUseCase @Inject constructor(private val preferences
         .distinctUntilChanged()
 }
 ```
+
+### 5.5 Запись настроек (PR 5C, I5-D15)
+
+```kotlin
+// domain/model/SettingMutation.kt
+enum class SettingKey { Sound, Vibration, Theme }
+
+sealed interface SettingMutation {
+    val key: SettingKey
+    data class Sound(val enabled: Boolean) : SettingMutation { override val key get() = SettingKey.Sound }
+    data class Vibration(val enabled: Boolean) : SettingMutation { override val key get() = SettingKey.Vibration }
+    data class Theme(val mode: ThemeMode) : SettingMutation { override val key get() = SettingKey.Theme }
+}
+
+// domain/repository/SettingsWriter.kt
+interface SettingsWriter {
+    /** Ключи, последняя обработанная запись которых завершилась отказом. */
+    val failedKeys: StateFlow<Set<SettingKey>>
+
+    /** Принять команду. Не suspend и не бросает: запись выполнит владелец очереди. */
+    fun submit(mutation: SettingMutation)
+}
+
+// data/prefs/SettingsWriteQueue.kt — @Singleton; единственный писатель настроек из UI
+@Singleton
+class SettingsWriteQueue @Inject constructor(
+    private val preferences: UserPreferencesRepository,
+    @ApplicationScope scope: CoroutineScope,
+) : SettingsWriter {
+
+    private val commands = Channel<SettingMutation>(Channel.UNLIMITED)
+    private val failures = MutableStateFlow<Set<SettingKey>>(emptySet())
+    override val failedKeys: StateFlow<Set<SettingKey>> = failures.asStateFlow()
+
+    init {
+        scope.launch {                                   // ОДИН worker на процесс
+            for (mutation in commands) apply(mutation)   // строго в порядке поступления
+        }
+    }
+
+    override fun submit(mutation: SettingMutation) {
+        commands.trySend(mutation)                       // UNLIMITED: не отказывает, пока очередь открыта
+    }
+
+    private suspend fun apply(mutation: SettingMutation) {
+        try {
+            when (mutation) {                            // ровно один edit DataStore — атомарная граница
+                is SettingMutation.Sound -> preferences.setSoundEnabled(mutation.enabled)
+                is SettingMutation.Vibration -> preferences.setVibrationEnabled(mutation.enabled)
+                is SettingMutation.Theme -> preferences.setThemeMode(mutation.mode)
+            }
+            failures.update { it - mutation.key }        // успех снимает ошибку ТОЛЬКО своего ключа
+        } catch (e: CancellationException) {
+            throw e                                      // отмена scope приложения — не ошибка ключа
+        } catch (e: Exception) {
+            failures.update { it + mutation.key }        // чужие ключи не трогаются
+        }
+    }
+}
+
+// di/ApplicationScope.kt — квалификатор; провайдер в di/AppModule.kt:
+@Provides @Singleton @ApplicationScope
+fun applicationScope(): CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+// di/PreferencesModule.kt: @Binds SettingsWriter ← SettingsWriteQueue
+```
+
+- **Сериализация.** Один worker и одна очередь: команды применяются в порядке `submit`, `failures` меняет только worker, поэтому поздний исход не может перетереть более ранний другого ключа, а устаревших завершений не бывает — к моменту обработки следующей команды предыдущая уже завершена.
+- **Граница очереди.** Каждая команда — один `edit` одного ключа, без пакетов и без `NonCancellable`. Очередь не ограничена по ёмкости, но заполняется только нажатиями пользователя, и worker обрабатывает их за миллисекунды; объединение команд одного ключа не требуется — последний `edit` в любом случае последний.
+- **Время жизни.** `SupervisorJob` приложения живёт до смерти процесса; в тестах вместо него передаётся `TestScope.backgroundScope`, и отмена теста проверяет ветку `CancellationException`.
+- Слой `ui` видит только доменный интерфейс `SettingsWriter`; `data` его реализует — направление зависимостей `ARCHITECTURE.md` §1 сохранено.
 
 ---
 
@@ -1528,7 +1627,7 @@ fun averageText(tenths: Int?, res: Resources): String =
 ### 6.3 `GetDayRecapUseCase` (PR 5B)
 
 ```
-invoke(localDate, today):
+invoke(localDate):                                       // только чтение Room; записей DataStore нет (I5-D31)
     dayResult  = progress.getDayResult(localDate)        ?: return NotFound
     assignment = assignments.getAssignment(localDate)    ?: return NotFound
     attempts   = progress.getAttempts(localDate).associateBy { it.slotIndex }
@@ -1543,7 +1642,6 @@ invoke(localDate, today):
                 ?: Unavailable(i, a.score)                                          // нет строки / неверная форма
         }
     }
-    streaks(today)                                       // GetStreaksUseCase: только запись StreakCache
     completed      = progress.getCompletedDates()
     throughDay     = completed.filter { it <= localDate }
     streakAtDay    = StreakCalculator.streaks(throughDay, localDate).current
@@ -1554,6 +1652,8 @@ invoke(localDate, today):
 ```
 
 Инвариант, проверяемый `I5-R3`: при `isComplete == true` ни одного `NotPlayed` нет; при `isComplete == false` их ровно `3 − completed_count`.
+
+`today` из сигнатуры убран: при рекомендованном ответе O5-5 он нужен только заголовку, и его читает ViewModel (I3-D51). Если владелец выберет «серию на сегодня», параметр возвращается, а серия считается `StreakCalculator.streaks(completed, today)` — тоже чистым расчётом, без `GetStreaksUseCase` и без записи кэша. Зависимости use case после итерации 5: `DayAssignmentRepository`, `PuzzleRepository`, `ProgressRepository`.
 
 ### 6.4 `GetPuzzleResultUseCase` с отзывом (PR 5B)
 
@@ -1689,17 +1789,23 @@ private fun enc(s: String, keep: String = ""): String = buildString {
 ```kotlin
 init { load() }
 
+// Зависимости: GetDayRecapUseCase, DateProvider, SavedStateHandle. UserPreferencesRepository — нет (I5-D31).
 private fun load() {
     val args = routeArgs                                   // date + origin из SavedStateHandle
     if (args == null) { state.value = DayRecapState.NotFound(origin = RouteOrigin.Session); return }
     viewModelScope.launch {
-        try {
+        // Экранную ошибку может дать только чтение дня и его преобразование — и больше ничего.
+        val next: DayRecapState = try {
             val today = dateProvider.today()                // один раз на загрузку (I3-D51)
-            val result = getDayRecap(args.date, today)
-            state.value = result.toDayRecapState(today, args.origin)
-            if (result is DayRecapResult.Content && result.isComplete) preferences.setHasCompletedFirstDay(true)
-        } catch (e: CancellationException) { throw e }
-          catch (e: Exception) { state.value = DayRecapState.NotFound(args.origin) }   // I3 §18: recapMissing
+            getDayRecap(args.date).toDayRecapState(today, args.origin)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            DayRecapState.NotFound(args.origin)            // данных дня нет или они непригодны: recapMissing
+        }
+        state.value = next
+        // После публикации состояния никаких записей нет: флаг первого дня ставит SubmitAnswerUseCase
+        // (раздел 6.12), StreakCache — расчёт Home. Готовый Content ничем не заменяется.
     }
 }
 
@@ -1723,33 +1829,28 @@ fun onEvent(event: DayRecapEvent) {
 
 Разбор `origin`: отсутствует → `Session`; `"archive"` → `Archive`; любое другое значение → `NotFound(Session)` без обращения к базе (`RouteArgError.OriginMalformed`). Подстановки варианта по дате нет.
 
-### 6.9 `SettingsViewModel` — запись без цикла (PR 5C)
+### 6.9 `SettingsViewModel` — команды без цикла (PR 5C)
 
 ```kotlin
+// Зависимости: UserPreferencesRepository (чтение), SettingsWriter (запись), AppBuildInfo,
+// GetInstalledContentVersionUseCase. Собственных корутин записи у ViewModel нет.
 val uiState: StateFlow<SettingsState> =
-    combine(preferences.preferences.map { it.toUi() }, contentVersion, writeFailure) { p, c, f ->
-        SettingsState(preferences = p, about = AboutUi(app.versionName, app.versionCode, c), writeFailure = f)
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SettingsState(null, AboutUi(app.versionName, app.versionCode, null), null))
+    combine(preferences.preferences.map { it.toUi() }, contentVersion, writer.failedKeys) { p, c, failed ->
+        SettingsState(preferences = p, about = AboutUi(app.versionName, app.versionCode, c), writeFailures = failed)
+    }.stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(5_000),
+        SettingsState(null, AboutUi(app.versionName, app.versionCode, null), writer.failedKeys.value),
+    )
 
 fun onEvent(event: SettingsEvent) = when (event) {
-    is SettingsEvent.SoundToggled -> write(SettingKey.Sound) { preferences.setSoundEnabled(event.enabled) }
-    is SettingsEvent.VibrationToggled -> write(SettingKey.Vibration) { preferences.setVibrationEnabled(event.enabled) }
-    is SettingsEvent.ThemeSelected -> write(SettingKey.Theme) { preferences.setThemeMode(event.mode) }
+    is SettingsEvent.SoundToggled -> writer.submit(SettingMutation.Sound(event.enabled))
+    is SettingsEvent.VibrationToggled -> writer.submit(SettingMutation.Vibration(event.enabled))
+    is SettingsEvent.ThemeSelected -> writer.submit(SettingMutation.Theme(event.mode))
     SettingsEvent.SourcesClicked -> send(SettingsEffect.OpenSources)
     SettingsEvent.ReportClicked -> viewModelScope.launch {
         send(SettingsEffect.ComposeReport(ReportContext(puzzleId = null, app = app, content = getInstalledContentVersion())))
     }
     SettingsEvent.BackClicked -> send(SettingsEffect.NavigateBack)
-}
-
-private fun write(key: SettingKey, block: suspend () -> Unit) {
-    viewModelScope.launch {
-        try {
-            withContext(NonCancellable) { block() }        // уход с экрана не обрывает начатую запись
-            writeFailure.value = null
-        } catch (e: CancellationException) { throw e }
-          catch (e: Exception) { writeFailure.value = key }
-    }
 }
 ```
 
@@ -1810,6 +1911,32 @@ private fun ArchiveRoute(navController: NavHostController, entry: NavBackStackEn
 ```
 
 Защита «текущая запись» применяется к навигации, запускаемой нажатием на новых экранах (`Archive`, архивный `DayRecap`, архивный `PuzzleResult`, `Settings`, `Sources`). Редиректы без нажатия (`Skipped`/`NoAttempt` при загрузке) её не используют: они отправляются, пока запись ещё входит в экран, и отбрасывать их нельзя. Внешние действия (`ComposeReport`, `Share`, `Feedback`) выполняются только из этого коллектора — ни ViewModel, ни render-функция их не запускают.
+
+### 6.12 Флаг первого завершённого дня в `SubmitAnswerUseCase` (PR 5B, I5-D31)
+
+```kotlin
+// domain/usecase/SubmitAnswerUseCase.kt — пятая зависимость: UserPreferencesRepository
+// Шаги 1–8 итерации 3 не меняются. После успешного recordAttempt:
+markFirstDayCompletedIfNeeded(localDate)                 // best-effort, результат не меняет
+return SubmitResult.Recorded(slotIndex, score, kind)
+
+private suspend fun markFirstDayCompletedIfNeeded(localDate: LocalDate) {
+    try {
+        if (progress.getDayResult(localDate)?.isComplete != true) return   // день ещё не завершён
+        if (preferences.preferences.first().hasCompletedFirstDay) return    // уже стоит — повторной записи нет
+        preferences.setHasCompletedFirstDay(true)
+    } catch (e: CancellationException) {
+        throw e                                          // отмена остаётся отменой
+    } catch (e: Exception) {
+        // Попытка уже в базе, и ответ пользователя от флага не зависит. Флаг останется false,
+        // и следующий завершённый день повторит запись.
+    }
+}
+```
+
+- Ветки `AlreadyClosed` и `Failure` флаг не трогают: попытку создал не этот вызов либо она не создана вовсе. При гонке флаг ставит победивший вызов.
+- `CancellationException` после успешного `recordAttempt` пробрасывается из use case: `PuzzleViewModel` уже отменён (итерация 3 пробрасывает отмену в `submit`), попытка в базе, флаг будет поставлен при следующем завершении дня.
+- Лишних записей DataStore нет: чтение флага предшествует записи, и после первой удачной записи игровой путь только читает.
 
 ---
 
@@ -1980,13 +2107,16 @@ val LocalExternalApps = staticCompositionLocalOf<ExternalApps?> { null }
 ### 8.2 Отдача: `FeedbackPlayer` и `SoundCues` (PR 5E)
 
 ```kotlin
-// ui/feedback/SoundCues.kt
-@ActivityRetainedScoped
-class SoundCues @Inject constructor(
-    @ApplicationContext private val context: Context,
-    lifecycle: ActivityRetainedLifecycle,
-) {
-    private val pool = SoundPool.Builder()
+// ui/feedback/SoundEngine.kt — узкая граница над SoundPool; фейк в тестах фиксирует порядок вызовов
+interface SoundEngine {
+    fun setOnLoadComplete(listener: (sampleId: Int, status: Int) -> Unit)
+    fun load(rawResId: Int): Int            // 0 — загрузка не начата (контракт SoundPool.load)
+    fun play(sampleId: Int)
+    fun release()
+}
+
+class SoundPoolEngine(private val context: Context) : SoundEngine {
+    private val pool: SoundPool = SoundPool.Builder()                    // шаг 1: создать SoundPool
         .setMaxStreams(2)
         .setAudioAttributes(
             AudioAttributes.Builder()
@@ -1994,24 +2124,65 @@ class SoundCues @Inject constructor(
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                 .build(),
         ).build()
-    private val ids = mapOf(
-        FeedbackCue.CardMoved to pool.load(context, R.raw.feedback_move, 1),
-        FeedbackCue.AnswerAccepted to pool.load(context, R.raw.feedback_accept, 1),
-    )
-    private val loaded = ConcurrentHashMap.newKeySet<Int>()
-    private val audio = context.getSystemService(AudioManager::class.java)
+    override fun setOnLoadComplete(listener: (Int, Int) -> Unit) =
+        pool.setOnLoadCompleteListener { _, sampleId, status -> listener(sampleId, status) }
+    override fun load(rawResId: Int): Int = pool.load(context, rawResId, 1)
+    override fun play(sampleId: Int) { pool.play(sampleId, 1f, 1f, 0, 0, 1f) }
+    override fun release() = pool.release()
+}
+
+// ui/feedback/SoundCues.kt — вся логика порядка и состояний; SoundCueBank не знает про Android и Hilt
+class SoundCueBank(
+    private val engine: SoundEngine,
+    private val canPlaySound: () -> Boolean,                             // ringerMode == RINGER_MODE_NORMAL
+    sounds: Map<FeedbackCue, Int>,                                       // cue → R.raw.*
+) {
+    private val loaded: MutableSet<Int> = ConcurrentHashMap.newKeySet()  // шаг 2: коллекция загруженных ID
+    private val released = AtomicBoolean(false)
+    private val sampleIds: Map<FeedbackCue, Int>
 
     init {
-        pool.setOnLoadCompleteListener { _, id, status -> if (status == 0) loaded += id }
-        lifecycle.addOnClearedListener { pool.release() }     // окончательное завершение Activity
+        engine.setOnLoadComplete { sampleId, status ->                   // шаг 3: listener ДО первого load()
+            if (status == 0 && !released.get()) loaded += sampleId       // ошибочный status не разрешает звук
+        }
+        sampleIds = sounds.mapValues { (_, rawResId) -> engine.load(rawResId) }   // шаг 4: только теперь load()
     }
 
     fun play(cue: FeedbackCue) {
-        val id = ids.getValue(cue)
-        if (id !in loaded) return                            // не загружен — пропуск, без очереди
-        if (audio.ringerMode != AudioManager.RINGER_MODE_NORMAL) return
-        pool.play(id, 1f, 1f, 0, 0, 1f)
+        if (released.get()) return                                       // после release — ничего
+        val sampleId = sampleIds.getValue(cue)
+        if (sampleId == 0 || sampleId !in loaded) return                 // шаг 5: только после status == 0
+        if (!canPlaySound()) return                                      // беззвучный и вибро-режим
+        engine.play(sampleId)
     }
+
+    fun release() {                                                      // шаг 6: ровно один раз
+        if (!released.compareAndSet(false, true)) return
+        loaded.clear()
+        engine.release()
+    }
+}
+
+@ActivityRetainedScoped
+class SoundCues @Inject constructor(
+    @ApplicationContext context: Context,
+    lifecycle: ActivityRetainedLifecycle,
+) {
+    private val audio = context.getSystemService(AudioManager::class.java)
+    private val bank = SoundCueBank(
+        engine = SoundPoolEngine(context),
+        canPlaySound = { audio.ringerMode == AudioManager.RINGER_MODE_NORMAL },
+        sounds = mapOf(
+            FeedbackCue.CardMoved to R.raw.feedback_move,
+            FeedbackCue.AnswerAccepted to R.raw.feedback_accept,
+        ),
+    )
+
+    init {
+        lifecycle.addOnClearedListener { bank.release() }               // окончательное уничтожение компонента
+    }
+
+    fun play(cue: FeedbackCue) = bank.play(cue)
 }
 
 // ui/feedback/FeedbackPlayer.kt
@@ -2032,6 +2203,8 @@ class AndroidFeedbackPlayer(private val sounds: SoundCues, private val view: Vie
 }
 ```
 
+**Почему порядок гарантирован, а не «успевает».** Kotlin выполняет инициализаторы свойств и блоки `init` в порядке объявления: `loaded` и `released` созданы до блока `init`, а `sampleIds` присваивается внутри него **после** `setOnLoadComplete`. Поэтому callback, пришедший сколь угодно рано — даже синхронно внутри `load()`, — уже находит listener и коллекцию. `SoundPool.load` возвращает 0, если загрузка не начата: такой cue не станет доступным никогда. Callback `SoundPool` приходит на Looper потока, создавшего пул (главный), `play` вызывается там же; `ConcurrentHashMap.newKeySet()` и `AtomicBoolean` снимают вопрос видимости и при другом потоке. `release()` защищён `compareAndSet`: повторный вызов ничего не делает, а callback после освобождения не возвращает доступность.
+
 `MainActivity` получает `SoundCues` полевой инъекцией (`@Inject lateinit var soundCues: SoundCues` — Activity-компонент видит привязки `ActivityRetainedComponent`) и предоставляет его экранам через `LocalSoundCues`. Route-контейнер `Puzzle` строит `AndroidFeedbackPlayer(LocalSoundCues.current, LocalView.current)` и вызывает `play` в коллекторе эффектов перед навигацией. Compose- и навигационные тесты подставляют `RecordingFeedbackPlayer` через `LocalFeedbackPlayerOverride`.
 
 ### 8.3 Тема и системные панели (PR 5C)
@@ -2051,17 +2224,18 @@ class AndroidFeedbackPlayer(private val sounds: SoundCues, private val view: Vie
 | Ошибка перечитывания окна или статистики после показа | последние удачные данные остаются, футер `RefreshFailed`; «Повторить» и `ON_START` переподписывают поток (`generation`) |
 | Ошибка статистики до первого показа | `Archive.Error` |
 | Испорченная строка архива (дата, диапазоны) | исключение отображения → как ошибка чтения выше; значения не обрезаются |
-| Ошибка чтения итога дня | `recapMissing` («Данные за этот день не сохранились», без «Повторить») — обещание I3 §18, которое сейчас не выполнено из-за неперехваченного исключения |
+| Ошибка чтения итога дня | `recapMissing` («Данные за этот день не сохранились», без «Повторить») — обещание I3 §18, которое сейчас не выполнено из-за неперехваченного исключения. Формирует его только чтение дня и его преобразование |
+| Ошибка записи `hasCompletedFirstDay` | итог дня её не видит — он флаг не пишет; в `SubmitAnswerUseCase` запись best-effort: `Recorded` возвращается, флаг останется `false` до следующего завершённого дня (I5-D31) |
 | Ошибка чтения результата | существующий `PuzzleResultState.Error(Storage)` |
 | Ошибка DataStore при чтении | значения по умолчанию (`UserPreferencesRepositoryImpl`) |
-| Ошибка DataStore при записи | «Не удалось сохранить настройку» под строкой, значение прежнее |
+| Ошибка DataStore при записи настройки | ключ попадает в `SettingsWriter.failedKeys`; «Не удалось сохранить настройку» под строкой этого ключа, значение прежнее; ошибки других ключей не меняются; снимает только успешная запись того же ключа |
 | Нет головоломки / источника | итог: `unavailable`; результат: «Задание недоступно»; источники: головоломка не входит в список |
 | Нет браузера | `SourceRow.urlPlainText` (утверждённое состояние) |
 | Нет почтового клиента | действие отсутствует в дереве; адрес копируется в «О приложении» |
 | Нет обработчика `ACTION_SEND` | системный выбор сам сообщает об отсутствии приложений; исключение запуска → `LaunchResult.Failed`, экран на месте |
 | Исключение платформенного запуска | перехватывается в `AndroidExternalApps`, наружу не выходит |
 | Уход с экрана во время загрузки | `viewModelScope` отменяется; `CancellationException` пробрасывается первым `catch` и никогда не становится `Error` |
-| Уход с экрана во время записи настройки | запись завершается в `NonCancellable` |
+| Уход с экрана во время записи настройки | команда уже в application-scoped очереди и будет применена; ViewModel нечего отменять; `NonCancellable` не используется |
 | Быстрая серия одинаковых нажатий | строка архива, строка итога, «Назад»: вторая навигация отбрасывается проверкой текущей записи (6.11); «Поделиться», «Сообщить о неточности», ссылка: второй запуск — `Suppressed` (8.1); `EndReached`: принимается только из `CanLoadMore`; «Проверить»: второе нажатие игнорируется состоянием `Submitting` (I3), отдача звучит один раз |
 
 ### 8.6 Диаграммы потоков
@@ -2072,15 +2246,17 @@ class AndroidFeedbackPlayer(private val sounds: SoundCues, private val view: Vie
 sequenceDiagram
     participant UI as SettingsScreen
     participant VM as SettingsViewModel
+    participant Q as SettingsWriteQueue (application scope)
     participant DS as DataStore
     participant Root as MainActivity (AppThemeViewModel)
     UI->>VM: ThemeSelected(DARK) — только из onClick строки
-    VM->>DS: setThemeMode(DARK) в NonCancellable
+    VM->>Q: submit(Theme(DARK)) — без suspend
+    Q->>DS: setThemeMode(DARK) — один edit, строго по очереди
     DS-->>VM: preferences(themeMode = DARK)
     DS-->>Root: preferences(themeMode = DARK)
     VM-->>UI: SettingsState(preferences.themeMode = DARK) — выбрана строка «Тёмная»
     Root-->>Root: PoPoRyadkuTheme(dark = true) и системные панели под тёмную тему
-    Note over UI,DS: отказ записи: DS не эмитит → строка остаётся прежней + «Не удалось сохранить настройку»
+    Note over Q,DS: отказ edit: DS не эмитит, Q добавляет Theme в failedKeys → строка прежняя + «Не удалось сохранить настройку»
 ```
 
 **Событие UI → отдача, шеринг, письмо**
@@ -2155,15 +2331,16 @@ sequenceDiagram
 
 | Изменяется | Что именно |
 | --- | --- |
-| `domain/usecase/SlotOutcome.kt`, `DayRecapResult.kt`, `GetDayRecapUseCase.kt` | `NotPlayed`, три слота, `streakAtDay` |
+| `domain/usecase/SlotOutcome.kt`, `DayRecapResult.kt`, `GetDayRecapUseCase.kt` | `NotPlayed`, три слота, `streakAtDay`; из `GetDayRecapUseCase` убраны `GetStreaksUseCase` и параметр `today` — загрузка итога только читает Room (I5-D31) |
+| `domain/usecase/SubmitAnswerUseCase.kt` | пятая зависимость `UserPreferencesRepository`; после записи попытки — `hasCompletedFirstDay`, если день завершён и флаг ещё `false`, best-effort (I5-D31) |
 | `domain/usecase/PuzzleResultLoad.kt`, `GetPuzzleResultUseCase.kt` | `isRetired` |
-| `ui/recap/DayRecapState.kt`, `DayRecapEvent.kt`, `DayRecapEffect.kt`, `DayRecapStateMapper.kt`, `DayRecapViewModel.kt`, `DayRecapScreen.kt` | варианты по `origin`, строки `notPlayed`, «День не завершён», серия дня, перехват исключений |
+| `ui/recap/DayRecapState.kt`, `DayRecapEvent.kt`, `DayRecapEffect.kt`, `DayRecapStateMapper.kt`, `DayRecapViewModel.kt`, `DayRecapScreen.kt` | варианты по `origin`, строки `notPlayed`, «День не завершён», серия дня, перехват исключений только вокруг чтения дня; `DayRecapViewModel` больше не инжектирует `UserPreferencesRepository` |
 | `ui/components/DayResultRow.kt` | состояние `notPlayed`, интерактивная `available`-строка |
 | `ui/puzzleresult/PuzzleResultState.kt`, `PuzzleResultEffect.kt`, `PuzzleResultViewModel.kt`, `PuzzleResultScreen.kt` | архивный режим, `RetiredNotice` |
 | `ui/navigation/Destinations.kt`, `AppNavHost.kt` | `origin`, настоящий `archive`; удаляются `ArchiveStubScreen`, `SampleArchiveDate` и testTag `archive_open_recap_row` |
 | `app/src/main/res/values/strings.xml` | строки архива и итога (раздел 13.3); удаляются `stub_archive_title`, `stub_archive_open_recap` |
-| тесты: `domain/usecase/GetDayRecapUseCaseTest.kt`, `GetPuzzleResultUseCaseTest.kt`, `ui/recap/DayRecapViewModelTest.kt`, `ui/puzzleresult/PuzzleResultViewModelTest.kt`, `testDebug/…/ui/recap/DayRecapScreenTest.kt`, `testDebug/…/ui/puzzleresult/PuzzleResultScreenTest.kt`, `androidTest/…/ui/navigation/AppNavHostTest.kt` | `I5-R2`, `I5-R3`, `I5-V11…V18`, `I5-C8…C11`, `I5-N1…N3`, `I5-N5…N7`; `homeToArchiveToRecapByIsoDate` переписан на настоящую строку архива |
-| документы | `UX_FLOW.md` §1, §6, §7; `COMPONENTS.md` (`Archive row`, `Statistics block`, `DayResultRow`, `RetiredNotice`, `Loading skeleton`, `Error.retryable`); `UI_REVIEW_CHECKLIST.md` (архивные пункты `DayResultRow`); `ITERATION_3_DESIGN.md` — отметки у O-3, O-7, I3-D51 |
+| тесты: `domain/usecase/GetDayRecapUseCaseTest.kt`, `GetPuzzleResultUseCaseTest.kt`, `SubmitAnswerUseCaseTest.kt`, `ui/recap/DayRecapViewModelTest.kt`, `ui/puzzleresult/PuzzleResultViewModelTest.kt`, `testDebug/…/ui/recap/DayRecapScreenTest.kt`, `testDebug/…/ui/puzzleresult/PuzzleResultScreenTest.kt`, `androidTest/…/ui/navigation/AppNavHostTest.kt` | `I5-R2`, `I5-R3`, `I5-R6`, `I5-V11…V18`, `I5-V35`, `I5-C8…C11`, `I5-N1…N3`, `I5-N5…N7`; `homeToArchiveToRecapByIsoDate` переписан на настоящую строку архива; `I3-V34` переписан под `GetDayRecapUseCase(localDate)`: `today` больше не доезжает до `updateStreakCache`, проверяются дата вызова и заголовок |
+| документы | `UX_FLOW.md` §1, §6, §7; `COMPONENTS.md` (`Archive row`, `Statistics block`, `DayResultRow`, `RetiredNotice`, `Loading skeleton`, `Error.retryable`); `UI_REVIEW_CHECKLIST.md` (архивные пункты `DayResultRow`); `ITERATION_3_DESIGN.md` — отметки у O-3, O-7, I3-D51, I3-D12 и §13 (`hasCompletedFirstDay`) |
 
 **Запрещено:** настройки, источники, письмо, шеринг, отдача, `AndroidManifest.xml`, Gradle, `app/schemas/**`, `assets/**`, `.github/**`, `ui/platform/**`.
 
@@ -2180,14 +2357,15 @@ sequenceDiagram
 | `ui/report/ReportContext.kt`, `ReportMailComposer.kt`, `MailtoUri.kt`, `ReportTemplatesResources.kt` | письмо; последний файл читает `Resources` |
 | `ui/components/ReportInaccuracyAction.kt` | действие на `PuzzleResult` и в настройках |
 | `core/model/AppBuildInfo.kt` | версия приложения |
+| `domain/model/SettingMutation.kt`, `domain/repository/SettingsWriter.kt`, `data/prefs/SettingsWriteQueue.kt`, `di/ApplicationScope.kt` | очередь записи настроек с одним worker в application scope (раздел 5.5) |
 | `domain/repository/PlayedSourcesRepository.kt`, `data/repository/PlayedSourcesRepositoryImpl.kt`, `domain/usecase/GetPlayedSourcesUseCase.kt`, `domain/usecase/SourceCatalog.kt` | источники сыгранных головоломок |
-| тесты: `ui/settings/SettingsViewModelTest.kt`, `ui/sources/SourcesViewModelTest.kt`, `ui/theme/AppThemeViewModelTest.kt`, `ui/theme/ThemeResolutionTest.kt`, `ui/report/ReportMailComposerTest.kt`, `ui/report/MailtoUriTest.kt`, `domain/usecase/SourceCatalogTest.kt`, `data/repository/PlayedSourcesRepositoryTest.kt`, `testDebug/…/ui/settings/SettingsScreenTest.kt`, `testDebug/…/ui/sources/SourcesScreenTest.kt`, `testDebug/…/ui/platform/AndroidExternalAppsTest.kt` | `I5-T*`, `I5-E*`, `I5-Q*`, `I5-V19…V27`, `I5-C12…C14`, `I5-P1` |
+| тесты: `ui/settings/SettingsViewModelTest.kt` (с настоящей `SettingsWriteQueue` на `TestScope` и фейковым репозиторием — отдельный тестовый файл очереди не заводится), `ui/sources/SourcesViewModelTest.kt`, `ui/theme/AppThemeViewModelTest.kt`, `ui/theme/ThemeResolutionTest.kt`, `ui/report/ReportMailComposerTest.kt`, `ui/report/MailtoUriTest.kt`, `domain/usecase/SourceCatalogTest.kt`, `data/repository/PlayedSourcesRepositoryTest.kt`, `testDebug/…/ui/settings/SettingsScreenTest.kt`, `testDebug/…/ui/sources/SourcesScreenTest.kt`, `testDebug/…/ui/platform/AndroidExternalAppsTest.kt` | `I5-T*`, `I5-E*`, `I5-Q*`, `I5-V19…V27`, `I5-C12…C14`, `I5-P1` |
 
 | Изменяется | Что именно |
 | --- | --- |
 | `MainActivity.kt` | `AppThemeViewModel`, ожидание первой эмиссии, `enableEdgeToEdge` с разрешённой темой, `LocalExternalApps` |
 | `app/src/main/AndroidManifest.xml` | `<queries>` для `SENDTO` `mailto`; разрешений не добавляется |
-| `di/AppModule.kt`, `di/RepositoryModule.kt` | `AppBuildInfo`, `PlayedSourcesRepository` |
+| `di/AppModule.kt`, `di/RepositoryModule.kt`, `di/PreferencesModule.kt` | `AppBuildInfo` и `@ApplicationScope CoroutineScope`; `PlayedSourcesRepository`; `SettingsWriter ← SettingsWriteQueue` |
 | `data/db/dao/PuzzleDao.kt` | `playedSources()` |
 | `data/db/mapper/PuzzleMapper.kt` | отображение `StoredSource → Puzzle.Source` выносится в общую функцию для `PlayedSourcesRepositoryImpl` |
 | `ui/components/SourceRow.kt` | доступность и запуск через `ExternalApps`; три состояния и анатомия без изменений |
@@ -2195,7 +2373,7 @@ sequenceDiagram
 | `ui/navigation/Destinations.kt`, `AppNavHost.kt` | `sources`; настоящие `settings`; удаляются `SettingsStubScreen`, `StubScaffold`, `StubPrimaryButton`, `StubSecondaryButton`, `TestTags` заглушек |
 | `app/src/main/res/values/strings.xml` | строки раздела 13.3, `feedback_email`, `about_author`; удаляются `stub_placeholder_caption`, `stub_settings_title` |
 | тесты: `testDebug/…/ui/components/SourcesBlockTest.kt` (без изменения утверждений; добавляется случай с фейком), `testDebug/…/ui/puzzleresult/PuzzleResultScreenTest.kt`, `androidTest/…/ui/navigation/AppNavHostTest.kt` | `I5-C13`, `I5-N4`; `homeToSettingsToHome` переписан без тега заглушки |
-| документы | `UX_FLOW.md` §5, §8; `COMPONENTS.md` (`SourcesBlock`, `SourceRow`, `Settings row`, `ReportInaccuracyAction`, `Error.retryable`); `ARCHITECTURE.md` §1, §4 (эффекты внешних действий), новый ADR-018; `IMPLEMENTATION_PLAN.md` итерации 5 и 7 |
+| документы | `UX_FLOW.md` §5, §8; `COMPONENTS.md` (`SourcesBlock`, `SourceRow`, `Settings row`, `ReportInaccuracyAction`, `Error.retryable`); `ARCHITECTURE.md` §1, §4 (эффекты внешних действий), §5 (очередь записи настроек в application scope), новый ADR-018; `IMPLEMENTATION_PLAN.md` итерации 5 и 7 |
 
 **Запрещено:** напоминание и `POST_NOTIFICATIONS`; `INTERNET`, `VIBRATE`; шеринг; отдача; Gradle; `app/schemas/**`; `assets/**`; `.github/**`.
 
@@ -2227,10 +2405,10 @@ sequenceDiagram
 
 | Создаётся | Назначение |
 | --- | --- |
-| `ui/feedback/FeedbackCue.kt`, `FeedbackRequest.kt`, `FeedbackPolicy.kt`, `FeedbackPlayer.kt`, `AndroidFeedbackPlayer.kt`, `SoundCues.kt`, `LocalFeedback.kt` | отдача |
+| `ui/feedback/FeedbackCue.kt`, `FeedbackRequest.kt`, `FeedbackPolicy.kt`, `FeedbackPlayer.kt`, `AndroidFeedbackPlayer.kt`, `SoundEngine.kt` (`SoundEngine`, `SoundPoolEngine`), `SoundCues.kt` (`SoundCueBank`, `SoundCues`), `LocalFeedback.kt` | отдача; порядок listener → load и однократный `release()` — в `SoundCueBank` |
 | `domain/model/FeedbackSettings.kt`, `domain/usecase/ObserveFeedbackSettingsUseCase.kt` | настройки отдачи |
 | `app/src/main/res/raw/feedback_move.ogg`, `app/src/main/res/raw/feedback_accept.ogg` | звуки (O5-7) |
-| тесты: `ui/feedback/FeedbackPolicyTest.kt`, `testDebug/…/ui/feedback/AndroidFeedbackPlayerTest.kt` | `I5-F*` |
+| тесты: `ui/feedback/FeedbackPolicyTest.kt`, `testDebug/…/ui/feedback/AndroidFeedbackPlayerTest.kt` (включая `SoundCueBank` с фейковым `SoundEngine`) | `I5-F*` |
 
 | Изменяется | Что именно |
 | --- | --- |
@@ -2260,13 +2438,14 @@ sequenceDiagram
 | I5-S5 | Округление half-up целочисленно: 0,25 → 3; 0,75 → 8; 13,5 → 135; 15 → 150; `n = 1` и `n = 1000` без переполнения | 5A | I5-D5, п. 3 |
 | I5-S6 | На одних и тех же историях (включая 200 псевдослучайных с фиксированным seed) `TodayStats` из `GetTodayStateUseCase` совпадает с полями `Statistics` | 5A | I5-D5, п. 8 |
 | I5-S7 | `GetStreaksUseCase(today)` и `StatisticsCalculator.of(days, today).streaks` равны на тех же историях | 5A | I5-D5, п. 5 |
-| I5-S8 | Испорченные строки: неразбираемая дата, `total_score = 19`, `completed_count = 0` и `4`, `is_complete` против `completed_count` — отображение бросает, значения не обрезаются | 5A | I5-D5, п. 7 |
+| I5-S8 | Строгий mapper строки архива. Отклоняются: неразбираемая дата; `set_index = −1`; `set_index = Int.MAX_VALUE` — без переполнения, до вычисления `dayNumber`; `completed_count = 0` и `4`; `total_score = 7` при `completed_count = 1`, `13` при `2`, `19` при `3`; `total_score = −1`; `is_complete` против `completed_count`. Принимаются границы: `set_index = 0` → «День 1», `set_index = Int.MAX_VALUE − 1` → `dayNumber = Int.MAX_VALUE`; `total_score` 0 и 6 при `completed_count = 1`, 12 при `2`, 18 при `3`. Значения не обрезаются | 5A | I5-D5, п. 7; раздел 5.1 |
 | I5-S9 | SQL-оракул раздела 5.2 на in-memory Room равен `StatisticsCalculator` для набора из I5-S1 | 5A | раздел 5.2 |
 | I5-R1 | `PuzzleRetirement` — все шесть строк таблицы истинности раздела 3.8 | 5B | I5-D11 |
 | I5-R2 | `GetPuzzleResultUseCase` на фикстуре: отозванная → `Content(isRetired = true)`; активная → `false`; нет строки → `PuzzleNotFound`; неверная форма → `InvalidPuzzle`; пропуск → `Skipped`; отметка `Unknown` → запасное значение | 5B | I5-D11, раздел 3.8 |
 | I5-R3 | `GetDayRecapUseCase`: всегда три слота; `NotPlayed` ровно `3 − completed_count`; у завершённого дня `NotPlayed` нет; `streakAtDay` на днях с разрывом; `isRecordUpdated` прежний (I3-U38…U41 не меняются) | 5B | I5-D9 |
 | I5-R4 | Исторический `puzzleId` не подменяется (in-memory Room): после замены отозванной головоломки в слоте `daily_sets` итог и результат прошлого дня показывают головоломку из попытки, а не из набора | 5B | I5-D10 |
 | I5-R5 | `GetInstalledContentVersionUseCase`: отпечаток `null` → `Unknown`; версия 0 → `Unknown`; `(1, отпечаток)` → `Known(1)` | 5B | I5-D12 |
+| I5-R6 | `SubmitAnswerUseCase` и флаг первого дня: записи слотов 0 и 1 флаг не трогают; запись, завершившая день (ответ или пропуск последнего слота), при `hasCompletedFirstDay = false` вызывает сеттер ровно один раз; при уже `true` — ни одного вызова; сеттер бросает `IOException` → результат `Recorded`, попытка в базе; сеттер бросает `CancellationException` → исключение пробрасывается; `AlreadyClosed` и `Failure` сеттер не вызывают | 5B | I5-D31 |
 | I5-Q1 | `SourceCatalog`: дубли по URL сливаются; представитель — наибольший `accessedAt`, затем правила раздела 3.11; `referenceOnly` различаются парой `(reference, title)`; перемешанный вход даёт тот же выход | 5C | I5-D17 |
 | I5-Q2 | `PlayedSourcesRepository` на Room: только сыгранные непропущенные; пропуск исключён; отозванная включена; попытка на отсутствующую головоломку не ломает список; `ContentAssetSource` не вызывается ни разу; испорченный `sources_json` бросает | 5C | I5-D17 |
 | I5-E1 | Письмо с `PuzzleResult`: тема и тело совпадают с шаблоном раздела 3.12 посимвольно | 5C | I5-D18 |
@@ -2324,11 +2503,11 @@ sequenceDiagram
 | I5-V17 | Архивный результат: `NoAttempt`, `Skipped` → `NavigateBack`; `NavigateToPuzzle`, `NavigateToNextSlot`, `NavigateToRecap` не отправляются ни в одном исходе | 5B | I5-D10 |
 | I5-V18 | `isRetired` доменного исхода доезжает до `PuzzleResultState.Content` | 5B | I5-D11 |
 | I5-V19 | Настройки: `preferences = null` до первой эмиссии; затем значения DataStore; версия из `AppBuildInfo`; версия контента `Known`/`Unknown` | 5C | I5-D15 |
-| I5-V20 | Число вызовов сеттера равно числу событий; повторные эмиссии DataStore сеттеры не вызывают | 5C | I5-D15 |
-| I5-V21 | Отказ записи → `writeFailure` у строки, значение прежнее; следующая удачная запись снимает флаг | 5C | I5-D15 |
-| I5-V22 | `ThemeSelected(DARK)` → запись; после эмиссии выбрана «Тёмная» | 5C | I5-D15 |
+| I5-V20 | На настоящей `SettingsWriteQueue`: число вызовов сеттеров репозитория равно числу принятых команд и идёт в порядке `submit`; повторные эмиссии DataStore команд не порождают; до эмиссии DataStore экран показывает прежнее значение (нет оптимистичного обновления) | 5C | I5-D15 |
+| I5-V21 | Ошибки по ключам: (а) запись A (звук) падает, следующая запись B (тема) успешна → `writeFailures = {Sound}`; (б) A успешна, B падает → `{Theme}`; (в) A и B падают → `{Sound, Theme}`, ни одна не потеряна; (г) повторная успешная запись A снимает только `Sound`, `Theme` остаётся; значения на экране — из DataStore | 5C | I5-D15 |
+| I5-V22 | `ThemeSelected(DARK)` → запись; после эмиссии выбрана «Тёмная». Два быстрых выбора `DARK`, затем `LIGHT` до обработки первого → в репозиторий уходят `DARK`, затем `LIGHT`, в DataStore остаётся `LIGHT`, экран показывает «Светлая» | 5C | I5-D15 |
 | I5-V23 | `ReportClicked` в настройках → один `ComposeReport(puzzleId = null, версии)` | 5C | I5-D18 |
-| I5-V24 | Запись, начатая до очистки ViewModel, завершается (`NonCancellable`); `CancellationException` не становится `writeFailure` | 5C | I5-D15 |
+| I5-V24 | Владение записью: команда отправлена, ViewModel очищена (`ViewModelStore.clear()`) до обработки → очередь приложения применяет запись, новый экземпляр ViewModel видит значение и прежние `writeFailures`; отмена scope приложения во время `edit` пробрасывает `CancellationException` и ключ в `writeFailures` не попадает; `NonCancellable` в `ui/settings` и `data/prefs` не встречается | 5C | I5-D15 |
 | I5-V25 | Источники: `Loading → Empty` / `Content` / `Error`; «Повторить» | 5C | I5-D17 |
 | I5-V26 | `ReportClicked` на результате → один `ComposeReport(puzzleId из попытки, версии)`, в том числе в архивном режиме | 5C | I5-D18 |
 | I5-V27 | `SourcesClicked` → один `OpenSources`; `BackClicked` → один `NavigateBack` | 5C | I5-D24 |
@@ -2340,6 +2519,7 @@ sequenceDiagram
 | I5-V32 | `Recorded(Answered)` → `Feedback(AnswerAccepted)`, затем `NavigateToResult` — порядок в канале | 5E | I5-D22 |
 | I5-V33 | Отказ записи, `AlreadyClosed`, пропуск, второе нажатие «Проверить» → `AnswerAccepted` не отправляется (при двойном нажатии — ровно один) | 5E | I5-D22 |
 | I5-V34 | Загрузка, восстановление порядка из `SavedStateHandle`, повтор загрузки, `BackPressed` → отдачи нет | 5E | I5-D22 |
+| I5-V35 | Итог завершённого дня (и сессионный, и архивный) успешно загружен; фейковый `setHasCompletedFirstDay` бросает исключение → экран остаётся `Content`, в `NotFound` не превращается, процесс не падает; сеттер флага и `updateStreakCache` не вызываются ни разу | 5B | I5-D25, I5-D31 |
 
 ### 10.4 Compose (Robolectric, `testDebug`)
 
@@ -2369,7 +2549,7 @@ sequenceDiagram
 | I5-P1 | `AndroidExternalApps`: второй запуск до `ON_RESUME` и в пределах секунды → `Suppressed`; `ON_RESUME` снимает защиту; `ActivityNotFoundException` → `NoHandler`; `SecurityException` → `Failed`; `composeEmail` — `ACTION_SENDTO`, схема `mailto`, extras темы и тела | 5C |
 | I5-P2 | `shareText`: `createChooser` поверх `ACTION_SEND`, `text/plain`, `EXTRA_TEXT` равен тексту | 5D |
 | I5-H10 | `ShareCardResources` с настоящими ресурсами: «По порядку! · День 12», «Серия: 6 дней», седьмая строка — `share_app_url` | 5D |
-| I5-F2 | `AndroidFeedbackPlayer`: `CLOCK_TICK` для перестановки; `CONFIRM` на API 30+ и `VIRTUAL_KEY` на API 29; звук не играет в беззвучном и вибро-режиме и пока ресурс не загружен; флаги запроса соблюдаются | 5E |
+| I5-F2 | `AndroidFeedbackPlayer`: `CLOCK_TICK` для перестановки; `CONFIRM` на API 30+ и `VIRTUAL_KEY` на API 29; звук не играет в беззвучном и вибро-режиме; флаги запроса соблюдаются. `SoundCueBank` с фейковым `SoundEngine`: `setOnLoadComplete` вызван до первого `load`; callback, доставленный синхронно внутри `load()`, делает cue доступным; callback со `status == 0` открывает только свой cue — второй файл учитывается независимо; callback с ненулевым `status` воспроизведение не разрешает; `load()`, вернувший 0, не даёт cue стать доступным; `play` до загрузки ничего не воспроизводит; `release()` дважды → `engine.release()` один раз; после `release()` ни `play`, ни поздний callback воспроизведения не дают | 5E |
 
 ### 10.6 Навигация и сквозные (`androidTest`)
 
@@ -2411,12 +2591,15 @@ sequenceDiagram
 | --- | --- | --- | --- |
 | 5A | Статистика архива расходится с Home | «Сыграно дней» или «Лучший день» разные на двух экранах | один `StatisticsCalculator` для обоих; `I5-S6`, `I5-S7` |
 | 5A | Кто-то «оптимизирует» окно в `LIMIT/OFFSET` | дубль строки на границе страниц после новой игры | `I5-A6`, `I5-A7`; `rg -n "LIMIT.*OFFSET" app/src/main/java/ru/poporyadku/data/db/dao` пусто |
+| 5A | Строка архива с `set_index` на границе `Int` или счётом выше возможного | переполнение номера дня, «День −2147483648», «19 из 18» | проверки mapper до построения модели (раздел 5.1); `I5-S8` |
 | 5A | Внутреннее соединение молча скрывает строку без назначения | в списке меньше дней, чем «сыграно дней» | инвариант записи + `I5-A5` фиксирует поведение; значение видно в испорченной базе, а не у пользователя |
 | 5B | Архивный режим результата открывает игру прошлого дня | в `puzzle_attempts` появляется попытка на прошлую дату после просмотра архива | `I5-V17`, `I5-N6`; `rg -nF "Destinations.puzzle(" app/src/main/java/ru/poporyadku/ui/archive app/src/main/java/ru/poporyadku/ui/recap` пусто |
+| 5B | В путь загрузки итога возвращается запись DataStore | отказ DataStore показывает «Данные за этот день не сохранились» у целого дня; флаг переписывается при каждом открытии архива | I5-D31; `I5-V35`, `I5-R6`; `rg -n -e setHasCompletedFirstDay -e updateStreakCache -e GetStreaksUseCase app/src/main/java/ru/poporyadku/ui/recap app/src/main/java/ru/poporyadku/domain/usecase/GetDayRecapUseCase.kt` пусто |
 | 5B | Вариант итога выбирают по дате, а не по `origin` | архивная строка сегодняшнего дня показывает «Готово» и уходит на Home | `I5-V11`, `I5-C8` |
 | 5B | Серия архивного итога снова считается на `today` | под рекордом прошлого дня стоит сегодняшнее значение | `I5-R3`, `I5-C8`; O5-5 |
 | 5B | `SlotOutcome` без `score` в интерфейсе ломает существующие тесты I3 | компиляция тестов итога | правка тестов входит в 5B; исчерпывающий `when` без `else` (I3-D37) |
 | 5C | Настройка пишется повторно из состояния (цикл) | мерцание переключателя, лишние записи DataStore | `I5-V20`; `rg -n "LaunchedEffect" app/src/main/java/ru/poporyadku/ui/settings` пусто |
+| 5C | Пересекающиеся записи настроек теряют или перетирают ошибки; уход со Settings обрывает запись | ошибка звука исчезает после успешной записи темы; выключенный звук снова включён после «Назад» | одна очередь с одним worker в application scope, ошибки — множеством ключей (I5-D15); `I5-V21`, `I5-V24` |
 | 5C | Первый кадр в чужой теме | вспышка светлого экрана при выбранной тёмной | корень не компонует экраны до первой эмиссии; `I5-T2`, `I5-M4` |
 | 5C | Иконки статус-бара невидимы при принудительной теме | тёмные иконки на тёмном фоне | `enableEdgeToEdge` с разрешённой темой; `I5-M4` |
 | 5C | Без `<queries>` для `mailto` действие пропадает у всех на API 30+ | «Сообщить о неточности» нет при установленной почте | правка манифеста в 5C; `I5-M2` на API 35 |
@@ -2425,6 +2608,7 @@ sequenceDiagram
 | 5C | Адрес или имя автора не получены | PR 5C нельзя смержить | O5-1, O5-2 — вопросы раздела 13 с указанием блокируемого PR |
 | 5D | Карточка с `.invalid`-адресом уходит в альфу | получатель видит нерабочую ссылку | O5-6; release-readiness итерации 7 запрещает `.invalid` |
 | 5D | Эмодзи отрисовываются по-разному в мессенджерах | ряды разной ширины | U+1F7E9 и U+2B1C — эмодзи с представлением по умолчанию; `I5-M1` на двух мессенджерах |
+| 5E | Callback загрузки приходит раньше регистрации listener | звук не играет никогда, хотя файл загружен | listener до первого `load()` по построению `SoundCueBank`; `I5-F2` с синхронным callback |
 | 5E | Звук запаздывает на первом ходе после запуска | тишина на первом ходе | загрузка `SoundPool` при создании Activity; незагруженный звук пропускается осознанно |
 | 5E | Отдача срабатывает при восстановлении экрана | щелчок без действия | отдача только в `move()`/`Recorded`; `I5-V34` |
 | 5E | Звуковые файлы без лицензии | риск распространения | O5-7; происхождение в `VERSIONS.md` — критерий 5E |
@@ -2459,6 +2643,7 @@ sequenceDiagram
 | §3 | Комментарий: архив = `day_results ⋈ day_assignments`, новых таблиц и агрегатов нет; **точная семантика статистики** (раздел 3.5 этого документа) | 5A |
 | §4 | `PuzzleEffect.Feedback`; **граница отдачи**: решение в ViewModel, исполнение в route-контейнере, `SoundCues` в `ActivityRetainedComponent` | 5E |
 | §4 | **Владение Android-интентами**: только `ui/platform/ExternalApps`; ViewModel отдаёт данные эффектом, route-контейнер запускает | 5C |
+| §5, таблица инструментов | Запись настроек — команды в application-scoped очереди `SettingsWriteQueue` с одним worker; атомарная граница — один `edit` DataStore; `NonCancellable` не используется | 5C |
 | новый ADR-017 | «Архив: keyset-окно без Paging 3» — контекст, решение, альтернативы (`OFFSET`, растущий `LIMIT`, Paging 3), последствия | 5A |
 | новый ADR-018 | «Граница внешних Android-действий» — `ExternalApps`, перехват исключений, защита от повторного запуска | 5C |
 
@@ -2501,7 +2686,7 @@ sequenceDiagram
 | `docs/design/UI_REVIEW_CHECKLIST.md` | пункт ShareCard: `{RU_STORE_URL}` → `share_app_url`; архивные пункты `DayResultRow` и `Archive row` | 5B, 5D |
 | `docs/design/b2/state-sheets/share-card-format.md` | `{RU_STORE_URL}` → `{APP_SHARE_URL}` | 5D |
 | `docs/VERSIONS.md` | раздел «Звуковые ресурсы»: файлы, автор, лицензия, дата | 5E |
-| `docs/ITERATION_3_DESIGN.md` | отметки: O-1 закрыт (I5-D27), O-3 закрыт (I5-D9), O-7 закрыт (I5-D8), I3-D51/I3-D12 — показываемая серия итога = серия дня (O5-5) | 5B |
+| `docs/ITERATION_3_DESIGN.md` | отметки: O-1 закрыт (I5-D27), O-3 закрыт (I5-D9), O-7 закрыт (I5-D8), I3-D51/I3-D12 — показываемая серия итога = серия дня (O5-5); I3-D12 и §13 — `GetDayRecapUseCase` больше не пишет `StreakCache`, `hasCompletedFirstDay` ставит `SubmitAnswerUseCase` в момент завершения дня (I5-D31) | 5B |
 | `docs/ITERATION_4_DESIGN.md` | «Ход реализации»: 4D влит (PR №16); §20 «отложено»: пометка отзыва и чтение `storedContentVersion` выполнены в итерации 5 | 5A, 5C |
 
 ---
@@ -2619,11 +2804,11 @@ rg -n "DELETE" app/src/main/java/ru/poporyadku/data/db/dao/PuzzleDao.kt         
 
 | PR | Готов, когда |
 | --- | --- |
-| **5A** | тесты `I5-S1…S9`, `I5-A1…A10` зелёные; существующие `GetTodayStateUseCaseTest` и `HomeViewModelTest` проходят без изменения утверждений; `AppDatabase.version == 1`, в `app/schemas` нет второго файла; в `ui/**` нет изменений; O5-3 получен; `ARCHITECTURE.md` (§1, §3, ADR-017), `IMPLEMENTATION_PLAN.md` (статус итерации 4, разбиение итерации 5), `ITERATION_4_DESIGN.md` («Ход реализации») синхронизированы |
-| **5B** | тесты `I5-R1…R5`, `I5-V1…V18`, `I5-C1…C11` зелёные; `I5-N1…N3`, `I5-N5…N7` скомпилированы и пройдены вручную на эмуляторе; тесты I3 итога и результата (`I3-C10…C13`, `I3-C15`, `I3-C17`, `I3-V34`, `I3-U38…U41`) проходят с обновлёнными типами; `rg -n -e ArchiveStubScreen -e SampleArchiveDate -e stub_archive app/src` пусто; `rg -nF "Destinations.puzzle(" app/src/main/java/ru/poporyadku/ui/archive app/src/main/java/ru/poporyadku/ui/recap` пусто; `when` по `SlotOutcome`/`SlotResultUi` исчерпывающие без `else`; `I5-M6…M9` для архива пройдены; O5-5 и O5-9 (часть 5B) получены; документы 5B раздела 12 синхронизированы |
-| **5C** | тесты `I5-T1`, `I5-T2`, `I5-E1…E5`, `I5-Q1`, `I5-Q2`, `I5-V19…V27`, `I5-C12…C14`, `I5-C16`, `I5-P1` зелёные; `I5-N4` пройден вручную; `I5-M2…M4`, `I5-M6…M9` для настроек и источников пройдены; в манифесте добавлен ровно один `<intent>` в `<queries>` (`SENDTO mailto`) и ни одного разрешения; `rg -n "startActivity" app/src/main/java/ru/poporyadku/ui` находит только `ui/platform/AndroidExternalApps.kt`; `rg -n -e Stub -e stub_ app/src/main` пусто; строки «Напоминание» в настройках нет; O5-1, O5-2, O5-4, O5-8 (часть 5C), O5-9 (часть 5C) получены; документы 5C раздела 12 синхронизированы |
+| **5A** | тесты `I5-S1…S9` (включая расширенный `I5-S8`: границы `set_index` и счёт по числу закрытых слотов), `I5-A1…A10` зелёные; проверки mapper стоят до вычисления `dayNumber`; существующие `GetTodayStateUseCaseTest` и `HomeViewModelTest` проходят без изменения утверждений; `AppDatabase.version == 1`, в `app/schemas` нет второго файла; в `ui/**` нет изменений; O5-3 получен; `ARCHITECTURE.md` (§1, §3, ADR-017), `IMPLEMENTATION_PLAN.md` (статус итерации 4, разбиение итерации 5), `ITERATION_4_DESIGN.md` («Ход реализации») синхронизированы |
+| **5B** | тесты `I5-R1…R6`, `I5-V1…V18`, `I5-V35`, `I5-C1…C11` зелёные; `I5-N1…N3`, `I5-N5…N7` скомпилированы и пройдены вручную на эмуляторе; тесты I3 итога и результата (`I3-C10…C13`, `I3-C15`, `I3-C17`, `I3-U38…U41`) проходят с обновлёнными типами, `I3-V34` переписан под `GetDayRecapUseCase(localDate)`; существующие тесты `SubmitAnswerUseCaseTest` проходят с новой зависимостью; `rg -n -e setHasCompletedFirstDay -e updateStreakCache -e GetStreaksUseCase app/src/main/java/ru/poporyadku/ui/recap app/src/main/java/ru/poporyadku/domain/usecase/GetDayRecapUseCase.kt` пусто; `rg -nF "setHasCompletedFirstDay(" app/src/main/java/ru/poporyadku/ui app/src/main/java/ru/poporyadku/domain/usecase` находит только `domain/usecase/SubmitAnswerUseCase.kt`; `rg -n -e ArchiveStubScreen -e SampleArchiveDate -e stub_archive app/src` пусто; `rg -nF "Destinations.puzzle(" app/src/main/java/ru/poporyadku/ui/archive app/src/main/java/ru/poporyadku/ui/recap` пусто; `when` по `SlotOutcome`/`SlotResultUi` исчерпывающие без `else`; `I5-M6…M9` для архива пройдены; O5-5 и O5-9 (часть 5B) получены; документы 5B раздела 12 синхронизированы |
+| **5C** | тесты `I5-T1`, `I5-T2`, `I5-E1…E5`, `I5-Q1`, `I5-Q2`, `I5-V19…V27`, `I5-C12…C14`, `I5-C16`, `I5-P1` зелёные, причём `I5-V20…V22` и `I5-V24` выполняются на настоящей `SettingsWriteQueue` с `TestScope`; `rg -n NonCancellable app/src/main/java/ru/poporyadku/ui/settings app/src/main/java/ru/poporyadku/data/prefs` пусто; `rg -nF -e "setSoundEnabled(" -e "setVibrationEnabled(" -e "setThemeMode(" app/src/main/java/ru/poporyadku/ui` пусто — UI пишет настройки только через `SettingsWriter`; `I5-N4` пройден вручную; `I5-M2…M4`, `I5-M6…M9` для настроек и источников пройдены; в манифесте добавлен ровно один `<intent>` в `<queries>` (`SENDTO mailto`) и ни одного разрешения; `rg -n "startActivity" app/src/main/java/ru/poporyadku/ui` находит только `ui/platform/AndroidExternalApps.kt`; `rg -n -e Stub -e stub_ app/src/main` пусто; строки «Напоминание» в настройках нет; O5-1, O5-2, O5-4, O5-8 (часть 5C), O5-9 (часть 5C) получены; документы 5C раздела 12 синхронизированы |
 | **5D** | тесты `I5-H1…H10`, `I5-V28`, `I5-C15`, `I5-P2` зелёные; `I5-M1` пройден; `rg -n -i -e rustore -e appgallery app/src/main/java` пусто; `ShareCardBuilder.kt` не импортирует `android.*` и не содержит `@Preview`; `share_app_url` лежит в `distribution.xml`; O5-6 (а) получен; документы 5D раздела 12 синхронизированы |
-| **5E** | тесты `I5-F1`, `I5-F2`, `I5-V29…V34` зелёные; `I5-N8` и `I5-M5`, `I5-M10` пройдены; `rg -n -e VIBRATE -e Vibrator app/src/main` пусто; `rg -n "SoundPool" app/src/main/java` находит только `ui/feedback/SoundCues.kt`; литералов пользовательского текста в `ui/**` вне `@Preview` нет (сверка по `rg -n "Text\(\s*\"" app/src/main/java/ru/poporyadku/ui` и `rg -n "contentDescription = \"" app/src/main/java/ru/poporyadku/ui` — пусто); неиспользуемых строк в `strings.xml` нет (`lint` `UnusedResources` без предупреждений по новым строкам); O5-7 получен, `docs/VERSIONS.md` дополнен; все строки раздела 12 выполнены; `IMPLEMENTATION_PLAN.md` отмечает итерацию 5 выполненной, `I4-C6` — открытым пунктом итерации 7 |
+| **5E** | тесты `I5-F1`, `I5-F2` (включая порядок listener → load, независимость двух файлов, ошибочный `status`, однократный `release()`), `I5-V29…V34` зелёные; `I5-N8` и `I5-M5`, `I5-M10` пройдены; `rg -n -e VIBRATE -e Vibrator app/src/main` пусто; `rg -n "SoundPool" app/src/main/java` находит только `ui/feedback/SoundEngine.kt`; литералов пользовательского текста в `ui/**` вне `@Preview` нет (сверка по `rg -n "Text\(\s*\"" app/src/main/java/ru/poporyadku/ui` и `rg -n "contentDescription = \"" app/src/main/java/ru/poporyadku/ui` — пусто); неиспользуемых строк в `strings.xml` нет (`lint` `UnusedResources` без предупреждений по новым строкам); O5-7 получен, `docs/VERSIONS.md` дополнен; все строки раздела 12 выполнены; `IMPLEMENTATION_PLAN.md` отмечает итерацию 5 выполненной, `I4-C6` — открытым пунктом итерации 7 |
 
 ---
 
@@ -2632,7 +2817,8 @@ rg -n "DELETE" app/src/main/java/ru/poporyadku/data/db/dao/PuzzleDao.kt         
 | Ревизия | Дата | Изменения |
 | --- | --- | --- |
 | 1.0 | 2026-09-11 | Первая редакция: базовая линия после влития итерации 4; решения `I5-D1`…`I5-D30`; модели и SQL архива, статистики, итога, результата, настроек, источников, письма, карточки и отдачи; навигационные контракты с аргументом `origin`; платформенные границы; разрез PR 5A–5E; тестовая матрица `I5-*`; риски и откат; план синхронизации документов; вопросы владельцу `O5-1`…`O5-9`. Статус — готова к архитектурному ревью |
+| 1.1 | 2026-09-11 | Точечные исправления по ревью: загрузка `DayRecap` без записей DataStore, `hasCompletedFirstDay` — в `SubmitAnswerUseCase` (новое `I5-D31`, `I5-R6`, `I5-V35`); порядок `SoundPool` listener → load и однократный `release()` через `SoundCueBank`/`SoundEngine` (`I5-D23`, `I5-F2`); записи настроек — application-scoped очередь с одним worker и ошибками по ключам, без `NonCancellable` (`I5-D15`, `I5-V20`…`I5-V22`, `I5-V24`); строгий mapper строки архива (`I5-S8`); синхронизированы файлы и критерии PR 5A, 5B, 5C, 5E, риски и план правок документов. Архитектура итерации, состав PR 5A–5E и вопросы `O5-1`…`O5-9` не менялись. Статус — готова к финальному архитектурному подтверждению |
 
 ---
 
-**Статус документа: ревизия 1.0, готова к архитектурному ревью.** Документ не утверждён. Реализация итерации 5 не начата; ни один Kotlin-файл, ресурс, манифест, Room-схема, JSON-контент, Gradle-скрипт, CI-конфигурация и ни один другой документ этим документом не изменены.
+**Статус документа: ревизия 1.1, готова к финальному архитектурному подтверждению.** Документ не утверждён. Реализация итерации 5 не начата; ни один Kotlin-файл, ресурс, манифест, Room-схема, JSON-контент, Gradle-скрипт, CI-конфигурация и ни один другой документ этим документом не изменены.
