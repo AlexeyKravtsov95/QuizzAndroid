@@ -47,33 +47,37 @@ app/
         DailySetRepositoryImpl.kt
         ArchiveRepositoryImpl.kt      // строгое отображение строки архива: проверки до модели
     domain/
-      model/                    // TodayState, TodayStats, ArchiveDay, Statistics
+      model/                    // TodayState, TodayStats, ArchiveDay, Statistics, InstalledContentVersion
       repository/               // интерфейсы репозиториев, в том числе ArchiveRepository (probe, observeWindow)
       usecase/
         GetTodayStateUseCase.kt
         GetPuzzleUseCase.kt
         StartDailySessionUseCase.kt   // фиксирует localDate -> setIndex
-        SubmitAnswerUseCase.kt
-        GetDayRecapUseCase.kt
+        SubmitAnswerUseCase.kt        // + флаг первого завершённого дня, best-effort (I5-D31)
+        GetDayRecapUseCase.kt         // три слота, NotPlayed, серия этого дня; только чтение Room
+        GetPuzzleResultUseCase.kt     // puzzleId из попытки; признак отзыва
         GetArchiveUseCase.kt          // разведка страницы LIMIT 51 и наблюдаемое окно архива
         GetStatisticsUseCase.kt       // поток статистики архива поверх observeDayResults()
+        GetInstalledContentVersionUseCase.kt  // отметка установленного контента из DataStore
       scoring/
         PairwiseScoreCalculator.kt
         StreakCalculator.kt
         StatisticsCalculator.kt       // единственный расчёт статистики — архив и Home
+        PuzzleRetirement.kt           // retiredIn <= установленная версия (запасная — версия строки)
       assignment/
         SetAssignmentPolicy.kt        // последовательная выдача наборов
       shuffle/
         DeterministicShuffler.kt
     ui/
       theme/                    // Color, Type, Shape, PoPoRyadkuTheme
-      components/               // OrderableCard, DragHandle, MoveButtons, ScoreBadge
-      navigation/               // AppNavHost, Destinations
+      components/               // OrderableCard, DragHandle, MoveButtons, ScoreBadge,
+                                // ArchiveRow, DayResultRow (notPlayed), RetiredNotice
+      navigation/               // AppNavHost, Destinations, RouteOrigin (Session | Archive)
       home/                     // HomeScreen, HomeViewModel, HomeUiState
       puzzle/                   // PuzzleScreen, PuzzleViewModel, PuzzleUiState, PuzzleEvent
-      puzzleresult/
-      recap/
-      archive/
+      puzzleresult/             // + ResultRoute: date, slotIndex и origin маршрута результата
+      recap/                    // один экран, сессионный и архивный варианты по origin
+      archive/                  // ArchiveScreen, ArchiveViewModel (keyset-пагинация), State/Event/Effect, ArchiveFormat
       settings/
       share/                    // ShareCardBuilder, шеринг через Intent
       feedback/                 // ReportInaccuracyIntentBuilder (mailto)
@@ -257,6 +261,17 @@ day_results
 | Текущая и лучшая серия | `StreakCalculator` по датам завершённых дней; будущие даты — вне текущей серии, внутри лучшей |
 
 `StreakCache` по-прежнему пишет только расчёт Home через `GetStreaksUseCase` (ADR-005): архив — читатель, а не писатель кэша.
+
+### Архивный итог дня и исторический результат (итерация 5, PR 5B)
+
+Архив открывает прошлый день и результат его головоломки теми же экранами, что и игровая сессия, но в отдельном варианте (`ITERATION_5_DESIGN.md`, §3.7, §7; **I5-D8**, **I5-D10**):
+
+- **Вариант выбирает происхождение маршрута, а не дата.** Аргумент `origin` у `recap/{date}` и `puzzle/{slotIndex}/result?date=` — query-аргумент `nullable = true` без значения по умолчанию, тип `RouteOrigin`: отсутствует → `Session`, `archive` → `Archive`, любое другое значение — невалидный маршрут. Архивная строка сегодняшнего дня открывает архивный вариант, итог с Home — сессионный. Сессионные строители маршрутов не меняются, поэтому `popUpTo` игрового потока находит те же записи.
+- **Бэкстек архива:** `home → archive → recap/{D}?origin=archive → puzzle/{i}/result?date={D}&origin=archive`. Каждый возврат — `popBackStack()` к экрану ниже; если снимать нечего — `popBackStack(HOME, false)`. Второй экземпляр Home не создаётся. Пользовательская навигация выполняется, только пока запись экрана — текущая (второе быстрое нажатие отбрасывается); редирект загрузки без кадра этой проверкой не ограничивается.
+- **Граница исторического результата.** Архивный режим `PuzzleResult` отдаёт только «назад к итогу»: переходы в игровой маршрут `puzzle/{slotIndex}?date=`, к следующему слоту и в сессионный итог в нём не существуют ни при каком исходе (`NoAttempt`, `Skipped` — назад без кадра). Архив не строит игровой маршрут ни в одном месте: игра прошлого дня из архива недостижима.
+- **Историческая головоломка — из попытки.** `GetDayRecapUseCase` и `GetPuzzleResultUseCase` берут `puzzleId` из `puzzle_attempts`, `daily_sets` не читают: замена отозванной головоломки в наборе (I4-D4) не подменяет того, что пользователь видел. Отозванная головоломка остаётся `Played` и открывает полный результат с пометкой; отзыв — `PuzzleRetirement`: `retiredIn != null && retiredIn <= установленная версия` (при неизвестной отметке — `content_version` строки).
+- **Итог дня всегда из трёх строк.** Слот без попытки — `NotPlayed` («не сыграно», без счёта). Серия на итоге — серия этого дня (`streakAtDay`, решение владельца O5-5), у незавершённого дня её нет.
+- **Загрузка итога не пишет в DataStore (I5-D31).** `GetDayRecapUseCase` читает только Room (`DayAssignmentRepository`, `PuzzleRepository`, `ProgressRepository`) и не вызывает `GetStreaksUseCase`; `DayRecapViewModel` не инжектирует `UserPreferencesRepository`. Поэтому отказ DataStore не может заменить готовый итог на `NotFound`. `hasCompletedFirstDay` ставит `SubmitAnswerUseCase` сразу после записи попытки, завершившей день, — best-effort: отказ записи флага не меняет `SubmitResult.Recorded`, отмена пробрасывается.
 
 ---
 
