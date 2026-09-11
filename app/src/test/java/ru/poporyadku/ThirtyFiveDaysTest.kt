@@ -81,6 +81,10 @@ class ThirtyFiveDaysTest {
         delegate: FakeUserPreferencesRepository = FakeUserPreferencesRepository(),
     ) : UserPreferencesRepository by delegate {
         override suspend fun updateStreakCache(current: Int, best: Int, date: LocalDate) = Unit
+
+        // Флаг первого завершённого дня пишет SubmitAnswerUseCase (I5-D31); прогон 35 дней
+        // проверяет выдачу наборов, а не флаг.
+        override suspend fun setHasCompletedFirstDay(completed: Boolean) = Unit
     }
 
     @Before
@@ -111,7 +115,7 @@ class ThirtyFiveDaysTest {
         getTodayState = GetTodayStateUseCase(content, assignments, progress, GetStreaksUseCase(progress, prefs))
         startDailySession = StartDailySessionUseCase(content, assignments, sets, progress)
         getPuzzle = GetPuzzleUseCase(content, assignments, sets, puzzles, progress)
-        submitAnswer = SubmitAnswerUseCase(assignments, sets, puzzles, progress)
+        submitAnswer = SubmitAnswerUseCase(assignments, sets, puzzles, progress, prefs)
         setCount = runBlocking { reader.readHeader(packId).manifest.setCount }
     }
 

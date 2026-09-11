@@ -18,12 +18,21 @@ sealed interface PuzzleResultLoad {
         val puzzle: Puzzle,
         val attempt: PuzzleAttempt,
         val scored: PairwiseScore,
+        /**
+         * Головоломка отозвана относительно установленной версии контента
+         * (ITERATION_5_DESIGN.md, §3.8, I5-D11). Результат при этом полный: пометку
+         * показывает экран, а не use case.
+         */
+        val isRetired: Boolean,
     ) : PuzzleResultLoad
 
     /** Слот закрыт пропуском: показывать нечего, экран обязан перенаправить (I3-D45). */
     data class Skipped(val slotIndex: Int) : PuzzleResultLoad
 
-    /** Попытки нет: слот ещё не сыгран — экран возвращается на Puzzle. */
+    /**
+     * Попытки нет: слот ещё не сыгран. Сессионный экран возвращается на Puzzle,
+     * архивный — назад к итогу: игру прошлого дня архив не запускает (I5-D10).
+     */
     data class NoAttempt(val slotIndex: Int) : PuzzleResultLoad
 
     data class Failure(val kind: PuzzleErrorKind) : PuzzleResultLoad

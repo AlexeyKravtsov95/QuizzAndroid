@@ -3,12 +3,15 @@ package ru.poporyadku.ui.recap
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.SemanticsMatcher
-import androidx.compose.ui.test.SemanticsNodeInteractionCollection
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -19,6 +22,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.unit.Density
 import java.time.LocalDate
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -26,11 +30,13 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import ru.poporyadku.core.model.Category
+import ru.poporyadku.ui.navigation.RouteOrigin
 import ru.poporyadku.ui.theme.PoPoRyadkuTheme
+import ru.poporyadku.ui.theme.Sizing
 
 /**
  * `DayRecapScreen` — ITERATION_3_DESIGN.md, `I3-C10`, `I3-C15`, `I3-C17` и
- * Recap-части `I3-C11`–`I3-C13`.
+ * Recap-части `I3-C11`–`I3-C13`; ITERATION_5_DESIGN.md, §10.4: `I5-C8`…`I5-C10`.
  *
  * Экран stateless: рендерится готовое состояние, Hilt не участвует (I3-D31).
  */
@@ -54,7 +60,7 @@ class DayRecapScreenTest {
         rule.onNodeWithText("4 из 6").assertIsDisplayed()
         rule.onNodeWithTag(DayRecapTestTags.STREAK).assertExists()
         rule.onNodeWithText(TITLE_TODAY).assertIsDisplayed()
-        rule.onNodeWithTag(DayRecapTestTags.DONE_BUTTON).assertIsDisplayed()
+        rule.onNodeWithTag(DayRecapTestTags.PRIMARY_BUTTON).assertIsDisplayed()
     }
 
     /** `I3-C10`. На 320 dp при масштабе 200% список целиком уходит в `stacked`. */
@@ -91,17 +97,13 @@ class DayRecapScreenTest {
     fun `I3-C15 unavailable rows show the task label and the actual score`() {
         rule.setContent {
             Recap(
-                DayRecapState.Content(
-                    title = DayRecapTitle.Today,
-                    totalScore = 10,
+                content(
                     slots = listOf(
-                        SlotResultUi.Played(0, 6, Category.GEOGRAPHY),
+                        SlotResultUi.Played(0, 6, Category.GEOGRAPHY, isOpenable = false),
                         SlotResultUi.Unavailable(1, 0),
                         SlotResultUi.Unavailable(2, 4),
                     ),
-                    currentStreak = 3,
-                    bestStreak = 9,
-                    isRecordUpdated = false,
+                    total = 10,
                 ),
             )
         }
@@ -123,17 +125,13 @@ class DayRecapScreenTest {
     fun `all three rows share a single layout mode`() {
         rule.setContent {
             Recap(
-                DayRecapState.Content(
-                    title = DayRecapTitle.Today,
-                    totalScore = 10,
+                content(
                     slots = listOf(
-                        SlotResultUi.Played(0, 6, Category.GEOGRAPHY),
+                        SlotResultUi.Played(0, 6, Category.GEOGRAPHY, isOpenable = false),
                         SlotResultUi.Unavailable(1, 0),
-                        SlotResultUi.Played(2, 4, Category.CULTURE),
+                        SlotResultUi.Played(2, 4, Category.CULTURE, isOpenable = false),
                     ),
-                    currentStreak = 3,
-                    bestStreak = 9,
-                    isRecordUpdated = false,
+                    total = 10,
                 ),
             )
         }
@@ -176,12 +174,14 @@ class DayRecapScreenTest {
     /** `NotFound` показывает текст и **не** содержит «Повторить» — повторять нечего. */
     @Test
     fun `not found has no retry action`() {
-        rule.setContent { Recap(DayRecapState.NotFound) }
+        rule.setContent { Recap(DayRecapState.NotFound(RouteOrigin.Session)) }
 
         rule.onNodeWithTag(DayRecapTestTags.NOT_FOUND).assertIsDisplayed()
         rule.onNodeWithText(NOT_FOUND_TEXT).assertIsDisplayed()
         rule.onNodeWithText(RETRY).assertDoesNotExist()
-        rule.onNodeWithTag(DayRecapTestTags.DONE_BUTTON).assertDoesNotExist()
+        rule.onNodeWithTag(DayRecapTestTags.PRIMARY_BUTTON).assertDoesNotExist()
+        // Сессионный recapMissing: выход — системная «назад», кнопки в шапке нет.
+        rule.onNodeWithContentDescription(BACK).assertDoesNotExist()
     }
 
     /** Заголовок сегодняшнего итога — «Сегодня», leading-иконки «Назад» нет. */
@@ -193,9 +193,9 @@ class DayRecapScreenTest {
         rule.onNodeWithContentDescription(BACK).assertDoesNotExist()
     }
 
-    /** Архивный итог показывает дату этого дня. */
+    /** Итог прошлого дня, открытый из сессии, показывает дату этого дня. */
     @Test
-    fun `archive recap shows the date of that day`() {
+    fun `a past day shows the date of that day`() {
         rule.setContent {
             Recap(
                 played(total = 12, scores = listOf(6, 3, 3))
@@ -208,15 +208,15 @@ class DayRecapScreenTest {
 
     /** «Готово» отправляет ровно одно событие. */
     @Test
-    fun `done button emits DoneClicked`() {
+    fun `done button emits PrimaryClicked`() {
         val events = mutableListOf<DayRecapEvent>()
         rule.setContent {
             Recap(played(total = 15, scores = listOf(6, 5, 4)), onEvent = { events += it })
         }
 
-        rule.onNodeWithTag(DayRecapTestTags.DONE_BUTTON).performClick()
+        rule.onNodeWithTag(DayRecapTestTags.PRIMARY_BUTTON).assertTextEquals(DONE).performClick()
 
-        assertEquals(listOf(DayRecapEvent.DoneClicked), events)
+        assertEquals(listOf<DayRecapEvent>(DayRecapEvent.PrimaryClicked), events)
     }
 
     // --- I3-C11 / I3-C12 / I3-C13, Recap-часть ---------------------------------------
@@ -227,18 +227,7 @@ class DayRecapScreenTest {
     fun `I3-C11 recap renders on 320 dp without horizontal scrolling`() {
         rule.setContent { Recap(played(total = 15, scores = listOf(6, 5, 4))) }
 
-        val screen = rule.onNodeWithTag(DayRecapTestTags.SCREEN).fetchSemanticsNode()
-        val content = rule.onNodeWithTag(DayRecapTestTags.CONTENT).fetchSemanticsNode()
-        assertTrue(
-            "контент шире экрана: ${content.size.width} > ${screen.size.width}",
-            content.size.width <= screen.size.width,
-        )
-        assertTrue(
-            "на DayRecap не должно быть горизонтальной прокрутки",
-            rule.onAllNodes(
-                SemanticsMatcher.keyIsDefined(SemanticsProperties.HorizontalScrollAxisRange),
-            ).fetchSemanticsNodes().isEmpty(),
-        )
+        assertNoHorizontalOverflow()
     }
 
     /** `I3-C12`, Recap-часть. При масштабе 200% кнопка «Готово» доступна и нажимается. */
@@ -254,12 +243,12 @@ class DayRecapScreenTest {
 
         // assertExists недостаточно: Compose кликает и по узлу, уехавшему за пределы
         // viewport, — кнопка обязана остаться ВИДИМОЙ.
-        rule.onNodeWithTag(DayRecapTestTags.DONE_BUTTON).assertIsDisplayed()
-        rule.onNodeWithTag(DayRecapTestTags.DONE_BUTTON).assertHasClickAction()
-        rule.onNodeWithTag(DayRecapTestTags.DONE_BUTTON).assertIsEnabled()
-        rule.onNodeWithTag(DayRecapTestTags.DONE_BUTTON).performClick()
+        rule.onNodeWithTag(DayRecapTestTags.PRIMARY_BUTTON).assertIsDisplayed()
+        rule.onNodeWithTag(DayRecapTestTags.PRIMARY_BUTTON).assertHasClickAction()
+        rule.onNodeWithTag(DayRecapTestTags.PRIMARY_BUTTON).assertIsEnabled()
+        rule.onNodeWithTag(DayRecapTestTags.PRIMARY_BUTTON).performClick()
 
-        assertEquals(listOf(DayRecapEvent.DoneClicked), events)
+        assertEquals(listOf<DayRecapEvent>(DayRecapEvent.PrimaryClicked), events)
     }
 
     /** `I3-C13`, Recap-часть. Тёмная тема отрисовывается. */
@@ -273,7 +262,148 @@ class DayRecapScreenTest {
 
         rule.onNodeWithTag(DayRecapTestTags.SCREEN).assertExists()
         rule.onNodeWithTag(DayRecapTestTags.SCORE_BADGE).assertIsDisplayed()
-        rule.onNodeWithTag(DayRecapTestTags.DONE_BUTTON).assertIsDisplayed()
+        rule.onNodeWithTag(DayRecapTestTags.PRIMARY_BUTTON).assertIsDisplayed()
+    }
+
+    // --- I5-C8: архивный итог ----------------------------------------------------------
+
+    /**
+     * `I5-C8`. Архивный итог: «Назад» в шапке и внизу, дата в заголовке и для сегодняшнего
+     * дня; незавершённый день — «День не завершён», строки «Задание N» / «не сыграно» без
+     * «0 из 6», без `StreakRow`, без «Лучшей серии» и без «Поделиться».
+     */
+    @Test
+    fun `I5-C8 an archived incomplete day`() {
+        val today = LocalDate.of(2026, 9, 11)
+        val events = mutableListOf<DayRecapEvent>()
+        rule.setContent { Recap(archivedIncomplete(title = DayRecapTitle.Date(today)), onEvent = { events += it }) }
+
+        rule.onNodeWithText("11 сентября 2026").assertIsDisplayed()
+        rule.onNodeWithText(TITLE_TODAY).assertDoesNotExist()
+        rule.onNodeWithTag(DayRecapTestTags.INCOMPLETE).assertIsDisplayed()
+        rule.onNodeWithText(DAY_INCOMPLETE).assertIsDisplayed()
+
+        // NotPlayed: «Задание N» слева, «не сыграно» справа — ни категории, ни «0 из 6».
+        rule.onNodeWithText("Задание 2").assertIsDisplayed()
+        rule.onNodeWithText("Задание 3").assertIsDisplayed()
+        assertEquals(2, rule.onAllNodes(hasText(NOT_PLAYED)).fetchSemanticsNodes().size)
+        rule.onNodeWithText("0 из 6").assertDoesNotExist()
+        assertEquals(1, rule.onAllNodes(hasContentDescription(CATEGORY_CULTURE)).fetchSemanticsNodes().size)
+
+        rule.onNodeWithTag(DayRecapTestTags.STREAK).assertDoesNotExist()
+        rule.onNodeWithTag(DayRecapTestTags.BEST_STREAK).assertDoesNotExist()
+        rule.onNodeWithText(SHARE).assertDoesNotExist()
+
+        rule.onNodeWithContentDescription(BACK).performClick()
+        rule.onNodeWithTag(DayRecapTestTags.PRIMARY_BUTTON).assertTextEquals(BACK).performClick()
+        assertEquals(listOf(DayRecapEvent.BackClicked, DayRecapEvent.PrimaryClicked), events)
+    }
+
+    /** `I5-C8`. Завершённый архивный день показывает серию этого дня и рекорд тем же значением. */
+    @Test
+    fun `I5-C8 an archived complete day shows the streak of that day`() {
+        rule.setContent {
+            Recap(
+                played(total = 15, scores = listOf(6, 5, 4), isRecordUpdated = true, origin = RouteOrigin.Archive)
+                    .copy(title = DayRecapTitle.Date(LocalDate.of(2026, 8, 25)), streakDays = 5),
+            )
+        }
+
+        rule.onNodeWithText("25 августа 2026").assertIsDisplayed()
+        rule.onNodeWithContentDescription(BACK).assertIsDisplayed()
+        rule.onNodeWithTag(DayRecapTestTags.INCOMPLETE).assertDoesNotExist()
+        // Обе строки — «5 дней»: рекорд, установленный днём, равен его серии (O5-5).
+        assertEquals(2, rule.onAllNodes(hasText("5 дней")).fetchSemanticsNodes().size)
+    }
+
+    /** `I5-C8`. Архивный recapMissing: «Назад» в шапке — единственный экранный выход. */
+    @Test
+    fun `I5-C8 an archived missing day keeps the top bar back button`() {
+        val events = mutableListOf<DayRecapEvent>()
+        rule.setContent { Recap(DayRecapState.NotFound(RouteOrigin.Archive), onEvent = { events += it }) }
+
+        rule.onNodeWithText(NOT_FOUND_TEXT).assertIsDisplayed()
+        rule.onNodeWithText(RETRY).assertDoesNotExist()
+        rule.onNodeWithTag(DayRecapTestTags.PRIMARY_BUTTON).assertDoesNotExist()
+        rule.onNodeWithContentDescription(BACK).performClick()
+        assertEquals(listOf<DayRecapEvent>(DayRecapEvent.BackClicked), events)
+    }
+
+    // --- I5-C9: сессионный итог не изменился -------------------------------------------
+
+    @Test
+    fun `I5-C9 the session recap keeps no top bar button and Done`() {
+        rule.setContent { Recap(played(total = 15, scores = listOf(6, 5, 4))) }
+
+        rule.onNodeWithContentDescription(BACK).assertDoesNotExist()
+        rule.onNodeWithTag(DayRecapTestTags.PRIMARY_BUTTON).assertTextEquals(DONE)
+        rule.onNodeWithTag(DayRecapTestTags.INCOMPLETE).assertDoesNotExist()
+        // Строки сессионного итога не нажимаются.
+        assertTrue(rowNodes().none { SemanticsActions.OnClick in it.config })
+    }
+
+    // --- I5-C10: нажимается только Played архива ---------------------------------------
+
+    @Test
+    fun `I5-C10 only Played rows of the archive recap are clickable buttons`() {
+        val events = mutableListOf<DayRecapEvent>()
+        rule.setContent {
+            Recap(
+                content(
+                    origin = RouteOrigin.Archive,
+                    slots = listOf(
+                        SlotResultUi.Played(0, 5, Category.GEOGRAPHY, isOpenable = true),
+                        SlotResultUi.Unavailable(1, 3),
+                        SlotResultUi.NotPlayed(2),
+                    ),
+                    total = 8,
+                    isComplete = false,
+                ),
+                onEvent = { events += it },
+            )
+        }
+
+        val rows = rowNodes()
+        assertEquals(3, rows.size)
+        val played = rows[0].config
+        assertEquals(Role.Button, played.getOrNull(SemanticsProperties.Role))
+        assertEquals(OPEN_RESULT, played.getOrNull(SemanticsActions.OnClick)?.label)
+        val touchTarget = with(rule.density) { Sizing.touchTargetMin.roundToPx() }
+        assertTrue("строка — одна цель не ниже 48 dp", rows[0].size.height >= touchTarget)
+        assertNull("Unavailable без действия нажатия", rows[1].config.getOrNull(SemanticsActions.OnClick))
+        assertNull("NotPlayed без действия нажатия", rows[2].config.getOrNull(SemanticsActions.OnClick))
+
+        rule.onNode(SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Button) and hasText("5 из 6"))
+            .performClick()
+        assertEquals(listOf<DayRecapEvent>(DayRecapEvent.SlotClicked(0)), events)
+    }
+
+    /**
+     * Строка результата — один узел без собственного описания: TalkBack читает её части по
+     * порядку, поэтому в узле есть и категория (или «Задание N»), и счёт (или «не сыграно»).
+     */
+    @Test
+    fun `every result row exposes both of its parts`() {
+        rule.setContent {
+            Recap(
+                content(
+                    origin = RouteOrigin.Archive,
+                    slots = listOf(
+                        SlotResultUi.Played(0, 5, Category.GEOGRAPHY, isOpenable = true),
+                        SlotResultUi.Unavailable(1, 3),
+                        SlotResultUi.NotPlayed(2),
+                    ),
+                    total = 8,
+                    isComplete = false,
+                ),
+            )
+        }
+
+        val rows = rowNodes()
+        assertEquals(listOf(CATEGORY_GEOGRAPHY), rows[0].config.getOrNull(SemanticsProperties.ContentDescription))
+        assertEquals(listOf("5 из 6"), rows[0].config.getOrNull(SemanticsProperties.Text)?.map { it.text })
+        assertEquals(listOf("Задание 2", "3 из 6"), rows[1].config.getOrNull(SemanticsProperties.Text)?.map { it.text })
+        assertEquals(listOf("Задание 3", NOT_PLAYED), rows[2].config.getOrNull(SemanticsProperties.Text)?.map { it.text })
     }
 
     // --- Инфраструктура --------------------------------------------------------------
@@ -299,21 +429,66 @@ class DayRecapScreenTest {
         .fetchSemanticsNode()
         .children
 
+    private fun assertNoHorizontalOverflow() {
+        val screen = rule.onNodeWithTag(DayRecapTestTags.SCREEN).fetchSemanticsNode()
+        val content = rule.onNodeWithTag(DayRecapTestTags.CONTENT).fetchSemanticsNode()
+        assertTrue(
+            "контент шире экрана: ${content.size.width} > ${screen.size.width}",
+            content.size.width <= screen.size.width,
+        )
+        assertTrue(
+            "на DayRecap не должно быть горизонтальной прокрутки",
+            rule.onAllNodes(
+                SemanticsMatcher.keyIsDefined(SemanticsProperties.HorizontalScrollAxisRange),
+            ).fetchSemanticsNodes().isEmpty(),
+        )
+    }
+
     private fun played(
         total: Int,
         scores: List<Int>,
         isRecordUpdated: Boolean = false,
-    ) = DayRecapState.Content(
-        title = DayRecapTitle.Today,
-        totalScore = total,
+        origin: RouteOrigin = RouteOrigin.Session,
+    ) = content(
+        origin = origin,
         slots = listOf(
-            SlotResultUi.Played(0, scores[0], Category.GEOGRAPHY),
-            SlotResultUi.Played(1, scores[1], Category.HISTORY),
-            SlotResultUi.Played(2, scores[2], Category.SCIENCE),
+            SlotResultUi.Played(0, scores[0], Category.GEOGRAPHY, isOpenable = origin == RouteOrigin.Archive),
+            SlotResultUi.Played(1, scores[1], Category.HISTORY, isOpenable = origin == RouteOrigin.Archive),
+            SlotResultUi.Played(2, scores[2], Category.SCIENCE, isOpenable = origin == RouteOrigin.Archive),
         ),
-        currentStreak = 6,
-        bestStreak = 9,
+        total = total,
         isRecordUpdated = isRecordUpdated,
+    )
+
+    private fun archivedIncomplete(title: DayRecapTitle) = content(
+        origin = RouteOrigin.Archive,
+        title = title,
+        slots = listOf(
+            SlotResultUi.Played(0, 5, Category.CULTURE, isOpenable = true),
+            SlotResultUi.NotPlayed(1),
+            SlotResultUi.NotPlayed(2),
+        ),
+        total = 5,
+        isComplete = false,
+    )
+
+    private fun content(
+        slots: List<SlotResultUi>,
+        total: Int,
+        origin: RouteOrigin = RouteOrigin.Session,
+        title: DayRecapTitle = DayRecapTitle.Today,
+        isComplete: Boolean = true,
+        isRecordUpdated: Boolean = false,
+    ) = DayRecapState.Content(
+        origin = origin,
+        title = title,
+        dayNumber = 12,
+        totalScore = total,
+        isComplete = isComplete,
+        slots = slots,
+        streakDays = if (isComplete) 6 else null,
+        isRecordUpdated = isRecordUpdated,
+        canShare = isComplete,
     )
 
     private companion object {
@@ -326,6 +501,12 @@ class DayRecapScreenTest {
         const val NOT_FOUND_TEXT = "Данные за этот день не сохранились"
         const val RETRY = "Повторить"
         const val BACK = "Назад"
+        const val DONE = "Готово"
+        const val SHARE = "Поделиться"
+        const val DAY_INCOMPLETE = "День не завершён"
+        const val NOT_PLAYED = "не сыграно"
+        const val OPEN_RESULT = "Открыть результат"
         const val CATEGORY_GEOGRAPHY = "Категория: География"
+        const val CATEGORY_CULTURE = "Категория: Культура"
     }
 }

@@ -3,22 +3,28 @@ package ru.poporyadku.domain.usecase
 import android.database.sqlite.SQLiteConstraintException
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
+import java.io.IOException
 import java.time.Clock
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneOffset
 import java.util.concurrent.atomic.AtomicInteger
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
@@ -30,10 +36,12 @@ import ru.poporyadku.core.model.ContentPack
 import ru.poporyadku.core.model.DailySet
 import ru.poporyadku.core.model.Puzzle
 import ru.poporyadku.core.model.PuzzleAttempt
+import ru.poporyadku.core.model.UserPreferences
 import ru.poporyadku.core.model.puzzleIdAt
 import ru.poporyadku.core.model.InMemoryPuzzleRepository
 import ru.poporyadku.core.model.TestContent
 import ru.poporyadku.core.time.FakeClockProvider
+import ru.poporyadku.data.content.FakeUserPreferencesRepository
 import ru.poporyadku.data.db.AppDatabase
 import ru.poporyadku.data.db.dao.AttemptDao
 import ru.poporyadku.data.db.entity.DayAssignmentEntity
@@ -45,9 +53,11 @@ import ru.poporyadku.data.repository.DayAssignmentRepositoryImpl
 import ru.poporyadku.domain.repository.ProgressRepository
 import ru.poporyadku.domain.scoring.PairwiseScoreCalculator
 import ru.poporyadku.domain.repository.PuzzleRepository
+import ru.poporyadku.domain.repository.UserPreferencesRepository
 
 /**
- * ITERATION_3_DESIGN.md, §19: `I3-U12`–`I3-U17`, `I3-U26`, `I3-U27`, `I3-U30`–`I3-U32`, `I3-U35`.
+ * ITERATION_3_DESIGN.md, §19: `I3-U12`–`I3-U17`, `I3-U26`, `I3-U27`, `I3-U30`–`I3-U32`, `I3-U35`;
+ * ITERATION_5_DESIGN.md, §6.12: `I5-R6` — флаг первого завершённого дня (I5-D31).
  *
  * Гонки (`I3-U17`, `I3-U35`) синхронизируются барьером на общем чтении «есть ли уже
  * попытка»: обе корутины гарантированно проходят ранний рубеж до того, как любая из них
@@ -60,6 +70,7 @@ class SubmitAnswerUseCaseTest {
     private lateinit var clock: FakeClockProvider
     private lateinit var progress: ProgressRepositoryImpl
     private lateinit var assignments: DayAssignmentRepositoryImpl
+    private lateinit var preferences: FlagPreferences
 
     private val date = LocalDate.of(2026, 9, 1)
     private val zone = ZoneOffset.UTC
@@ -130,6 +141,31 @@ class SubmitAnswerUseCaseTest {
             throw SQLiteConstraintException("NOT NULL constraint failed: puzzle_attempts.some_future_column")
     }
 
+    /**
+     * Флаг первого завершённого дня: читается из состояния, запись считается и умеет
+     * бросить заданное исключение. Остальной контракт настроек — у двойника импортёра,
+     * `SubmitAnswerUseCase` его не касается.
+     */
+    private class FlagPreferences(
+        private val delegate: FakeUserPreferencesRepository = FakeUserPreferencesRepository(),
+    ) : UserPreferencesRepository by delegate {
+        val flag = MutableStateFlow(false)
+        var writes = 0
+            private set
+
+        /** Чем ответить на запись флага вместо записи; `null` — записать штатно. */
+        var failWith: (() -> Throwable)? = null
+
+        override val preferences: Flow<UserPreferences> =
+            flag.map { delegate.current.copy(hasCompletedFirstDay = it) }
+
+        override suspend fun setHasCompletedFirstDay(completed: Boolean) {
+            writes++
+            failWith?.let { throw it() }
+            flag.value = completed
+        }
+    }
+
     private class FixedPuzzles(private val puzzle: Puzzle?) : PuzzleRepository {
         var calls = 0
         override suspend fun getPuzzle(puzzleId: String): Puzzle? {
@@ -146,6 +182,7 @@ class SubmitAnswerUseCaseTest {
         clock = FakeClockProvider(Clock.fixed(date.atTime(LocalTime.NOON).atZone(zone).toInstant(), zone))
         progress = ProgressRepositoryImpl(db, db.attemptDao(), db.dayResultDao(), clock)
         assignments = DayAssignmentRepositoryImpl(db, db.assignmentDao(), db.dailySetDao(), clock, packId)
+        preferences = FlagPreferences()
         runBlocking {
             db.dailySetDao().upsertAll(listOf(fixtureSet.toEntity()))
             db.assignmentDao().insert(DayAssignmentEntity(date.toString(), packId, 0, assignedAt = 1L))
@@ -165,6 +202,7 @@ class SubmitAnswerUseCaseTest {
         sets = DailySetRepositoryImpl(db.dailySetDao()),
         puzzles = puzzles,
         progress = progressRepository,
+        preferences = preferences,
     )
 
     private suspend fun rows() = db.attemptDao().getByDate(date.toString())
@@ -364,5 +402,99 @@ class SubmitAnswerUseCaseTest {
             assertEquals(1, results.count { it is SubmitResult.AlreadyClosed })
             assertEquals(stored.score, (results.first { it is SubmitResult.Recorded } as SubmitResult.Recorded).score)
         }
+    }
+
+    // --- I5-R6: флаг первого завершённого дня ------------------------------------------
+
+    @Test
+    fun `I5-R6 - slots 0 and 1 leave the flag alone, the answer that completes the day sets it once`() = runTest {
+        useCase()(date, 0, Submission.Answer(correctOrderAt(0)))
+        useCase()(date, 1, Submission.Answer(correctOrderAt(1)))
+        assertEquals("незавершённый день флаг не трогает", 0, preferences.writes)
+        assertFalse(preferences.flag.value)
+
+        val last = useCase()(date, 2, Submission.Answer(correctOrderAt(2)))
+
+        assertEquals(SubmitResult.Recorded(2, 6, AttemptKind.Answered), last)
+        assertEquals(1, preferences.writes)
+        assertTrue(preferences.flag.value)
+    }
+
+    @Test
+    fun `I5-R6 - a skip of the last slot completes the day and sets the flag`() = runTest {
+        useCase()(date, 0, Submission.Answer(correctOrderAt(0)))
+        useCase()(date, 1, Submission.Skip)
+
+        val last = useCase()(date, 2, Submission.Skip)
+
+        assertEquals(SubmitResult.Recorded(2, 0, AttemptKind.Skipped), last)
+        assertEquals(1, preferences.writes)
+        assertTrue(preferences.flag.value)
+    }
+
+    @Test
+    fun `I5-R6 - an already set flag is read and never written again`() = runTest {
+        preferences.flag.value = true
+
+        repeat(3) { slot -> useCase()(date, slot, Submission.Answer(correctOrderAt(slot))) }
+
+        assertEquals("повторной записи нет", 0, preferences.writes)
+        assertTrue(preferences.flag.value)
+    }
+
+    @Test
+    fun `I5-R6 - a failing write does not change Recorded and keeps the attempt`() = runTest {
+        useCase()(date, 0, Submission.Answer(correctOrderAt(0)))
+        useCase()(date, 1, Submission.Answer(correctOrderAt(1)))
+        preferences.failWith = { IOException("DataStore недоступен") }
+
+        val last = useCase()(date, 2, Submission.Answer(correctOrderAt(2)))
+
+        assertEquals(SubmitResult.Recorded(2, 6, AttemptKind.Answered), last)
+        assertEquals(1, preferences.writes)
+        assertFalse("флаг остался false — повторит следующий завершённый день", preferences.flag.value)
+        assertEquals(3, rows().size)
+        assertTrue(requireNotNull(progress.getDayResult(date)).isComplete)
+    }
+
+    @Test
+    fun `I5-R6 - cancellation during the flag write is rethrown, the attempt stays recorded`() {
+        runBlocking {
+            useCase()(date, 0, Submission.Answer(correctOrderAt(0)))
+            useCase()(date, 1, Submission.Answer(correctOrderAt(1)))
+        }
+        preferences.failWith = { CancellationException("экран ушёл") }
+
+        assertThrows(CancellationException::class.java) {
+            runBlocking { useCase()(date, 2, Submission.Answer(correctOrderAt(2))) }
+        }
+        runBlocking {
+            assertEquals(3, rows().size)
+            assertTrue(requireNotNull(progress.getDayResult(date)).isComplete)
+        }
+    }
+
+    @Test
+    fun `I5-R6 - AlreadyClosed and Failure never touch the flag`() = runTest {
+        repeat(3) { slot -> useCase()(date, slot, Submission.Answer(correctOrderAt(slot))) }
+        assertEquals(1, preferences.writes)
+        // Даже при сброшенном флаге ни повтор, ни отказ его не пишут: попытку создал не этот вызов.
+        preferences.flag.value = false
+
+        assertEquals(
+            SubmitResult.AlreadyClosed(2, AttemptKind.Answered),
+            useCase()(date, 2, Submission.Answer(correctOrderAt(2))),
+        )
+        assertEquals(
+            SubmitResult.Failure(PuzzleErrorKind.SlotOutOfRange),
+            useCase()(date, 3, Submission.Skip),
+        )
+        assertEquals(
+            SubmitResult.Failure(PuzzleErrorKind.NoAssignment),
+            useCase()(date.plusDays(1), 0, Submission.Skip),
+        )
+
+        assertEquals(1, preferences.writes)
+        assertFalse(preferences.flag.value)
     }
 }
