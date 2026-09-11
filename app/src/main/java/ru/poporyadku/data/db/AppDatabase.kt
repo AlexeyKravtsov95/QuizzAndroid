@@ -2,6 +2,7 @@ package ru.poporyadku.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import ru.poporyadku.data.db.dao.ArchiveDao
 import ru.poporyadku.data.db.dao.AssignmentDao
 import ru.poporyadku.data.db.dao.AttemptDao
 import ru.poporyadku.data.db.dao.DailySetDao
@@ -33,4 +34,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun assignmentDao(): AssignmentDao
     abstract fun attemptDao(): AttemptDao
     abstract fun dayResultDao(): DayResultDao
+
+    // ITERATION_5_DESIGN.md, I5-D2 (PR 5A): read-only DAO без сущностей. Аксессор не
+    // меняет экспортируемую схему: version, entities и identityHash прежние.
+    abstract fun archiveDao(): ArchiveDao
 }

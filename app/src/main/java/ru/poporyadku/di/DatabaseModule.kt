@@ -9,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 import ru.poporyadku.data.db.AppDatabase
+import ru.poporyadku.data.db.dao.ArchiveDao
 import ru.poporyadku.data.db.dao.AssignmentDao
 import ru.poporyadku.data.db.dao.AttemptDao
 import ru.poporyadku.data.db.dao.DailySetDao
@@ -40,4 +41,8 @@ object DatabaseModule {
 
     @Provides
     fun provideDayResultDao(database: AppDatabase): DayResultDao = database.dayResultDao()
+
+    // ITERATION_5_DESIGN.md, §5.1 (PR 5A): архив сыгранных дней, только чтение.
+    @Provides
+    fun provideArchiveDao(database: AppDatabase): ArchiveDao = database.archiveDao()
 }

@@ -20,7 +20,7 @@ import ru.poporyadku.domain.model.TodayState
 import ru.poporyadku.domain.model.TodayStats
 import ru.poporyadku.domain.repository.DayAssignmentRepository
 import ru.poporyadku.domain.repository.ProgressRepository
-import ru.poporyadku.domain.scoring.Streaks
+import ru.poporyadku.domain.scoring.StatisticsCalculator
 
 /**
  * Живое состояние сегодняшнего дня (ITERATION_3_DESIGN.md, I3-D13, I3-D14, I3-D38, I3-D43).
@@ -83,7 +83,11 @@ class GetTodayStateUseCase @Inject constructor(
 
         // Одна выборка на всю статистику, hasAnyAttemptEver и последний завершённый день.
         val dayResults = progress.getAllDayResults()
-        val stats = statsOf(dayResults, streaks(today))
+        // Вызов остаётся ради записи StreakCache: расчёт Home — единственный её писатель
+        // (I3-D12). Показываемая серия берётся из StatisticsCalculator — те же
+        // StreakCalculator и завершённые даты, поэтому значения равны (I5-S7).
+        streaks(today)
+        val stats = statsOf(dayResults, today)
         partial.stats = stats
 
         return when (val decision = context.decision) {
@@ -170,12 +174,20 @@ class GetTodayStateUseCase @Inject constructor(
         )
     }
 
-    private fun statsOf(dayResults: List<DayResult>, streaks: Streaks): TodayStats = TodayStats(
-        streaks = streaks,
-        bestDayScore = dayResults.maxOfOrNull { it.totalScore } ?: 0,
-        playedDayCount = dayResults.size,
-        completedDayCount = dayResults.count { it.isComplete },
-    )
+    /**
+     * Поля и их значения прежние; меняется только происхождение чисел: тот же
+     * [StatisticsCalculator], что у архива, поэтому Home и архив не расходятся по
+     * построению (ITERATION_5_DESIGN.md, §6.2, I5-D5, `I5-S6`).
+     */
+    private fun statsOf(dayResults: List<DayResult>, today: LocalDate): TodayStats {
+        val statistics = StatisticsCalculator.of(dayResults, today)
+        return TodayStats(
+            streaks = statistics.streaks,
+            bestDayScore = statistics.bestDayScore,
+            playedDayCount = statistics.playedDays,
+            completedDayCount = statistics.completedDays,
+        )
+    }
 
     private fun failureState(e: Exception, partial: PartialToday): TodayState = TodayState.Failure(
         today = partial.today,
