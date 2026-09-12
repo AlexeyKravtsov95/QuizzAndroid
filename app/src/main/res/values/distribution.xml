@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Ссылка на приложение (ITERATION_5_DESIGN.md, I5-D21, O5-6). Отдельный файл: в итерации 7
+  меняется только значение ниже — на реальный URL универсальной landing-страницы, ведущей
+  в RuStore и Huawei AppGallery; `strings.xml` и код при этом не затрагиваются. Product
+  flavors и магазинные конфигурации для ссылки не нужны ни сейчас, ни в итерации 7.
+
+  ВНИМАНИЕ: `https://poporyadku.invalid/` — одобренное владельцем АЛЬФА-значение. Домен
+  `.invalid` зарезервирован RFC 2606 и заведомо нерабочий; release-readiness итерации 7
+  запрещает его в release-сборке.
+-->
+<resources>
+    <string name="share_app_url" translatable="false">https://poporyadku.invalid/</string>
+</resources>

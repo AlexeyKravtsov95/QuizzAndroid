@@ -246,6 +246,7 @@ private object PreviewExternalApps : ExternalApps {
     override fun viewUrl(url: String): LaunchResult = LaunchResult.Launched
     override fun canComposeEmail(): Boolean = true
     override fun composeEmail(draft: MailDraft): LaunchResult = LaunchResult.Launched
+    override fun shareText(text: String, chooserTitle: String): LaunchResult = LaunchResult.Launched
 }
 
 @Composable

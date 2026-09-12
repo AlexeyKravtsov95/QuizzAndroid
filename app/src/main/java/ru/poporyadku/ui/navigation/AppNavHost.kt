@@ -43,6 +43,7 @@ import ru.poporyadku.ui.report.reportDraft
 import ru.poporyadku.ui.settings.SettingsEffect
 import ru.poporyadku.ui.settings.SettingsScreen
 import ru.poporyadku.ui.settings.SettingsViewModel
+import ru.poporyadku.ui.share.shareCardText
 import ru.poporyadku.ui.sources.SourcesEffect
 import ru.poporyadku.ui.sources.SourcesScreen
 import ru.poporyadku.ui.sources.SourcesViewModel
@@ -265,8 +266,12 @@ private fun DayRecapRoute(navController: NavHostController, entry: NavBackStackE
     val viewModel: DayRecapViewModel = hiltViewModel()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
+    val externalApps = rememberExternalApps()
+    // Ресурсы карточки читает контейнер, а не ViewModel; `resources` в ключах — чтобы
+    // коллектор пересоздался при смене конфигурации, как у PuzzleRoute.
+    val resources = LocalResources.current
 
-    LaunchedEffect(viewModel, lifecycleOwner) {
+    LaunchedEffect(viewModel, lifecycleOwner, externalApps, resources) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.effects.collect { effect ->
                 if (!navController.isCurrent(entry)) return@collect
@@ -281,6 +286,16 @@ private fun DayRecapRoute(navController: NavHostController, entry: NavBackStackE
                     is DayRecapEffect.OpenResult -> navController.navigate(
                         Destinations.archivedPuzzleResult(effect.slotIndex, effect.localDate),
                     )
+
+                    // Карточка собирается здесь: ViewModel не читает Resources, экран
+                    // ничего не запускает. Отказ запуска (Failed/Suppressed) экран не
+                    // роняет и навигацию не меняет — пользователь остаётся на итоге.
+                    is DayRecapEffect.Share -> {
+                        externalApps.shareText(
+                            text = resources.shareCardText(effect.input),
+                            chooserTitle = resources.getString(R.string.share_chooser_title),
+                        )
+                    }
                 }
             }
         }

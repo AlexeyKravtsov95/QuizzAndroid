@@ -40,6 +40,7 @@ import ru.poporyadku.ui.components.DayResultTrailing
 import ru.poporyadku.ui.components.ErrorBlock
 import ru.poporyadku.ui.components.PrimaryButton
 import ru.poporyadku.ui.components.ScoreBadge
+import ru.poporyadku.ui.components.SecondaryButton
 import ru.poporyadku.ui.components.SkeletonLine
 import ru.poporyadku.ui.components.StreakRow
 import ru.poporyadku.ui.navigation.RouteOrigin
@@ -56,6 +57,7 @@ object DayRecapTestTags {
     const val RESULTS = "recap_results"
     const val STREAK = "recap_streak"
     const val BEST_STREAK = "recap_best_streak"
+    const val SHARE_BUTTON = "recap_share_button"
     const val PRIMARY_BUTTON = "recap_primary_button"
     const val NOT_FOUND = "recap_not_found"
 }
@@ -67,13 +69,14 @@ object DayRecapTestTags {
  * Stateless: состояние и callbacks приходят параметрами.
  *
  * Порядок сверху вниз — заголовок → общий счёт → («День не завершён») → три результата →
- * серия → основная кнопка; общий счёт крупнейший текстовый элемент экрана.
+ * серия → («Поделиться») → основная кнопка; общий счёт крупнейший текстовый элемент экрана.
  *
  * **Два варианта по происхождению** (I5-D8). Сессионный: заголовок «Сегодня» либо дата,
  * leading-иконки «Назад» нет (граф сессии уже вычищен, и она вела бы туда же, куда
  * «Готово»), строки не нажимаются, внизу «Готово». Архивный: заголовок — всегда дата,
  * «Назад» в шапке и внизу, строка `Played` открывает исторический результат.
- * «Поделиться» (PR 5D), реклама и диалог уведомлений на экране отсутствуют.
+ * «Поделиться» есть только у завершённого дня (`canShare`, I5-D20) — в обоих вариантах;
+ * реклама и диалог уведомлений на экране отсутствуют.
  */
 @Composable
 fun DayRecapScreen(
@@ -200,6 +203,17 @@ private fun RecapContent(state: DayRecapState.Content, onEvent: (DayRecapEvent) 
                 modifier = Modifier.testTag(DayRecapTestTags.BEST_STREAK),
             )
         }
+    }
+
+    // «Поделиться» — после серии и рекорда, над основной кнопкой, и только у
+    // завершённого дня: в карточке ровно три результата, а символа «не сыграно» в её
+    // формате нет (I5-D20). Собственного состояния у кнопки нет — одно событие наружу.
+    if (state.canShare) {
+        SecondaryButton(
+            text = stringResource(R.string.recap_share),
+            onClick = { onEvent(DayRecapEvent.ShareClicked) },
+            modifier = Modifier.testTag(DayRecapTestTags.SHARE_BUTTON),
+        )
     }
 }
 

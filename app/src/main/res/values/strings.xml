@@ -92,6 +92,22 @@
     <string name="recap_slot_open">Открыть результат</string>
 
     <!--
+      Итерация 5, PR 5D. Карточка результата дня и системный шеринг
+      (ITERATION_5_DESIGN.md, §3.13, I5-D20; docs/design/b2/state-sheets/share-card-format.md).
+      «День N» — порядковый номер набора пользователя, а не календарная дата; формы
+      «день»/«дня»/«дней» выбирает собственное правило RussianPlural, а не plurals по
+      локали устройства: карточка уходит наружу и не должна зависеть от языка чужого
+      телефона.
+    -->
+    <string name="recap_share">Поделиться</string>
+    <string name="share_card_header">По порядку! · День %1$d</string>
+    <string name="share_card_streak">Серия: %1$d %2$s</string>
+    <string name="share_card_day_one">день</string>
+    <string name="share_card_day_few">дня</string>
+    <string name="share_card_day_many">дней</string>
+    <string name="share_chooser_title">Поделиться результатом</string>
+
+    <!--
       Итерация 3, PR 3D. Строки игровых экранов. Формулировки перенесены дословно из
       UX_FLOW.md и COMPONENTS.md; литеральных строк в коде экранов и компонентов нет.
     -->

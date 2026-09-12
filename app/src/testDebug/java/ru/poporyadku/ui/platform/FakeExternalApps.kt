@@ -19,6 +19,9 @@ class FakeExternalApps(
     val viewedUrls = mutableListOf<String>()
     val composedDrafts = mutableListOf<MailDraft>()
 
+    /** Каждый шеринг: текст карточки и заголовок системного выбора. */
+    val sharedTexts = mutableListOf<Pair<String, String>>()
+
     override fun canViewUrl(url: String): Boolean {
         viewQueries += url
         return canView(url)
@@ -34,5 +37,11 @@ class FakeExternalApps(
     override fun composeEmail(draft: MailDraft): LaunchResult {
         composedDrafts += draft
         return if (emailAvailable) LaunchResult.Launched else LaunchResult.NoHandler
+    }
+
+    /** Системный выбор доступен всегда: доступность у шеринга не спрашивается. */
+    override fun shareText(text: String, chooserTitle: String): LaunchResult {
+        sharedTexts += text to chooserTitle
+        return LaunchResult.Launched
     }
 }
