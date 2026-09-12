@@ -41,6 +41,7 @@ import ru.poporyadku.domain.usecase.GetDayRecapUseCase
 import ru.poporyadku.domain.usecase.GetStreaksUseCase
 import ru.poporyadku.ui.navigation.Destinations
 import ru.poporyadku.ui.navigation.RouteOrigin
+import ru.poporyadku.ui.share.ShareCardInput
 
 /**
  * `DayRecapViewModel` — ITERATION_3_DESIGN.md, `I3-V34` (источник `today`, I3-D51);
@@ -349,6 +350,136 @@ class DayRecapViewModelTest {
         assertNull(content.streakDays)
         assertEquals(false, content.canShare)
         assertEquals(listOf(SlotResultUi.NotPlayed(1), SlotResultUi.NotPlayed(2)), content.slots.drop(1))
+    }
+
+    // --- I5-V28: «Поделиться» ------------------------------------------------------------
+
+    /**
+     * `I5-V28`. Завершённый день даёт ровно один `Share` и в сессионном, и в архивном
+     * варианте; вход несёт номер дня, три счёта в порядке слотов 0..2 и серию ЭТОГО дня.
+     * Общего счёта во входе нет — его считает `ShareCardBuilder`.
+     */
+    @Test
+    fun `I5-V28 a completed day shares the same card from session and from archive`() = runTest(dispatcher) {
+        givenCompletedDay(archiveDate, totalScore = 14)
+        val expected = ShareCardInput(dayNumber = 3, slotScores = listOf(6, 4, 4), streakDays = 1)
+
+        val session = createViewModel(date = Destinations.serialize(archiveDate))
+        val archive = createViewModel(date = Destinations.serialize(archiveDate), origin = Destinations.ORIGIN_ARCHIVE)
+        advanceUntilIdle()
+
+        session.effects.test {
+            session.onEvent(DayRecapEvent.ShareClicked)
+            assertEquals(DayRecapEffect.Share(expected), awaitItem())
+            expectNoEvents()
+        }
+        archive.effects.test {
+            archive.onEvent(DayRecapEvent.ShareClicked)
+            assertEquals(DayRecapEffect.Share(expected), awaitItem())
+            expectNoEvents()
+        }
+    }
+
+    /** `I5-V28`. `Unavailable` входит в карточку своим фактическим счётом, а не нулём. */
+    @Test
+    fun `I5-V28 an unavailable slot contributes its actual score`() = runTest(dispatcher) {
+        progress.dayResult = DayResult(archiveDate, totalScore = 11, completedCount = 3, isComplete = true, completedAt = 1L)
+        assignments.assignment = DayAssignment(archiveDate, PACK, setIndex = 5, assignedAt = 0L)
+        progress.attempts = listOf(
+            attempt(slot = 0, puzzleId = "p1", order = listOf("a", "b", "c", "d"), score = 6),
+            // Головоломка недоступна (id не читается), но попытка была и счёт у неё есть.
+            attempt(slot = 1, puzzleId = "missing", order = listOf("a", "b"), score = 2),
+            attempt(slot = 2, puzzleId = "p1", order = listOf("a", "b", "c", "d"), score = 3),
+        )
+        progress.completedDates = listOf(archiveDate)
+        val viewModel = createViewModel(date = Destinations.serialize(archiveDate))
+        advanceUntilIdle()
+
+        val content = viewModel.uiState.value as DayRecapState.Content
+        assertTrue(content.slots[1] is SlotResultUi.Unavailable)
+
+        viewModel.effects.test {
+            viewModel.onEvent(DayRecapEvent.ShareClicked)
+            assertEquals(
+                DayRecapEffect.Share(ShareCardInput(dayNumber = 6, slotScores = listOf(6, 2, 3), streakDays = 1)),
+                awaitItem(),
+            )
+            expectNoEvents()
+        }
+    }
+
+    /** `I5-V28`. У незавершённого дня кнопки нет, и событие эффекта не создаёт. */
+    @Test
+    fun `I5-V28 an incomplete day shares nothing`() = runTest(dispatcher) {
+        progress.dayResult = DayResult(archiveDate, totalScore = 6, completedCount = 1, isComplete = false, completedAt = null)
+        assignments.assignment = DayAssignment(archiveDate, PACK, setIndex = 1, assignedAt = 0L)
+        progress.attempts = listOf(attempt(slot = 0, puzzleId = "p1", order = listOf("a", "b", "c", "d"), score = 6))
+        val viewModel = createViewModel(date = Destinations.serialize(archiveDate), origin = Destinations.ORIGIN_ARCHIVE)
+        advanceUntilIdle()
+
+        assertEquals(false, (viewModel.uiState.value as DayRecapState.Content).canShare)
+
+        viewModel.effects.test {
+            viewModel.onEvent(DayRecapEvent.ShareClicked)
+            expectNoEvents()
+        }
+    }
+
+    /**
+     * `I5-V28`. Одно нажатие — ровно один эффект: два принятых нажатия дают два эффекта и
+     * ни одного лишнего, скрытого повтора у `Channel` нет. Отсечение второго запуска —
+     * работа `ExternalApps`, а не ViewModel.
+     */
+    @Test
+    fun `I5-V28 each accepted click produces exactly one effect`() = runTest(dispatcher) {
+        givenCompletedDay(archiveDate, totalScore = 14)
+        val viewModel = createViewModel(date = Destinations.serialize(archiveDate))
+        advanceUntilIdle()
+
+        viewModel.effects.test {
+            viewModel.onEvent(DayRecapEvent.ShareClicked)
+            viewModel.onEvent(DayRecapEvent.ShareClicked)
+            assertTrue(awaitItem() is DayRecapEffect.Share)
+            assertTrue(awaitItem() is DayRecapEffect.Share)
+            expectNoEvents()
+        }
+    }
+
+    /** `I5-V28`. До загрузки дня делиться нечем: у `Loading` эффекта нет. */
+    @Test
+    fun `I5-V28 sharing before the day is loaded produces nothing`() = runTest(dispatcher) {
+        givenCompletedDay(archiveDate, totalScore = 14)
+        val viewModel = createViewModel(date = Destinations.serialize(archiveDate))
+
+        assertEquals(DayRecapState.Loading, viewModel.uiState.value)
+        viewModel.effects.test {
+            viewModel.onEvent(DayRecapEvent.ShareClicked)
+            expectNoEvents()
+            advanceUntilIdle()
+            expectNoEvents()
+        }
+    }
+
+    /** `I5-V28`. Навигационные эффекты не изменились: «Поделиться» их не подменяет. */
+    @Test
+    fun `I5-V28 navigation effects are unchanged`() = runTest(dispatcher) {
+        givenCompletedDay(archiveDate, totalScore = 14)
+        val session = createViewModel(date = Destinations.serialize(archiveDate))
+        val archive = createViewModel(date = Destinations.serialize(archiveDate), origin = Destinations.ORIGIN_ARCHIVE)
+        advanceUntilIdle()
+
+        session.effects.test {
+            session.onEvent(DayRecapEvent.PrimaryClicked)
+            assertEquals(DayRecapEffect.NavigateHome, awaitItem())
+            expectNoEvents()
+        }
+        archive.effects.test {
+            archive.onEvent(DayRecapEvent.BackClicked)
+            assertEquals(DayRecapEffect.NavigateBack, awaitItem())
+            archive.onEvent(DayRecapEvent.SlotClicked(0))
+            assertEquals(DayRecapEffect.OpenResult(slotIndex = 0, localDate = archiveDate), awaitItem())
+            expectNoEvents()
+        }
     }
 
     // --- I5-V35: загрузка итога не пишет в DataStore -------------------------------------

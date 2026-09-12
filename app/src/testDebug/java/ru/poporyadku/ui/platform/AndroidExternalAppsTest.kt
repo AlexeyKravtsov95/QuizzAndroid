@@ -23,7 +23,8 @@ import ru.poporyadku.ui.report.MailDraft
 import ru.poporyadku.ui.report.MailtoUri
 
 /**
- * `AndroidExternalApps` — `I5-P1` (ITERATION_5_DESIGN.md, §3.12, §8.1, I5-D19).
+ * `AndroidExternalApps` — `I5-P1` (ITERATION_5_DESIGN.md, §3.12, §8.1, I5-D19) и `I5-P2`
+ * (§3.13, шеринг карточки).
  *
  * Обработчики регистрируются в `ShadowPackageManager` фильтрами намерений — так, как их
  * объявил бы браузер или почтовый клиент: `SENDTO mailto:` с любыми параметрами и
@@ -188,6 +189,84 @@ class AndroidExternalAppsTest {
         assertEquals(LaunchResult.Launched, apps.composeEmail(DRAFT))
     }
 
+    // --- I5-P2: системный шеринг -------------------------------------------------------
+
+    /**
+     * `I5-P2`. Наружу уходит системный выбор, внутри него — `ACTION_SEND` с `text/plain` и
+     * посимвольно тем текстом, что передали; заголовок выбора — переданный аргумент.
+     * Обработчик заранее не разрешается: выбор приложения разрешается системой всегда.
+     */
+    @Test
+    fun `I5-P2 shareText launches a chooser over ACTION_SEND with the exact text`() {
+        assertEquals(LaunchResult.Launched, apps.shareText(CARD, CHOOSER_TITLE))
+
+        val chooser = shadowOf(activity).nextStartedActivity
+        assertEquals(Intent.ACTION_CHOOSER, chooser.action)
+        assertEquals(CHOOSER_TITLE, chooser.getStringExtra(Intent.EXTRA_TITLE))
+
+        val send = chooser.getParcelableExtra(Intent.EXTRA_INTENT, Intent::class.java)!!
+        assertEquals(Intent.ACTION_SEND, send.action)
+        assertEquals("text/plain", send.type)
+        assertEquals(CARD, send.getStringExtra(Intent.EXTRA_TEXT))
+        // Семь строк доезжают до Intent как есть: ни обрезки, ни лишнего перевода строки.
+        assertEquals(7, send.getStringExtra(Intent.EXTRA_TEXT)!!.lines().size)
+        assertNull("запусков ровно один", shadowOf(activity).nextStartedActivity)
+    }
+
+    /** `I5-P2`. Защита от повторного запуска общая: второй быстрый шеринг подавляется. */
+    @Test
+    fun `I5-P2 a second share before resume and within a second is suppressed`() {
+        installMailClient()
+
+        assertEquals(LaunchResult.Launched, apps.shareText(CARD, CHOOSER_TITLE))
+        now += AndroidExternalApps.LAUNCH_GUARD_MS - 1
+        assertEquals(LaunchResult.Suppressed, apps.shareText(CARD, CHOOSER_TITLE))
+        assertEquals("защита общая для всех действий", LaunchResult.Suppressed, apps.composeEmail(DRAFT))
+
+        assertEquals(Intent.ACTION_CHOOSER, shadowOf(activity).nextStartedActivity.action)
+        assertNull("второй запуск не состоялся", shadowOf(activity).nextStartedActivity)
+    }
+
+    /** `I5-P2`. Возврат на экран снимает защиту, и следующий шеринг снова проходит. */
+    @Test
+    fun `I5-P2 ON_RESUME releases the guard for sharing`() {
+        assertEquals(LaunchResult.Launched, apps.shareText(CARD, CHOOSER_TITLE))
+        controller.pause().stop().start().resume()
+
+        assertEquals(LaunchResult.Launched, apps.shareText(CARD, CHOOSER_TITLE))
+        assertEquals(2, generateSequence { shadowOf(activity).nextStartedActivity }.count())
+    }
+
+    /**
+     * `I5-P2`. Любой отказ запуска шеринга даёт `Failed` и наружу не выходит: у системного
+     * выбора обработчику исчезать некуда, поэтому `NoHandler` здесь не бывает. Неудачный
+     * запуск защиту не взводит — следующий не подавляется.
+     */
+    @Test
+    fun `I5-P2 a failing share is Failed and does not arm the guard`() {
+        activity.failure = ActivityNotFoundException("системный выбор недоступен")
+        assertEquals(LaunchResult.Failed, apps.shareText(CARD, CHOOSER_TITLE))
+
+        activity.failure = SecurityException("запуск запрещён")
+        assertEquals(LaunchResult.Failed, apps.shareText(CARD, CHOOSER_TITLE))
+
+        activity.failure = IllegalStateException("иной отказ платформы")
+        assertEquals(LaunchResult.Failed, apps.shareText(CARD, CHOOSER_TITLE))
+        assertNull("ни один отказ не запустил Activity", shadowOf(activity).nextStartedActivity)
+
+        activity.failure = null
+        assertEquals("отказы защиту не взводили", LaunchResult.Launched, apps.shareText(CARD, CHOOSER_TITLE))
+    }
+
+    /** `I5-P2`. Шеринг не спрашивает `PackageManager`: его отказ на запуск не влияет. */
+    @Test
+    fun `I5-P2 sharing does not depend on handler resolution`() {
+        activity.packageManagerFailure = IllegalStateException("Package manager has died")
+
+        assertEquals(LaunchResult.Launched, apps.shareText(CARD, CHOOSER_TITLE))
+        assertEquals(Intent.ACTION_CHOOSER, shadowOf(activity).nextStartedActivity.action)
+    }
+
     // --- Инфраструктура ------------------------------------------------------------------
 
     private fun installMailClient() = installHandler(
@@ -231,6 +310,18 @@ class AndroidExternalAppsTest {
     private companion object {
         const val START_MS = 1_000_000L
         const val URL = "https://www.britannica.com/place/Mont-Blanc"
+        const val CHOOSER_TITLE = "Поделиться результатом"
+
+        /** Карточка дня из семи строк — ровно такая, какую строит `ShareCardBuilder`. */
+        val CARD = listOf(
+            "По порядку! · День 12",
+            "15/18",
+            "🟩🟩🟩🟩🟩🟩",
+            "🟩🟩🟩🟩⬜⬜",
+            "🟩🟩🟩🟩🟩⬜",
+            "Серия: 6 дней",
+            "https://poporyadku.invalid/",
+        ).joinToString("\n")
         val DRAFT = MailDraft(
             to = "feedback@example.test",
             subject = "По порядку! — неточность в задании geo-vysota-gor-007",

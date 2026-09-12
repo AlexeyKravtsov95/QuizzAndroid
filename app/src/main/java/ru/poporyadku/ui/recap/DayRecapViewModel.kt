@@ -19,6 +19,7 @@ import ru.poporyadku.core.time.DateProvider
 import ru.poporyadku.domain.usecase.GetDayRecapUseCase
 import ru.poporyadku.ui.navigation.Destinations
 import ru.poporyadku.ui.navigation.RouteOrigin
+import ru.poporyadku.ui.share.ShareCardInput
 
 /**
  * ViewModel итога дня (ITERATION_3_DESIGN.md, §13, I3-D51; ITERATION_5_DESIGN.md, §6.8,
@@ -78,6 +79,43 @@ class DayRecapViewModel @Inject constructor(
                 if (!slot.isOpenable) return
                 effectChannel.trySend(DayRecapEffect.OpenResult(slot.slotIndex, args.date))
             }
+
+            DayRecapEvent.ShareClicked -> {
+                val content = state.value as? DayRecapState.Content ?: return
+                // Кнопки у незавершённого дня нет; проверка повторяется здесь, потому что
+                // событие может прийти и от чего-то, кроме этой кнопки.
+                if (!content.canShare) return
+                // Внутренне противоречивое состояние (нет серии или есть NotPlayed при
+                // canShare) карточкой не показывается: эффекта просто нет.
+                val scores = content.shareScores() ?: return
+                val streakDays = content.streakDays ?: return
+                effectChannel.trySend(
+                    DayRecapEffect.Share(
+                        ShareCardInput(
+                            dayNumber = content.dayNumber,
+                            slotScores = scores,
+                            streakDays = streakDays,
+                        ),
+                    ),
+                )
+            }
+        }
+    }
+
+    /**
+     * Три счёта в порядке слотов 0..2 или `null`, если карточке нечего показать.
+     *
+     * `Unavailable` в карточку входит: попытка была, счёт из данных — это не «не сыграно».
+     * `NotPlayed` не входит: символа «не сыграно» в формате из семи строк нет (§3.13).
+     */
+    private fun DayRecapState.Content.shareScores(): List<Int>? {
+        if (slots.size != SLOT_COUNT) return null
+        return slots.sortedBy { it.slotIndex }.map { slot ->
+            when (slot) {
+                is SlotResultUi.Played -> slot.score
+                is SlotResultUi.Unavailable -> slot.score
+                is SlotResultUi.NotPlayed -> return null
+            }
         }
     }
 
@@ -106,6 +144,11 @@ class DayRecapViewModel @Inject constructor(
     }
 
     private data class RouteArgs(val date: LocalDate, val origin: RouteOrigin)
+
+    private companion object {
+        /** Головоломок в дне — столько же строк результата в карточке. */
+        const val SLOT_COUNT = 3
+    }
 
     private fun parseRoute(rawDate: String?, rawOrigin: String?): RouteArgs? {
         val origin = RouteOrigin.fromRouteToken(rawOrigin) ?: return null

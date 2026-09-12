@@ -19,6 +19,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.unit.Density
 import java.time.LocalDate
 import org.junit.Assert.assertEquals
@@ -376,6 +377,91 @@ class DayRecapScreenTest {
         rule.onNode(SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Button) and hasText("5 из 6"))
             .performClick()
         assertEquals(listOf<DayRecapEvent>(DayRecapEvent.SlotClicked(0)), events)
+    }
+
+    // --- I5-C15: «Поделиться» ----------------------------------------------------------
+
+    /** `I5-C15`. Кнопка есть у завершённого сессионного итога и отправляет ровно одно событие. */
+    @Test
+    fun `I5-C15 the session recap of a completed day can be shared`() {
+        val events = mutableListOf<DayRecapEvent>()
+        rule.setContent {
+            Recap(played(total = 15, scores = listOf(6, 5, 4)), onEvent = { events += it })
+        }
+
+        // Кнопка живёт в прокручиваемой части экрана — «есть» значит «доезжает и видна».
+        rule.onNodeWithTag(DayRecapTestTags.SHARE_BUTTON).performScrollTo().assertIsDisplayed()
+        rule.onNodeWithTag(DayRecapTestTags.SHARE_BUTTON).assertTextEquals(SHARE)
+        rule.onNodeWithTag(DayRecapTestTags.SHARE_BUTTON).assertIsEnabled()
+        rule.onNodeWithTag(DayRecapTestTags.SHARE_BUTTON).performClick()
+
+        assertEquals(listOf<DayRecapEvent>(DayRecapEvent.ShareClicked), events)
+    }
+
+    /** `I5-C15`. Та же кнопка у завершённого архивного итога — вариант её не меняет. */
+    @Test
+    fun `I5-C15 the archived recap of a completed day can be shared`() {
+        val events = mutableListOf<DayRecapEvent>()
+        rule.setContent {
+            Recap(
+                played(total = 15, scores = listOf(6, 5, 4), origin = RouteOrigin.Archive)
+                    .copy(title = DayRecapTitle.Date(LocalDate.of(2026, 8, 25))),
+                onEvent = { events += it },
+            )
+        }
+
+        rule.onNodeWithTag(DayRecapTestTags.SHARE_BUTTON).performScrollTo().assertIsDisplayed()
+        rule.onNodeWithTag(DayRecapTestTags.SHARE_BUTTON).performClick()
+
+        assertEquals(listOf<DayRecapEvent>(DayRecapEvent.ShareClicked), events)
+    }
+
+    /** `I5-C15`. У незавершённого дня кнопки нет: в карточке нет символа «не сыграно». */
+    @Test
+    fun `I5-C15 an incomplete day has no share button`() {
+        rule.setContent { Recap(archivedIncomplete(title = DayRecapTitle.Date(LocalDate.of(2026, 9, 11)))) }
+
+        rule.onNodeWithTag(DayRecapTestTags.SHARE_BUTTON).assertDoesNotExist()
+        rule.onNodeWithText(SHARE).assertDoesNotExist()
+    }
+
+    /** `I5-C15`. Кнопка стоит после серии и рекорда и выше основной кнопки. */
+    @Test
+    fun `I5-C15 the share button sits between the streak and the primary button`() {
+        rule.setContent {
+            Recap(played(total = 18, scores = listOf(6, 6, 6), isRecordUpdated = true))
+        }
+
+        val streakBottom = rule.onNodeWithTag(DayRecapTestTags.BEST_STREAK).fetchSemanticsNode().boundsInRoot.bottom
+        val share = rule.onNodeWithTag(DayRecapTestTags.SHARE_BUTTON).fetchSemanticsNode().boundsInRoot
+        val primaryTop = rule.onNodeWithTag(DayRecapTestTags.PRIMARY_BUTTON).fetchSemanticsNode().boundsInRoot.top
+
+        assertTrue("«Поделиться» ниже строки рекорда", share.top >= streakBottom)
+        assertTrue("«Поделиться» выше основной кнопки", share.bottom <= primaryTop)
+    }
+
+    /** `I5-C15`. На 320 dp при масштабе 200% кнопка достижима и остаётся целью не ниже 48 dp. */
+    @Test
+    @Config(qualifiers = "w320dp-h844dp")
+    fun `I5-C15 the share button stays reachable at 320 dp and font scale 200 percent`() {
+        val events = mutableListOf<DayRecapEvent>()
+        rule.setContent {
+            WithFontScale(FONT_SCALE_200) {
+                Recap(played(total = 15, scores = listOf(6, 5, 4)), onEvent = { events += it })
+            }
+        }
+
+        // Кнопка живёт в прокручиваемой части: «достижима» — значит доезжает и видна.
+        rule.onNodeWithTag(DayRecapTestTags.SHARE_BUTTON).performScrollTo().assertIsDisplayed()
+        val touchTarget = with(rule.density) { Sizing.touchTargetMin.roundToPx() }
+        assertTrue(
+            "цель нажатия не ниже 48 dp",
+            rule.onNodeWithTag(DayRecapTestTags.SHARE_BUTTON).fetchSemanticsNode().size.height >= touchTarget,
+        )
+        rule.onNodeWithTag(DayRecapTestTags.SHARE_BUTTON).performClick()
+
+        assertEquals(listOf<DayRecapEvent>(DayRecapEvent.ShareClicked), events)
+        assertNoHorizontalOverflow()
     }
 
     /**

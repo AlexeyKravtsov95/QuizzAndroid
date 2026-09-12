@@ -275,7 +275,7 @@
 
 ## Итерация 5. Архив, статистика, настройки, шеринг
 
-**Статус: в работе.** PR 5A (данные и домен архива, keyset-пагинация, единая статистика) влит как PR №18; PR 5B (UI архива, архивный итог дня, исторический результат) влит как PR №19; PR 5C (настройки, применение темы, «О приложении», экран источников, «Сообщить о неточности», граница `ExternalApps`) реализован и ожидает ревью; PR 5D–5E не начаты.
+**Статус: в работе.** PR 5A (данные и домен архива, keyset-пагинация, единая статистика) влит как PR №18; PR 5B (UI архива, архивный итог дня, исторический результат) влит как PR №19; PR 5C (настройки, применение темы, «О приложении», экран источников, «Сообщить о неточности», граница `ExternalApps`) влит как PR №20; PR 5D (карточка результата дня и системный шеринг) реализован и ожидает ревью; PR 5E не начат. **Итерация 5 не завершена.**
 
 **Входные данные владельца O5-1 и O5-2 получены** (2026-09-11): `feedback_email` = `alexey.kravtsov95@gmail.com`, `about_author` = «Алексей»; внесены в `res/values/strings.xml` (`translatable="false"`) в PR 5C. O5-7 (два OGG-файла и их лицензия) — по-прежнему вход PR 5E.
 
@@ -322,8 +322,8 @@
 | --- | --- | --- |
 | **5A** | Данные и домен архива: read-only `ArchiveDao` (четыре запроса `day_results ⋈ day_assignments`), `ArchiveRepository` со строгим mapper'ом строки, keyset-пагинация `GetArchiveUseCase` (разведка `LIMIT 51`, окно `>=` границы, ADR-017), единый `StatisticsCalculator` для архива и Home, `GetStatisticsUseCase`; тесты `I5-S1`…`I5-S9`, `I5-A1`…`I5-A10`. UI, ресурсы, схема Room не меняются | влит, PR №18 |
 | **5B** | UI архива и прошлый день: `ArchiveScreen`/`ArchiveViewModel`, архивный `DayRecap` по аргументу `origin` (строка «не сыграно», серия этого дня), исторический `PuzzleResult` с пометкой отзыва, установленная версия контента; флаг первого дня переезжает в `SubmitAnswerUseCase` | влит, PR №19 |
-| **5C** | Настройки (звук, вибрация, тема с применением в `MainActivity`), application-scoped очередь записи настроек `SettingsWriteQueue`, «О приложении», экран источников `sources`, «Сообщить о неточности» на результате и в настройках, платформенная граница `ExternalApps` (ADR-018); тесты `I5-T1`, `I5-T2`, `I5-E1`…`I5-E5`, `I5-Q1`, `I5-Q2`, `I5-V19`…`I5-V27`, `I5-C12`…`I5-C14`, `I5-C16`, `I5-P1`, `I5-N4`. Входные данные O5-1, O5-2 получены | реализован, ожидает ревью |
-| **5D** | Spoiler-free `ShareCard` и системный share sheet на итоге завершённого дня | не начат |
+| **5C** | Настройки (звук, вибрация, тема с применением в `MainActivity`), application-scoped очередь записи настроек `SettingsWriteQueue`, «О приложении», экран источников `sources`, «Сообщить о неточности» на результате и в настройках, платформенная граница `ExternalApps` (ADR-018); тесты `I5-T1`, `I5-T2`, `I5-E1`…`I5-E5`, `I5-Q1`, `I5-Q2`, `I5-V19`…`I5-V27`, `I5-C12`…`I5-C14`, `I5-C16`, `I5-P1`, `I5-N4`. Входные данные O5-1, O5-2 получены | влит, PR №20 |
+| **5D** | Spoiler-free `ShareCard` и системный share sheet на итоге завершённого дня: `ui/share/ShareCardBuilder.kt` (`ShareCardInput`, `ShareCardStrings`, `RussianPlural`, `ShareCardBuilder` — чистый Kotlin, ровно семь строк), `ui/share/ShareCardResources.kt`, ресурс `share_app_url` в `res/values/distribution.xml`, `ExternalApps.shareText` (`ACTION_SEND` + `createChooser`), `DayRecapEvent.ShareClicked` → `DayRecapEffect.Share` → `DayRecapRoute`; тесты `I5-H1`…`I5-H10`, `I5-V28`, `I5-C15`, `I5-P2`, ручной `I5-M1`. Новых разрешений, flavors и SDK магазинов нет | реализован, ожидает ревью |
 | **5E** | Звуковая и тактильная отдача, финальная интеграция и сверка строк | не начат; мерж — после входных данных O5-7 |
 
 ---
@@ -425,7 +425,7 @@
 - карточка RuStore заполнена, политика конфиденциальности доступна по ссылке;
 - **release-readiness:** выполнен замер полного импорта `I4-C6` на физическом устройстве (перенесён из итерации 4; `ContentImportTimingTest`, logcat-тег `I4-C6`), и по нему принято решение о выносе установки контента из `mapLatest` (`ITERATION_4_DESIGN.md`, раздел 16);
 - **release-readiness:** пройден живой проход TalkBack `I5-M6` на физическом устройстве — Archive, архивный итог, исторический результат, Settings, Sources (перенесён владельцем из PR 5B/5C; до него он не объявляется выполненным);
-- **release inputs:** `share_app_url` содержит реальный URL одной универсальной landing-страницы владельца, ведущей в RuStore и Huawei AppGallery, вместо альфа-значения `https://poporyadku.invalid/` (O5-6); `.invalid` в release-сборке запрещён. `feedback_email` и `about_author` получены в итерации 5 (O5-1, O5-2) и перед публикацией только сверяются;
+- **release inputs:** `share_app_url` содержит реальный URL одной универсальной landing-страницы владельца, ведущей в RuStore и Huawei AppGallery, вместо альфа-значения `https://poporyadku.invalid/`, фактически внесённого в `res/values/distribution.xml` в PR 5D (O5-6); `.invalid` в release-сборке запрещён. `feedback_email` и `about_author` получены в итерации 5 (O5-1, O5-2) и перед публикацией только сверяются;
 - гейт публичного релиза выполнен или публикация отложена до его выполнения.
 
 **Тесты.**

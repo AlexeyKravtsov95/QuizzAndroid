@@ -25,8 +25,9 @@ import ru.poporyadku.ui.report.MailtoUri
  * Исключения наружу не выходят ни из разрешения обработчика, ни из запуска: отказ
  * `PackageManager` при `resolveActivity` — «обработчика нет» для `can*` и
  * [LaunchResult.Failed] для запуска; `ActivityNotFoundException` →
- * [LaunchResult.NoHandler], `SecurityException` и остальные отказы платформы →
- * [LaunchResult.Failed]. Экран при этом остаётся на месте и сообщения не показывает:
+ * [LaunchResult.NoHandler] у ссылки и письма (обработчик исчез между проверкой и
+ * запуском) и [LaunchResult.Failed] у системного выбора, где исчезать нечему;
+ * `SecurityException` и остальные отказы платформы → [LaunchResult.Failed]. Экран при этом остаётся на месте и сообщения не показывает:
  * действие необязательное, а доступность перепроверится на следующем `ON_START`.
  *
  * Продуктовый экземпляр один на Activity — его создаёт `MainActivity` и отдаёт экранам
@@ -71,6 +72,21 @@ class AndroidExternalApps(
         return launchIfResolvable(intent)
     }
 
+    /**
+     * Системный выбор приложения поверх `ACTION_SEND` (§3.13). Обработчик заранее не
+     * разрешается: `createChooser` разрешается системой всегда, а `<queries>` для него
+     * не нужны — список приложений показывает сам системный выбор.
+     */
+    override fun shareText(text: String, chooserTitle: String): LaunchResult {
+        val sendIntent = Intent(Intent.ACTION_SEND).apply {
+            type = MIME_PLAIN_TEXT
+            putExtra(Intent.EXTRA_TEXT, text)
+        }
+        // Отсутствие обработчика у самого выбора — не «приложение удалили», а отказ
+        // платформы: у шеринга исход отказа один — Failed (§3.13).
+        return launch(Intent.createChooser(sendIntent, chooserTitle), absentHandler = LaunchResult.Failed)
+    }
+
     private fun viewIntent(url: String): Intent = Intent(Intent.ACTION_VIEW, url.toUri())
 
     /**
@@ -96,7 +112,17 @@ class AndroidExternalApps(
 
     private enum class Resolution { Found, Missing, Failed }
 
-    private fun launch(intent: Intent): LaunchResult {
+    /**
+     * Общая защита от повторного запуска — одна на все внешние действия.
+     *
+     * @param absentHandler исход `ActivityNotFoundException`: у ссылки и письма обработчик
+     *  мог исчезнуть между проверкой и запуском ([LaunchResult.NoHandler]), у системного
+     *  выбора исчезать нечему — это отказ платформы ([LaunchResult.Failed]).
+     */
+    private fun launch(
+        intent: Intent,
+        absentHandler: LaunchResult = LaunchResult.NoHandler,
+    ): LaunchResult {
         val now = clock()
         val previous = lastLaunchAt
         if (previous != null && now - previous < LAUNCH_GUARD_MS) return LaunchResult.Suppressed
@@ -105,7 +131,7 @@ class AndroidExternalApps(
             lastLaunchAt = now
             LaunchResult.Launched
         } catch (e: ActivityNotFoundException) {
-            LaunchResult.NoHandler
+            absentHandler
         } catch (e: SecurityException) {
             LaunchResult.Failed
         } catch (e: RuntimeException) {
@@ -120,5 +146,8 @@ class AndroidExternalApps(
 
         /** Проба доступности почтового клиента — схема без адреса. */
         private const val MAILTO_PROBE = "mailto:"
+
+        /** Карточка — обычный текст: ни вложений, ни разметки. */
+        private const val MIME_PLAIN_TEXT = "text/plain"
     }
 }
