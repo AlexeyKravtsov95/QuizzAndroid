@@ -1,5 +1,7 @@
 package ru.poporyadku.ui.puzzle
 
+import ru.poporyadku.ui.feedback.FeedbackRequest
+
 /**
  * Одноразовые эффекты игрового экрана (ITERATION_3_DESIGN.md, I3-D25).
  *
@@ -30,4 +32,15 @@ sealed interface PuzzleEffect {
         val position: Int,
         val totalPositions: Int,
     ) : PuzzleEffect
+
+    /**
+     * Звуковая и тактильная отдача (ITERATION_5_DESIGN.md, §3.14, §4.7, I5-D22).
+     *
+     * Решение «звучать ли и чем» уже принято `FeedbackPolicy` по настройкам
+     * пользователя: эффекта с обоими выключенными каналами не бывает, и исполнитель
+     * своей политики не имеет. Тем же `Channel`, что навигация, — поэтому поворот,
+     * перекомпозиция и повторная подписка отдачу не повторяют, а в `PuzzleUiState` её
+     * нет вовсе и восстановление состояния её не порождает.
+     */
+    data class Feedback(val request: FeedbackRequest) : PuzzleEffect
 }

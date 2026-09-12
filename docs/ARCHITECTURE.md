@@ -84,6 +84,11 @@ app/
                                 // внешних Intent (ADR-018)
       report/                   // ReportContext, MailDraft, ReportMailComposer, MailtoUri (RFC 6068),
                                 // шаблоны письма из ресурсов
+      feedback/                 // отдача (PR 5E): FeedbackCue, FeedbackRequest, FeedbackPolicy (чистая),
+                                // FeedbackPlayer, SoundCuePlayer, AndroidFeedbackPlayer (performHapticFeedback),
+                                // SoundEngine + SoundPoolEngine — единственное место SoundPool,
+                                // SoundCueBank (порядок listener -> load, однократный release),
+                                // SoundCues (@ActivityRetainedScoped), LocalFeedback (LocalSoundCues)
       home/                     // HomeScreen, HomeViewModel, HomeUiState
       puzzle/                   // PuzzleScreen, PuzzleViewModel, PuzzleUiState, PuzzleEvent
       puzzleresult/             // + ResultRoute: date, slotIndex и origin маршрута результата
@@ -356,9 +361,17 @@ sealed interface PuzzleEvent {
 // Однократные эффекты
 sealed interface PuzzleEffect {
     data class NavigateToResult(val slotIndex: Int) : PuzzleEffect
+    data class NavigateToNextSlot(val slotIndex: Int) : PuzzleEffect   // только пропуск
+    data object NavigateToRecap : PuzzleEffect                         // только пропуск последнего слота
     data object NavigateHome : PuzzleEffect
-    data class AnnounceForAccessibility(val message: String) : PuzzleEffect
-    data class Haptic(val kind: HapticKind) : PuzzleEffect
+    // Структура, а не готовая фраза: локализованный текст собирает route-контейнер
+    data class AnnounceCardMoved(
+        val cardTitle: String,
+        val position: Int,
+        val totalPositions: Int,
+    ) : PuzzleEffect
+    // Отдача (PR 5E): что подтвердить и какими каналами — уже решено
+    data class Feedback(val request: FeedbackRequest) : PuzzleEffect
 }
 ```
 
@@ -367,7 +380,9 @@ sealed interface PuzzleEffect {
 - перестановка карточек — операция над `List<String>` идентификаторов в ViewModel; UI ничего не переставляет сам;
 - текущий порядок хранится в `SavedStateHandle` (`currentOrder: String`), поэтому переживает смерть процесса;
 - `Submit` вызывает `SubmitAnswerUseCase`, который **сначала** пишет `PuzzleAttempt` и обновляет `day_results`, и только потом ViewModel отправляет `NavigateToResult`. Порядок обратный ломает гарантию «попытка зафиксирована»;
-- повторный `Submit` во время `Submitting` игнорируется по состоянию, не по флагу-костылю.
+- повторный `Submit` во время `Submitting` игнорируется по состоянию, не по флагу-костылю;
+- **граница отдачи** (`ITERATION_5_DESIGN.md`, §3.14, §8.2, I5-D22, I5-D23): **решение — в ViewModel, исполнение — в route-контейнере**. `PuzzleViewModel` читает настройки через `ObserveFeedbackSettingsUseCase` (`stateIn(Eagerly, FeedbackSettings.Unknown)`) и вызывает чистую `FeedbackPolicy.requestFor(cue, settings)`: `Unknown` и «оба канала выключены» дают `null` — эффекта нет вовсе. Android-типов (`SoundPool`, `View`, `HapticFeedbackConstants`) во ViewModel нет, поэтому все комбинации настроек проверяются JVM-тестами по содержимому эффекта. `PuzzleRoute` исполняет `PuzzleEffect.Feedback` тем же **единственным** lifecycle-aware коллектором, что и навигацию, — второго коллектора отдача не добавляет; `Feedback(AnswerAccepted)` лежит в канале **перед** `NavigateToResult`, поэтому исполняется до ухода с экрана. Отдача — одноразовый эффект в `Channel` и в `PuzzleUiState` её нет: поворот, перекомпозиция, повторная подписка и восстановление состояния её не повторяют;
+- **`SoundCues` — в `ActivityRetainedComponent`** (`@ActivityRetainedScoped`, полевая инъекция в `MainActivity`, экранам отдаётся через `LocalSoundCues`): один экземпляр на Activity, переживающий поворот, `release()` ровно один раз из `ActivityRetainedLifecycle.addOnClearedListener`. Процессный `@Singleton` отклонён — держал бы нативные ресурсы и в фоне без точки освобождения; экранный пул отклонён — `release()` в `onDispose` оборвал бы `AnswerAccepted`, который звучит в момент ухода с `Puzzle`. Порядок «создать движок → коллекция загруженных ID → зарегистрировать listener → только потом `load()` обоих файлов → играть только ID с `status == 0`» живёт в `SoundCueBank` над узкой границей `SoundEngine` и проверяется фейком без Android (`I5-F2`). Звук не играет при `AudioManager.ringerMode != RINGER_MODE_NORMAL`; тактильная отдача — только `View.performHapticFeedback` без `FLAG_IGNORE_GLOBAL_SETTING`, поэтому системное отключение отключает и нашу, а разрешения на вибрацию не требуется.
 
 ### Подсчёт баллов и серия
 

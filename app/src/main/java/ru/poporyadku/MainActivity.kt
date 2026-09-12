@@ -14,6 +14,9 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import ru.poporyadku.ui.feedback.LocalSoundCues
+import ru.poporyadku.ui.feedback.SoundCues
 import ru.poporyadku.ui.navigation.AppNavHost
 import ru.poporyadku.ui.platform.AndroidExternalApps
 import ru.poporyadku.ui.platform.LocalExternalApps
@@ -28,6 +31,17 @@ class MainActivity : ComponentActivity() {
 
     /** Выбранная тема (ITERATION_5_DESIGN.md, §3.9, §4.8, I5-D16). */
     private val appTheme: AppThemeViewModel by viewModels()
+
+    /**
+     * Звуки отдачи (ITERATION_5_DESIGN.md, §3.14, §8.2, I5-D22).
+     *
+     * Полевая инъекция: `SoundCues` — `@ActivityRetainedScoped`, и Activity-компонент
+     * видит привязки `ActivityRetainedComponent`. Один экземпляр на Activity, живущий
+     * через поворот экрана: звуки не перегружаются, а `release()` вызывается один раз —
+     * из `ActivityRetainedLifecycle`, при окончательном уничтожении компонента.
+     */
+    @Inject
+    lateinit var soundCues: SoundCues
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +78,10 @@ class MainActivity : ComponentActivity() {
                 // Смена темы — перекомпозиция корня, без пересоздания Activity: граф
                 // навигации и его состояние сохраняются.
                 PoPoRyadkuTheme(darkTheme = resolvedDark) {
-                    CompositionLocalProvider(LocalExternalApps provides externalApps) {
+                    CompositionLocalProvider(
+                        LocalExternalApps provides externalApps,
+                        LocalSoundCues provides soundCues,
+                    ) {
                         AppNavHost()
                     }
                 }

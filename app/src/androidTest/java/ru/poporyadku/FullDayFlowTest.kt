@@ -11,12 +11,14 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import ru.poporyadku.core.model.ContentPack
 import ru.poporyadku.core.model.SLOTS_PER_DAY
+import ru.poporyadku.ui.feedback.FeedbackCue
 import ru.poporyadku.ui.home.HomeTestTags
 import ru.poporyadku.ui.navigation.Destinations
 import ru.poporyadku.ui.puzzle.PuzzleTestTags
@@ -88,6 +90,50 @@ class FullDayFlowTest {
     }
 
     /**
+     * `I5-N8` (ITERATION_5_DESIGN.md, §3.14, §10.6, I5-D22). Тот же полный день, но с
+     * подставленным `RecordingFeedbackPlayer`: настоящего звука и тактильной отдачи тест
+     * не касается — он утверждает, сколько раз и что именно подтверждалось.
+     *
+     * Три `AnswerAccepted` — по одному на каждый принятый ответ, ни одного лишнего:
+     * переходы «Дальше» на результате, итог дня и «Готово» подтверждения ответа не
+     * порождают. `CardMoved` ровно столько, сколько перестановок выполнено нажатиями:
+     * ни одна не потерялась и ни одна не удвоилась.
+     */
+    @Test
+    fun i5N8FeedbackAccompaniesEveryReorderAndEveryAcceptedAnswer() {
+        val player = DayFlowDriver.RecordingFeedbackPlayer()
+
+        driver.startApp(player)
+        driver.awaitHomeCta()
+
+        driver.playTodayThroughTheUi()
+
+        assertEquals("день закрыт ровно тремя попытками", SLOTS_PER_DAY, driver.attemptCount())
+        assertEquals(
+            "по одному подтверждению на принятый ответ",
+            SLOTS_PER_DAY,
+            player.countOf(FeedbackCue.AnswerAccepted),
+        )
+        assertTrue("день требует перестановок", driver.performedReorders > 0)
+        assertEquals(
+            "подтверждение на каждую выполненную перестановку",
+            driver.performedReorders,
+            player.countOf(FeedbackCue.CardMoved),
+        )
+
+        // Итог дня на экране — тот же, что без отдачи: 18 из 18.
+        composeTestRule.onNodeWithText(PERFECT_DAY_SCORE).assertExists()
+
+        composeTestRule.onNodeWithTag(DayRecapTestTags.PRIMARY_BUTTON).performClick()
+        driver.awaitRoute(Destinations.HOME)
+        driver.awaitHomeCta()
+
+        // Уход с итога отдачи не добавляет.
+        assertEquals(SLOTS_PER_DAY, player.countOf(FeedbackCue.AnswerAccepted))
+        assertEquals(driver.performedReorders, player.countOf(FeedbackCue.CardMoved))
+    }
+
+    /**
      * `I3-E2`. После первого результата системная «назад» ведёт на Home, а повторный
      * вход в уже закрытый слот немедленно показывает его результат — переиграть нельзя
      * и второй попытки не создаётся.
@@ -129,5 +175,8 @@ class FullDayFlowTest {
 
         const val HOME_CTA_START = "Начать"
         const val HOME_CTA_VIEW_RECAP = "Посмотреть итог"
+
+        /** Итог полного дня — тот же, что у `I4-E1`. */
+        const val PERFECT_DAY_SCORE = "18 из 18"
     }
 }
