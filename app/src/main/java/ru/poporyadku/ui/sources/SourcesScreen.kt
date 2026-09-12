@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -36,6 +37,10 @@ import ru.poporyadku.ui.components.ErrorBlock
 import ru.poporyadku.ui.components.PrimaryButton
 import ru.poporyadku.ui.components.SkeletonLine
 import ru.poporyadku.ui.components.SourceRow
+import ru.poporyadku.ui.platform.ExternalApps
+import ru.poporyadku.ui.platform.LaunchResult
+import ru.poporyadku.ui.platform.LocalExternalApps
+import ru.poporyadku.ui.report.MailDraft
 import ru.poporyadku.ui.theme.PoPoRyadkuTheme
 import ru.poporyadku.ui.theme.Sizing
 import ru.poporyadku.ui.theme.Spacing
@@ -232,10 +237,23 @@ private val previewItems = listOf(
     ),
 )
 
+/**
+ * Граница внешних действий для превью: у Preview нет `ComponentActivity`, и Android-
+ * реализация по умолчанию там недоступна. Ссылки считаются открываемыми, запусков нет.
+ */
+private object PreviewExternalApps : ExternalApps {
+    override fun canViewUrl(url: String): Boolean = true
+    override fun viewUrl(url: String): LaunchResult = LaunchResult.Launched
+    override fun canComposeEmail(): Boolean = true
+    override fun composeEmail(draft: MailDraft): LaunchResult = LaunchResult.Launched
+}
+
 @Composable
 private fun PreviewSources(state: SourcesState, darkTheme: Boolean = false) {
-    PoPoRyadkuTheme(darkTheme = darkTheme) {
-        SourcesScreen(state = state, onEvent = {})
+    CompositionLocalProvider(LocalExternalApps provides PreviewExternalApps) {
+        PoPoRyadkuTheme(darkTheme = darkTheme) {
+            SourcesScreen(state = state, onEvent = {})
+        }
     }
 }
 

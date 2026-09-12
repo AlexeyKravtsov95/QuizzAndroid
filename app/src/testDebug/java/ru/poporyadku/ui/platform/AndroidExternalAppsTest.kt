@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.ComponentName
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.activity.ComponentActivity
 import org.junit.Assert.assertArrayEquals
@@ -26,7 +27,8 @@ import ru.poporyadku.ui.report.MailtoUri
  *
  * Обработчики регистрируются в `ShadowPackageManager` фильтрами намерений — так, как их
  * объявил бы браузер или почтовый клиент: `SENDTO mailto:` с любыми параметрами и
- * `VIEW https`. Отказы запуска моделирует Activity, чей `startActivity` бросает.
+ * `VIEW https`. Отказы платформы моделирует Activity, чьи `startActivity` и
+ * `getPackageManager` бросают.
  */
 @RunWith(RobolectricTestRunner::class)
 class AndroidExternalAppsTest {
@@ -163,6 +165,29 @@ class AndroidExternalAppsTest {
         assertEquals("отказы защиту не взводили", LaunchResult.Launched, apps.viewUrl(URL))
     }
 
+    /**
+     * `I5-P1`. Отказ `PackageManager` при разрешении обработчика наружу не выходит:
+     * `can*` отвечают «нет» (строка источника деградирует, действие письма скрыто), запуск —
+     * `Failed`, ничего не стартует; после восстановления сервиса всё работает, защита от
+     * повторного запуска отказом не взведена.
+     */
+    @Test
+    fun `I5-P1 a PackageManager failure during resolution stays inside the boundary`() {
+        installMailClient()
+        installBrowser()
+        activity.packageManagerFailure = IllegalStateException("Package manager has died")
+
+        assertFalse(apps.canComposeEmail())
+        assertFalse(apps.canViewUrl(URL))
+        assertEquals(LaunchResult.Failed, apps.composeEmail(DRAFT))
+        assertEquals(LaunchResult.Failed, apps.viewUrl(URL))
+        assertNull(shadowOf(activity).nextStartedActivity)
+
+        activity.packageManagerFailure = null
+        assertTrue(apps.canComposeEmail())
+        assertEquals(LaunchResult.Launched, apps.composeEmail(DRAFT))
+    }
+
     // --- Инфраструктура ------------------------------------------------------------------
 
     private fun installMailClient() = installHandler(
@@ -182,18 +207,24 @@ class AndroidExternalAppsTest {
     )
 
     private fun installHandler(component: ComponentName, filter: IntentFilter) {
-        val packageManager = shadowOf(activity.packageManager)
+        val packageManager = shadowOf(activity.applicationContext.packageManager)
         packageManager.addActivityIfNotPresent(component)
         packageManager.addIntentFilterForActivity(component, filter)
     }
 
-    /** Activity, чей `startActivity` бросает заданный отказ платформы. */
+    /** Activity, чьи `startActivity` и `getPackageManager` бросают заданные отказы платформы. */
     class LaunchingActivity : ComponentActivity() {
         var failure: RuntimeException? = null
+        var packageManagerFailure: RuntimeException? = null
 
         override fun startActivity(intent: Intent) {
             failure?.let { throw it }
             super.startActivity(intent)
+        }
+
+        override fun getPackageManager(): PackageManager {
+            packageManagerFailure?.let { throw it }
+            return super.getPackageManager()
         }
     }
 

@@ -22,7 +22,9 @@ import ru.poporyadku.ui.report.MailtoUri
  * Время фиксирует только успешный `startActivity`: неудачная попытка следующую не
  * блокирует.
  *
- * Исключения запуска наружу не выходят: `ActivityNotFoundException` →
+ * Исключения наружу не выходят ни из разрешения обработчика, ни из запуска: отказ
+ * `PackageManager` при `resolveActivity` — «обработчика нет» для `can*` и
+ * [LaunchResult.Failed] для запуска; `ActivityNotFoundException` →
  * [LaunchResult.NoHandler], `SecurityException` и остальные отказы платформы →
  * [LaunchResult.Failed]. Экран при этом остаётся на месте и сообщения не показывает:
  * действие необязательное, а доступность перепроверится на следующем `ON_START`.
@@ -49,11 +51,12 @@ class AndroidExternalApps(
         )
     }
 
-    override fun canViewUrl(url: String): Boolean = resolves(viewIntent(url))
+    override fun canViewUrl(url: String): Boolean = resolve(viewIntent(url)) == Resolution.Found
 
     override fun viewUrl(url: String): LaunchResult = launchIfResolvable(viewIntent(url))
 
-    override fun canComposeEmail(): Boolean = resolves(Intent(Intent.ACTION_SENDTO, MAILTO_PROBE.toUri()))
+    override fun canComposeEmail(): Boolean =
+        resolve(Intent(Intent.ACTION_SENDTO, MAILTO_PROBE.toUri())) == Resolution.Found
 
     override fun composeEmail(draft: MailDraft): LaunchResult {
         val intent = Intent(Intent.ACTION_SENDTO).apply {
@@ -70,12 +73,28 @@ class AndroidExternalApps(
 
     private fun viewIntent(url: String): Intent = Intent(Intent.ACTION_VIEW, url.toUri())
 
-    private fun resolves(intent: Intent): Boolean =
-        intent.resolveActivity(activity.packageManager) != null
+    /**
+     * Есть ли обработчик. Разрешение тоже под защитой: `can*` вызываются из композиции и
+     * при построении экрана, и отказ `PackageManager` (например, умерший системный сервис
+     * — `RuntimeException`) не должен уронить экран. Отказ разрешения — «обработчика не
+     * видно» для `can*` и `Failed` для запуска.
+     */
+    private fun resolve(intent: Intent): Resolution =
+        try {
+            if (intent.resolveActivity(activity.packageManager) != null) Resolution.Found else Resolution.Missing
+        } catch (e: RuntimeException) {
+            Resolution.Failed
+        }
 
     /** Перед открытием — проверка обработчика: без него запуск даже не пробуется. */
     private fun launchIfResolvable(intent: Intent): LaunchResult =
-        if (resolves(intent)) launch(intent) else LaunchResult.NoHandler
+        when (resolve(intent)) {
+            Resolution.Found -> launch(intent)
+            Resolution.Missing -> LaunchResult.NoHandler
+            Resolution.Failed -> LaunchResult.Failed
+        }
+
+    private enum class Resolution { Found, Missing, Failed }
 
     private fun launch(intent: Intent): LaunchResult {
         val now = clock()
