@@ -13,6 +13,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.espresso.Espresso
@@ -46,12 +47,14 @@ import ru.poporyadku.ui.home.HomeTestTags
 import ru.poporyadku.ui.puzzle.PuzzleTestTags
 import ru.poporyadku.ui.puzzleresult.PuzzleResultTestTags
 import ru.poporyadku.ui.recap.DayRecapTestTags
+import ru.poporyadku.ui.settings.SettingsTestTags
+import ru.poporyadku.ui.sources.SourcesTestTags
 import ru.poporyadku.ui.theme.PoPoRyadkuTheme
 
 /**
  * Навигация — `UX_FLOW.md` §1 и ITERATION_3_DESIGN.md, `I3-N1`–`I3-N8`;
  * ITERATION_5_DESIGN.md, §7, §10.6: архив, архивный итог и исторический результат —
- * `I5-N1`–`I5-N3`, `I5-N5`–`I5-N7`.
+ * `I5-N1`–`I5-N3`, `I5-N5`–`I5-N7`; настройки и источники — `I5-N4`.
  *
  * Все экраны цепочек настоящие, поэтому они проходятся реальными кнопками: «Начать» на
  * Home, «Проверить» на `Puzzle`, «Дальше»/«К итогу дня» на `PuzzleResult`, строки архива
@@ -643,15 +646,55 @@ class AppNavHostTest {
         composeTestRule.onNodeWithContentDescription(SETTINGS).assertExists()
     }
 
+    /**
+     * `I5-N4`. Home → Settings → Sources → «Назад» → Settings → «Назад» → существующий Home.
+     *
+     * Home в стеке один: после двух возвратов под ним нет ни одной записи, а на каждом шаге
+     * запись ниже текущей — ровно предыдущий экран цепочки.
+     */
     @Test
-    fun homeToSettingsToHome() {
+    fun homeToSettingsToSourcesAndBackToTheSameHome() {
         startApp()
+        val home = requireNotNull(navController.currentBackStackEntry)
 
         composeTestRule.onNodeWithContentDescription(SETTINGS).performClick()
         awaitRoute(Destinations.SETTINGS)
+        assertEquals(Destinations.HOME, navController.previousBackStackEntry?.destination?.route)
 
-        composeTestRule.onNodeWithTag(GENERIC_BACK).performClick()
+        composeTestRule.onNodeWithTag(SettingsTestTags.SOURCES_ROW).performScrollTo().performClick()
+        awaitRoute(Destinations.SOURCES)
+        assertEquals(Destinations.SETTINGS, navController.previousBackStackEntry?.destination?.route)
+        // Экран источников читает Room: на чистой базе — Empty.
+        awaitTag(SourcesTestTags.EMPTY)
+
+        composeTestRule.onNodeWithContentDescription(BACK).performClick()
+        awaitRoute(Destinations.SETTINGS)
+        assertEquals(Destinations.HOME, navController.previousBackStackEntry?.destination?.route)
+
+        composeTestRule.onNodeWithContentDescription(BACK).performClick()
         awaitRoute(Destinations.HOME)
+        assertEquals("тот же экземпляр Home, а не второй", home.id, navController.currentBackStackEntry?.id)
+        assertNull("под Home ничего нет — он в стеке один", navController.previousBackStackEntry)
+    }
+
+    /** Системная «назад» проходит тот же путь: Sources → Settings → существующий Home. */
+    @Test
+    fun systemBackFromSourcesReturnsThroughSettingsToHome() {
+        startApp()
+        val home = requireNotNull(navController.currentBackStackEntry)
+
+        composeTestRule.onNodeWithContentDescription(SETTINGS).performClick()
+        awaitRoute(Destinations.SETTINGS)
+        composeTestRule.onNodeWithTag(SettingsTestTags.SOURCES_ROW).performScrollTo().performClick()
+        awaitRoute(Destinations.SOURCES)
+
+        Espresso.pressBackUnconditionally()
+        awaitRoute(Destinations.SETTINGS)
+        Espresso.pressBackUnconditionally()
+        awaitRoute(Destinations.HOME)
+
+        assertEquals(home.id, navController.currentBackStackEntry?.id)
+        assertNull(navController.previousBackStackEntry)
     }
 
     private companion object {
@@ -677,8 +720,5 @@ class AppNavHostTest {
         /** Заголовок архивного итога — `d MMMM yyyy` на русском, как у строки архива. */
         val TITLE_FORMAT: DateTimeFormatter =
             DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.forLanguageTag("ru"))
-
-        // testTag заглушки итерации 1 — только у Settings, которая ею и осталась (PR 5C).
-        const val GENERIC_BACK = "stub_generic_back_button"
     }
 }

@@ -7,10 +7,15 @@
       установленный браузер, и SourceRow деградировал бы до `urlPlainText` даже там,
       где обработчик есть (COMPONENTS.md, «SourceRow»).
 
-      Объявлена ровно одна возможность — открыть http(s)-ссылку во внешнем приложении.
+      Объявлены ровно две возможности: открыть http(s)-ссылку во внешнем приложении и
+      открыть письмо «Сообщить о неточности» в почтовом клиенте (SENDTO mailto,
+      ITERATION_5_DESIGN.md, §3.12): без этого объявления на API 30+ `canComposeEmail()`
+      не видел бы ни одного клиента и действие пропало бы у всех.
+
       Разрешение INTERNET при этом НЕ требуется и не добавляется: сетевой запрос
-      выполняет браузер, а не приложение (UX_FLOW.md §5, IMPLEMENTATION_PLAN.md,
-      итерация 7: «нет ни одного сетевого разрешения и ни одного сетевого вызова»).
+      выполняет браузер, а письмо отправляет пользователь из своего клиента
+      (UX_FLOW.md §5, IMPLEMENTATION_PLAN.md, итерация 7: «нет ни одного сетевого
+      разрешения и ни одного сетевого вызова»).
     -->
     <queries>
         <intent>
@@ -20,6 +25,10 @@
         <intent>
             <action android:name="android.intent.action.VIEW" />
             <data android:scheme="http" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <data android:scheme="mailto" />
         </intent>
     </queries>
 

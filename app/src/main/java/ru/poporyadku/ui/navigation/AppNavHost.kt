@@ -1,39 +1,13 @@
 package ru.poporyadku.ui.navigation
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.heading
-import androidx.compose.ui.semantics.semantics
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -51,9 +25,11 @@ import ru.poporyadku.R
 import ru.poporyadku.ui.archive.ArchiveEffect
 import ru.poporyadku.ui.archive.ArchiveScreen
 import ru.poporyadku.ui.archive.ArchiveViewModel
+import ru.poporyadku.ui.components.rememberReportAvailability
 import ru.poporyadku.ui.home.HomeEffect
 import ru.poporyadku.ui.home.HomeScreen
 import ru.poporyadku.ui.home.HomeViewModel
+import ru.poporyadku.ui.platform.rememberExternalApps
 import ru.poporyadku.ui.puzzle.PuzzleEffect
 import ru.poporyadku.ui.puzzle.PuzzleScreen
 import ru.poporyadku.ui.puzzle.PuzzleViewModel
@@ -63,12 +39,22 @@ import ru.poporyadku.ui.puzzleresult.PuzzleResultViewModel
 import ru.poporyadku.ui.recap.DayRecapEffect
 import ru.poporyadku.ui.recap.DayRecapScreen
 import ru.poporyadku.ui.recap.DayRecapViewModel
-import ru.poporyadku.ui.theme.Sizing
-import ru.poporyadku.ui.theme.Spacing
+import ru.poporyadku.ui.report.reportDraft
+import ru.poporyadku.ui.settings.SettingsEffect
+import ru.poporyadku.ui.settings.SettingsScreen
+import ru.poporyadku.ui.settings.SettingsViewModel
+import ru.poporyadku.ui.sources.SourcesEffect
+import ru.poporyadku.ui.sources.SourcesScreen
+import ru.poporyadku.ui.sources.SourcesViewModel
 
 /**
- * Граф приложения. Настоящие экраны — `Home`, `Puzzle`, `PuzzleResult`, `DayRecap` и
- * (с PR 5B) `Archive`; заглушкой итерации 1 остаётся только `Settings` (PR 5C).
+ * Граф приложения. Все экраны настоящие: `Home`, `Puzzle`, `PuzzleResult`, `DayRecap`,
+ * `Archive` (PR 5B), `Settings` и её единственный подэкран `Sources` (PR 5C). Заглушек
+ * итерации 1 не осталось.
+ *
+ * Внешние действия (письмо «Сообщить о неточности») выполняет коллектор эффектов
+ * route-контейнера через `ExternalApps` — ни ViewModel, ни render-функция
+ * (ITERATION_5_DESIGN.md, §6.11, §8.1).
  *
  * `DayRecap` и `PuzzleResult` существуют в двух вариантах по аргументу `origin`
  * (ITERATION_5_DESIGN.md, §3.7, §7): сессионный — игровая цепочка, архивный — бэкстек
@@ -135,8 +121,12 @@ fun AppNavHost(
             ArchiveRoute(navController, backStackEntry)
         }
 
-        composable(Destinations.SETTINGS) {
-            SettingsStubScreen(onBackClick = { navController.popBackStack() })
+        composable(Destinations.SETTINGS) { backStackEntry ->
+            SettingsRoute(navController, backStackEntry)
+        }
+
+        composable(Destinations.SOURCES) { backStackEntry ->
+            SourcesRoute(navController, backStackEntry)
         }
     }
 }
@@ -404,21 +394,38 @@ private fun PuzzleResultRoute(
     val viewModel: PuzzleResultViewModel = hiltViewModel()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
+    val externalApps = rememberExternalApps()
+    val resources = LocalResources.current
+    // Почтовый клиент перепроверяется на каждом ON_START; без него действия нет в дереве.
+    val isReportAvailable = rememberReportAvailability()
 
-    LaunchedEffect(viewModel, lifecycleOwner) {
+    LaunchedEffect(viewModel, lifecycleOwner, externalApps, resources) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.effects.collect { effect ->
-                if (effect is PuzzleResultEffect.NavigateBack) {
-                    if (!effect.isRedirect && !navController.isCurrent(entry)) return@collect
-                    navController.popBackOrHome()
-                } else {
-                    navController.navigateFromPuzzleResult(effect, slotIndex, sessionDate)
+                when (effect) {
+                    is PuzzleResultEffect.NavigateBack -> {
+                        if (!effect.isRedirect && !navController.isCurrent(entry)) return@collect
+                        navController.popBackOrHome()
+                    }
+
+                    // Нажатие: только с текущей записи. Без клиента или при отказе
+                    // запуска пользователь остаётся на этом экране.
+                    is PuzzleResultEffect.ComposeReport -> {
+                        if (!navController.isCurrent(entry)) return@collect
+                        externalApps.composeEmail(resources.reportDraft(effect.context))
+                    }
+
+                    else -> navController.navigateFromPuzzleResult(effect, slotIndex, sessionDate)
                 }
             }
         }
     }
 
-    PuzzleResultScreen(state = state, onEvent = viewModel::onEvent)
+    PuzzleResultScreen(
+        state = state,
+        onEvent = viewModel::onEvent,
+        isReportAvailable = isReportAvailable,
+    )
 }
 
 /** Сессионные переходы результата — правила бэкстека итерации 3 без изменений. */
@@ -449,9 +456,72 @@ private fun NavHostController.navigateFromPuzzleResult(
 
         PuzzleResultEffect.NavigateHome -> leaveToHome()
 
-        // Архивный возврат выполняет route-контейнер до этой функции.
+        // Архивный возврат и письмо выполняет route-контейнер до этой функции.
         is PuzzleResultEffect.NavigateBack -> popBackOrHome()
+        is PuzzleResultEffect.ComposeReport -> Unit
     }
+}
+
+// --- Settings и Sources ------------------------------------------------------------------
+
+/**
+ * Route-контейнер настроек (ITERATION_5_DESIGN.md, §3.9, §4.5, §6.11): одна ViewModel,
+ * ровно один lifecycle-aware коллектор эффектов. Все эффекты — нажатия, поэтому
+ * выполняются только с текущей записи. Письмо открывается через `ExternalApps`; без
+ * почтового клиента или при отказе запуска пользователь остаётся на экране.
+ */
+@Composable
+private fun SettingsRoute(navController: NavHostController, entry: NavBackStackEntry) {
+    val viewModel: SettingsViewModel = hiltViewModel()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val externalApps = rememberExternalApps()
+    val resources = LocalResources.current
+    val isReportAvailable = rememberReportAvailability()
+
+    LaunchedEffect(viewModel, lifecycleOwner, externalApps, resources) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.effects.collect { effect ->
+                if (!navController.isCurrent(entry)) return@collect
+                when (effect) {
+                    // Home лежит непосредственно ниже: возврат на существующий, не второй.
+                    SettingsEffect.NavigateBack -> navController.popBackOrHome()
+
+                    SettingsEffect.OpenSources -> navController.navigate(Destinations.SOURCES)
+
+                    is SettingsEffect.ComposeReport ->
+                        externalApps.composeEmail(resources.reportDraft(effect.context))
+                }
+            }
+        }
+    }
+
+    SettingsScreen(
+        state = state,
+        isReportAvailable = isReportAvailable,
+        onEvent = viewModel::onEvent,
+    )
+}
+
+/** Route-контейнер источников: «Назад» — к настройкам, только с текущей записи. */
+@Composable
+private fun SourcesRoute(navController: NavHostController, entry: NavBackStackEntry) {
+    val viewModel: SourcesViewModel = hiltViewModel()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    LaunchedEffect(viewModel, lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.effects.collect { effect ->
+                if (!navController.isCurrent(entry)) return@collect
+                when (effect) {
+                    SourcesEffect.NavigateBack -> navController.popBackOrHome()
+                }
+            }
+        }
+    }
+
+    SourcesScreen(state = state, onEvent = viewModel::onEvent)
 }
 
 /** Возврат на существующий Home, а не создание его второго экземпляра. */
@@ -475,7 +545,7 @@ private fun NavHostController.popBackOrHome() {
 private fun NavHostController.isCurrent(entry: NavBackStackEntry): Boolean =
     currentBackStackEntry?.id == entry.id
 
-// --- Аргументы маршрутов и заглушка итерации 1 -------------------------------
+// --- Аргументы маршрутов -----------------------------------------------------
 
 /**
  * Сессионная дата маршрута — **без** запасного варианта: подмены на «сегодня» или на
@@ -491,116 +561,3 @@ private fun NavBackStackEntry.sessionDateOrNull(): LocalDate? =
 /** Слот маршрута; невалидное значение отсекает уже `readPuzzleRoute()` во ViewModel. */
 private fun NavBackStackEntry.slotIndex(): Int =
     arguments?.getInt(Destinations.ARG_SLOT_INDEX) ?: 0
-
-@Composable
-private fun StubScaffold(
-    title: String,
-    onBackClick: (() -> Unit)? = null,
-    content: @Composable ColumnScope.() -> Unit = {},
-) {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background,
-    ) {
-        BoxWithConstraints(
-            modifier = Modifier
-                .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.safeDrawing),
-            contentAlignment = Alignment.TopCenter,
-        ) {
-            val isCompactWidth = maxWidth < Sizing.compactWidthBreakpoint
-            val horizontalMargin = if (isCompactWidth) Spacing.marginCompact else Spacing.marginDefault
-            val isWideOrLandscape = maxWidth >= Sizing.mediumWidthBreakpoint || maxWidth > maxHeight
-            val columnWidthModifier = if (isWideOrLandscape) {
-                Modifier.widthIn(max = Sizing.contentMaxWidth)
-            } else {
-                Modifier.fillMaxWidth()
-            }
-
-            Column(
-                modifier = columnWidthModifier
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = horizontalMargin, vertical = Spacing.section),
-                verticalArrangement = Arrangement.spacedBy(Spacing.section),
-            ) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.semantics { heading() },
-                )
-                content()
-                if (onBackClick != null) {
-                    StubSecondaryButton(
-                        text = stringResource(R.string.cd_back),
-                        onClick = onBackClick,
-                        modifier = Modifier.testTag(TestTags.GENERIC_BACK_BUTTON),
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun StubPrimaryButton(
-    text: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Button(
-        onClick = onClick,
-        modifier = modifier
-            .fillMaxWidth()
-            .heightIn(min = Sizing.buttonHeight),
-        shape = MaterialTheme.shapes.small,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
-        ),
-    ) {
-        Text(text = text, style = MaterialTheme.typography.labelLarge)
-    }
-}
-
-@Composable
-private fun StubSecondaryButton(
-    text: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    OutlinedButton(
-        onClick = onClick,
-        modifier = modifier
-            .fillMaxWidth()
-            .heightIn(min = Sizing.buttonHeight),
-        shape = MaterialTheme.shapes.small,
-        border = BorderStroke(
-            width = ButtonDefaults.outlinedButtonBorder(enabled = true).width,
-            color = MaterialTheme.colorScheme.outline,
-        ),
-        colors = ButtonDefaults.outlinedButtonColors(
-            contentColor = MaterialTheme.colorScheme.onSurface,
-        ),
-    ) {
-        Text(text = text, style = MaterialTheme.typography.labelLarge)
-    }
-}
-
-/** Стабильные testTag заглушек для `AppNavHostTest` — не производственное поведение. */
-private object TestTags {
-    const val GENERIC_BACK_BUTTON = "stub_generic_back_button"
-}
-
-@Composable
-private fun SettingsStubScreen(onBackClick: () -> Unit) {
-    StubScaffold(
-        title = stringResource(R.string.stub_settings_title),
-        onBackClick = onBackClick,
-    ) {
-        Text(
-            text = stringResource(R.string.stub_placeholder_caption),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-    }
-}

@@ -3,11 +3,13 @@ package ru.poporyadku.ui.puzzleresult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assertHasClickAction
+import androidx.compose.ui.test.assertHeightIsAtLeast
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -26,13 +28,18 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import ru.poporyadku.core.model.Puzzle
 import ru.poporyadku.domain.scoring.InvertedPair
+import ru.poporyadku.domain.usecase.PuzzleErrorKind
 import ru.poporyadku.ui.components.OrderableCardTestTags
+import ru.poporyadku.ui.components.rememberReportAvailability
 import ru.poporyadku.ui.navigation.RouteOrigin
+import ru.poporyadku.ui.platform.FakeExternalApps
+import ru.poporyadku.ui.platform.LocalExternalApps
 import ru.poporyadku.ui.theme.PoPoRyadkuTheme
+import ru.poporyadku.ui.theme.Sizing
 
 /**
  * `PuzzleResultScreen` — ITERATION_3_DESIGN.md, `I3-C7`–`I3-C9` и Result-части
- * `I3-C11`–`I3-C13`; ITERATION_5_DESIGN.md, §10.4: `I5-C11`.
+ * `I3-C11`–`I3-C13`; ITERATION_5_DESIGN.md, §10.4: `I5-C11`, результатная часть `I5-C13`.
  *
  * Экран stateless: рендерится готовое состояние, Hilt не участвует (I3-D31).
  */
@@ -337,6 +344,61 @@ class PuzzleResultScreenTest {
         )
     }
 
+    // --- I5-C13: «Сообщить о неточности» -------------------------------------------------
+
+    /**
+     * `I5-C13`. Без почтового клиента действия нет в дереве вовсе — не disabled; доступность
+     * приходит настоящим `rememberReportAvailability()` поверх фейка `ExternalApps`.
+     */
+    @Test
+    fun `I5-C13 without a mail client the report action is absent`() {
+        val apps = FakeExternalApps(emailAvailable = false)
+        rule.setContent { ResultWithApps(apps, content(score = 4, pairs = allPairs.take(2))) }
+
+        rule.onNodeWithText(REPORT).assertDoesNotExist()
+        rule.onNodeWithTag(PuzzleResultTestTags.REPORT).assertDoesNotExist()
+    }
+
+    /**
+     * `I5-C13`. С клиентом действие есть — рядом с источниками, до основной кнопки, одна цель
+     * с ролью кнопки не ниже 48 dp — и шлёт `ReportClicked`; в архивном режиме тоже.
+     */
+    @Test
+    fun `I5-C13 with a mail client the report action sits after sources and sends the event`() {
+        val apps = FakeExternalApps(emailAvailable = true)
+        val events = mutableListOf<PuzzleResultEvent>()
+        rule.setContent {
+            ResultWithApps(
+                apps,
+                content(score = 4, pairs = allPairs.take(2), origin = RouteOrigin.Archive),
+                onEvent = { events += it },
+            )
+        }
+
+        val action = rule.onNodeWithTag(PuzzleResultTestTags.REPORT).performScrollTo()
+        action.assertIsDisplayed().assertHeightIsAtLeast(Sizing.touchTargetMin)
+        assertEquals(Role.Button, action.fetchSemanticsNode().config.getOrNull(SemanticsProperties.Role))
+        assertTrue(
+            "после источников",
+            action.fetchSemanticsNode().positionInRoot.y >
+                rule.onNodeWithTag(PuzzleResultTestTags.SOURCES).fetchSemanticsNode().positionInRoot.y,
+        )
+        rule.onNodeWithText(REPORT).performClick()
+
+        assertEquals(listOf<PuzzleResultEvent>(PuzzleResultEvent.ReportClicked), events)
+        assertTrue("письмо открывает route-контейнер, а не экран", apps.composedDrafts.isEmpty())
+    }
+
+    /** `I5-C13`. Действие существует только при показанном результате — не на ошибке. */
+    @Test
+    fun `I5-C13 the report action is absent without content`() {
+        rule.setContent {
+            ResultWithApps(FakeExternalApps(emailAvailable = true), PuzzleResultState.Error(PuzzleErrorKind.PuzzleNotFound))
+        }
+
+        rule.onNodeWithText(REPORT).assertDoesNotExist()
+    }
+
     // --- Инфраструктура -------------------------------------------------------------------
 
     @Composable
@@ -346,6 +408,19 @@ class PuzzleResultScreenTest {
     ) {
         PoPoRyadkuTheme(darkTheme = false) {
             PuzzleResultScreen(state = state, onEvent = onEvent)
+        }
+    }
+
+    @Composable
+    private fun ResultWithApps(
+        apps: FakeExternalApps,
+        state: PuzzleResultState,
+        onEvent: (PuzzleResultEvent) -> Unit = {},
+    ) {
+        CompositionLocalProvider(LocalExternalApps provides apps) {
+            PoPoRyadkuTheme(darkTheme = false) {
+                PuzzleResultScreen(state = state, onEvent = onEvent, isReportAvailable = rememberReportAvailability())
+            }
         }
     }
 
@@ -390,6 +465,7 @@ class PuzzleResultScreenTest {
         const val SOURCES = "Источники"
         const val BACK = "Назад"
         const val RETIRED_NOTICE = "Задание отозвано: в нём была неточность"
+        const val REPORT = "Сообщить о неточности"
         const val HINT_TEXT =
             "Баллы даются за каждую пару карточек в правильном порядке. У четырёх карточек шесть пар"
         val FORBIDDEN = listOf("выше", "ниже")

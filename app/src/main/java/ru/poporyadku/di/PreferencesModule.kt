@@ -14,7 +14,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+import ru.poporyadku.data.prefs.SettingsWriteQueue
 import ru.poporyadku.data.prefs.UserPreferencesRepositoryImpl
+import ru.poporyadku.domain.repository.SettingsWriter
 import ru.poporyadku.domain.repository.UserPreferencesRepository
 
 // ITERATION_2_DESIGN.md, D-18: единственное место в проекте, где встречается имя
@@ -27,6 +29,14 @@ abstract class PreferencesModule {
     abstract fun userPreferencesRepository(
         impl: UserPreferencesRepositoryImpl,
     ): UserPreferencesRepository
+
+    /**
+     * Единственный путь записи настроек из UI (ITERATION_5_DESIGN.md, §5.5, I5-D15).
+     * Экземпляр — `@Singleton` по аннотации самого класса: одна очередь и один worker
+     * на процесс.
+     */
+    @Binds
+    abstract fun settingsWriter(impl: SettingsWriteQueue): SettingsWriter
 
     companion object {
         private const val PREFERENCES_FILE_NAME = "poporyadku_prefs"
