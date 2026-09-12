@@ -26,6 +26,7 @@ import ru.poporyadku.ui.archive.ArchiveEffect
 import ru.poporyadku.ui.archive.ArchiveScreen
 import ru.poporyadku.ui.archive.ArchiveViewModel
 import ru.poporyadku.ui.components.rememberReportAvailability
+import ru.poporyadku.ui.feedback.rememberFeedbackPlayer
 import ru.poporyadku.ui.home.HomeEffect
 import ru.poporyadku.ui.home.HomeScreen
 import ru.poporyadku.ui.home.HomeViewModel
@@ -322,16 +323,25 @@ private fun PuzzleRoute(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
     val view = LocalView.current
+    // Исполнитель отдачи: звуки Activity и `View` этого экрана — либо подставленный
+    // тестом (ITERATION_5_DESIGN.md, §8.2). Второго коллектора эффектов отдача не
+    // добавляет: она собирается тем же единственным ниже.
+    val feedbackPlayer = rememberFeedbackPlayer()
     // LocalResources, а не LocalContext.getString: чтение ресурсов обязано
     // инвалидироваться при смене конфигурации, иначе объявление TalkBack осталось бы на
     // старой локали. По той же причине `resources` входит в ключи LaunchedEffect —
     // коллектор пересоздаётся, а недоставленный эффект удержит Channel.
     val resources = LocalResources.current
 
-    LaunchedEffect(viewModel, lifecycleOwner, resources) {
+    LaunchedEffect(viewModel, lifecycleOwner, resources, feedbackPlayer) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.effects.collect { effect ->
                 when (effect) {
+                    // Отдача исполняется ДО навигации: `Feedback(AnswerAccepted)` лежит
+                    // в канале перед `NavigateToResult`, и звук успевает начаться на
+                    // ещё живом экране.
+                    is PuzzleEffect.Feedback -> feedbackPlayer.play(effect.request)
+
                     // Локализованную фразу собирает контейнер: ViewModel не держит ни
                     // Context, ни Resources и структурой эффекта их не подменяет.
                     is PuzzleEffect.AnnounceCardMoved -> view.announceForAccessibility(
@@ -385,7 +395,9 @@ private fun NavHostController.navigateFromPuzzle(
 
         PuzzleEffect.NavigateHome -> leaveToHome()
 
+        // Объявление и отдачу выполняет route-контейнер до этой функции.
         is PuzzleEffect.AnnounceCardMoved -> Unit
+        is PuzzleEffect.Feedback -> Unit
     }
 }
 

@@ -9,19 +9,25 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.poporyadku.core.model.Puzzle
 import ru.poporyadku.core.model.SLOTS_PER_DAY
+import ru.poporyadku.domain.model.FeedbackSettings
 import ru.poporyadku.domain.usecase.AttemptKind
 import ru.poporyadku.domain.usecase.GetPuzzleResult
 import ru.poporyadku.domain.usecase.GetPuzzleUseCase
+import ru.poporyadku.domain.usecase.ObserveFeedbackSettingsUseCase
 import ru.poporyadku.domain.usecase.PuzzleErrorKind
 import ru.poporyadku.domain.usecase.Submission
 import ru.poporyadku.domain.usecase.SubmitAnswerUseCase
 import ru.poporyadku.domain.usecase.SubmitResult
+import ru.poporyadku.ui.feedback.FeedbackCue
+import ru.poporyadku.ui.feedback.FeedbackPolicy
 
 /** Ключи восстановления порядка карточек (I3-D26). */
 internal const val KEY_CURRENT_ORDER = "puzzle.currentOrder"
@@ -35,7 +41,9 @@ private const val LAST_SLOT_INDEX = SLOTS_PER_DAY - 1
 /**
  * ViewModel игрового экрана (ITERATION_3_DESIGN.md, раздел 11).
  *
- * Инъекции ограничены двумя use cases и `SavedStateHandle`. Калькулятор счёта,
+ * Инъекции ограничены тремя use cases и `SavedStateHandle` — третий появился в
+ * итерации 5: `ObserveFeedbackSettingsUseCase`, только чтение двух переключателей
+ * отдачи (ITERATION_5_DESIGN.md, §4.7). Калькулятор счёта,
  * репозитории прогресса и контента, провайдеры часов и даты сюда **не** инжектируются:
  * считать счёт, писать попытку и определять «сегодня» этому экрану нечем, и отсутствие
  * зависимости — единственная проверяемая форма этого запрета (проверка `rg` раздела 22.4
@@ -44,11 +52,16 @@ private const val LAST_SLOT_INDEX = SLOTS_PER_DAY - 1
  *
  * Порядок карточек — единственное, что ViewModel держит сама; он живёт в состоянии и
  * дублируется в `SavedStateHandle` строкой идентификаторов. UI список не переставляет.
+ *
+ * Отдача решается здесь, а исполняется в route-контейнере: звуковой пул, `View` и
+ * `HapticFeedbackConstants` во ViewModel не появляются, поэтому все комбинации настроек
+ * проверяются JVM-тестами по содержимому эффекта (`I5-V29`…`I5-V34`).
  */
 @HiltViewModel
 class PuzzleViewModel @Inject constructor(
     private val getPuzzle: GetPuzzleUseCase,
     private val submitAnswer: SubmitAnswerUseCase,
+    observeFeedbackSettings: ObserveFeedbackSettingsUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -62,6 +75,20 @@ class PuzzleViewModel @Inject constructor(
 
     /** Ровно один коллектор на стороне UI — на уровне route-контейнера (I3-D25). */
     val effects: Flow<PuzzleEffect> = effectChannel.receiveAsFlow()
+
+    /**
+     * Настройки отдачи (ITERATION_5_DESIGN.md, §3.14, §6.10, I5-D22).
+     *
+     * `Eagerly` — чтение начинается при создании ViewModel, а не с первой подпиской: у
+     * этого потока подписчиков нет вовсе, его значение читается синхронно в момент
+     * события. `Unknown` до первой эмиссии означает «отдачи нет»: см. `FeedbackPolicy`.
+     */
+    private val feedbackSettings: StateFlow<FeedbackSettings> =
+        observeFeedbackSettings().stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = FeedbackSettings.Unknown,
+        )
 
     init {
         when (route) {
@@ -230,6 +257,11 @@ class PuzzleViewModel @Inject constructor(
         savedStateHandle[KEY_CURRENT_ORDER] = order.joinToString(ORDER_SEPARATOR)
         savedStateHandle[KEY_ORDER_PUZZLE_ID] = board.puzzleId
 
+        // Только здесь — после фактического изменения порядка: ранние выходы выше
+        // (не `Playing`, чужой cardId, край списка) отдачу не порождают, и «недоступная
+        // перестановка молчит» — свойство потока управления, а не отдельная проверка.
+        emitFeedback(FeedbackCue.CardMoved)
+
         emitEffect(
             PuzzleEffect.AnnounceCardMoved(
                 cardTitle = cards[index].title,
@@ -307,8 +339,15 @@ class PuzzleViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 when (val result = submitAnswer(args.date, args.slotIndex, submission)) {
-                    is SubmitResult.Recorded ->
+                    is SubmitResult.Recorded -> {
+                        // Попытка уже в базе: отдача подтверждает зафиксированное и не
+                        // может соврать при отказе записи. Пропуск не подтверждается —
+                        // подтверждать нечего.
+                        if (result.kind == AttemptKind.Answered) {
+                            emitFeedback(FeedbackCue.AnswerAccepted)
+                        }
                         emitEffect(effectForClosedSlot(result.kind, result.slotIndex))
+                    }
 
                     // Гонка: идём по ПОБЕДИВШЕЙ записи, а не по своему намерению.
                     is SubmitResult.AlreadyClosed ->
@@ -361,6 +400,16 @@ class PuzzleViewModel @Inject constructor(
 
     private fun emitEffect(effect: PuzzleEffect) {
         effectChannel.trySend(effect)
+    }
+
+    /**
+     * Единственный вход отдачи. `load()`, `orderOf()` (восстановление из
+     * `SavedStateHandle`), `onSkip()`, отказы записи, `AlreadyClosed` и `BackPressed` его
+     * не вызывают — поэтому отдачи в них нет по построению, а не по проверке флага.
+     */
+    private fun emitFeedback(cue: FeedbackCue) {
+        FeedbackPolicy.requestFor(cue, feedbackSettings.value)
+            ?.let { request -> emitEffect(PuzzleEffect.Feedback(request)) }
     }
 
     private companion object {

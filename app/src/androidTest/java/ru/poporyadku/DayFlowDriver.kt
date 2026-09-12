@@ -1,6 +1,7 @@
 package ru.poporyadku
 
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -24,6 +25,10 @@ import ru.poporyadku.core.model.puzzleIdAt
 import ru.poporyadku.debug.DebugGraphEntryPoint
 import ru.poporyadku.domain.shuffle.DeterministicShuffler
 import ru.poporyadku.ui.components.OrderableCardTestTags
+import ru.poporyadku.ui.feedback.FeedbackCue
+import ru.poporyadku.ui.feedback.FeedbackPlayer
+import ru.poporyadku.ui.feedback.FeedbackRequest
+import ru.poporyadku.ui.feedback.LocalFeedbackPlayerOverride
 import ru.poporyadku.ui.home.HomeTestTags
 import ru.poporyadku.ui.navigation.AppNavHost
 import ru.poporyadku.ui.navigation.Destinations
@@ -48,6 +53,15 @@ internal class DayFlowDriver(
     lateinit var navController: TestNavHostController
         private set
 
+    /**
+     * Сколько фактических перестановок выполнил тест нажатиями «вверх» (`I5-N8`).
+     *
+     * Считается по совершённым нажатиям, а не по формуле: с этим числом сравнивается
+     * число `CardMoved`, дошедших до исполнителя отдачи.
+     */
+    var performedReorders: Int = 0
+        private set
+
     val deps: DebugGraphEntryPoint by lazy {
         EntryPointAccessors.fromApplication(
             rule.activity.applicationContext,
@@ -63,14 +77,22 @@ internal class DayFlowDriver(
         withContext(Dispatchers.IO) { deps.database().attemptDao().observeAll().first().size }
     }
 
-    fun startApp() {
+    /**
+     * @param feedbackPlayer подставленный исполнитель отдачи (`I5-N8`): настоящий звук и
+     * тактильная отдача в сквозном тесте не нужны, а проверять надо вызовы. `null` —
+     * поведение по умолчанию: `PuzzleRoute` строит `AndroidFeedbackPlayer`, а звуков в
+     * этой композиции нет, потому что `LocalSoundCues` здесь никто не предоставляет.
+     */
+    fun startApp(feedbackPlayer: FeedbackPlayer? = null) {
         rule.activity.runOnUiThread {
             navController = TestNavHostController(rule.activity).apply {
                 navigatorProvider.addNavigator(ComposeNavigator())
             }
             rule.activity.setContent {
                 PoPoRyadkuTheme {
-                    AppNavHost(navController = navController)
+                    CompositionLocalProvider(LocalFeedbackPlayerOverride provides feedbackPlayer) {
+                        AppNavHost(navController = navController)
+                    }
                 }
             }
         }
@@ -182,9 +204,27 @@ internal class DayFlowDriver(
                 rule.waitForIdle()
                 current[at] = current[at - 1]
                 current[at - 1] = cardId
+                performedReorders++
             }
         }
         assertEquals("скрипт обязан привести список к правильному порядку", puzzle.correctOrder, current)
+    }
+
+    /**
+     * Исполнитель отдачи, который только записывает запросы (`I5-N8`).
+     *
+     * Ни `SoundPool`, ни `performHapticFeedback`: тест утверждает, сколько раз и что
+     * именно подтверждалось, а не то, что устройство издало звук.
+     */
+    class RecordingFeedbackPlayer : FeedbackPlayer {
+
+        private val requests = mutableListOf<FeedbackRequest>()
+
+        override fun play(request: FeedbackRequest) {
+            synchronized(requests) { requests += request }
+        }
+
+        fun countOf(cue: FeedbackCue): Int = synchronized(requests) { requests.count { it.cue == cue } }
     }
 
     companion object {

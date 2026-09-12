@@ -21,12 +21,17 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import ru.poporyadku.data.content.FakeUserPreferencesRepository
+import ru.poporyadku.domain.repository.UserPreferencesRepository
 import ru.poporyadku.domain.shuffle.DeterministicShuffler
 import ru.poporyadku.domain.usecase.GetPuzzleUseCase
+import ru.poporyadku.domain.usecase.ObserveFeedbackSettingsUseCase
 import ru.poporyadku.domain.usecase.PuzzleErrorKind
 import ru.poporyadku.domain.usecase.Submission
 import ru.poporyadku.domain.usecase.SubmitAnswerUseCase
+import ru.poporyadku.ui.feedback.FeedbackCue
+import ru.poporyadku.ui.feedback.FeedbackRequest
 import ru.poporyadku.ui.navigation.Destinations
+import ru.poporyadku.ui.settings.ControllablePreferences
 
 /**
  * `PuzzleViewModel` — ITERATION_3_DESIGN.md, `I3-V1`–`I3-V12`, `I3-V17`, `I3-V22`–`I3-V31`,
@@ -569,19 +574,334 @@ class PuzzleViewModelTest {
         assertEquals(PuzzleEffect.NavigateToNextSlot(1), viewModel.effects.first())
     }
 
+
+    // --- I5-V29 – I5-V34: отдача ------------------------------------------------------
+
+    /**
+     * `I5-V29`. Каждая фактическая перестановка — включая вызванную custom actions
+     * TalkBack (`MoveToTop`/`MoveToBottom`) — даёт `Feedback(CardMoved)` с каналами по
+     * настройкам, и он приходит ПЕРЕД объявлением для TalkBack.
+     */
+    @Test
+    fun `I5-V29 a real reorder emits feedback before the announcement`() = runTest(dispatcher) {
+        val events = listOf(
+            PuzzleEvent.MoveUp("c3"),
+            PuzzleEvent.MoveDown("c1"),
+            PuzzleEvent.MoveToTop("c4"),
+            PuzzleEvent.MoveToBottom("c1"),
+        )
+
+        events.forEach { event ->
+            setUp()
+            val viewModel = playingViewModel(
+                order = listOf("c1", "c2", "c3", "c4"),
+                feedback = feedbackSettings(sound = true, vibration = true),
+            )
+
+            viewModel.effects.test {
+                viewModel.onEvent(event)
+
+                assertEquals(
+                    "$event: отдача первой",
+                    PuzzleEffect.Feedback(
+                        FeedbackRequest(FeedbackCue.CardMoved, playSound = true, performHaptic = true),
+                    ),
+                    awaitItem(),
+                )
+                assertTrue("$event: затем объявление", awaitItem() is PuzzleEffect.AnnounceCardMoved)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+    }
+
+    /**
+     * `I5-V30`. Недоступная перестановка (край списка и чужой `cardId`), `Submitting` и
+     * `Error` отдачи не дают: `move()` выходит раньше единственного её вызова.
+     */
+    @Test
+    fun `I5-V30 unavailable reorders and wrong states emit no feedback`() = runTest(dispatcher) {
+        val enabled = feedbackSettings(sound = true, vibration = true)
+
+        // Край списка: первая карточка вверх, последняя вниз, и чужой cardId.
+        val viewModel = playingViewModel(order = listOf("c1", "c2", "c3", "c4"), feedback = enabled)
+        viewModel.effects.test {
+            viewModel.onEvent(PuzzleEvent.MoveUp("c1"))
+            viewModel.onEvent(PuzzleEvent.MoveToTop("c1"))
+            viewModel.onEvent(PuzzleEvent.MoveDown("c4"))
+            viewModel.onEvent(PuzzleEvent.MoveToBottom("c4"))
+            viewModel.onEvent(PuzzleEvent.MoveUp("c9"))
+            advanceUntilIdle()
+
+            expectNoEvents()
+            cancelAndIgnoreRemainingEvents()
+        }
+        assertEquals(listOf("c1", "c2", "c3", "c4"), viewModel.orderOrNull())
+
+        // Submitting: запись идёт, управление заблокировано состоянием.
+        progress.blockRecording()
+        viewModel.onEvent(PuzzleEvent.Submit)
+        runCurrent()
+        assertTrue(viewModel.uiState.value is PuzzleUiState.Submitting)
+        viewModel.effects.test {
+            viewModel.onEvent(PuzzleEvent.MoveUp("c3"))
+            runCurrent()
+
+            expectNoEvents()
+            cancelAndIgnoreRemainingEvents()
+        }
+        progress.release()
+        advanceUntilIdle()
+
+        // Error: двигать нечего.
+        setUp()
+        assignments.failWith = { IllegalStateException("база недоступна") }
+        val failed = createViewModel(routeHandle(), enabled)
+        advanceUntilIdle()
+        assertTrue(failed.uiState.value is PuzzleUiState.Error)
+        failed.effects.test {
+            failed.onEvent(PuzzleEvent.MoveUp("c3"))
+            advanceUntilIdle()
+
+            expectNoEvents()
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    /**
+     * `I5-V31`. Каналы в эффекте — ровно настройки пользователя; при обоих выключенных и
+     * при непрочитанных настройках эффекта нет вовсе.
+     */
+    @Test
+    fun `I5-V31 channels follow the user settings`() = runTest(dispatcher) {
+        val expected = mapOf(
+            (true to true) to FeedbackRequest(FeedbackCue.CardMoved, playSound = true, performHaptic = true),
+            (true to false) to FeedbackRequest(FeedbackCue.CardMoved, playSound = true, performHaptic = false),
+            (false to true) to FeedbackRequest(FeedbackCue.CardMoved, playSound = false, performHaptic = true),
+        )
+
+        expected.forEach { (settings, request) ->
+            val (sound, vibration) = settings
+            setUp()
+            val viewModel = playingViewModel(
+                order = listOf("c1", "c2", "c3", "c4"),
+                feedback = feedbackSettings(sound = sound, vibration = vibration),
+            )
+
+            viewModel.effects.test {
+                viewModel.onEvent(PuzzleEvent.MoveUp("c3"))
+
+                assertEquals("звук=$sound, вибрация=$vibration", PuzzleEffect.Feedback(request), awaitItem())
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+        // Оба выключены и «ещё не прочитано» дают одно и то же наблюдаемое поведение —
+        // но по разным причинам, и обе обязаны молчать.
+        val silent = listOf(
+            feedbackSettings(sound = false, vibration = false),
+            ControllablePreferences(initial = null),
+        )
+
+        silent.forEach { preferences ->
+            setUp()
+            val viewModel = playingViewModel(order = listOf("c1", "c2", "c3", "c4"), feedback = preferences)
+
+            viewModel.effects.test {
+                viewModel.onEvent(PuzzleEvent.MoveUp("c3"))
+
+                // Объявление для TalkBack остаётся: оно не отдача и от настроек не зависит.
+                assertTrue(awaitItem() is PuzzleEffect.AnnounceCardMoved)
+                expectNoEvents()
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+    }
+
+    /**
+     * `I5-V32`. `Recorded(Answered)` → `Feedback(AnswerAccepted)`, затем
+     * `NavigateToResult`: порядок в канале, и отдача — уже после записи в базу.
+     */
+    @Test
+    fun `I5-V32 accepted answer emits feedback before navigation`() = runTest(dispatcher) {
+        val viewModel = playingViewModel(feedback = feedbackSettings(sound = true, vibration = true))
+        progress.blockRecording()
+
+        viewModel.effects.test {
+            viewModel.onEvent(PuzzleEvent.Submit)
+            runCurrent()
+            // До завершения записи не приходит ничего — в том числе отдача.
+            expectNoEvents()
+            assertTrue("попытка ещё не записана", progress.recorded.isEmpty())
+
+            progress.release()
+            advanceUntilIdle()
+
+            assertEquals(
+                PuzzleEffect.Feedback(
+                    FeedbackRequest(FeedbackCue.AnswerAccepted, playSound = true, performHaptic = true),
+                ),
+                awaitItem(),
+            )
+            assertEquals(PuzzleEffect.NavigateToResult(0), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+        assertEquals(1, progress.recorded.size)
+    }
+
+    /**
+     * `I5-V33`. Отказ записи, проигранная гонка (`AlreadyClosed`), пропуск и второе
+     * нажатие «Проверить» `AnswerAccepted` не дают; при двойном нажатии он ровно один.
+     */
+    @Test
+    fun `I5-V33 refusal, already closed, skip and double submit emit no accept`() = runTest(dispatcher) {
+        val enabled = feedbackSettings(sound = true, vibration = true)
+
+        // Отказ записи: подтверждать нечего.
+        var viewModel = playingViewModel(feedback = enabled)
+        progress.failWith = { IllegalStateException("база недоступна") }
+        viewModel.effects.test {
+            viewModel.onEvent(PuzzleEvent.Submit)
+            advanceUntilIdle()
+
+            expectNoEvents()
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        // AlreadyClosed: запись создало не это действие.
+        setUp()
+        viewModel = playingViewModel(feedback = enabled)
+        progress.close(PuzzleFixtures.date, slotIndex = 0, submittedOrder = listOf("c2", "c1", "c3", "c4"))
+        viewModel.effects.test {
+            viewModel.onEvent(PuzzleEvent.Submit)
+            advanceUntilIdle()
+
+            assertEquals(PuzzleEffect.NavigateToResult(0), awaitItem())
+            expectNoEvents()
+            cancelAndIgnoreRemainingEvents()
+        }
+        assertTrue("второй попытки нет", progress.recorded.isEmpty())
+
+        // «Пропустить» — не «Проверить»: подтверждения ответа нет.
+        setUp()
+        puzzles.remove(PuzzleFixtures.PUZZLE_ID)
+        val skipping = createViewModel(routeHandle(), enabled)
+        advanceUntilIdle()
+        assertEquals(PuzzleErrorKind.PuzzleNotFound, (skipping.uiState.value as PuzzleUiState.Error).kind)
+        skipping.effects.test {
+            skipping.onEvent(PuzzleEvent.SkipClicked)
+            advanceUntilIdle()
+
+            assertEquals(PuzzleEffect.NavigateToNextSlot(1), awaitItem())
+            expectNoEvents()
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        // Второе нажатие в Submitting действия не создаёт — значит и отдачи.
+        setUp()
+        viewModel = playingViewModel(feedback = enabled)
+        progress.blockRecording()
+        viewModel.effects.test {
+            viewModel.onEvent(PuzzleEvent.Submit)
+            runCurrent()
+            viewModel.onEvent(PuzzleEvent.Submit)
+            runCurrent()
+            progress.release()
+            advanceUntilIdle()
+
+            assertEquals(
+                PuzzleEffect.Feedback(
+                    FeedbackRequest(FeedbackCue.AnswerAccepted, playSound = true, performHaptic = true),
+                ),
+                awaitItem(),
+            )
+            assertEquals(PuzzleEffect.NavigateToResult(0), awaitItem())
+            expectNoEvents()
+            cancelAndIgnoreRemainingEvents()
+        }
+        assertEquals("ровно одна запись", 1, progress.recorded.size)
+    }
+
+    /**
+     * `I5-V34`. Перечислением: загрузка, восстановление порядка из `SavedStateHandle`,
+     * повторная загрузка и `BackPressed` отдачи не порождают — `emitFeedback` в них не
+     * вызывается.
+     */
+    @Test
+    fun `I5-V34 loading, restoring, reloading and back emit no feedback`() = runTest(dispatcher) {
+        val enabled = feedbackSettings(sound = true, vibration = true)
+
+        // Первоначальная загрузка.
+        var viewModel = createViewModel(routeHandle(), enabled)
+        advanceUntilIdle()
+        assertTrue(viewModel.uiState.value is PuzzleUiState.Playing)
+        assertNull("загрузка отдачи не даёт", withTimeoutOrNull(REPLAY_PROBE_MS) { viewModel.effects.first() })
+
+        // Восстановление порядка после смерти процесса.
+        setUp()
+        val restored = listOf("c4", "c3", "c2", "c1")
+        viewModel = createViewModel(
+            routeHandle(
+                KEY_CURRENT_ORDER to restored.joinToString(","),
+                KEY_ORDER_PUZZLE_ID to PuzzleFixtures.PUZZLE_ID,
+            ),
+            enabled,
+        )
+        advanceUntilIdle()
+        assertEquals(restored, viewModel.orderOrNull())
+        assertNull(
+            "восстановление отдачи не даёт",
+            withTimeoutOrNull(REPLAY_PROBE_MS) { viewModel.effects.first() },
+        )
+
+        // Повторная загрузка по «Повторить».
+        setUp()
+        assignments.failWith = { IllegalStateException("база недоступна") }
+        viewModel = createViewModel(routeHandle(), enabled)
+        advanceUntilIdle()
+        assignments.failWith = null
+        viewModel.effects.test {
+            viewModel.onEvent(PuzzleEvent.RetryClicked)
+            advanceUntilIdle()
+
+            expectNoEvents()
+            cancelAndIgnoreRemainingEvents()
+        }
+        assertTrue(viewModel.uiState.value is PuzzleUiState.Playing)
+
+        // BackPressed: только навигация.
+        viewModel.effects.test {
+            viewModel.onEvent(PuzzleEvent.BackPressed)
+            advanceUntilIdle()
+
+            assertEquals(PuzzleEffect.NavigateHome, awaitItem())
+            expectNoEvents()
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
     // --- Инфраструктура ----------------------------------------------------------------
 
-    private fun createViewModel(handle: SavedStateHandle) = PuzzleViewModel(
+    /**
+     * @param feedback настройки отдачи. По умолчанию DataStore не эмитит вовсе, поэтому
+     * настройки остаются `Unknown` и отдачи нет (`FeedbackPolicy`): тесты игрового цикла
+     * итерации 3 проверяют свои эффекты без неё, а включают её тесты `I5-V29`…`I5-V34`.
+     */
+    private fun createViewModel(
+        handle: SavedStateHandle,
+        feedback: UserPreferencesRepository = ControllablePreferences(initial = null),
+    ) = PuzzleViewModel(
         getPuzzle = GetPuzzleUseCase(content, assignments, sets, puzzles, progress),
         // FakeProgress не хранит day_results: день для флага первого дня никогда не
         // завершён, и настройки SubmitAnswerUseCase здесь не читаются вовсе.
         submitAnswer = SubmitAnswerUseCase(assignments, sets, puzzles, progress, FakeUserPreferencesRepository()),
+        observeFeedbackSettings = ObserveFeedbackSettingsUseCase(feedback),
         savedStateHandle = handle,
     )
 
     /** ViewModel в `Playing` с нужным порядком карточек. */
     private fun kotlinx.coroutines.test.TestScope.playingViewModel(
         order: List<String>? = null,
+        feedback: UserPreferencesRepository = ControllablePreferences(initial = null),
     ): PuzzleViewModel {
         val handle = if (order == null) {
             routeHandle()
@@ -591,11 +911,16 @@ class PuzzleViewModelTest {
                 KEY_ORDER_PUZZLE_ID to PuzzleFixtures.PUZZLE_ID,
             )
         }
-        val viewModel = createViewModel(handle)
+        val viewModel = createViewModel(handle, feedback)
         advanceUntilIdle()
         check(viewModel.uiState.value is PuzzleUiState.Playing) { "ожидалось Playing" }
         return viewModel
     }
+
+    /** Настройки отдачи, прочитанные из DataStore: оба канала по флагам. */
+    private fun feedbackSettings(sound: Boolean, vibration: Boolean) = ControllablePreferences(
+        ControllablePreferences.defaults(soundEnabled = sound, vibrationEnabled = vibration),
+    )
 
     private fun routeHandle(
         vararg extras: Pair<String, Any?>,
