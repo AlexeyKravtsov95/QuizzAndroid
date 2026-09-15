@@ -1,6 +1,6 @@
 # ITERATION_6_DESIGN.md — «По порядку!»
 
-Техническое проектирование итерации 6 «Перетаскивание, доступность, визуальная полировка» и напоминаний. Статус: **ревизия 1.1, готова к архитектурному ревью, 2026-09-13.** Документ не утверждён; решения `I6-D*` имеют статус «предложено», решения владельца `O6-1`…`O6-6` (раздел 18) открыты.
+Техническое проектирование итерации 6 «Перетаскивание, доступность, визуальная полировка» и напоминаний. Статус: **ревизия 1.2, готова к архитектурному ревью, 2026-09-15.** Документ не утверждён; решения `I6-D*` имеют статус «предложено», решения владельца `O6-1`…`O6-6` (раздел 18) открыты.
 
 Документ дополняет `IMPLEMENTATION_PLAN.md` (итерация 6) и не заменяет его: план говорит **что** делает итерация, этот документ — **как**, **в каком порядке**, **какими типами и контрактами**, и закрывает вопросы, на которые утверждённые документы и текущий код отвечают противоречиво или не отвечают вовсе. Цель — чтобы реализация PR 6A–6D не принимала архитектурных решений внутри Kotlin-кода.
 
@@ -198,7 +198,7 @@
 | ID | Решение | Отклонённая альтернатива | Раздел |
 | --- | --- | --- | --- |
 | I6-D1 | Четыре PR: **6A** единый путь перестановки и drag → **6B** напоминания (независим от 6A) → **6C** доступность, reduced motion, `DragEducationHint` (после 6A) → **6D** полировка, переходы, иконки, итоговая матрица UI (после 6A–6C) | один PR; PR «доступность» до drag | 13 |
-| I6-D2 | Room-схема и ключи DataStore не меняются: все нужные ключи существуют (2.4) | ключ «последнее показанное напоминание» | 9.7 |
+| I6-D2 | Room-схема не меняется, ключи DataStore не добавляются: все нужные ключи существуют (2.4); `UserPreferencesRepository` получает один метод атомарного перехода `acceptReminderPrompt(time)` над существующими ключами | ключ «последнее показанное напоминание»; отдельный pending-ключ согласия | 9.7, 8.3 |
 | I6-D3 | Карточка во всех намерениях перестановки адресуется только `cardId` | индексы «откуда/куда» | 4.1 |
 | I6-D4 | Единственная функция перестановки — чистая `CardOrder.move(order, cardId, target): List<String>?` в `ui/puzzle`; её вызывают кнопки, custom actions и drag через один метод ViewModel `reorder()` | алгоритм в UI для жеста и в ViewModel для кнопок | 4.2 |
 | I6-D5 | Жестовые события несут идентификатор жеста: `DragStarted(cardId, gesture)`, `DragMovedTo(cardId, targetIndex, gesture)`, `DragFinished(cardId, gesture)`; `DragGestureId` выдаёт процессный монотонный счётчик UI; `DragMoved(from, to)` и `DragEnded` удаляются | сохранить контракт I3; различать жесты только по `cardId` | 4.3 |
@@ -222,11 +222,11 @@
 | I6-D23 | Клавиатура и D-pad: достижимость `MoveButton`, «Проверить» и остальных целей стандартным фокусом Compose; drag с клавиатуры и сочетания клавиш не вводятся | Ctrl+↑/↓ | 7.8 |
 | I6-D24 | Напоминания: доменная граница `domain/reminder` (чистые расчёты, интерфейсы `ReminderScheduler`, `ReminderNotifier`, `NotificationAccess`, use cases, `ReminderRun`, `SyncReminderScheduleUseCase`); Android-реализации и оркестрация процесса (`@ApplicationScope`, коллектор, приёмник) — `notifications/`; `notifications` зависит от `domain`, ни `ui`, ни `data` не импортирует; `domain/reminder` не импортирует `ru.poporyadku.di` | Android-код или `@ApplicationScope` в `domain`; worker, вызывающий репозитории напрямую | 9.1 |
 | I6-D25 | Подключается `work-runtime-ktx` из catalog (ADR-006; версия перепроверяется по первичному источнику в 6B); `hilt-work` и `work-testing` не подключаются: зависимости worker'а — через Hilt `EntryPoint` | `@HiltWorker` + `hilt-work` | 9.1 |
-| I6-D26 | Одна уникальная работа `daily_reminder`, `OneTimeWorkRequest` без ограничений; каждая операция WorkManager ожидается (`Operation.await`); синхронизация — `REPLACE`; перепланирование worker'ом — `APPEND_OR_REPLACE`, только если синхронизация уже не поставила ожидающую работу; все записи планировщика в процессе — под `ReminderScheduleLock`; выключение — `cancelUniqueWork` | `PeriodicWorkRequest`; `KEEP`; операции без ожидания | 9.3 |
+| I6-D26 | Две уникальные работы без ограничений: `daily_reminder` (`OneTimeWorkRequest` напоминания) и `reminder_resync` (`ReminderResyncWorker`, долговечное продолжение события времени, `REPLACE`); каждая операция WorkManager ожидается (`Operation.await`); синхронизация — `REPLACE`; перепланирование worker'ом — `APPEND_OR_REPLACE`, только если синхронизация уже не поставила ожидающую работу; все записи `daily_reminder` в процессе — под `ReminderScheduleLock`; выключение — `cancelUniqueWork` | `PeriodicWorkRequest`; `KEEP`; операции без ожидания | 9.3 |
 | I6-D27 | `WorkRequest` несёт только `targetDate` (ISO) и `minuteOfDay` (Int) | передача настроек, счёта, `puzzleId` | 9.6 |
 | I6-D28 | Следующий момент — ближайшее вхождение локального времени строго после «сейчас» в текущей зоне через `ZonedDateTime.of`: пропуск DST сдвигает вперёд на длину разрыва, перекрытие берёт более раннее смещение | фиксированные 24 часа от прошлого срабатывания | 9.2 |
-| I6-D29 | Одна операция `SyncReminderScheduleUseCase` (`suspend`, под `ReminderScheduleLock`): перечитывает `reminderEnabled`/`reminderTime`, берёт один `TimeSnapshot`, ожидает `schedule`/`cancel`, возвращает `Scheduled`/`Cancelled`/`Failed`; её вызывают постоянный `ReminderScheduleObserver` (`notifications`, `@ApplicationScope`, старт из `MainActivity.onCreate`), приёмник и worker с неразбираемыми данными | `MutableSharedFlow` сигналов resync; вызовы планировщика из `SettingsViewModel`; запуск из `Application.onCreate` | 9.4 |
-| I6-D30 | Приёмник `ReminderTimeChangeReceiver` в манифесте на `TIME_SET` и `TIMEZONE_CHANGED` (исключения из запрета неявных broadcast), `exported="false"`: `goAsync()` → `ReminderBroadcastHandler` выполняет `SyncReminderScheduleUseCase` до конца и вызывает `finish()` только по завершении корутины; холодному процессу `MainActivity` не нужна | сигнал в поток, собираемый только после старта `MainActivity`; только самокоррекция worker'а | 9.4, 9.5 |
+| I6-D29 | Одна операция `SyncReminderScheduleUseCase` (`suspend`, под `ReminderScheduleLock`): перечитывает `reminderEnabled`/`reminderTime`, берёт один `TimeSnapshot`, ожидает `schedule`/`cancel`, возвращает `Scheduled`/`Cancelled`/`Failed`; её вызывают постоянный `ReminderScheduleObserver` (`notifications`, `@ApplicationScope`, старт из `MainActivity.onCreate`), `ReminderResyncWorker`, запасной путь приёмника и worker с неразбираемыми данными | `MutableSharedFlow` сигналов resync; вызовы планировщика из `SettingsViewModel`; запуск из `Application.onCreate` | 9.4 |
+| I6-D30 | Приёмник `ReminderTimeChangeReceiver` в манифесте на `TIME_SET` и `TIMEZONE_CHANGED`, `exported="false"`: `goAsync()` → `ReminderBroadcastHandler` ожидает **долговечного** результата — сохранения уникальной `reminder_resync` в базе WorkManager (при отказе записи — прямой `SyncReminderScheduleUseCase` с подтверждённым `Scheduled`/`Cancelled`) — и только затем вызывает `finish()` ровно один раз; отменяющего таймаута нет; процесс можно уничтожить сразу после `finish()`; `MainActivity` не нужна | синхронизация под таймаутом с `finish()` после истечения; сигнал в поток, собираемый только после старта `MainActivity` | 9.4, 9.5 |
 | I6-D31 | Рантайм-приёмник смены даты для Home (O-2 итерации 3) не вводится: тикер и `ON_START` уже закрывают сценарии; O-2 закрывается | регистрация приёмников в `HomeRoute` | 9.5 |
 | I6-D32 | Worker не вызывает `GetTodayStateUseCase`, `StartDailySessionUseCase`, `ContentInstaller`, запись попыток и сеттеры настроек; решение — только `peek()` + `getDayResult(today)` + чтение настроек и разрешения | переиспользовать `GetTodayStateUseCase` | 9.6 |
 | I6-D33 | Показ разрешён, когда решение политики `NewSet`/`CarryOver` или `Assigned` без закрытых слотов сегодня; день в процессе — по **O6-1**; `AwaitingNextDay`, `ContentExhausted`, завершённый день, ошибки — не показывать | показ при любом незавершённом дне | 9.6 |
@@ -236,7 +236,7 @@
 | I6-D37 | Экран показывает переключатель как `reminderEnabled && availability() == Allowed`, перечитывая статус на `ON_START`; отзыв доступа вне приложения ничего не пишет; единственная запись от `ON_START` — выполнение сохранённого намерения `pendingEnable` при `Allowed` | автоматически записывать `false` при отзыве | 8.1, 8.2 |
 | I6-D38 | Время записывается одной командой `SettingMutation.ReminderTime` по подтверждению выбора; форма выбора — **O6-3** | запись на каждое изменение поля | 8.1 |
 | I6-D39 | `SettingMutation` расширяется: `ReminderEnabled`, `ReminderTime`, `DragHintSeen`; очередь та же; экран настроек показывает ошибки только ключей `Reminder`, `ReminderTime`; `notificationPromptShown` через очередь **не** пишется | отдельная очередь напоминаний; отметка предложения fire-and-forget | 8.1 |
-| I6-D40 | Предложение на `DayRecap` — отдельный `ReminderPromptViewModel` в том же route-контейнере (`DayRecapViewModel` по-прежнему не получает настройки, I5-D31); условие — сессионный вариант, день завершён, `!notificationPromptShown`, `!reminderEnabled`; отметка — подтверждаемая `suspend`-запись `MarkReminderPromptShownUseCase`, системный запрос создаётся только после её успеха; включение — только при перечитанном `Allowed` | поля диалога в `DayRecapViewModel`; `SettingsWriteQueue.submit` перед запросом | 8.3 |
+| I6-D40 | Предложение на `DayRecap` — отдельный `ReminderPromptViewModel` в том же route-контейнере (`DayRecapViewModel` по-прежнему не получает настройки, I5-D31); условие — сессионный вариант, день завершён, `!notificationPromptShown`, `!reminderEnabled`; «Да» — один подтверждаемый переход DataStore `acceptReminderPrompt(09:00)` (`notificationPromptShown`, время, `reminderEnabled = true`) до любого эффекта; системный запрос — только после перехода и только при `RuntimePermissionMissing`; недоступность уведомлений не отбрасывает согласие; «Не нужно» — подтверждаемая `MarkReminderPromptShownUseCase` | отметка и включение разными командами; `SettingsWriteQueue.submit` или `SavedStateHandle` как граница согласия | 8.3 |
 | I6-D41 | Сети нет: ни `INTERNET`, ни локальных сетевых разрешений, ни сетевых вызовов; `ACCESS_NETWORK_STATE`, объявленный WorkManager, остаётся — это normal-разрешение на чтение состояния сети без сетевого доступа; транзитивное разрешение библиотеки без официально документированной гарантии WorkManager не удаляется; итоговый манифест проверяется тестом | удалить `ACCESS_NETWORK_STATE` манифестным слиянием | 10.4 |
 | I6-D42 | Все новые пользовательские тексты — ресурсы; формулировки вне утверждённых документов — предложения таблицы 8.6 до подтверждения владельцем | литералы; тексты «по аналогии» | 8.6 |
 | I6-D43 | Переходы между экранами задаются явно в `NavHost` через токены: вход `motion.duration.long`/`standardDecelerate`, выход `motion.duration.exit`/`standardAccelerate`; тип перехода — **O6-5** | библиотечный `tween(700)` | 11.3 |
@@ -823,22 +823,45 @@ val NotificationAvailability.settingsTarget: NotificationSettingsTarget?
 
 ### 8.3 Предложение на `DayRecap` (I6-D40)
 
+**Долговечная граница согласия.** Нажатие «Да, в 9:00» фиксируется **одним подтверждаемым переходом DataStore** до любого внешнего эффекта:
+
+```kotlin
+// domain/repository/UserPreferencesRepository.kt — новый метод (ключи DataStore не добавляются, I6-D2)
+/** Один edit: notificationPromptShown = true, reminderTime = time, reminderEnabled = true. Возвращается после записи. */
+suspend fun acceptReminderPrompt(time: LocalTime)
+
+// domain/usecase/AcceptReminderPromptUseCase.kt   — suspend invoke() = acceptReminderPrompt(LocalTime.of(9, 0))
+// domain/usecase/MarkReminderPromptShownUseCase.kt — suspend invoke() = setNotificationPromptShown(true) («Не нужно», «назад»)
+```
+
+Долговечное намерение — сам `reminderEnabled = true`: отдельный pending-ключ не нужен, потому что включённое, но недоступное напоминание уже имеет определённое поведение — переключатель показан выключенным, под ним подсказка и путь в системные настройки (**I6-D37**, 8.2), worker без `Allowed` не показывает уведомлений (9.6). `SavedStateHandle` и команды `SettingsWriteQueue` границей согласия не являются.
+
+`ReminderPromptViewModel` хранит в `SavedStateHandle` только шаг продолжения — `PromptStep.AcceptedAwaitingRequest` (переход записан, запрос ещё не запущен) или `PromptStep.RequestLaunched` (route-контейнер сообщил о запуске системного диалога событием `PermissionRequestLaunched`). Шаг пишется **после** успешного перехода и нужен только для безопасного продолжения; согласие от него не зависит.
+
 | Вопрос | Решение |
 | --- | --- |
 | Условие показа | сессионный вариант (`origin` отсутствует) **и** день завершён (`day_results.is_complete`) **и** `notificationPromptShown == false` **и** `reminderEnabled == false`; читается один раз при создании `ReminderPromptViewModel` (`GetReminderPromptEligibilityUseCase`) |
 | Архивный итог, незавершённый день | никогда |
 | Компонент | `NotificationOptInDialog` по `COMPONENTS.md`: один текстовый узел «Напоминать о новом задании?» (`titleMedium`, `heading()`), `PrimaryButton` «Да, в 9:00», `SecondaryButton` «Не нужно», `shape.large`, `surfaceContainerHigh`, `elevation.dialog`, `scrim`/`opacity.scrim`, `dismissOnClickOutside = false` |
-| Отметка «предложение показано» | **подтверждаемая** запись: `MarkReminderPromptShownUseCase` — `suspend`, вызывает существующий `UserPreferencesRepository.setNotificationPromptShown(true)` и возвращается только после завершения `edit` DataStore; ошибка пробрасывается вызывающему. Через `SettingsWriteQueue` отметка **не** идёт: `submit` не ждёт записи |
-| «Да, в 9:00» | 1) диалог скрывается сразу; 2) `markPromptShown()` ожидается в `viewModelScope`; 3) только после успешной записи — `availability()`: `Allowed` → команды `ReminderTime(09:00)`, `ReminderEnabled(true)`; `RuntimePermissionMissing` → `pendingEnable` в `SavedStateHandle` и эффект системного запроса; `AppNotificationsDisabled`/`ChannelDisabled` → ничего не включается, runtime-запроса нет, системные настройки из диалога не открываются (включить можно в «Настройках», где есть подсказка и действие) |
-| Результат системного запроса | статус перечитывается; включение — только при `Allowed`. Callback `true` при всё ещё заблокированных уведомлениях приложения или канале напоминание **не** включает; отказ — ничего не включается, без текста-упрёка |
-| Ошибка записи отметки | диалог остаётся скрытым в этом экземпляре; разрешение не запрашивается, напоминание не включается; итог дня работает; в следующий раз предложение может появиться снова — честное следствие незаписанной отметки |
-| «Не нужно», системная «назад» | диалог скрывается сразу; ожидается `markPromptShown()`; системного запроса нет; ошибка записи — как выше |
+| «Да, в 9:00» | 1) диалог скрывается сразу; 2) `acceptReminderPrompt()` ожидается; 3) только после успеха — шаг `AcceptedAwaitingRequest` и `availability()`: **`Allowed`** — ничего больше, коллектор планирует работу, шаг очищается; **`RuntimePermissionMissing`** — эффект системного запроса; **`AppNotificationsDisabled`/`ChannelDisabled`** — runtime-запроса нет, шаг очищается; «Да» не отброшено: в DataStore напоминание включено на 9:00, в «Настройках» переключатель показан выключенным с подсказкой и действием «Открыть настройки уведомлений», и после разблокировки напоминание заработает без повторного согласия |
+| Результат системного запроса | статус перечитывается; записей нет ни при каком исходе — согласие уже сохранено. `Allowed` — напоминание фактически включено; всё ещё `RuntimePermissionMissing` (отказ, постоянный отказ) или `AppNotificationsDisabled`/`ChannelDisabled` при callback `true` — уведомлений нет, «Настройки» показывают выключенный переключатель, подсказку и путь; шаг очищается |
+| Ошибка перехода | переход атомарен: DataStore не записал ни одного из трёх значений; диалог остаётся скрытым в этом экземпляре; разрешение не запрашивается; итог дня работает; в следующий раз предложение может появиться снова — честное следствие незаписанного согласия |
+| «Не нужно», системная «назад» | диалог скрывается сразу; ожидается `MarkReminderPromptShownUseCase`; напоминание не включается; системного запроса нет; ошибка записи — как выше |
 | Касание вне диалога | ничего |
-| Смерть процесса после появления системного диалога | отметка уже в DataStore (запрос создаётся только после неё) → новый `ReminderPromptViewModel` получает `notificationPromptShown == true` и диалога не показывает; результат запроса, доставленный восстановленному route-контейнеру, обрабатывается по `pendingEnable` из `SavedStateHandle` |
-| Уход с итога во время записи отметки | `viewModelScope` отменяется: запрос не создаётся, `CancellationException` пробрасывается; записана ли отметка — решает DataStore, и оба исхода безопасны |
+| Уход с итога во время перехода | `viewModelScope` отменяется, `CancellationException` пробрасывается, эффекта нет; записан ли переход — решает DataStore, и оба исхода описаны таблицей восстановления ниже |
 | Отказ чтения условий | диалог не показывается; итог дня не затронут |
 | Итог дня | `DayRecapViewModel` не меняется и настроек не инжектирует (I5-D31); диалог — слой route-контейнера поверх `DayRecapScreen` |
 | Обычные переключатели | «Звук», «Вибрация», «Тема», «Напоминание», «Время» по-прежнему пишут через `SettingsWriteQueue` |
+
+**Восстановление после смерти процесса.**
+
+| Когда умер процесс | Что в DataStore | Что происходит после восстановления |
+| --- | --- | --- |
+| До завершения перехода | ничего из трёх значений (переход атомарен) | согласие не записано и не считается данным; при следующем открытии сессионного итога завершённого дня предложение показывается снова; запроса нет |
+| Сразу после перехода, до эффекта; задача восстановлена с `SavedStateHandle` (шаг `AcceptedAwaitingRequest`) | `promptShown`, 09:00, `reminderEnabled` | диалога нет; ViewModel перечитывает статус: `RuntimePermissionMissing` → ровно один системный запрос; `Allowed` → ничего, работа запланирована коллектором; `AppNotificationsDisabled`/`ChannelDisabled` → запроса нет, «Настройки» показывают намерение и путь |
+| Сразу после перехода; холодный старт без `SavedStateHandle` | то же | диалога нет, автоматического запроса нет; «Настройки» показывают выключенный переключатель, подсказку и действие по причине; нажатие переключателя при `RuntimePermissionMissing` запускает системный запрос (8.2) |
+| После запуска системного диалога (шаг `RequestLaunched`) | то же | результат доставляется восстановленному route-контейнеру через `ActivityResultRegistry` → перечитывание статуса; повторного запроса нет; если результат не доставлен — поведение холодного старта |
+| Между результатом разрешения и «окончательным включением» | то же | окончательного включения нет как отдельного шага: оно было частью перехода; при `Allowed` уведомления начинаются по расписанию, иначе — путь через «Настройки» |
 
 ### 8.4 Уведомление и нажатие
 
@@ -908,14 +931,17 @@ domain/reminder/                          // чистый Kotlin + kotlinx.corou
   ReminderRun.kt                          // оркестрация одного срабатывания worker'а
   GetReminderPromptEligibilityUseCase.kt  // условие диалога на DayRecap
 domain/usecase/
-  MarkReminderPromptShownUseCase.kt       // подтверждаемая запись notificationPromptShown (8.3)
+  AcceptReminderPromptUseCase.kt          // один подтверждаемый переход: promptShown + 09:00 + reminderEnabled (8.3)
+  MarkReminderPromptShownUseCase.kt       // подтверждаемая отметка «Не нужно» (8.3)
 notifications/                            // Android и оркестрация процесса
   WorkManagerReminderScheduler.kt         // над узкой границей UniqueWorkOperations; каждая операция ожидается (Operation.await)
   ReminderScheduleObserver.kt             // @Singleton, @ApplicationScope: постоянный коллектор настроек → SyncReminderScheduleUseCase
-  ReminderBroadcastHandler.kt             // фильтр действий, запуск синхронизации, finish() по завершении
+  ReminderBroadcastHandler.kt             // фильтр действий; ожидание долговечной resync-работы; finish() после неё
+  ReminderResyncRequests.kt               // enqueueDurably(): уникальная reminder_resync, ожидаемая запись
+  ReminderResyncWorker.kt                 // CoroutineWorker: SyncReminderScheduleUseCase; ResyncAttemptPolicy — Failed → ограниченный retry
   ReminderTimeChangeReceiver.kt           // тонкий BroadcastReceiver: goAsync() → ReminderBroadcastHandler
   ReminderWorker.kt                       // CoroutineWorker: EntryPoint → ReminderRun
-  ReminderEntryPoint.kt                   // @EntryPoint @InstallIn(SingletonComponent): worker и receiver
+  ReminderEntryPoint.kt                   // @EntryPoint @InstallIn(SingletonComponent): ReminderWorker, ReminderResyncWorker, receiver
   AndroidReminderNotifier.kt              // канал, показ, снятие
   AndroidNotificationAccess.kt            // статус по таблице 8.2
 di/ReminderModule.kt                      // @Binds интерфейсов domain/reminder
@@ -966,13 +992,14 @@ object NextReminderTrigger {
 | Синхронизация (`ScheduleMode.Replace`) | `enqueueUniqueWork(name, REPLACE, request)` — отменяет ожидающую и выполняющуюся работу; новые настройки важнее |
 | Перепланирование из worker'а (`ScheduleMode.AfterCurrent(workId)`) | под `ReminderScheduleLock`: если в цепочке `daily_reminder` уже есть работа в `ENQUEUED`/`BLOCKED`, отличная от `workId`, — ничего (её поставила синхронизация); иначе `enqueueUniqueWork(name, APPEND_OR_REPLACE, request)` — следующая работа ставится после текущей и не отменяет её |
 | Отмена | `cancelUniqueWork(name)` |
+| Resync после события времени | отдельное уникальное имя `reminder_resync`, `OneTimeWorkRequest<ReminderResyncWorker>` без задержки, данных и ограничений, `REPLACE`; ставится приёмником и ожидается до `finish()`; не пишет `daily_reminder` сама — только через `SyncReminderScheduleUseCase` |
 | Периодическая работа | не используется: период 24 часа не следует местному времени через смену зоны и DST |
 
 `ReminderScheduleLock` сериализует все записи планировщика внутри процесса. Порядок «синхронизация `REPLACE` → перепланирование worker'а» поэтому не создаёт в цепочке второй ожидающей работы: worker видит уже поставленную синхронизацией работу и не добавляет свою. Обратный порядок безопасен сам: `REPLACE` заменяет всю цепочку.
 
 ### 9.4 Одна операция синхронизации и её вызывающие (I6-D29, I6-D30)
 
-**Единственная операция** — `SyncReminderScheduleUseCase`: и постоянный коллектор, и приёмник, и worker с неразбираемыми данными вызывают её, а не собственные копии логики.
+**Единственная операция** — `SyncReminderScheduleUseCase`: её вызывают постоянный коллектор, `ReminderResyncWorker` (долговечное продолжение события приёмника), запасной путь приёмника и `ReminderWorker` с неразбираемыми данными — собственных копий логики нет.
 
 ```kotlin
 // domain/reminder/SyncReminderScheduleUseCase.kt
@@ -1033,7 +1060,7 @@ class ReminderScheduleObserver @Inject constructor(
 }
 ```
 
-**Приёмник** (в том числе холодный процесс):
+**Приёмник** (в том числе холодный процесс). Приёмник сам бизнес-операцию не выполняет: до `finish()` он делает событие **долговечным** — сохраняет в базе WorkManager уникальную работу `ReminderResyncWorker`, которая затем вызывает ту же `SyncReminderScheduleUseCase`. Таймаута, отменяющего операцию, у приёмника нет.
 
 ```kotlin
 // notifications/ReminderTimeChangeReceiver.kt
@@ -1046,37 +1073,72 @@ class ReminderTimeChangeReceiver : BroadcastReceiver() {
     }
 }
 
+// notifications/ReminderResyncRequests.kt — узкая граница над WorkManager
+interface ReminderResyncRequests {
+    /** Возвращается только после того, как WorkManager записал работу в свою базу; иначе бросает. */
+    suspend fun enqueueDurably()   // enqueueUniqueWork("reminder_resync", REPLACE, OneTimeWorkRequest<ReminderResyncWorker>).await()
+}
+
+sealed interface ResyncRequestOutcome {
+    data object ResyncWorkPersisted : ResyncRequestOutcome                       // основной путь
+    data class SyncedDirectly(val result: ReminderSyncResult) : ResyncRequestOutcome   // запасной путь: Scheduled/Cancelled уже записаны
+    data class NotPersisted(val cause: Throwable) : ResyncRequestOutcome         // WorkManager отказал в обеих записях
+}
+
 // notifications/ReminderBroadcastHandler.kt
 class ReminderBroadcastHandler @Inject constructor(
+    private val resyncRequests: ReminderResyncRequests,
     private val sync: SyncReminderScheduleUseCase,
     @ApplicationScope private val scope: CoroutineScope,
 ) {
-    fun handle(action: String?, onFinished: () -> Unit) {
+    fun handle(action: String?, onFinished: () -> Unit): Job? {
         if (action != Intent.ACTION_TIMEZONE_CHANGED && action != Intent.ACTION_TIME_CHANGED) {
-            onFinished(); return
+            onFinished(); return null
         }
-        scope.launch {
-            // бюджет меньше системного предела обработки broadcast; истечение — Failed, а не успех
-            withTimeoutOrNull(RECEIVER_SYNC_BUDGET) { sync() } ?: ReminderSyncResult.Failed(ReceiverTimeout)
-        }.invokeOnCompletion { onFinished() }   // ровно один раз и только после завершения корутины
+        return scope.launch { persist() }
+            .also { job -> job.invokeOnCompletion { onFinished() } }   // ровно один раз: успех, ошибка, отмена
+    }
+
+    private suspend fun persist(): ResyncRequestOutcome = try {
+        resyncRequests.enqueueDurably()                                  // 1. долговечная resync-работа
+        ResyncRequestOutcome.ResyncWorkPersisted
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        when (val direct = sync()) {                                     // 2. запись WorkManager не удалась — прямая синхронизация
+            is ReminderSyncResult.Scheduled, ReminderSyncResult.Cancelled -> ResyncRequestOutcome.SyncedDirectly(direct)
+            is ReminderSyncResult.Failed -> ResyncRequestOutcome.NotPersisted(e)
+        }
+    }
+}
+
+// notifications/ReminderResyncWorker.kt
+class ReminderResyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
+    override suspend fun doWork(): Result {
+        val sync = EntryPointAccessors.fromApplication(applicationContext, ReminderEntryPoint::class.java).syncReminderSchedule()
+        // CancellationException пробрасывается; отображение результата — чистая ResyncAttemptPolicy (I6-P8)
+        return when (ResyncAttemptPolicy.decide(sync(), runAttemptCount)) {
+            ResyncAttempt.Done -> Result.success()
+            ResyncAttempt.Retry -> Result.retry()        // Failed и runAttemptCount < RESYNC_MAX_ATTEMPTS
+            ResyncAttempt.GiveUp -> Result.success()     // Failed после последней попытки; коллектор повторит при старте
+        }
     }
 }
 ```
 
 | Требование | Как выполнено |
 | --- | --- |
-| Читает актуальные `reminderEnabled`, `reminderTime` | `preferences.first()` внутри операции, под блокировкой — не значение, захваченное при событии |
-| Цель от одного `TimeSnapshot` | один `clock.now()` на вызов |
-| Последовательные `schedule`/`cancel` | `ReminderScheduleLock`: коллектор, приёмник и worker никогда не пишут WorkManager одновременно |
-| Одна операция для коллектора и приёмника | оба вызывают `SyncReminderScheduleUseCase` |
-| `finish()` только после завершения | `invokeOnCompletion` запущенной корутины; операция завершается только после `Operation.await()` — к `finish()` работа уже записана в базу WorkManager либо результат `Failed` |
-| Холодный процесс без `MainActivity` | система поднимает процесс для приёмника из манифеста; `Application.onCreate` создаёт граф Hilt, стартовый инициализатор WorkManager (`InitializationProvider`) выполняется до `onReceive`; ни `ReminderScheduleObserver.start()`, ни `MainActivity` не нужны |
-| Событие не хранится без коллектора | `SharedFlow` не используется: приёмник сам выполняет операцию до конца |
-| `CancellationException` | пробрасывается из операции; при отмене корутины `invokeOnCompletion` всё равно вызывает `finish()` |
-| Обычная ошибка | `ReminderSyncResult.Failed`: процесс не падает, результат не считается успешной синхронизацией, `finish()` вызывается; следующая попытка — при следующем изменении настроек, событии времени или старте `MainActivity` |
-| Неизвестное действие | `finish()` сразу, без синхронизации |
-
-`RECEIVER_SYNC_BUDGET` — техническая константа 6B (не токен дизайна), выбирается меньше системного предела времени обработки broadcast; её значение и обоснование фиксируются в KDoc при реализации.
+| Что сохранено к `finish()` | в основном пути — строка уникальной работы `reminder_resync` в базе WorkManager (`Operation.await()` вернулся успешно); в запасном — итоговая `daily_reminder` (`Scheduled`) или её отмена (`Cancelled`), тоже подтверждённая `await()` |
+| Процесс уничтожен сразу после `finish()` | работа `reminder_resync` уже в базе WorkManager; при следующем запуске планировщика задач система поднимает процесс и выполняет `ReminderResyncWorker` → `SyncReminderScheduleUseCase` → правильная `daily_reminder`. `MainActivity` не нужна |
+| Истечение времени | отменяющего таймаута нет: приёмник ждёт одну запись строки в базе WorkManager (миллисекунды). Если система завершит процесс раньше, `finish()` не вызван — контракт «`finish()` только после долговечного результата» не нарушен; незавершённая транзакция WorkManager атомарна; при следующем старте `MainActivity` коллектор синхронизирует заново |
+| Исход «истёк бюджет» | не существует: истечение времени не является результатом обработки, и `finish()` не вызывается «на всякий случай» до сохранения события |
+| Единственная бизнес-операция | `SyncReminderScheduleUseCase` — её вызывают коллектор, `ReminderResyncWorker`, запасной путь приёмника и `ReminderWorker` при неразбираемых данных |
+| Повторные события | `REPLACE` по имени `reminder_resync`: новое событие заменяет ожидающую или выполняющуюся resync-работу; новая читает свежие настройки и часы |
+| Ошибка синхронизации внутри resync-работы | `Result.retry()` с backoff WorkManager, не более `RESYNC_MAX_ATTEMPTS` попыток (техническая константа 6B); `Failed` не засчитывается успехом |
+| `NotPersisted` | единственный исход, при котором `finish()` вызывается без долговечного результата: WorkManager отказал и в записи resync-работы, и в записи `daily_reminder`. Сохранить событие в этой ситуации нечем; восстановление — синхронизация коллектора при следующем старте `MainActivity` (риск в разделе 16) |
+| `CancellationException` | пробрасывается из `persist()` и из `ReminderResyncWorker`; `finish()` вызывается `invokeOnCompletion` ровно один раз |
+| `SharedFlow` | не используется |
+| Неизвестное действие | `finish()` сразу, работы нет |
 
 | Вопрос | Ответ |
 | --- | --- |
@@ -1093,9 +1155,9 @@ class ReminderBroadcastHandler @Inject constructor(
 
 | Событие | Реакция |
 | --- | --- |
-| Смена часового пояса (`ACTION_TIMEZONE_CHANGED`) | `ReminderTimeChangeReceiver` → `goAsync()` → `ReminderBroadcastHandler` → `SyncReminderScheduleUseCase` → `finish()` после завершения (9.4) |
+| Смена часового пояса (`ACTION_TIMEZONE_CHANGED`) | `ReminderTimeChangeReceiver` → `goAsync()` → сохранение `reminder_resync` (ожидается) → `finish()` → `ReminderResyncWorker` → `SyncReminderScheduleUseCase` (9.4) |
 | Ручной перевод часов (`ACTION_TIME_CHANGED`, `android.intent.action.TIME_SET`) | то же |
-| Приложение не запущено в момент события | оба действия входят в список исключений из ограничения неявных broadcast — приёмник из манифеста получает их и поднимает процесс; `MainActivity` не запускается |
+| Приложение не запущено в момент события | оба действия входят в список исключений из ограничения неявных broadcast — приёмник из манифеста получает их и поднимает процесс; `MainActivity` не запускается; после `finish()` процесс может быть уничтожен — событие уже сохранено работой `reminder_resync` |
 | Переход DST | зона не меняется — событие не приходит; следующее срабатывание уже рассчитано через `ZonedDateTime` (9.2); worker перепроверяет момент (9.6) |
 | Работа сработала раньше (часы переведены вперёд, WorkManager считает по настенным часам) | worker видит `now < trigger.at` → не показывает, перепланирует ту же цель |
 | Работа сработала позже (Doze, агрессивная прошивка) | показывает, если дата цели всё ещё сегодняшняя и остальные проверки прошли; после смены даты — не показывает |
@@ -1211,7 +1273,7 @@ class ReminderRun @Inject constructor(
 
 ### 9.8 Ошибки и отмена (I6-D49)
 
-- `SyncReminderScheduleUseCase` превращает обычные ошибки в `ReminderSyncResult.Failed` — это не успех; коллектор продолжает сбор, приёмник вызывает `finish()`; `CancellationException` пробрасывается.
+- `SyncReminderScheduleUseCase` превращает обычные ошибки в `ReminderSyncResult.Failed` — это не успех; коллектор продолжает сбор, `ReminderResyncWorker` повторяет ограниченное число раз; приёмник вызывает `finish()` только после сохранения `reminder_resync` или подтверждённой прямой синхронизации (исключение — `NotPersisted`, 9.4); `CancellationException` пробрасывается.
 - `ReminderRun` бросает только `CancellationException`; ошибки оценки, fallback и планировщика возвращаются в `Report` раздельно (9.6); пользователь ошибок планирования не видит, игровой поток от них не зависит.
 - Отказ `enqueue`: работа не запланирована до следующего изменения настроек, события времени, срабатывания цепочки или старта `MainActivity`.
 - Отказ показа (`SecurityException` при отозванном разрешении между проверкой и `notify`) перехватывается в `AndroidReminderNotifier`.
@@ -1419,9 +1481,9 @@ Loading/Empty/Error, верхние панели, CTA, карточки и сп�
 | Повторный вход в `DayRecap` того же дня после ответа | диалога нет | `I6-V15` |
 | Быстрые включение → выключение → смена времени | последовательные команды очереди; итоговая работа соответствует последнему состоянию | `I6-Y1` |
 | Изменение настроек, пока worker выполняется | `REPLACE` отменяет выполняющийся worker; перепланирование не дублируется | `I6-N6` |
-| Смена зоны или времени при незапущенном приложении | система поднимает процесс для приёмника; `goAsync()`, одна операция синхронизации, `finish()` после записи WorkManager; `MainActivity` не нужна | `I6-P4`, `I6-N6`, `I6-M7` |
+| Смена зоны или времени при незапущенном приложении | система поднимает процесс для приёмника; `goAsync()`, ожидание сохранения `reminder_resync`, `finish()`; процесс можно уничтожить сразу — resync выполнит WorkManager; `MainActivity` не нужна | `I6-P4`, `I6-N6`, `I6-M7` |
 | Приёмник и открытое приложение синхронизируют одновременно | `ReminderScheduleLock`: операции последовательны, каждая перечитывает настройки | `I6-Y2` |
-| Смерть процесса после появления системного диалога из предложения на `DayRecap` | отметка уже подтверждена записью; новый ViewModel диалога не показывает; результат запроса обрабатывается по `pendingEnable` | `I6-V15` |
+| Смерть процесса на любом шаге согласия «Да» на `DayRecap` | согласие — один атомарный переход DataStore; продолжение по шагу `SavedStateHandle` либо путь через «Настройки» (таблица восстановления 8.3) | `I6-V15`, `I6-P7` |
 | Отмена worker'а после вычисления следующей цели | `ensureActive()` перед `schedule`; перепланирования нет | `I6-W3` |
 | Уведомление пришло, пользователь уже в приложении | снимается при следующем `onStart` `MainActivity` | `I6-P2`, `I6-M9` |
 
@@ -1489,15 +1551,15 @@ Loading/Empty/Error, верхние панели, CTA, карточки и сп�
 
 | Создаётся | Назначение |
 | --- | --- |
-| `domain/reminder/*` (9.1), `domain/usecase/MarkReminderPromptShownUseCase.kt` | расчёты, статус доступа, интерфейсы, `SyncReminderScheduleUseCase`, `ReminderScheduleLock`, `ReminderRun`, подтверждаемая отметка предложения |
-| `notifications/*` (9.1) | WorkManager с ожидаемыми операциями, `ReminderScheduleObserver`, `ReminderBroadcastHandler`, приёмник, worker, уведомление, статус доступа |
+| `domain/reminder/*` (9.1), `domain/usecase/AcceptReminderPromptUseCase.kt`, `MarkReminderPromptShownUseCase.kt` | расчёты, статус доступа, интерфейсы, `SyncReminderScheduleUseCase`, `ReminderScheduleLock`, `ReminderRun`, атомарное согласие и отметка «Не нужно» |
+| `notifications/*` (9.1) | WorkManager с ожидаемыми операциями, `ReminderScheduleObserver`, `ReminderBroadcastHandler`, `ReminderResyncRequests`, `ReminderResyncWorker`, приёмник, worker, уведомление, статус доступа |
 | `di/ReminderModule.kt` | привязки |
 | `ui/settings/ReminderRows.kt` | группа напоминания, выбор времени по **O6-3** |
 | `ui/recap/ReminderPromptViewModel.kt` | предложение (8.3) |
 | `ui/components/NotificationOptInDialog.kt` | компонент по `COMPONENTS.md` |
 | `ui/platform/NotificationPermissionRequest.kt` | `rememberNotificationPermissionRequest(onResult)` |
 | `res/drawable/ic_stat_reminder.xml` | входные данные владельца |
-| тесты JVM: `NextReminderTriggerTest`, `ReminderEligibilityTest`, `EvaluateReminderUseCaseTest`, `ReminderRunTest`, `SyncReminderScheduleUseCaseTest`, `test/…/notifications/ReminderScheduleObserverTest`, `ReminderPromptViewModelTest` | `I6-S*`, `I6-W*`, `I6-Y1`, `I6-Y2`, `I6-V15` |
+| тесты JVM: `NextReminderTriggerTest`, `ReminderEligibilityTest`, `EvaluateReminderUseCaseTest`, `ReminderRunTest`, `SyncReminderScheduleUseCaseTest`, `test/…/notifications/ReminderScheduleObserverTest`, `test/…/notifications/ResyncAttemptPolicyTest`, `ReminderPromptViewModelTest` | `I6-S*`, `I6-W*`, `I6-Y1`, `I6-Y2`, `I6-P8`, `I6-V15` |
 | тесты Robolectric: `testDebug/…/notifications/WorkManagerReminderSchedulerTest.kt`, `AndroidReminderNotifierTest.kt`, `AndroidNotificationAccessTest.kt`, `ReminderBroadcastHandlerTest.kt`, `ManifestPermissionsTest.kt`; `testDebug/…/ui/components/NotificationOptInDialogTest.kt` | `I6-P1`…`I6-P5`, `I6-C10` |
 | `androidTest/…/notifications/ReminderWorkSchedulingTest.kt` | `I6-N6` |
 
@@ -1507,6 +1569,7 @@ Loading/Empty/Error, верхние панели, CTA, карточки и сп�
 | `gradle/libs.versions.toml` | только комментарии «не подключён» → «подключён в 6B»; версия — после сверки |
 | `AndroidManifest.xml` | 10.3 (`POST_NOTIFICATIONS`, приёмник); влитые разрешения WorkManager, включая `ACCESS_NETWORK_STATE`, не удаляются |
 | `MainActivity.kt` | `ReminderScheduleObserver.start()`, `ensureChannel()`, снятие показанного в `onStart` |
+| `domain/repository/UserPreferencesRepository.kt`, `data/prefs/UserPreferencesRepositoryImpl.kt`, `test/…/data/prefs/UserPreferencesRepositoryTest.kt` | `acceptReminderPrompt(time)` одним `edit`; `I6-P7` |
 | `domain/model/SettingMutation.kt`, `data/prefs/SettingsWriteQueue.kt` | новые команды и ключи (**I6-D39**) |
 | `ui/settings/SettingsState.kt`, `SettingsEvent.kt`, `SettingsEffect.kt`, `SettingsViewModel.kt`, `SettingsScreen.kt` | 8.1, 8.2 |
 | `ui/platform/ExternalApps.kt`, `AndroidExternalApps.kt` | `openNotificationSettings(target: App/Channel)` |
@@ -1517,11 +1580,11 @@ Loading/Empty/Error, верхние панели, CTA, карточки и сп�
 
 **Не входит:** drag, доступность игрового экрана, переходы, иконка приложения; deep link; точные будильники.
 
-**Тесты:** `I6-S1`…`I6-S4`, `I6-W1`…`I6-W4`, `I6-Y1`, `I6-Y2`, `I6-V14`…`I6-V16`, `I6-C9`…`I6-C11`, `I6-P1`…`I6-P6`, `I6-N6`; `I6-K1`…`I6-K3`, `I6-K8`. **Ручные:** `I6-M5` (эмулятор), `I6-M6`, `I6-M7`, `I6-M8`, `I6-M9`, `I6-M13`.
+**Тесты:** `I6-S1`…`I6-S4`, `I6-W1`…`I6-W4`, `I6-Y1`, `I6-Y2`, `I6-V14`…`I6-V16`, `I6-C9`…`I6-C11`, `I6-P1`…`I6-P8`, `I6-N6`; `I6-K1`…`I6-K3`, `I6-K8`. **Ручные:** `I6-M5` (эмулятор), `I6-M6`, `I6-M7`, `I6-M8`, `I6-M9`, `I6-M13`.
 
-**Готов, когда:** тесты зелёные; `I6-N6` (включая холодную синхронизацию без `MainActivity`) и ручные проверки пройдены на эмуляторе API 35 и эмуляторе API ниже 33 с записью API и результата в описании PR; итоговый манифест совпадает с набором, зафиксированным `I6-P5` (есть `ACCESS_NETWORK_STATE` от WorkManager, нет `INTERNET` и локальных сетевых разрешений); в `ReminderRun`, `SyncReminderScheduleUseCase` и `ReminderBroadcastHandler` нет перепланирования или записи в блоке, выполняемом при отмене; системный запрос в `ReminderPromptViewModel` создаётся только после успешной `MarkReminderPromptShownUseCase`; `VERSIONS.md` содержит сверенную версию WorkManager с датой; `DayRecapViewModel` не изменён; тексты и иконка уведомления получены от владельца.
+**Готов, когда:** тесты зелёные; `I6-N6` (включая холодное событие без `MainActivity` с сохранением `reminder_resync` до `onFinished`) и `I6-M7` (уничтожение процесса сразу после `finish()`) и ручные проверки пройдены на эмуляторе API 35 и эмуляторе API ниже 33 с записью API и результата в описании PR; итоговый манифест совпадает с набором, зафиксированным `I6-P5` (есть `ACCESS_NETWORK_STATE` от WorkManager, нет `INTERNET` и локальных сетевых разрешений); в `ReminderRun`, `SyncReminderScheduleUseCase` и `ReminderBroadcastHandler` нет перепланирования или записи в блоке, выполняемом при отмене; системный запрос в `ReminderPromptViewModel` создаётся только после успешного `acceptReminderPrompt`; в `ReminderBroadcastHandler` нет таймаута, после которого `finish()` вызывается без долговечного результата; `VERSIONS.md` содержит сверенную версию WorkManager с датой; `DayRecapViewModel` не изменён; тексты и иконка уведомления получены от владельца.
 
-**Rollback:** `git revert` PR. Ключи DataStore существовали до 6B, их значения остаются и ни на что не влияют. Уже запланированная у пользователя работа ссылается на удалённый класс worker'а: WorkManager завершит её ошибкой создания worker'а без показа уведомления и без повтора, а уже показанное уведомление снимет пользователь или система в начале следующей даты (`timeoutAfter`, заданный при показе). Если откатываемая сборка уже ушла альфа-пользователям, следующая сборка на одну версию содержит однострочную очистку `cancelUniqueWork("daily_reminder")` при старте `MainActivity`.
+**Rollback:** `git revert` PR. Ключи DataStore существовали до 6B, их значения остаются и ни на что не влияют (включённое через предложение напоминание просто перестаёт исполняться). Уже сохранённые у пользователя работы `daily_reminder` и `reminder_resync` ссылаются на удалённые классы worker'ов: WorkManager завершит их ошибкой создания worker'а без показа уведомления и без повтора, а уже показанное уведомление снимет пользователь или система в начале следующей даты (`timeoutAfter`, заданный при показе). Если откатываемая сборка уже ушла альфа-пользователям, следующая сборка на одну версию содержит однострочную очистку `cancelUniqueWork("daily_reminder")` и `cancelUniqueWork("reminder_resync")` при старте `MainActivity`.
 
 **Запрещено в diff:** удаление влитых разрешений библиотек манифестным слиянием, `app/schemas`, `assets`, CI, `ui/puzzle`, `ui/components/OrderableCard.kt`, `DayRecapViewModel.kt`, `INTERNET`, сетевые библиотеки, `hilt-work`, `work-testing`, `SCHEDULE_EXACT_ALARM`, `AlarmManager`.
 
@@ -1685,7 +1748,7 @@ python3 tools/validate-content/validate.py app/src/main/assets/content --expect-
 | I6-Y1 | `ReminderScheduleObserver` (фейковый `SyncReminderScheduleUseCase`, `TestScope`): `start()` → синхронизация на первой эмиссии; вкл → выкл → вкл → смена времени — по одной синхронизации на эмиссию, по порядку; эмиссия другого ключа — без вызова; второй `start()` — без второго коллектора; результат `Failed` не останавливает сбор | `test/…/notifications/ReminderScheduleObserverTest` | 6B | I6-D29 |
 | I6-Y2 | `SyncReminderScheduleUseCase`: включено → `schedule(Replace)` с целью `NextReminderTrigger` от одного `clock.now()` (фейк часов считает вызовы = 1); выключено → `cancel`; настройки, изменённые между двумя вызовами, читаются заново; результат возвращается только после завершения фейковой операции планировщика; исключение планировщика → `Failed` (не `Scheduled`/`Cancelled`); `CancellationException` пробрасывается; два одновременных вызова выполняются последовательно (второй ждёт `ReminderScheduleLock`) | `test/…/domain/reminder/SyncReminderScheduleUseCaseTest` | 6B | I6-D29 |
 | I6-V14 | `SettingsViewModel` с фейковым `NotificationAccess`: переключатель = `enabled && Allowed`; включение при `Allowed` → `ReminderEnabled(true)`; при `RuntimePermissionMissing` → `pendingEnable`, эффект запроса, записи нет; результат запроса `true`, но перечитанный статус `ChannelDisabled` → записи нет, подсказка с целью `Channel`; перечитанный `Allowed` (в том числе при callback `false`) → одна команда; при `AppNotificationsDisabled` и `ChannelDisabled` → эффекта запроса нет, сразу `OpenNotificationSettings(App)`/`(Channel)`, подсказка; API 26–32 без доступа → никогда не запрос, сразу настройки; `onScreenStarted()` после возврата: `pendingEnable && Allowed` → ровно одна команда, повторный `onScreenStarted()` — ни одной; отзыв доступа → показано выключенным, записей нет; выключение сбрасывает `pendingEnable`; выбор времени → `ReminderTime`; `pendingEnable` переживает новый экземпляр ViewModel на том же `SavedStateHandle`; ошибки ключей `Reminder`/`ReminderTime` видны, `DragHintSeen` — нет | `test/…/ui/settings/SettingsViewModelTest` | 6B | I6-D36…I6-D39 |
-| I6-V15 | `ReminderPromptViewModel` с управляемыми фейками `MarkReminderPromptShownUseCase` и `NotificationAccess`: показ только при сессии + завершённом дне + `!promptShown` + `!reminderEnabled`; архив, незавершённый день, флаг, включённое напоминание — нет; «Да» при **задержанной** записи → диалог скрыт, эффект запроса и команды не отправлены, пока запись не завершилась; после завершения при `RuntimePermissionMissing` → ровно один эффект запроса, при `Allowed` → `ReminderTime(09:00)` и `ReminderEnabled(true)`, при `AppNotificationsDisabled`/`ChannelDisabled` → ничего; «Да» при **упавшей** записи → диалог скрыт, запроса и команд нет, `CancellationException` не глотается; результат запроса `true`, но перечитан `ChannelDisabled` или `AppNotificationsDisabled` → включения нет; перечитан `Allowed` → две команды; «Не нужно»/«назад» → только ожидаемая запись, без запроса; **новый ViewModel после подтверждённой записи** (флаг `true`) — диалога нет, а результат запроса, пришедший ему по `pendingEnable` из `SavedStateHandle`, при `Allowed` включает напоминание; отказ чтения условий → диалога нет | `test/…/ui/recap/ReminderPromptViewModelTest` | 6B | I6-D40 |
+| I6-V15 | `ReminderPromptViewModel` с управляемыми фейками `AcceptReminderPromptUseCase`, `MarkReminderPromptShownUseCase`, `NotificationAccess`, общим фейковым хранилищем настроек и `SavedStateHandle`: **условия** — показ только при сессии + завершённом дне + `!promptShown` + `!reminderEnabled`, архив/незавершённый день/флаг/включённое напоминание — нет; **«Да» при задержанном переходе** — диалог скрыт, ни эффекта запроса, ни шага в `SavedStateHandle`, пока переход не завершён; после завершения в хранилище одновременно `promptShown`, 09:00 и `reminderEnabled`, затем по статусу: `Allowed` → эффектов нет; `RuntimePermissionMissing` → ровно один эффект запроса; `AppNotificationsDisabled`/`ChannelDisabled` → запроса нет, `SettingsViewModel` на том же хранилище показывает выключенный переключатель, подсказку и действие с целью `App`/`Channel`; **«Да» при упавшем переходе** — хранилище не изменено, диалог скрыт, запроса нет, итог дня не затронут; результат запроса при всё ещё заблокированных уведомлениях приложения или канале (callback `true`) — уведомления фактически не включены, записей нет; «Не нужно»/«назад» — только ожидаемая отметка, без запроса; **смерть процесса** (новый экземпляр ViewModel): (1) до завершения перехода — хранилище пусто, при следующем подходящем итоге диалог показывается снова, запроса нет; (2) сразу после перехода, до эффекта, `SavedStateHandle` восстановлен с шагом `AcceptedAwaitingRequest` — диалога нет; `Allowed` → ничего, `RuntimePermissionMissing` → ровно один запрос, `AppNotificationsDisabled`/`ChannelDisabled` → запроса нет и путь в «Настройках»; (2б) то же без `SavedStateHandle` (холодный старт) — ни диалога, ни запроса, «Настройки» показывают намерение и путь для каждого из четырёх статусов; (3) шаг `RequestLaunched`, затем результат разрешения доставлен новому экземпляру — повторного запроса нет, записей нет, итог по перечитанному статусу для `Allowed`, `RuntimePermissionMissing`, `AppNotificationsDisabled`, `ChannelDisabled`; `CancellationException` пробрасывается | `test/…/ui/recap/ReminderPromptViewModelTest` | 6B | I6-D40 |
 | I6-V16 | I5-D31 не нарушен: `DayRecapViewModel` не изменён, `rg`-проверка PR 5B пуста, `I5-V35` зелёный | `DayRecapViewModelTest` (существующий) | 6B | I6-D40 |
 
 ### 14.4 Напоминания: Android-границы и UI
@@ -1695,13 +1758,15 @@ python3 tools/validate-content/validate.py app/src/main/assets/content --expect-
 | I6-P1 | `WorkManagerReminderScheduler` с фейковой обёрткой над операциями WorkManager: `Replace` → `REPLACE`, `AfterCurrent` → `APPEND_OR_REPLACE`, имя `daily_reminder`, данные ровно `targetDate` и `minuteOfDay`, задержка = `Duration.between(now, at)`, отрицательная → 0; `cancel` → `cancelUniqueWork` | `testDebug/…/notifications/WorkManagerReminderSchedulerTest` | 6B | I6-D26, I6-D27 |
 | I6-P2 | `AndroidReminderNotifier` (Shadow `NotificationManager`): канал `daily_reminder`, `IMPORTANCE_DEFAULT`, без звука и вибрации, без значка, создаётся идемпотентно; уведомление с ID 1001, малой иконкой, `CATEGORY_REMINDER`, `autoCancel`, `contentIntent` на `MainActivity` с `ACTION_MAIN`/`CATEGORY_LAUNCHER` и `FLAG_IMMUTABLE`; повторный показ — одно активное уведомление; `cancelShown` снимает; `SecurityException` при показе перехвачен | `testDebug/…/notifications/AndroidReminderNotifierTest` | 6B | I6-D34, I6-D35 |
 | I6-P3 | `AndroidNotificationAccess.availability()` по порядку таблицы 8.2: API 33 без разрешения → `RuntimePermissionMissing` (даже при включённых уведомлениях приложения); API 33 с разрешением и выключенными уведомлениями приложения → `AppNotificationsDisabled`; API 32 с выключенными уведомлениями → `AppNotificationsDisabled` и никогда `RuntimePermissionMissing`; канал `IMPORTANCE_NONE` → `ChannelDisabled`; всё включено → `Allowed`; канал ещё не создан → не `ChannelDisabled` | `testDebug/…/notifications/AndroidNotificationAccessTest` | 6B | I6-D36 |
-| I6-P4 | `ReminderBroadcastHandler` при **незапущенном** `ReminderScheduleObserver` (реальный `SyncReminderScheduleUseCase`, фейковые настройки и управляемый планировщик): `TIMEZONE_CHANGED` при включённом напоминании → настройки прочитаны, `schedule(Replace)` с новой целью; `onFinished` не вызван, пока операция планировщика не завершена, и вызван ровно один раз после неё; `TIME_SET` — то же; выключенное напоминание → `cancel`, затем `onFinished`; планировщик бросает → результат `Failed`, `onFinished` один раз, исключение не выходит; истечение бюджета → `Failed`, `onFinished` один раз; отмена scope → `onFinished` один раз; неизвестное действие → `onFinished` сразу, синхронизации нет; итоговый манифест: приёмник с ровно двумя действиями и `exported = false` | `testDebug/…/notifications/ReminderBroadcastHandlerTest` | 6B | I6-D30 |
+| I6-P4 | `ReminderBroadcastHandler` при **незапущенном** `ReminderScheduleObserver`, с фейковым долговечным хранилищем работ (переживает «процесс») и управляемым `SyncReminderScheduleUseCase`: `TIMEZONE_CHANGED` → `enqueueDurably` вызван, `onFinished` не вызван, пока запись resync-работы не подтверждена, и вызван ровно один раз после неё; непосредственная синхронизация **задержана бесконечно** (дольше любого бюджета) — это не мешает `onFinished` после сохранения resync-работы; затем scope отменён и обработчик отброшен («процесс уничтожен»), новый экземпляр выполняет сохранённую resync-работу через реальный `SyncReminderScheduleUseCase` → `daily_reminder` с целью по текущим настройкам; `TIME_SET` — то же; выключенное напоминание → resync-работа сохранена, её выполнение → `cancel`; `enqueueDurably` бросает → прямая синхронизация: `Scheduled`/`Cancelled` → `SyncedDirectly`, `onFinished` после подтверждённой записи; обе записи отказали → `NotPersisted`, `onFinished` ровно один раз, исключение не выходит; отмена scope во время ожидания записи → `onFinished` ровно один раз; неизвестное действие → `onFinished` сразу, работ нет; итоговый манифест: приёмник с ровно двумя действиями и `exported = false` | `testDebug/…/notifications/ReminderBroadcastHandlerTest` | 6B | I6-D30 |
 | I6-P5 | Итоговый манифест (`PackageManager.getPackageInfo(GET_PERMISSIONS)`): набор запрошенных разрешений равен набору, зафиксированному в 6B по фактической сборке (`POST_NOTIFICATIONS` и разрешения WorkManager, включая `ACCESS_NETWORK_STATE`); отсутствуют `INTERNET`, `ACCESS_LOCAL_NETWORK`, `NEARBY_WIFI_DEVICES`, `ACCESS_WIFI_STATE`, `CHANGE_WIFI_STATE`, `CHANGE_WIFI_MULTICAST_STATE`, `CHANGE_NETWORK_STATE` | `testDebug/…/ManifestPermissionsTest` | 6B | I6-D41 |
 | I6-P6 | `AndroidExternalApps.openNotificationSettings(App)` → `Settings.ACTION_APP_NOTIFICATION_SETTINGS` с `EXTRA_APP_PACKAGE`; `(Channel)` → `Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS` с `EXTRA_APP_PACKAGE` и `EXTRA_CHANNEL_ID = daily_reminder`; защита от повторного запуска и перехват исключений — как `I5-P1` | `testDebug/…/ui/platform/AndroidExternalAppsTest` | 6B | I6-D36 |
+| I6-P7 | `UserPreferencesRepositoryImpl.acceptReminderPrompt(09:00)` на настоящем DataStore (Robolectric): один `edit` — первая эмиссия после вызова уже содержит `notificationPromptShown = true`, `reminderTime = 09:00`, `reminderEnabled = true`, промежуточной эмиссии с частью значений нет; метод возвращается после записи; новый экземпляр репозитория над тем же файлом читает все три значения | `test/…/data/prefs/UserPreferencesRepositoryTest` | 6B | I6-D40 |
+| I6-P8 | `ResyncAttemptPolicy.decide`: `Scheduled`/`Cancelled` → `Done`; `Failed` при `runAttemptCount < RESYNC_MAX_ATTEMPTS` → `Retry`; `Failed` на последней попытке → `GiveUp`; `Failed` никогда не даёт `Done` | `test/…/notifications/ResyncAttemptPolicyTest` | 6B | I6-D30 |
 | I6-C9 | Настройки: группа «Напоминание» с `heading()`; строка с ролью `Switch`; строка времени есть только при показанном включении; для каждой недоступности (`RuntimePermissionMissing`, `AppNotificationsDisabled`, `ChannelDisabled`) под строкой — подсказка и действие «Открыть настройки уведомлений», нажатие отправляет `OpenNotificationSettingsClicked`; при `Allowed` подсказки нет; ошибка записи под своей строкой; `w320dp-h844dp` при 200 % — всё видно, цели ≥ 48 dp, горизонтальной прокрутки нет; тёмная тема | `testDebug/…/ui/settings/SettingsScreenTest` | 6B | 8.1, 8.2 |
 | I6-C10 | `NotificationOptInDialog`: один текстовый узел вопроса с `heading()` и первым в порядке; кнопки «Да, в 9:00» → «Не нужно»; касание вне диалога не закрывает; системная «назад» → `Declined`; при 200 % кнопки вертикально и ≥ 48 dp; светлая и тёмная темы | `testDebug/…/ui/components/NotificationOptInDialogTest` | 6B | 8.3 |
 | I6-C11 | Выбор времени (форма — **O6-3**): выбор 10:30 и подтверждение → одно `ReminderTimeChosen(10:30)`; отмена → событий нет; описание строки «Время напоминания, 9:00» | `SettingsScreenTest` | 6B | I6-D38 |
-| I6-N6 | Эмулятор, настоящий WorkManager: `schedule(Replace)` → одна работа `ENQUEUED` с данными; повтор → по-прежнему одна; `cancel` → `CANCELLED`; `AfterCurrent` при уже поставленной синхронизацией работе второй работы не добавляет; **холодная синхронизация** — процесс инструментации без запуска `MainActivity` и без `ReminderScheduleObserver.start()`: `ReminderBroadcastHandler.handle(ACTION_TIMEZONE_CHANGED)` из графа Hilt, ожидание `onFinished`, сразу после него `getWorkInfosForUniqueWork` содержит `ENQUEUED` работу с новыми данными; worker без ограничений выполняется при объявленном WorkManager `ACCESS_NETWORK_STATE` | `androidTest/…/notifications/ReminderWorkSchedulingTest` | 6B | I6-D26, I6-D30, I6-D41 |
+| I6-N6 | Эмулятор, настоящий WorkManager: `schedule(Replace)` → одна работа `ENQUEUED` с данными; повтор → по-прежнему одна; `cancel` → `CANCELLED`; `AfterCurrent` при уже поставленной синхронизацией работе второй работы не добавляет; **холодное событие** — процесс инструментации без запуска `MainActivity` и без `ReminderScheduleObserver.start()`: `ReminderBroadcastHandler.handle(ACTION_TIMEZONE_CHANGED)` из графа Hilt, ожидание `onFinished` (ровно один вызов); **сразу после него** `getWorkInfosForUniqueWork("reminder_resync")` возвращает сохранённую работу (читается из базы WorkManager); затем новый экземпляр `WorkManager`-запроса дожидается её `SUCCEEDED` и `daily_reminder` содержит цель по текущим настройкам и зоне; то же для `TIME_SET` и для выключенного напоминания (итог — отменённая `daily_reminder`); worker без ограничений выполняется при объявленном WorkManager `ACCESS_NETWORK_STATE`. Уничтожение самого процесса после `finish()` проверяет `I6-M7` | `androidTest/…/notifications/ReminderWorkSchedulingTest` | 6B | I6-D26, I6-D30, I6-D41 |
 
 ### 14.5 Визуальные условия и ресурсы
 
@@ -1757,7 +1822,7 @@ rg -n 'android:fillColor' app/src/main/res/drawable/ic_stat_reminder.xml | rg -v
 | I6-M4 | Реальная тактильная отдача захвата и перемещения; различимость `DRAG_START`/`CLOCK_TICK` | **только физическое устройство** | — | итерация 7 |
 | I6-M5 | Напоминание в реальном времени: включить, выставить время через 2–3 минуты, дождаться уведомления; текст, иконка, отсутствие звука; повторное срабатывание на следующий день по управляемым часам debug-сборки | эмулятор — для мержа; физическое устройство — итерация 7 | 6B | итерация 7 |
 | I6-M6 | Доступ к уведомлениям по статусам: `RuntimePermissionMissing` — выдать, отказать, отказать повторно до постоянного отказа (API 33+, эмулятор API 35), каждый раз подсказка и действие; `AppNotificationsDisabled` — выключить уведомления приложения (эмулятор API ниже 33 и API 35): переключатель сразу открывает системные настройки, runtime-диалога нет, после возврата с включёнными уведомлениями напоминание включено; `ChannelDisabled` — выключить канал «Напоминание о заданиях»: открывается настройка канала, после возврата статус перечитан; `DayRecap` — «Да» при выключенном канале не включает напоминание; отзыв разрешения в системе и возврат в «Настройки» | эмулятор — для мержа; физическое устройство — итерация 7 | 6B | итерация 7 |
-| I6-M7 | Смена часового пояса и ручной перевод часов: (а) при открытом приложении; (б) **холодный процесс** — приложение не запущено, процесс убит (`run-as … kill`), затем смена зоны (`adb shell cmd alarm set-timezone …`): приёмник с `exported="false"` получил broadcast, работа перепланирована на местное время новой зоны (диагностика WorkManager / `dumpsys jobscheduler`) без запуска `MainActivity` | эмулятор | 6B | — |
+| I6-M7 | Смена часового пояса и ручной перевод часов: (а) при открытом приложении; (б) **холодный процесс с уничтожением после `finish()`** — приложение не запущено, процесс убит (`run-as … kill`); смена зоны (`adb shell cmd alarm set-timezone …`); по отладочному logcat-маркеру «resync persisted» (debug-сборка) процесс убивается сразу; затем без запуска `MainActivity` WorkManager поднимает процесс, `reminder_resync` выполняется и `daily_reminder` перепланирована на местное время новой зоны (диагностика WorkManager / `dumpsys jobscheduler`); то же для ручного перевода часов | эмулятор | 6B | — |
 | I6-M8 | Нет уведомления при завершённом дне, при исчерпанном контенте и при выключенной настройке (debug-часы) | эмулятор | 6B | — |
 | I6-M9 | Нажатие на уведомление: холодный старт → Home, «назад» → выход; живая задача в середине задания → тот же экран и порядок; уведомление снято; при открытом приложении снимается на `onStart` | эмулятор | 6B | — |
 | I6-M10 | Живой TalkBack: Puzzle (действия, объявления, порядок, подсказка), PuzzleResult, DayRecap с диалогом напоминания, Settings с напоминанием; полный день только средствами TalkBack | **только физическое устройство** (TalkBack на эмуляторе не реагирует на внедрённый ввод) | — | итерация 7 |
@@ -1809,9 +1874,11 @@ rg -n 'android:fillColor' app/src/main/res/drawable/ic_stat_reminder.xml | rg -v
 | WorkManager как скрытый источник мутаций | worker только читает; `rg` и фейки, бросающие на запись | `I6-W2`, `I6-K3` | revert 6B |
 | Повторный показ после смерти процесса worker'а | окно узкое; ключ «последний показ» сознательно не заводится (I6-D2); если риск подтвердится в альфе — отдельное решение | `I6-W4` | — |
 | `ACCESS_NETWORK_STATE` от WorkManager читается как «сетевое разрешение» | уточнённый критерий итерации 7; объяснение в 10.4; запрет `INTERNET` и локальных сетевых разрешений проверяется тестом | `I6-P5`, `I6-M13`, `I6-K2` | — (разрешение не даёт доступа в сеть) |
-| Событие смены зоны или времени в холодном процессе не перепланирует работу | приёмник сам выполняет `SyncReminderScheduleUseCase` внутри `goAsync()`, `finish()` — после ожидаемой операции WorkManager; без `SharedFlow` и без `MainActivity` | `I6-P4`, `I6-N6`, `I6-M7` | revert 6B |
+| Событие смены зоны или времени в холодном процессе теряется (таймаут, смерть процесса после `finish()`) | `finish()` только после сохранения `reminder_resync` (или подтверждённой прямой синхронизации); отменяющего таймаута нет; resync выполняет WorkManager в любом последующем процессе | `I6-P4`, `I6-P8`, `I6-N6`, `I6-M7` | revert 6B |
+| WorkManager отказал и в записи `reminder_resync`, и в записи `daily_reminder` (`NotPersisted`) | сохранить событие нечем; исход фиксируется, `finish()` вызывается, синхронизация повторяется коллектором при следующем старте `MainActivity` | `I6-P4` | — |
 | Перепланирование после отмены worker'а создаёт лишнюю работу | нет блока, выполняемого при отмене; `ensureActive()` перед `schedule`; проверка ожидающей работы под `ReminderScheduleLock` | `I6-W3`, `I6-N6` | revert 6B |
-| Предложение напоминания показывается повторно после смерти процесса во время системного диалога | отметка — подтверждаемая `suspend`-запись до создания запроса | `I6-V15` | revert 6B |
+| Согласие «Да» теряется или предложение показывается повторно после смерти процесса | один атомарный переход DataStore до любого эффекта; шаг продолжения в `SavedStateHandle`; путь через «Настройки» | `I6-V15`, `I6-P7` | revert 6B |
+| После отказа в системном диалоге сохранённое намерение остаётся и напоминания начнутся, когда пользователь сам разрешит уведомления в системе | переключатель показан выключенным с подсказкой; включение возможно только системным разрешением, которое даёт сам пользователь; изменение фиксируется в `COMPONENTS.md` (`NotificationOptInDialog`) | `I6-V15`, `I6-M6` | — |
 | Отказ чтения DataStore превращается в `reminderEnabled = false` и отменяет работу | поведение существующего репозитория (`IOException` → значения по умолчанию); следующее успешное чтение перепланирует; повреждённый файл заменяется `ReplaceFileCorruptionHandler` | `I6-Y2` | — |
 | Robolectric-тесты падают из-за WorkManager в `Application` | синхронизатор стартует из `MainActivity`, не из `Application` | весь `testDebugUnitTest` | — |
 | Чрезмерная полировка и scope creep | таблица 11.1 закрыта; «запрещено в diff» по каждому PR | ревью по разделу 13 | revert отдельного исправления |
@@ -1836,7 +1903,7 @@ rg -n 'android:fillColor' app/src/main/res/drawable/ic_stat_reminder.xml | rg -v
 | §1, дерево | `ui/platform/AccessibilityAnnouncer`, `ui/theme/ReducedMotion`, `ui/components/DragEducationHint`, `ui/components/NotificationOptInDialog` | 6B, 6C |
 | §4, контракт игрового экрана | `PuzzleEvent` (4.3), удаление `draggedCardId`, единый `reorder()`, сессия жеста; `FeedbackCue.CardGrabbed` в описании границы отдачи | 6A |
 | §5, таблица инструментов | синхронизатор напоминания в `@ApplicationScope`; WorkManager — уникальная работа, политики `REPLACE`/`APPEND_OR_REPLACE` | 6B |
-| §6 | полностью по разделам 8–10: `NotificationAvailability`, одна операция `SyncReminderScheduleUseCase` для коллектора, приёмника и worker'а, холодный приёмник с `goAsync()`, отмена без перепланирования, подтверждаемая отметка предложения, отсутствие перепланирования «при завершении дня», канал, force stop, `ACCESS_NETWORK_STATE` от WorkManager | 6B |
+| §6 | полностью по разделам 8–10: `NotificationAvailability`, одна операция `SyncReminderScheduleUseCase`, долговечная `reminder_resync` от приёмника до `finish()`, отмена без перепланирования, атомарное согласие на `DayRecap`, отсутствие перепланирования «при завершении дня», канал, force stop, `ACCESS_NETWORK_STATE` от WorkManager | 6B |
 | §9 | instrumented-тесты жеста и WorkManager выполняются вручную | 6A, 6B |
 | новый ADR-019 | «Единый путь перестановки и подтверждение жеста на пересечениях» | 6A |
 | новый ADR-020 | «Напоминание: проверка при срабатывании, WorkManager без Hilt-work, приёмник смены времени» | 6B |
@@ -1862,7 +1929,7 @@ rg -n 'android:fillColor' app/src/main/res/drawable/ic_stat_reminder.xml | rg -v
 | `OrderableCard` | ручка в индексной зоне; `dragging`: `zIndex`, смещение, отмена; `Submitting` — ручка без ввода; custom actions «вверх/вниз» (**I6-D18**) | 6A, 6C |
 | `DragHandle` | нет отдельного `disabled`-вида; пары контраста 5.6 | 6A |
 | `DragEducationHint` | место в `LazyColumn`, условия скрытия по ViewModel | 6C |
-| `NotificationOptInDialog` | точные условия показа (8.3); подтверждаемая отметка до системного запроса; включение только при `Allowed` | 6B |
+| `NotificationOptInDialog` | точные условия показа (8.3); «Да» — атомарный переход до системного запроса; при отказе или недоступности намерение сохраняется, переключатель показан выключенным с подсказкой (вместо «напоминание остаётся выключенным»); восстановление после смерти процесса | 6B |
 | `Settings row` | группа «Напоминание», строка времени, эффективное значение, подсказка и действие по статусу недоступности (8.2; тексты — **O6-4**), форма выбора времени (**O6-3**) | 6B |
 | `InvertedPairRow` | единственный шаблон «после» (I3-D5) | 6D |
 | Новый раздел «Иконки приложения и уведомления» | требования 11.4 | 6D |
@@ -1903,7 +1970,7 @@ rg -n 'android:fillColor' app/src/main/res/drawable/ic_stat_reminder.xml | rg -v
 
 ## 18. Решения владельца и входные данные
 
-До ответов на решения ниже статус документа остаётся «ревизия 1.1, готова к архитектурному ревью». Чисто технические решения, следующие из утверждённой архитектуры, сюда не вынесены.
+До ответов на решения ниже статус документа остаётся «ревизия 1.2, готова к архитектурному ревью». Чисто технические решения, следующие из утверждённой архитектуры, сюда не вынесены.
 
 ### 18.1 Открытые решения
 
@@ -1936,7 +2003,8 @@ Design Gate не генерирует и не добавляет ни одног
 | --- | --- | --- |
 | 1.0 | 2026-09-13 | Первая редакция: аудит кода на `f96a561`; решения `I6-D1`…`I6-D50`; единый путь перестановки и контракт жеста; отдача захвата; доступность и reduced motion; пользовательский контракт, планирование и Android-контракты напоминания; аудит полировки, анимации, иконки, итоговая матрица UI; разрез PR 6A–6D; тестовая матрица `I6-*`; ручные проверки и release gate итерации 7; риски; план синхронизации документов; решения владельца `O6-1`…`O6-7` и входные данные. Статус — готова к архитектурному ревью |
 | 1.1 | 2026-09-13 | Точечные исправления архитектурного ревью: холодная синхронизация напоминания — одна `suspend`-операция `SyncReminderScheduleUseCase` для коллектора, приёмника и worker'а, приёмник выполняет её внутри `goAsync()` и вызывает `finish()` после ожидаемой записи WorkManager, оркестрация процесса перенесена в `notifications` (`I6-D24`, `I6-D26`, `I6-D29`, `I6-D30`, `I6-Y2`, `I6-P4`, `I6-N6`, `I6-M7`); `ReminderRun` без перепланирования при отмене, раздельные ошибки оценки и планировщика (`I6-D49`, `I6-W3`); `NotificationAvailability` вместо Boolean, запрос `POST_NOTIFICATIONS` только при `RuntimePermissionMissing`, переход в настройки приложения или канала (`I6-D36`, `I6-D37`, `I6-V14`, `I6-V15`, `I6-P3`, `I6-P6`, `I6-C9`, `I6-M6`); подтверждаемая отметка `notificationPromptShown` до системного запроса, честный контракт `DragHintSeen` (`I6-D21`, `I6-D39`, `I6-D40`, `I6-V13`, `I6-V15`); `DragGestureId` в событиях жеста (`I6-D5`, `I6-D9`, `I6-V5`, `I6-V9`, `I6-V10`, `I6-N2`); единственный порог «центр пересёк центр соседа» с доказательством отсутствия дребезга (`I6-D7`, `I6-R3`); O6-7 закрыт технически — `ACCESS_NETWORK_STATE` от WorkManager остаётся, запрещены `INTERNET` и локальные сетевые разрешения, критерий итерации 7 уточнён (`I6-D41`, `I6-P5`); O6-4 переформулирован в вопрос о текстах. Статус — готова к архитектурному ревью |
+| 1.2 | 2026-09-15 | Финальные исправления ревью: приёмник смены времени вызывает `finish()` только после долговечного результата — сохранения уникальной работы `reminder_resync` (`ReminderResyncWorker` → `SyncReminderScheduleUseCase`) либо подтверждённой прямой синхронизации; отменяющий таймаут и `Failed(ReceiverTimeout)` удалены; процесс можно уничтожить сразу после `finish()` (`I6-D26`, `I6-D29`, `I6-D30`, `I6-P4`, `I6-P8`, `I6-N6`, `I6-M7`); «Да, в 9:00» — один подтверждаемый переход DataStore `acceptReminderPrompt` (`notificationPromptShown`, 09:00, `reminderEnabled`) до любого эффекта, шаг продолжения в `SavedStateHandle`, таблица восстановления после смерти процесса, недоступность уведомлений не отбрасывает согласие (`I6-D2`, `I6-D40`, `I6-V15`, `I6-P7`); синхронизированы §8.3, §9.1, §9.3–9.5, PR 6B, риски, rollback, план синхронизации документов. Статус — готова к архитектурному ревью |
 
 ---
 
-**Статус документа: ревизия 1.1, готова к архитектурному ревью, 2026-09-13.** Решения `I6-D*` предложены и не утверждены; решения владельца `O6-1`…`O6-6` открыты; входные данные раздела 18.2 не получены. Реализация итерации 6 не начата. `I4-C6`, `I5-M5`, `I5-M6`, `I5-M10` не выполнены и остаются пунктами release-readiness итерации 7.
+**Статус документа: ревизия 1.2, готова к архитектурному ревью, 2026-09-15.** Решения `I6-D*` предложены и не утверждены; решения владельца `O6-1`…`O6-6` открыты; входные данные раздела 18.2 не получены. Реализация итерации 6 не начата. `I4-C6`, `I5-M5`, `I5-M6`, `I5-M10` не выполнены и остаются пунктами release-readiness итерации 7.
