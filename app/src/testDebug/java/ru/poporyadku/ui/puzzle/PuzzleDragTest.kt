@@ -13,6 +13,7 @@ import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -180,32 +181,18 @@ class PuzzleDragTest {
     // --- I6-C3 -------------------------------------------------------------------------
 
     /**
-     * `I6-C3`. Свайп по центральной зоне карточки (вне ручки) не отправляет ни одного
-     * события жеста: захват начинается только на ручке — на `w320dp-h844dp` при 200%.
+     * `I6-C3`. Свайп по центральной зоне карточки (вне ручки) при 320 dp и шрифте 200 %
+     * **прокручивает список** и **не отправляет ни одного события жеста**: захват
+     * начинается только на ручке, а указатель вне её достаётся `LazyColumn` (I6-D10).
+     *
+     * Окно ниже 844 dp из спецификации намеренно: Robolectric не увеличивает метрики
+     * шрифта вместе с `fontScale`, поэтому на 844 dp список здесь не прокручивается вовсе
+     * и половина утверждения стала бы пустой. Прокрутка при 320 dp / 200 % на настоящем
+     * экране проверена вручную (`I6-M1`).
      */
     @Test
-    @Config(qualifiers = "w320dp-h844dp")
-    fun `I6-C3 a swipe outside the handle sends no gesture events`() {
-        val harness = Harness()
-        rule.setContent { WithFontScale(FONT_SCALE_200) { harness.Content() } }
-
-        rule.onNodeWithTag(OrderableCardTestTags.card("c2")).performTouchInput {
-            down(center)
-            moveBy(dragUp())
-            up()
-        }
-        rule.waitForIdle()
-
-        assertTrue("центральная зона карточки жест не начинает", harness.events.isEmpty())
-    }
-
-    /**
-     * `I6-C3`. На прокручиваемом списке тот же свайп вне ручки действительно прокручивает
-     * его: указатель достаётся `LazyColumn`, а не ручке.
-     */
-    @Test
-    @Config(qualifiers = "w320dp-h400dp")
-    fun `I6-C3 a swipe outside the handle scrolls the list`() {
+    @Config(qualifiers = "w320dp-h400dp", fontScale = FONT_SCALE_200)
+    fun `I6-C3 a swipe outside the handle scrolls the list and sends no gesture events`() {
         val harness = Harness()
         rule.setContent { harness.Content() }
         val scrollBefore = scrollOffset()
@@ -217,8 +204,9 @@ class PuzzleDragTest {
         }
         rule.waitForIdle()
 
-        assertTrue("события жеста не отправляются", harness.events.isEmpty())
-        assertNotEquals("список обязан прокрутиться", scrollBefore, scrollOffset())
+        assertTrue("центральная зона карточки жест не начинает", harness.events.isEmpty())
+        assertTrue("список обязан прокрутиться", scrollOffset() > scrollBefore)
+        assertEquals("порядок карточек прокруткой не меняется", CARD_IDS, harness.order())
     }
 
     // --- I6-C4 -------------------------------------------------------------------------
@@ -295,38 +283,58 @@ class PuzzleDragTest {
      */
     @Test
     @Config(qualifiers = "w320dp-h400dp")
-    fun `I6-C6 holding the card at the bottom edge auto scrolls and stops after release`() {
+    fun `I6-C6 holding the card at the bottom edge auto scrolls and keeps it under the finger`() {
         val harness = Harness()
         rule.setContent { harness.Content() }
-        val scrollBefore = scrollOffset()
 
-        // Палец останавливается в нижней краевой зоне и удерживается: дальше список
-        // двигает кадровый цикл, а не движение пальца.
+        val topBeforeDrag = cardTop("c1")
+        val scrollBefore = scrollOffset()
+        val fingerDelta = with(rule.density) { BOTTOM_EDGE_DRAG.toPx() }
+
+        // Палец уходит в нижнюю краевую зону и **останавливается**: всё дальнейшее
+        // движение списка выполняет кадровый цикл авто-прокрутки, а не жест.
         rule.onNodeWithTag(PuzzleTestTags.dragHandle("c1"), useUnmergedTree = true)
             .performTouchInput {
                 down(center)
-                moveBy(dragToBottomEdge())
+                moveBy(Offset(0f, fingerDelta))
             }
+        // Цикл крутится на часах теста и сам останавливается, когда список упирается в
+        // конец: покадровая подача здесь не используется — при остановленных часах
+        // Robolectric жест стартует, но цикл авто-прокрутки не запускается вовсе, и
+        // проверка стала бы проверкой окружения. Настоящая покадровая динамика закрыта
+        // `I6-N1`…`I6-N3` и ручной `I6-M1` на эмуляторе.
         rule.waitForIdle()
 
-        val scrollDuringDrag = scrollOffset()
-        assertTrue(
-            "авто-прокрутка не сдвинула список: $scrollBefore → $scrollDuringDrag",
-            scrollDuringDrag > scrollBefore,
-        )
-        assertTrue(
-            "пройденные карточки обязаны подтверждаться",
-            harness.events.any { it is PuzzleEvent.DragMovedTo },
-        )
+        val scrolled = scrollOffset()
+        val scrolledToEnd = canScrollForward()
+        val orderWhileHeld = harness.order()
+        val topWhileHeld = cardTop("c1")
 
         rule.onNodeWithTag(PuzzleTestTags.dragHandle("c1"), useUnmergedTree = true)
             .performTouchInput { up() }
         rule.waitForIdle()
         val afterRelease = scrollOffset()
-
-        rule.mainClock.advanceTimeBy(AUTO_SCROLL_WINDOW_MS)
+        rule.mainClock.advanceTimeBy(IDLE_WINDOW_MS)
         rule.waitForIdle()
-        assertEquals("после отпускания цикл остановлен", afterRelease, scrollOffset())
+        val afterIdle = scrollOffset()
+
+        // Прокрутка действительно потреблена списком.
+        assertTrue("авто-прокрутка не сдвинула список: $scrollBefore → $scrolled", scrolled > scrollBefore)
+        // И она компенсирована в тех же кадрах: карточка стоит ровно там, куда её привёл
+        // палец. Некомпенсированный кадр прокрутки сместил бы её на свою долю пути, а за
+        // всю прокрутку — на её полную величину.
+        assertEquals(
+            "карточка ушла из-под пальца (прокручено $scrolled)",
+            topBeforeDrag + fingerDelta,
+            topWhileHeld,
+            with(rule.density) { DRAG_MARGIN.toPx() },
+        )
+        // Последняя пройденная карточка подтверждена **до** остановки цикла у конца
+        // списка: поднятая карточка стоит последней.
+        assertFalse("список обязан дойти до конца", scrolledToEnd)
+        assertEquals(listOf("c2", "c3", "c4", "c1"), orderWhileHeld)
+        // После отпускания цикл остановлен: время идёт, список стоит.
+        assertEquals("после отпускания цикл остановлен", afterRelease, afterIdle, CARD_TOLERANCE_PX)
     }
 
     // --- I6-C7 -------------------------------------------------------------------------
@@ -357,12 +365,27 @@ class PuzzleDragTest {
         )
 
         val afterSubmit = scrollOffset()
-        rule.mainClock.advanceTimeBy(AUTO_SCROLL_WINDOW_MS)
+        rule.mainClock.advanceTimeBy(IDLE_WINDOW_MS)
         rule.waitForIdle()
-        assertEquals("авто-прокрутка остановлена вместе с жестом", afterSubmit, scrollOffset())
+        assertEquals(
+            "авто-прокрутка остановлена вместе с жестом",
+            afterSubmit,
+            scrollOffset(),
+            CARD_TOLERANCE_PX,
+        )
     }
 
     // --- Инфраструктура ------------------------------------------------------------------
+
+    /** Может ли список прокручиваться дальше — из той же семантики, что и смещение. */
+    private fun canScrollForward(): Boolean {
+        val range = rule.onNodeWithTag(PuzzleTestTags.CARD_LIST)
+            .fetchSemanticsNode()
+            .config
+            .getOrNull(SemanticsProperties.VerticalScrollAxisRange)
+            ?: return false
+        return range.value() < range.maxValue()
+    }
 
     /** Визуальный верх карточки в корне — с учётом смещения поднятой карточки. */
     private fun cardTop(cardId: String): Float =
@@ -476,10 +499,13 @@ class PuzzleDragTest {
         const val FIRST_POINTER = 0
         const val SECOND_POINTER = 1
 
-        const val FONT_SCALE_200 = 2f
+        const val FONT_SCALE_200 = 2.0f
 
-        /** Окно кадров, за которое авто-прокрутка обязана себя проявить. */
-        const val AUTO_SCROLL_WINDOW_MS = 500L
+        /** Окно времени, за которое остановленный цикл проявил бы себя прокруткой. */
+        const val IDLE_WINDOW_MS = 500L
+
+        /** Допуск на округление позиции до целых пикселей при компенсации. */
+        const val CARD_TOLERANCE_PX = 2f
 
         fun boardWith(order: List<String>): PuzzleBoard {
             val byId = CARD_IDS.withIndex().associate { (index, cardId) ->
