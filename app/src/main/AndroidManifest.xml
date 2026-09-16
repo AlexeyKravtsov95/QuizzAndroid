@@ -17,6 +17,15 @@
       (UX_FLOW.md §5, IMPLEMENTATION_PLAN.md, итерация 7: «нет ни одного сетевого
       разрешения и ни одного сетевого вызова»).
     -->
+    <!--
+      Единственное разрешение приложения (ITERATION_6_DESIGN.md, §10.3, §10.4, I6-D41):
+      показ напоминания на API 33+. Сетевых разрешений нет и не будет — ни INTERNET, ни
+      локальных. ACCESS_NETWORK_STATE и остальные разрешения WorkManager приходят в
+      итоговый манифест слиянием из библиотеки и НЕ удаляются: ACCESS_NETWORK_STATE —
+      normal-разрешение на чтение состояния сети, доступа в сеть оно не даёт.
+    -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <queries>
         <intent>
             <action android:name="android.intent.action.VIEW" />
@@ -50,6 +59,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--
+          Смена часового пояса и ручной перевод часов (ITERATION_6_DESIGN.md, §9.5,
+          I6-D30). Оба действия входят в список исключений из ограничения неявных
+          broadcast, поэтому приёмник из манифеста получает их и при незапущенном
+          приложении — MainActivity для перепланирования не нужна.
+
+          exported="false": системные broadcast приходят от системного uid и такому
+          приёмнику доставляются; факт проверяется на эмуляторе (I6-M7).
+
+          Приёмник смены ДАТЫ не заводится (I6-D31): полночь в открытом приложении уже
+          закрыта минутным тикером Home и ON_START.
+        -->
+        <receiver
+            android:name=".notifications.ReminderTimeChangeReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.TIME_SET" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

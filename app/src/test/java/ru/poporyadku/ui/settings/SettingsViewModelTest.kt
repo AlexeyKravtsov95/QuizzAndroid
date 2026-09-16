@@ -1,5 +1,6 @@
 package ru.poporyadku.ui.settings
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.viewModelScope
@@ -30,6 +31,10 @@ import org.junit.Before
 import org.junit.Test
 import ru.poporyadku.core.model.AppBuildInfo
 import ru.poporyadku.core.model.ThemeMode
+import ru.poporyadku.domain.reminder.FakeNotificationAccess
+import ru.poporyadku.domain.reminder.NotificationAccess
+import ru.poporyadku.domain.reminder.NotificationAvailability
+import ru.poporyadku.domain.reminder.NotificationSettingsTarget
 import ru.poporyadku.data.prefs.SettingsWriteQueue
 import ru.poporyadku.domain.model.InstalledContentVersion
 import ru.poporyadku.domain.model.SettingKey
@@ -377,6 +382,283 @@ class SettingsViewModelTest {
 
     // --- Инфраструктура -----------------------------------------------------------------
 
+    // --- I6-V14: напоминание, доступ и разрешение ----------------------------------------
+
+    /**
+     * `I6-V14`. Переключатель показывает `reminderEnabled && Allowed` (I6-D37): отзыв
+     * доступа в системе выключает его визуально и **ничего не пишет**.
+     */
+    @Test
+    fun `I6-V14 the switch shows intent and access together and revocation writes nothing`() =
+        runTest(dispatcher) {
+            val prefs = ControllablePreferences(ControllablePreferences.defaults(reminderEnabled = true))
+            val access = FakeNotificationAccess()
+            val viewModel = settings(prefs, access = access)
+            observe(viewModel)
+            advanceUntilIdle()
+
+            assertEquals(true, viewModel.uiState.value.reminder?.enabledShown)
+
+            // Разрешение отозвали вне приложения — узнаём об этом на ON_START.
+            access.value = NotificationAvailability.RuntimePermissionMissing
+            viewModel.onScreenStarted()
+            advanceUntilIdle()
+
+            val reminder = viewModel.uiState.value.reminder
+            assertEquals("показан выключенным", false, reminder?.enabledShown)
+            assertEquals(NotificationAvailability.RuntimePermissionMissing, reminder?.unavailability)
+            assertTrue("подсказка и путь в настройки", reminder!!.showPermissionHint)
+            assertTrue("намерение пользователя не переписывается", prefs.calls.isEmpty())
+            assertEquals(true, prefs.current?.reminderEnabled)
+        }
+
+    /** `I6-V14`. Включение при `Allowed` — сразу одна команда записи. */
+    @Test
+    fun `I6-V14 enabling with access writes immediately`() = runTest(dispatcher) {
+        val prefs = ControllablePreferences()
+        val viewModel = settings(prefs)
+        observe(viewModel)
+        advanceUntilIdle()
+
+        viewModel.onEvent(SettingsEvent.ReminderToggled(true))
+        advanceUntilIdle()
+
+        assertEquals(listOf(SettingMutation.ReminderEnabled(true)), prefs.calls)
+        assertEquals(true, viewModel.uiState.value.reminder?.enabledShown)
+    }
+
+    /**
+     * `I6-V14`. `RuntimePermissionMissing`: записи нет, эффект запроса есть, подсказка
+     * появляется сразу — намерение уже выражено.
+     */
+    @Test
+    fun `I6-V14 enabling without the runtime permission requests it and writes nothing`() =
+        runTest(dispatcher) {
+            val prefs = ControllablePreferences()
+            val viewModel = settings(
+                prefs,
+                access = FakeNotificationAccess(NotificationAvailability.RuntimePermissionMissing),
+            )
+            observe(viewModel)
+            advanceUntilIdle()
+
+            viewModel.effects.test {
+                viewModel.onEvent(SettingsEvent.ReminderToggled(true))
+                advanceUntilIdle()
+
+                assertEquals(SettingsEffect.RequestNotificationPermission, awaitItem())
+                assertTrue("записи быть не должно", prefs.calls.isEmpty())
+                assertTrue(viewModel.uiState.value.reminder!!.showPermissionHint)
+            }
+        }
+
+    /**
+     * `I6-V14`. Результат системного диалога: булев ответ не используется — статус
+     * перечитывается. `true` при заглушённом канале записи не даёт.
+     */
+    @Test
+    fun `I6-V14 a permission callback is decided by the re-read status only`() = runTest(dispatcher) {
+        val prefs = ControllablePreferences()
+        val access = FakeNotificationAccess(NotificationAvailability.RuntimePermissionMissing)
+        val viewModel = settings(prefs, access = access)
+        observe(viewModel)
+        advanceUntilIdle()
+        viewModel.onEvent(SettingsEvent.ReminderToggled(true))
+        advanceUntilIdle()
+
+        // Система «ответила», но канал заглушён — уведомлений всё равно не будет.
+        access.value = NotificationAvailability.ChannelDisabled
+        viewModel.onEvent(SettingsEvent.NotificationPermissionResult)
+        advanceUntilIdle()
+
+        assertTrue("записи нет", prefs.calls.isEmpty())
+        assertEquals(
+            NotificationAvailability.ChannelDisabled,
+            viewModel.uiState.value.reminder?.unavailability,
+        )
+    }
+
+    /** `I6-V14`. Перечитанный `Allowed` даёт ровно одну команду, даже если callback был отказом. */
+    @Test
+    fun `I6-V14 a re-read Allowed writes exactly once`() = runTest(dispatcher) {
+        val prefs = ControllablePreferences()
+        val access = FakeNotificationAccess(NotificationAvailability.RuntimePermissionMissing)
+        val viewModel = settings(prefs, access = access)
+        observe(viewModel)
+        advanceUntilIdle()
+        viewModel.onEvent(SettingsEvent.ReminderToggled(true))
+        advanceUntilIdle()
+
+        access.value = NotificationAvailability.Allowed
+        viewModel.onEvent(SettingsEvent.NotificationPermissionResult)
+        advanceUntilIdle()
+
+        assertEquals(listOf(SettingMutation.ReminderEnabled(true)), prefs.calls)
+    }
+
+    /**
+     * `I6-V14`. Уведомления приложения или канал выключены — runtime-запрос **не**
+     * запускается: система его даже не покажет. Сразу системные настройки нужной цели.
+     */
+    @Test
+    fun `I6-V14 blocked notifications open the system settings without a runtime request`() =
+        runTest(dispatcher) {
+            val cases = listOf(
+                NotificationAvailability.AppNotificationsDisabled to NotificationSettingsTarget.App,
+                NotificationAvailability.ChannelDisabled to NotificationSettingsTarget.Channel,
+            )
+
+            cases.forEach { (status, target) ->
+                val prefs = ControllablePreferences()
+                val viewModel = settings(prefs, access = FakeNotificationAccess(status))
+                observe(viewModel)
+                advanceUntilIdle()
+
+                viewModel.effects.test {
+                    viewModel.onEvent(SettingsEvent.ReminderToggled(true))
+                    advanceUntilIdle()
+
+                    assertEquals(SettingsEffect.OpenNotificationSettings(target), awaitItem())
+                    assertTrue("$status: записи нет", prefs.calls.isEmpty())
+                    assertTrue("$status: подсказка", viewModel.uiState.value.reminder!!.showPermissionHint)
+                }
+            }
+        }
+
+    /**
+     * `I6-V14`. Возврат из системных настроек: `pendingEnable && Allowed` даёт **ровно
+     * одну** команду; повторный `ON_START` второй не даёт — флаг сброшен до записи.
+     */
+    @Test
+    fun `I6-V14 returning with access performs the pending enable exactly once`() = runTest(dispatcher) {
+        val prefs = ControllablePreferences()
+        val access = FakeNotificationAccess(NotificationAvailability.AppNotificationsDisabled)
+        val viewModel = settings(prefs, access = access)
+        observe(viewModel)
+        advanceUntilIdle()
+        viewModel.onEvent(SettingsEvent.ReminderToggled(true))
+        advanceUntilIdle()
+
+        access.value = NotificationAvailability.Allowed
+        viewModel.onScreenStarted()
+        advanceUntilIdle()
+        viewModel.onScreenStarted()
+        advanceUntilIdle()
+
+        assertEquals(listOf(SettingMutation.ReminderEnabled(true)), prefs.calls)
+    }
+
+    /** `I6-V14`. Без выраженного намерения `ON_START` не пишет ничего. */
+    @Test
+    fun `I6-V14 ON_START without a pending intent writes nothing`() = runTest(dispatcher) {
+        val prefs = ControllablePreferences()
+        val viewModel = settings(prefs)
+        observe(viewModel)
+        advanceUntilIdle()
+
+        viewModel.onScreenStarted()
+        viewModel.onScreenStarted()
+        advanceUntilIdle()
+
+        assertTrue(prefs.calls.isEmpty())
+    }
+
+    /** `I6-V14`. Выключение сбрасывает намерение: возврат с доступом его не воскрешает. */
+    @Test
+    fun `I6-V14 disabling clears the pending intent`() = runTest(dispatcher) {
+        val prefs = ControllablePreferences()
+        val access = FakeNotificationAccess(NotificationAvailability.RuntimePermissionMissing)
+        val viewModel = settings(prefs, access = access)
+        observe(viewModel)
+        advanceUntilIdle()
+        viewModel.onEvent(SettingsEvent.ReminderToggled(true))
+        advanceUntilIdle()
+
+        viewModel.onEvent(SettingsEvent.ReminderToggled(false))
+        advanceUntilIdle()
+        access.value = NotificationAvailability.Allowed
+        viewModel.onScreenStarted()
+        advanceUntilIdle()
+
+        assertEquals(listOf(SettingMutation.ReminderEnabled(false)), prefs.calls)
+    }
+
+    /** `I6-V14`. Намерение переживает пересоздание ViewModel на том же `SavedStateHandle`. */
+    @Test
+    fun `I6-V14 the pending intent survives a new ViewModel on the same SavedStateHandle`() =
+        runTest(dispatcher) {
+            val prefs = ControllablePreferences()
+            val savedState = SavedStateHandle()
+            val access = FakeNotificationAccess(NotificationAvailability.RuntimePermissionMissing)
+            val first = settings(prefs, access = access, savedState = savedState)
+            observe(first)
+            advanceUntilIdle()
+            first.onEvent(SettingsEvent.ReminderToggled(true))
+            advanceUntilIdle()
+
+            // Экран пересоздан во время системного диалога.
+            access.value = NotificationAvailability.Allowed
+            val second = settings(prefs, access = access, savedState = savedState)
+            observe(second)
+            advanceUntilIdle()
+            second.onScreenStarted()
+            advanceUntilIdle()
+
+            assertEquals(listOf(SettingMutation.ReminderEnabled(true)), prefs.calls)
+        }
+
+    /** `I6-V14`. Выбор времени — одна команда по подтверждению. */
+    @Test
+    fun `I6-V14 choosing a time submits one ReminderTime mutation`() = runTest(dispatcher) {
+        val prefs = ControllablePreferences(ControllablePreferences.defaults(reminderEnabled = true))
+        val viewModel = settings(prefs)
+        observe(viewModel)
+        advanceUntilIdle()
+
+        viewModel.onEvent(SettingsEvent.ReminderTimeChosen(java.time.LocalTime.of(10, 30)))
+        advanceUntilIdle()
+
+        assertEquals(listOf(SettingMutation.ReminderTime(java.time.LocalTime.of(10, 30))), prefs.calls)
+        assertEquals(java.time.LocalTime.of(10, 30), viewModel.uiState.value.reminder?.time)
+    }
+
+    /** `I6-V14`. «Открыть настройки уведомлений» ведёт по перечитанной причине. */
+    @Test
+    fun `I6-V14 the hint action targets the current reason`() = runTest(dispatcher) {
+        val prefs = ControllablePreferences()
+        val viewModel = settings(
+            prefs,
+            access = FakeNotificationAccess(NotificationAvailability.ChannelDisabled),
+        )
+        observe(viewModel)
+        advanceUntilIdle()
+
+        viewModel.effects.test {
+            viewModel.onEvent(SettingsEvent.OpenNotificationSettingsClicked)
+            advanceUntilIdle()
+
+            assertEquals(
+                SettingsEffect.OpenNotificationSettings(NotificationSettingsTarget.Channel),
+                awaitItem(),
+            )
+        }
+    }
+
+    /** `I6-V14`. Ошибки записи видны у ключей `Reminder` и `ReminderTime`. */
+    @Test
+    fun `I6-V14 reminder write failures are visible under their own keys`() = runTest(dispatcher) {
+        val prefs = ControllablePreferences()
+        val viewModel = settings(prefs)
+        observe(viewModel)
+        advanceUntilIdle()
+
+        prefs.failNext(SettingKey.Reminder)
+        viewModel.onEvent(SettingsEvent.ReminderToggled(true))
+        advanceUntilIdle()
+
+        assertTrue(SettingKey.Reminder in viewModel.uiState.value.writeFailures)
+    }
+
     /** Настоящая очередь; worker — в scope «приложения» на планировщике теста. */
     private fun queue(prefs: ControllablePreferences) = SettingsWriteQueue(prefs, applicationScope())
 
@@ -389,11 +671,15 @@ class SettingsViewModelTest {
     private fun settings(
         prefs: ControllablePreferences,
         writer: SettingsWriteQueue = queue(prefs),
+        access: NotificationAccess = FakeNotificationAccess(),
+        savedState: SavedStateHandle = SavedStateHandle(),
     ) = SettingsViewModel(
         preferences = prefs,
         writer = writer,
         app = APP,
         getInstalledContentVersion = GetInstalledContentVersionUseCase(prefs),
+        notificationAccess = access,
+        savedStateHandle = savedState,
     )
 
     private fun factory(prefs: ControllablePreferences, writer: SettingsWriteQueue) = viewModelFactory {
@@ -403,6 +689,8 @@ class SettingsViewModelTest {
                 writer = writer,
                 app = APP,
                 getInstalledContentVersion = GetInstalledContentVersionUseCase(prefs),
+                notificationAccess = FakeNotificationAccess(),
+                savedStateHandle = SavedStateHandle(),
             )
         }
     }

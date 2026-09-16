@@ -65,6 +65,8 @@ class SettingsWriteQueue @Inject constructor(
                 is SettingMutation.Sound -> preferences.setSoundEnabled(mutation.enabled)
                 is SettingMutation.Vibration -> preferences.setVibrationEnabled(mutation.enabled)
                 is SettingMutation.Theme -> preferences.setThemeMode(mutation.mode)
+                is SettingMutation.ReminderEnabled -> preferences.setReminderEnabled(mutation.enabled)
+                is SettingMutation.ReminderTime -> preferences.setReminderTime(mutation.time)
             }
             // Успех снимает ошибку ТОЛЬКО своего ключа.
             failures.update { it - mutation.key }

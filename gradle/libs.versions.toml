@@ -2,8 +2,8 @@
 # Проверено по официальным страницам релизов 30.08.2026 — источники и даты проверки
 # зафиксированы в docs/VERSIONS.md. DataStore и Turbine подключены к app в итерации 2C
 # (ITERATION_2_DESIGN.md, D-18); kotlinx-serialization — в PR 4B итерации 4. WorkManager
-# пока НЕ подключён (см. [libraries] ниже и docs/VERSIONS.md) — версия зафиксирована
-# заранее, чтобы не искать её заново при подключении в будущих итерациях.
+# подключён к app в PR 6B итерации 6 (ITERATION_6_DESIGN.md, I6-D25); версия сверена
+# заново по официальной странице релизов 2026-09-16 и не изменилась.
 agp = "9.3.2"
 kotlin = "2.4.10"
 composeBom = "2026.08.00"
@@ -25,7 +25,7 @@ androidxTestCore = "1.7.0"
 kotlinxCoroutinesTest = "1.11.0"
 datastore = "1.2.1"
 turbine = "1.2.1"
-# WorkManager не подключён к app — см. docs/VERSIONS.md.
+# WorkManager подключён к app в PR 6B — см. docs/VERSIONS.md (сверка 2026-09-16).
 workManager = "2.11.2"
 # kotlinx-serialization подключена к app в PR 4B итерации 4 (ITERATION_4_DESIGN.md, §8.1).
 kotlinxSerialization = "1.11.0"
@@ -64,7 +64,7 @@ kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 
-# WorkManager не подключён к app в этом PR (см. docs/VERSIONS.md) — версия зафиксирована для итераций 5+.
+# Подключён к app в PR 6B: уникальные работы daily_reminder и reminder_resync (ITERATION_6_DESIGN.md, §9.3).
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workManager" }
 # Подключена к app в PR 4B: разбор asset-DTO (@AssetJson) и JSON-колонок Room (@StorageJson).
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }

@@ -129,6 +129,12 @@ dependencies {
     // и PreferencesModule.
     implementation(libs.androidx.datastore.preferences)
 
+    // WorkManager, ITERATION_6_DESIGN.md I6-D25/I6-D26 (PR 6B): две уникальные работы
+    // напоминания. hilt-work и work-testing НЕ подключаются — зависимости worker'ов
+    // приходят через Hilt EntryPoint уже подключённого hilt-android, а логика проверяется
+    // на чистых объектах (JVM/Robolectric) и на настоящем WorkManager в androidTest.
+    implementation(libs.androidx.work.runtime.ktx)
+
     // kotlinx-serialization, ITERATION_4_DESIGN.md §7.5 и §9.2: два разных Json —
     // терпимый @AssetJson для пакета из assets и строгий @StorageJson для JSON-колонок
     // Room. Потребители — только data/content/** и data/db/**.

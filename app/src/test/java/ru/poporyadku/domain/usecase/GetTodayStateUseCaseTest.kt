@@ -98,6 +98,7 @@ class GetTodayStateUseCaseTest {
         override suspend fun setVibrationEnabled(enabled: Boolean) = unsupported()
         override suspend fun setReminderEnabled(enabled: Boolean) = unsupported()
         override suspend fun setReminderTime(time: LocalTime) = unsupported()
+        override suspend fun acceptReminderPrompt(time: LocalTime) = unsupported()
         override suspend fun setThemeMode(mode: ThemeMode) = unsupported()
         override suspend fun setInstalledContent(contentVersion: Int, fingerprint: String) = unsupported()
         override suspend fun setHasSeenDragHint(seen: Boolean) = unsupported()

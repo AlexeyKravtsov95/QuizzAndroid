@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
@@ -19,6 +20,8 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.android.controller.ActivityController
+import ru.poporyadku.domain.reminder.NotificationSettingsTarget
+import ru.poporyadku.domain.reminder.REMINDER_CHANNEL_ID
 import ru.poporyadku.ui.report.MailDraft
 import ru.poporyadku.ui.report.MailtoUri
 
@@ -289,6 +292,85 @@ class AndroidExternalAppsTest {
         val packageManager = shadowOf(activity.applicationContext.packageManager)
         packageManager.addActivityIfNotPresent(component)
         packageManager.addIntentFilterForActivity(component, filter)
+    }
+
+    // --- I6-P6: системные настройки уведомлений -------------------------------------------
+
+    /**
+     * `I6-P6`. Цель `App` — экран уведомлений приложения с его пакетом
+     * (ITERATION_6_DESIGN.md, §8.2, I6-D36).
+     */
+    @Test
+    fun `I6-P6 openNotificationSettings App opens the app notification screen`() {
+        assertEquals(
+            LaunchResult.Launched,
+            apps.openNotificationSettings(NotificationSettingsTarget.App),
+        )
+
+        val intent = shadowOf(activity).nextStartedActivity
+        assertEquals(Settings.ACTION_APP_NOTIFICATION_SETTINGS, intent.action)
+        assertEquals(activity.packageName, intent.getStringExtra(Settings.EXTRA_APP_PACKAGE))
+        assertNull("идентификатора канала здесь быть не должно", intent.getStringExtra(Settings.EXTRA_CHANNEL_ID))
+        assertNull("запусков ровно один", shadowOf(activity).nextStartedActivity)
+    }
+
+    /**
+     * `I6-P6`. Цель `Channel` — экран **того самого** канала: настройки приложения
+     * показали бы включённые уведомления и запутали бы пользователя.
+     */
+    @Test
+    fun `I6-P6 openNotificationSettings Channel opens the reminder channel screen`() {
+        assertEquals(
+            LaunchResult.Launched,
+            apps.openNotificationSettings(NotificationSettingsTarget.Channel),
+        )
+
+        val intent = shadowOf(activity).nextStartedActivity
+        assertEquals(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS, intent.action)
+        assertEquals(activity.packageName, intent.getStringExtra(Settings.EXTRA_APP_PACKAGE))
+        assertEquals(REMINDER_CHANNEL_ID, intent.getStringExtra(Settings.EXTRA_CHANNEL_ID))
+    }
+
+    /** `I6-P6`. Защита от повторного запуска — общая со всеми внешними действиями. */
+    @Test
+    fun `I6-P6 a second system settings launch within a second is suppressed`() {
+        assertEquals(
+            LaunchResult.Launched,
+            apps.openNotificationSettings(NotificationSettingsTarget.App),
+        )
+        now += AndroidExternalApps.LAUNCH_GUARD_MS - 1
+
+        assertEquals(
+            LaunchResult.Suppressed,
+            apps.openNotificationSettings(NotificationSettingsTarget.Channel),
+        )
+        assertEquals(
+            Settings.ACTION_APP_NOTIFICATION_SETTINGS,
+            shadowOf(activity).nextStartedActivity.action,
+        )
+        assertNull("второй запуск не состоялся", shadowOf(activity).nextStartedActivity)
+    }
+
+    /** `I6-P6`. Отказ платформы не выходит наружу и экран не роняет. */
+    @Test
+    fun `I6-P6 a refused system settings launch is Failed`() {
+        activity.failure = SecurityException("отказ платформы")
+
+        assertEquals(
+            LaunchResult.Failed,
+            apps.openNotificationSettings(NotificationSettingsTarget.App),
+        )
+    }
+
+    /** `I6-P6`. Отсутствующий обработчик системного экрана — тоже `Failed`, не `NoHandler`. */
+    @Test
+    fun `I6-P6 a missing settings handler is Failed`() {
+        activity.failure = ActivityNotFoundException("нет обработчика")
+
+        assertEquals(
+            LaunchResult.Failed,
+            apps.openNotificationSettings(NotificationSettingsTarget.Channel),
+        )
     }
 
     /** Activity, чьи `startActivity` и `getPackageManager` бросают заданные отказы платформы. */

@@ -933,6 +933,7 @@ private class NoOpUserPreferences : UserPreferencesRepository {
     override suspend fun setVibrationEnabled(enabled: Boolean) = Unit
     override suspend fun setReminderEnabled(enabled: Boolean) = Unit
     override suspend fun setReminderTime(time: LocalTime) = Unit
+    override suspend fun acceptReminderPrompt(time: LocalTime) = Unit
     override suspend fun setThemeMode(mode: ThemeMode) = Unit
     override suspend fun setInstalledContent(contentVersion: Int, fingerprint: String) = Unit
     override suspend fun setHasSeenDragHint(seen: Boolean) = Unit

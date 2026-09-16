@@ -57,6 +57,7 @@ class FakeUserPreferencesRepository(
     override suspend fun setVibrationEnabled(enabled: Boolean) = unsupported()
     override suspend fun setReminderEnabled(enabled: Boolean) = unsupported()
     override suspend fun setReminderTime(time: LocalTime) = unsupported()
+    override suspend fun acceptReminderPrompt(time: LocalTime) = unsupported()
     override suspend fun setThemeMode(mode: ThemeMode) = unsupported()
     override suspend fun setHasSeenDragHint(seen: Boolean) = unsupported()
     override suspend fun setHasSeenScoringHint(seen: Boolean) = unsupported()

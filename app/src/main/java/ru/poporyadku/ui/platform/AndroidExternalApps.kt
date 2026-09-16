@@ -2,10 +2,13 @@ package ru.poporyadku.ui.platform
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import ru.poporyadku.domain.reminder.NotificationSettingsTarget
+import ru.poporyadku.domain.reminder.REMINDER_CHANNEL_ID
 import ru.poporyadku.ui.report.MailDraft
 import ru.poporyadku.ui.report.MailtoUri
 
@@ -85,6 +88,25 @@ class AndroidExternalApps(
         // Отсутствие обработчика у самого выбора — не «приложение удалили», а отказ
         // платформы: у шеринга исход отказа один — Failed (§3.13).
         return launch(Intent.createChooser(sendIntent, chooserTitle), absentHandler = LaunchResult.Failed)
+    }
+
+    /**
+     * Системные настройки уведомлений (§8.2). Обработчик заранее не разрешается: оба
+     * действия — системные и существуют с API 26, а `<queries>` на настройки не нужны.
+     * Отказ платформы, как и у остальных действий, экран не роняет.
+     */
+    override fun openNotificationSettings(target: NotificationSettingsTarget): LaunchResult {
+        val intent = when (target) {
+            NotificationSettingsTarget.App ->
+                Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                    .putExtra(Settings.EXTRA_APP_PACKAGE, activity.packageName)
+
+            NotificationSettingsTarget.Channel ->
+                Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
+                    .putExtra(Settings.EXTRA_APP_PACKAGE, activity.packageName)
+                    .putExtra(Settings.EXTRA_CHANNEL_ID, REMINDER_CHANNEL_ID)
+        }
+        return launch(intent, absentHandler = LaunchResult.Failed)
     }
 
     private fun viewIntent(url: String): Intent = Intent(Intent.ACTION_VIEW, url.toUri())

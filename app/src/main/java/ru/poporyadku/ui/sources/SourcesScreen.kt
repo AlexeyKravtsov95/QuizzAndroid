@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import ru.poporyadku.R
 import ru.poporyadku.core.model.Puzzle
+import ru.poporyadku.domain.reminder.NotificationSettingsTarget
 import ru.poporyadku.ui.components.AppTopBar
 import ru.poporyadku.ui.components.ErrorBlock
 import ru.poporyadku.ui.components.PrimaryButton
@@ -247,6 +248,8 @@ private object PreviewExternalApps : ExternalApps {
     override fun canComposeEmail(): Boolean = true
     override fun composeEmail(draft: MailDraft): LaunchResult = LaunchResult.Launched
     override fun shareText(text: String, chooserTitle: String): LaunchResult = LaunchResult.Launched
+    override fun openNotificationSettings(target: NotificationSettingsTarget): LaunchResult =
+        LaunchResult.Launched
 }
 
 @Composable

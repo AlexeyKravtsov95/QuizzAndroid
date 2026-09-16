@@ -1,5 +1,6 @@
 package ru.poporyadku.domain.model
 
+import java.time.LocalTime
 import ru.poporyadku.core.model.ThemeMode
 
 /**
@@ -10,6 +11,12 @@ enum class SettingKey {
     Sound,
     Vibration,
     Theme,
+
+    /** Включение и выключение напоминания (ITERATION_6_DESIGN.md, I6-D39). */
+    Reminder,
+
+    /** Время напоминания — отдельный ключ: отказ времени не гасит строку переключателя. */
+    ReminderTime,
 }
 
 /**
@@ -33,5 +40,19 @@ sealed interface SettingMutation {
 
     data class Theme(val mode: ThemeMode) : SettingMutation {
         override val key: SettingKey get() = SettingKey.Theme
+    }
+
+    /**
+     * Намерение пользователя показывать напоминание (ITERATION_6_DESIGN.md, §8.2,
+     * I6-D39). Планировщик здесь не вызывается: работу ставит коллектор настроек,
+     * увидевший записанное значение, — команда знает только про DataStore.
+     */
+    data class ReminderEnabled(val enabled: Boolean) : SettingMutation {
+        override val key: SettingKey get() = SettingKey.Reminder
+    }
+
+    /** Время напоминания — по подтверждению выбора, а не на каждое изменение поля (I6-D38). */
+    data class ReminderTime(val time: LocalTime) : SettingMutation {
+        override val key: SettingKey get() = SettingKey.ReminderTime
     }
 }

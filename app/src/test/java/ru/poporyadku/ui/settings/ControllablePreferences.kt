@@ -70,6 +70,70 @@ internal class ControllablePreferences(
     override suspend fun setThemeMode(mode: ThemeMode) =
         write(SettingMutation.Theme(mode)) { it.copy(themeMode = mode) }
 
+    override suspend fun setReminderEnabled(enabled: Boolean) =
+        write(SettingMutation.ReminderEnabled(enabled)) { it.copy(reminderEnabled = enabled) }
+
+    override suspend fun setReminderTime(time: LocalTime) =
+        write(SettingMutation.ReminderTime(time)) { it.copy(reminderTime = time) }
+
+    /**
+     * Атомарное согласие (ITERATION_6_DESIGN.md, §8.3, I6-D40): три значения появляются
+     * ОДНОЙ эмиссией, как у настоящего `edit` DataStore. Промежуточного состояния с
+     * частью значений подписчик увидеть не может — иначе фейк проверял бы не тот
+     * контракт.
+     */
+    override suspend fun acceptReminderPrompt(time: LocalTime) {
+        acceptCalls += time
+        try {
+            gate?.await()
+        } catch (e: CancellationException) {
+            cancelledAccepts += time
+            throw e
+        }
+        acceptFailures.removeFirstOrNull()?.let { throw it }
+        val current = checkNotNull(state.value) { "запись до первой эмиссии" }
+        state.value = current.copy(
+            notificationPromptShown = true,
+            reminderTime = time,
+            reminderEnabled = true,
+        )
+    }
+
+    /** Каждый вызов согласия — в порядке вызова. */
+    val acceptCalls = mutableListOf<LocalTime>()
+
+    /** Согласия, прерванные отменой, пока ждали [releaseWrites]. */
+    val cancelledAccepts = mutableListOf<LocalTime>()
+
+    private val acceptFailures = ArrayDeque<Exception>()
+
+    /** Уронить следующий вызов [acceptReminderPrompt] — «переход не записан». */
+    fun failNextAccept(error: Exception = IllegalStateException("edit согласия упал")) {
+        acceptFailures.addLast(error)
+    }
+
+    /** Каждый вызов отметки «предложение показано». */
+    val promptShownCalls = mutableListOf<Boolean>()
+
+    override suspend fun setNotificationPromptShown(shown: Boolean) {
+        promptShownCalls += shown
+        try {
+            gate?.await()
+        } catch (e: CancellationException) {
+            throw e
+        }
+        promptShownFailures.removeFirstOrNull()?.let { throw it }
+        val current = checkNotNull(state.value) { "запись до первой эмиссии" }
+        state.value = current.copy(notificationPromptShown = shown)
+    }
+
+    private val promptShownFailures = ArrayDeque<Exception>()
+
+    /** Уронить следующий вызов [setNotificationPromptShown]. */
+    fun failNextPromptShown(error: Exception = IllegalStateException("edit отметки упал")) {
+        promptShownFailures.addLast(error)
+    }
+
     private suspend fun write(mutation: SettingMutation, apply: (UserPreferences) -> UserPreferences) {
         calls += mutation
         try {
@@ -82,13 +146,10 @@ internal class ControllablePreferences(
         state.value = apply(checkNotNull(state.value) { "запись до первой эмиссии" })
     }
 
-    override suspend fun setReminderEnabled(enabled: Boolean) = unsupported()
-    override suspend fun setReminderTime(time: LocalTime) = unsupported()
     override suspend fun setInstalledContent(contentVersion: Int, fingerprint: String) = unsupported()
     override suspend fun setHasSeenDragHint(seen: Boolean) = unsupported()
     override suspend fun setHasSeenScoringHint(seen: Boolean) = unsupported()
     override suspend fun setHasCompletedFirstDay(completed: Boolean) = unsupported()
-    override suspend fun setNotificationPromptShown(shown: Boolean) = unsupported()
     override suspend fun setLastSeenDate(date: LocalDate?) = unsupported()
     override suspend fun updateStreakCache(current: Int, best: Int, date: LocalDate) = unsupported()
 
@@ -101,18 +162,21 @@ internal class ControllablePreferences(
             themeMode: ThemeMode = ThemeMode.SYSTEM,
             contentVersion: Int = 1,
             fingerprint: String? = "fingerprint-1",
+            reminderEnabled: Boolean = false,
+            reminderTime: LocalTime = LocalTime.of(9, 0),
+            notificationPromptShown: Boolean = false,
         ) = UserPreferences(
             soundEnabled = soundEnabled,
             vibrationEnabled = vibrationEnabled,
-            reminderEnabled = false,
-            reminderTime = LocalTime.of(9, 0),
+            reminderEnabled = reminderEnabled,
+            reminderTime = reminderTime,
             themeMode = themeMode,
             storedContentVersion = contentVersion,
             storedContentFingerprint = fingerprint,
             hasSeenDragHint = false,
             hasSeenScoringHint = false,
             hasCompletedFirstDay = false,
-            notificationPromptShown = false,
+            notificationPromptShown = notificationPromptShown,
             lastSeenDate = null,
             streakCache = StreakCache.EMPTY,
         )

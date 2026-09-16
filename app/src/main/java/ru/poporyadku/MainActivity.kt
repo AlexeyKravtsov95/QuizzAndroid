@@ -15,6 +15,8 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import ru.poporyadku.notifications.AndroidReminderNotifier
+import ru.poporyadku.notifications.ReminderScheduleObserver
 import ru.poporyadku.ui.feedback.LocalSoundCues
 import ru.poporyadku.ui.feedback.SoundCues
 import ru.poporyadku.ui.navigation.AppNavHost
@@ -43,8 +45,28 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var soundCues: SoundCues
 
+    /**
+     * Корень композиции напоминания (ITERATION_6_DESIGN.md, §9.1, §9.4, I6-D29).
+     *
+     * Коллектор стартует отсюда, а не из `Application.onCreate`: Robolectric-тесты
+     * создают `PoPoRyadkuApp` без инициализатора WorkManager, и обращение к нему из
+     * `Application` уронило бы весь `testDebugUnitTest`.
+     */
+    @Inject
+    lateinit var reminderScheduleObserver: ReminderScheduleObserver
+
+    /** Канал и снятие показанного напоминания (§10.1). */
+    @Inject
+    lateinit var reminderNotifier: AndroidReminderNotifier
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Идемпотентны оба: повторный старт коллектора не создаёт второго, повторное
+        // создание канала не перезаписывает пользовательские изменения.
+        reminderScheduleObserver.start()
+        reminderNotifier.ensureChannel()
+
         // До первой эмиссии настроек окно и системные панели следуют системной теме —
         // как и фон окна из Theme.PoPoRyadku; после неё стиль панелей переустанавливается
         // по выбранной теме ниже.
@@ -87,5 +109,15 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    /**
+     * Пользователь уже в приложении — напоминание о нём же в шторке не нужно
+     * (ITERATION_6_DESIGN.md, §8.4, §10.1). Снимается при **любом** старте: и когда
+     * приложение открыто нажатием на уведомление, и когда пользователь пришёл сам.
+     */
+    override fun onStart() {
+        super.onStart()
+        reminderNotifier.cancelShown()
     }
 }

@@ -377,6 +377,70 @@ class UserPreferencesRepositoryTest {
         }
     }
 
+    // ---------- I6-P7: атомарное согласие на напоминание ----------
+
+    /**
+     * `I6-P7`. `acceptReminderPrompt` — **один** `edit`: первая эмиссия после вызова уже
+     * содержит все три значения, промежуточной эмиссии с частью значений не существует.
+     *
+     * Это и есть граница согласия (ITERATION_6_DESIGN.md, §8.3, I6-D40): именно поэтому
+     * после смерти процесса не бывает состояния «отметка есть, напоминание выключено».
+     */
+    @Test
+    fun `I6-P7 acceptReminderPrompt writes all three values in a single edit`() = runTest {
+        repository.preferences.test {
+            val before = awaitItem()
+            assertEquals(false, before.notificationPromptShown)
+            assertEquals(false, before.reminderEnabled)
+
+            repository.acceptReminderPrompt(LocalTime.of(9, 0))
+
+            val after = awaitItem()
+            assertTrue("отметка предложения", after.notificationPromptShown)
+            assertTrue("напоминание включено", after.reminderEnabled)
+            assertEquals(LocalTime.of(9, 0), after.reminderTime)
+            // Промежуточной эмиссии с частью значений быть не должно.
+            expectNoEvents()
+        }
+    }
+
+    /** `I6-P7`. Метод возвращается после записи: следующее чтение уже видит все три значения. */
+    @Test
+    fun `I6-P7 acceptReminderPrompt returns only after the write`() = runTest {
+        repository.acceptReminderPrompt(LocalTime.of(21, 30))
+
+        repository.preferences.test {
+            val prefs = awaitItem()
+            assertTrue(prefs.notificationPromptShown)
+            assertTrue(prefs.reminderEnabled)
+            assertEquals(LocalTime.of(21, 30), prefs.reminderTime)
+        }
+    }
+
+    /** `I6-P7`. Новый экземпляр репозитория над тем же файлом читает все три значения. */
+    @Test
+    fun `I6-P7 a new repository over the same file reads the consent back`() = runTest {
+        repository.acceptReminderPrompt(LocalTime.of(7, 5))
+
+        UserPreferencesRepositoryImpl(dataStore).preferences.test {
+            val prefs = awaitItem()
+            assertTrue(prefs.notificationPromptShown)
+            assertTrue(prefs.reminderEnabled)
+            assertEquals(LocalTime.of(7, 5), prefs.reminderTime)
+        }
+    }
+
+    /** `I6-P7`. Диапазон времени проверяется так же, как у `setReminderTime`. */
+    @Test
+    fun `I6-P7 acceptReminderPrompt validates the time range`() = runTest {
+        // LocalTime сам не даёт выйти за сутки, поэтому проверяется принятая граница.
+        repository.acceptReminderPrompt(LocalTime.of(23, 59))
+
+        repository.preferences.test {
+            assertEquals(LocalTime.of(23, 59), awaitItem().reminderTime)
+        }
+    }
+
     private companion object {
         /** Любой правдоподобный отпечаток: значение контрактом теста не является. */
         val FINGERPRINT = "a".repeat(64)
