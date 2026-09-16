@@ -14,8 +14,9 @@ object FeedbackPolicy {
 
     /**
      * @return `null`, если отдавать нечем: настройки ещё не прочитаны
-     * ([FeedbackSettings.Unknown]) или оба канала выключены. Иначе — запрос с флагами
-     * ровно по настройкам.
+     * ([FeedbackSettings.Unknown]), оба канала выключены или у cue нет ни одного
+     * доступного канала (беззвучный `CardGrabbed` при выключенной вибрации). Иначе —
+     * запрос с флагами ровно по настройкам.
      */
     fun requestFor(cue: FeedbackCue, settings: FeedbackSettings): FeedbackRequest? =
         when (settings) {
@@ -24,15 +25,26 @@ object FeedbackPolicy {
             // а не по выбору пользователя.
             FeedbackSettings.Unknown -> null
 
-            is FeedbackSettings.Known ->
-                if (!settings.soundEnabled && !settings.vibrationEnabled) {
+            is FeedbackSettings.Known -> {
+                val playSound = settings.soundEnabled && cue.hasSound
+                val performHaptic = settings.vibrationEnabled
+                if (!playSound && !performHaptic) {
                     null
                 } else {
                     FeedbackRequest(
                         cue = cue,
-                        playSound = settings.soundEnabled,
-                        performHaptic = settings.vibrationEnabled,
+                        playSound = playSound,
+                        performHaptic = performHaptic,
                     )
                 }
+            }
         }
+
+    /**
+     * У захвата звука нет никогда (ITERATION_6_DESIGN.md, §6.1, I6-D14) — и это решается
+     * здесь, а не исполнителем: иначе «беззвучный cue» держался бы на том, что для него
+     * не завели файл, и первый же добавленный ресурс включил бы звук молча.
+     */
+    private val FeedbackCue.hasSound: Boolean
+        get() = this != FeedbackCue.CardGrabbed
 }

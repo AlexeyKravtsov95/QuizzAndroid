@@ -19,12 +19,22 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
@@ -32,12 +42,16 @@ import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
+import kotlinx.coroutines.flow.collectLatest
 import ru.poporyadku.R
 import ru.poporyadku.core.model.Category
 import ru.poporyadku.domain.usecase.PuzzleErrorKind
 import ru.poporyadku.domain.usecase.Submission
 import ru.poporyadku.ui.components.AppTopBar
 import ru.poporyadku.ui.components.CategoryLabel
+import ru.poporyadku.ui.components.DragHandle
 import ru.poporyadku.ui.components.ErrorBlock
 import ru.poporyadku.ui.components.OrderableCard
 import ru.poporyadku.ui.components.OrderableCardControls
@@ -60,6 +74,14 @@ object PuzzleTestTags {
     const val RETRY_BUTTON = "puzzle_retry_button"
     const val ERROR_BLOCK = "puzzle_error_block"
     const val SKELETON = "puzzle_skeleton"
+
+    /**
+     * Ручка адресуется по `cardId`, никогда по позиции.
+     *
+     * Тег — не семантика: он не добавляет ни роли, ни описания, ни действия, и в
+     * объединённом дереве карточки отдельного узла не создаёт (`I6-C1`).
+     */
+    fun dragHandle(cardId: String): String = "puzzle_drag_handle_$cardId"
 }
 
 /** Слотов в скелетоне ровно столько, сколько карточек появится после загрузки. */
@@ -205,6 +227,10 @@ private fun PuzzleTopBar(
  * перестановки на `motion.duration.long`. Формулировка и подпись направления едут
  * внутри того же списка, поэтому при 200% прокручивается **весь** контентный блок,
  * а кнопка «Проверить» остаётся закреплённой.
+ *
+ * Жест перетаскивания (ITERATION_6_DESIGN.md, §5): экран держит только визуальное
+ * смещение пальца ([ReorderDragState]); порядок карточек приходит из [board] и меняется
+ * исключительно подтверждениями ViewModel.
  */
 @Composable
 private fun PuzzleBoardContent(
@@ -214,8 +240,21 @@ private fun PuzzleBoardContent(
     onEvent: (PuzzleEvent) -> Unit,
 ) {
     val motion = rememberMotionTokens()
+    val listState = rememberLazyListState()
+    // Не `rememberSaveable` (I6-D9): пересоздание Activity не должно воскрешать
+    // «поднятую» карточку — пальца на экране после него нет.
+    val dragState = remember(listState) { ReorderDragState(listState) }
+    val cardIds = board.cards.map { it.cardId }
+
+    PuzzleDragEffects(
+        dragState = dragState,
+        cardIds = cardIds,
+        interactive = interactive,
+        onEvent = onEvent,
+    )
 
     LazyColumn(
+        state = listState,
         modifier = Modifier
             .fillMaxSize()
             .semantics { liveRegion = LiveRegionMode.Polite }
@@ -244,6 +283,8 @@ private fun PuzzleBoardContent(
         }
 
         items(items = board.cards, key = { card -> card.cardId }) { card ->
+            val dragged = dragState.draggedCardId == card.cardId
+
             OrderableCard(
                 cardId = card.cardId,
                 position = card.position,
@@ -259,15 +300,138 @@ private fun PuzzleBoardContent(
                     onMoveToTop = { onEvent(PuzzleEvent.MoveToTop(card.cardId)) },
                     onMoveToBottom = { onEvent(PuzzleEvent.MoveToBottom(card.cardId)) },
                 ),
-                modifier = Modifier.animateItem(
-                    placementSpec = tween(
-                        durationMillis = motion.durationLong,
-                        easing = motion.easingStandard,
-                    ),
-                ),
+                dragging = dragged,
+                dragHandle = {
+                    DragHandle(
+                        interactive = interactive,
+                        onDragStart = { startDrag(dragState, card.cardId, onEvent) },
+                        onDrag = { deltaY ->
+                            dragState.drag(deltaY)
+                            // Цель считается сразу по движению пальца, а не только в
+                            // кадре авто-прокрутки: без этого перестановка ждала бы
+                            // следующего кадра даже вдали от краевых зон.
+                            dragState.emitTarget(cardIds, onEvent)
+                        },
+                        onDragFinished = { finishDrag(dragState, onEvent) },
+                        modifier = Modifier.testTag(PuzzleTestTags.dragHandle(card.cardId)),
+                    )
+                },
+                modifier = Modifier
+                    .zIndex(if (dragged) DRAGGED_Z_INDEX else RESTING_Z_INDEX)
+                    .animateItem(
+                        // У поднятой карточки placement-анимации нет: иначе она
+                        // «догоняла» бы палец, вместо того чтобы следовать за ним.
+                        placementSpec = if (dragged) {
+                            null
+                        } else {
+                            tween(
+                                durationMillis = motion.durationLong,
+                                easing = motion.easingStandard,
+                            )
+                        },
+                    )
+                    // Раскладка изменилась — подтверждённой перестановкой или прокруткой:
+                    // компенсируем сдвиг слота, чтобы визуальный центр карточки не
+                    // прыгнул и остался под пальцем (§5.3, шаг 4).
+                    .onGloballyPositioned { if (dragged) dragState.syncSlotTop() }
+                    .graphicsLayer { translationY = if (dragged) dragState.offsetY else NO_OFFSET },
             )
         }
     }
+}
+
+/**
+ * Эффекты жеста: авто-прокрутка у краёв списка и закрытие жеста при уходе из `Playing`
+ * (ITERATION_6_DESIGN.md, §5.4, I6-D11, I6-D12).
+ *
+ * Кадровый цикл живёт **только пока прокрутка действительно нужна**: пока карточка не в
+ * краевой зоне или прокручивать некуда, скорость равна нулю и кадры не запрашиваются
+ * вовсе. Короткий список поэтому цикл не запускает ни разу, а отпускание, отмена, уход из
+ * `Playing` и уход из композиции отменяют корутину — «бесконечной корутины вне
+ * композиции» здесь не существует.
+ */
+@Composable
+private fun PuzzleDragEffects(
+    dragState: ReorderDragState,
+    cardIds: List<String>,
+    interactive: Boolean,
+    onEvent: (PuzzleEvent) -> Unit,
+) {
+    val density = LocalDensity.current
+    val edgeZonePx = with(density) { Sizing.dragAutoScrollEdgeZone.toPx() }
+    val maxVelocityPx = with(density) { Sizing.dragAutoScrollMaxVelocityDpPerSecond.dp.toPx() }
+    // Цикл переживает подтверждённые перестановки, поэтому порядок читается через
+    // `rememberUpdatedState`: захваченный при запуске список устарел бы после первой же.
+    val confirmedOrder by rememberUpdatedState(cardIds)
+
+    // Уход из `Playing` во время удержания: `pointerInput` пересоздаётся по ключу и
+    // `onDragCancel` уже не придёт — жест закрывается здесь, тем же событием (I6-C7).
+    LaunchedEffect(interactive) {
+        if (!interactive) finishDrag(dragState, onEvent)
+    }
+
+    LaunchedEffect(dragState.draggedCardId, interactive) {
+        if (dragState.draggedCardId == null || !interactive) return@LaunchedEffect
+
+        snapshotFlow { dragState.autoScrollVelocity(edgeZonePx, maxVelocityPx) != NO_VELOCITY }
+            .collectLatest { insideEdgeZone ->
+                if (!insideEdgeZone) return@collectLatest
+
+                var previousFrameNanos = NO_PREVIOUS_FRAME
+                while (true) {
+                    val elapsedSeconds = withFrameNanos { frameNanos ->
+                        val elapsed = if (previousFrameNanos == NO_PREVIOUS_FRAME) {
+                            NO_ELAPSED
+                        } else {
+                            (frameNanos - previousFrameNanos).toFloat() / NANOS_PER_SECOND
+                        }
+                        previousFrameNanos = frameNanos
+                        elapsed
+                    }
+
+                    // Условие перепроверяется каждый кадр: выход из краевой зоны и
+                    // достигнутый край списка останавливают прокрутку сразу, а не через
+                    // подписку.
+                    val velocity = dragState.autoScrollVelocity(edgeZonePx, maxVelocityPx)
+                    if (velocity == NO_VELOCITY) break
+
+                    // Фактический `dt`, а не константа кадра: пропущенный кадр не должен
+                    // превращаться ни в рывок, ни в замедление прокрутки.
+                    dragState.scrollBy(velocity * elapsedSeconds)
+                    // Прокрутка сдвинула слот под карточкой — цель считается заново, и
+                    // пройденные ею карточки подтверждаются как обычно.
+                    dragState.emitTarget(confirmedOrder, onEvent)
+                }
+            }
+    }
+}
+
+/** Новый жест: идентификатор выдаётся один раз и живёт до конца этого жеста (I6-D5). */
+private fun startDrag(
+    dragState: ReorderDragState,
+    cardId: String,
+    onEvent: (PuzzleEvent) -> Unit,
+): Boolean {
+    val gesture = DragGestureIds.next()
+    if (!dragState.start(cardId, gesture)) return false
+    onEvent(PuzzleEvent.DragStarted(cardId, gesture))
+    return true
+}
+
+/** Отпускание, отмена, потеря указателя и уход из `Playing` — одно и то же (I6-D8). */
+private fun finishDrag(dragState: ReorderDragState, onEvent: (PuzzleEvent) -> Unit) {
+    val cardId = dragState.draggedCardId ?: return
+    val gesture = dragState.gesture ?: return
+    dragState.finish()
+    onEvent(PuzzleEvent.DragFinished(cardId, gesture))
+}
+
+/** Цель пересчитана — отправляем её ViewModel; повтор той же цели там безвреден (I6-D3). */
+private fun ReorderDragState.emitTarget(cardIds: List<String>, onEvent: (PuzzleEvent) -> Unit) {
+    val cardId = draggedCardId ?: return
+    val gesture = gesture ?: return
+    val target = targetIndex(cardIds) ?: return
+    onEvent(PuzzleEvent.DragMovedTo(cardId, target, gesture))
 }
 
 /**
@@ -364,6 +528,27 @@ private fun retryShapeOf(kind: PuzzleErrorKind): RetryAction = when (kind) {
 
 private const val WEIGHT_FILL = 1f
 
+/**
+ * Порядок отрисовки поднятой карточки — структурная константа рядом с [WEIGHT_FILL], а не
+ * визуальное значение (ITERATION_6_DESIGN.md, 5.6): токеном «уровень выше соседей» не
+ * является.
+ */
+private const val DRAGGED_Z_INDEX = 1f
+private const val RESTING_Z_INDEX = 0f
+
+/** Карточка не поднята — визуального смещения нет. */
+private const val NO_OFFSET = 0f
+
+/** Прокручивать не нужно или невозможно. */
+private const val NO_VELOCITY = 0f
+
+/** Первый кадр цикла: предыдущего времени ещё нет, поэтому `dt` равен нулю. */
+private const val NO_PREVIOUS_FRAME = -1L
+private const val NO_ELAPSED = 0f
+
+/** `withFrameNanos` считает наносекундами, скорость задана в секундах. */
+private const val NANOS_PER_SECOND = 1_000_000_000f
+
 // --- Preview ---------------------------------------------------------------
 
 private val previewCards = listOf(
@@ -381,7 +566,6 @@ private val previewBoard = PuzzleBoard(
     prompt = "Расположите вершины от самой низкой к самой высокой",
     directionLabel = "Сверху — самая низкая",
     cards = previewCards,
-    draggedCardId = null,
 )
 
 private val previewPlaying = PuzzleUiState.Playing(previewBoard, isSubmitEnabled = true, showDragHint = false)

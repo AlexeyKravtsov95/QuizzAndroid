@@ -879,6 +879,476 @@ class PuzzleViewModelTest {
         }
     }
 
+    // --- I6-V1 – I6-V12: единый путь перестановки и жест -------------------------------
+
+    /**
+     * `I6-V1`. Жест на одну позицию вниз: порядок, `position`/`canMove*` и оба ключа
+     * `SavedStateHandle` обновлены; ровно один `Feedback(CardMoved)`; объявления во время
+     * жеста нет.
+     */
+    @Test
+    fun `I6-V1 a drag one position down confirms the order once`() = runTest(dispatcher) {
+        val handle = orderedHandle(listOf("c1", "c2", "c3", "c4"))
+        val viewModel = createViewModel(handle, feedbackSettings(sound = true, vibration = true))
+        advanceUntilIdle()
+
+        viewModel.effects.test {
+            viewModel.onEvent(PuzzleEvent.DragStarted("c1", G1))
+            assertEquals(grabbed(), awaitItem())
+
+            viewModel.onEvent(PuzzleEvent.DragMovedTo("c1", targetIndex = 1, gesture = G1))
+            assertEquals(moved(), awaitItem())
+
+            expectNoEvents()
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        assertEquals(listOf("c2", "c1", "c3", "c4"), viewModel.orderOrNull())
+        val cards = viewModel.boardOrNull()!!.cards
+        assertEquals(listOf(1, 2, 3, 4), cards.map { it.position })
+        assertFalse(cards.first().canMoveUp)
+        assertFalse(cards.last().canMoveDown)
+        assertEquals("c2,c1,c3,c4", handle.get<String>(KEY_CURRENT_ORDER))
+        assertEquals(PuzzleFixtures.PUZZLE_ID, handle.get<String>(KEY_ORDER_PUZZLE_ID))
+    }
+
+    /** `I6-V2`. Цель сразу на три позиции — одна перестановка и одна отдача. */
+    @Test
+    fun `I6-V2 a three position target is a single confirmed reorder`() = runTest(dispatcher) {
+        val viewModel = draggingViewModel("c1", order = listOf("c1", "c2", "c3", "c4"))
+
+        viewModel.effects.test {
+            assertEquals(grabbed(), awaitItem())
+            viewModel.onEvent(PuzzleEvent.DragMovedTo("c1", targetIndex = 3, gesture = G1))
+
+            assertEquals(moved(), awaitItem())
+            expectNoEvents()
+            cancelAndIgnoreRemainingEvents()
+        }
+        assertEquals(listOf("c2", "c3", "c4", "c1"), viewModel.orderOrNull())
+    }
+
+    /**
+     * `I6-V3`. Повтор той же абсолютной цели: второй перестановки, записи и отдачи нет —
+     * цель идемпотентна по построению (I6-D3).
+     */
+    @Test
+    fun `I6-V3 repeating the same target changes nothing`() = runTest(dispatcher) {
+        val handle = orderedHandle(listOf("c1", "c2", "c3", "c4"))
+        val viewModel = createViewModel(handle, feedbackSettings(sound = true, vibration = true))
+        advanceUntilIdle()
+        viewModel.onEvent(PuzzleEvent.DragStarted("c1", G1))
+        viewModel.onEvent(PuzzleEvent.DragMovedTo("c1", targetIndex = 2, gesture = G1))
+        val afterFirst = viewModel.uiState.value
+
+        viewModel.effects.test {
+            assertEquals(grabbed(), awaitItem())
+            assertEquals(moved(), awaitItem())
+            repeat(REPEATS) {
+                viewModel.onEvent(PuzzleEvent.DragMovedTo("c1", targetIndex = 2, gesture = G1))
+            }
+
+            expectNoEvents()
+            cancelAndIgnoreRemainingEvents()
+        }
+        assertEquals(afterFirst, viewModel.uiState.value)
+        assertEquals("c2,c3,c1,c4", handle.get<String>(KEY_CURRENT_ORDER))
+    }
+
+    /**
+     * `I6-V4`. Объявление жеста — ровно одно и только при завершении: на пересечениях
+     * порога TalkBack молчит, а вернувшаяся на место карточка не объявляется вовсе.
+     */
+    @Test
+    fun `I6-V4 a drag announces once at the end and not at all if it returns`() =
+        runTest(dispatcher) {
+            val viewModel = draggingViewModel("c1", order = listOf("c1", "c2", "c3", "c4"))
+
+            viewModel.effects.test {
+                assertEquals(grabbed(), awaitItem())
+                viewModel.onEvent(PuzzleEvent.DragMovedTo("c1", targetIndex = 1, gesture = G1))
+                assertEquals(moved(), awaitItem())
+                viewModel.onEvent(PuzzleEvent.DragMovedTo("c1", targetIndex = 2, gesture = G1))
+                assertEquals(moved(), awaitItem())
+
+                viewModel.onEvent(PuzzleEvent.DragFinished("c1", G1))
+                val announcement = awaitItem() as PuzzleEffect.AnnounceCardMoved
+                assertEquals("Эльбрус", announcement.cardTitle)
+                assertEquals(3, announcement.position)
+                assertEquals(4, announcement.totalPositions)
+
+                expectNoEvents()
+                cancelAndIgnoreRemainingEvents()
+            }
+
+            // Второй жест той же карточки, вернувший её на исходную позицию.
+            viewModel.onEvent(PuzzleEvent.DragStarted("c1", G2))
+            viewModel.effects.test {
+                assertEquals(grabbed(), awaitItem())
+                viewModel.onEvent(PuzzleEvent.DragMovedTo("c1", targetIndex = 0, gesture = G2))
+                assertEquals(moved(), awaitItem())
+                viewModel.onEvent(PuzzleEvent.DragMovedTo("c1", targetIndex = 2, gesture = G2))
+                assertEquals(moved(), awaitItem())
+
+                viewModel.onEvent(PuzzleEvent.DragFinished("c1", G2))
+
+                assertEquals("вернулась на своё место — объявлять нечего", 0, cancelAndConsumeRemainingEvents().size)
+            }
+        }
+
+    /**
+     * `I6-V5`. Отдача захвата: только тактильная и ровно одна на принятый жест.
+     * Выключенная вибрация и непрочитанные настройки её не порождают; повтор начала того
+     * же жеста — тоже; новый жест той же карточки даёт ровно одну новую.
+     */
+    @Test
+    fun `I6-V5 card grabbed is haptic only and happens once per accepted gesture`() =
+        runTest(dispatcher) {
+            val viewModel = playingViewModel(
+                order = listOf("c1", "c2", "c3", "c4"),
+                feedback = feedbackSettings(sound = true, vibration = true),
+            )
+
+            viewModel.effects.test {
+                viewModel.onEvent(PuzzleEvent.DragStarted("c1", G1))
+                assertEquals(
+                    PuzzleEffect.Feedback(
+                        FeedbackRequest(FeedbackCue.CardGrabbed, playSound = false, performHaptic = true),
+                    ),
+                    awaitItem(),
+                )
+
+                // Повтор начала ЭТОГО жеста: двойная доставка события не даёт второй отдачи.
+                viewModel.onEvent(PuzzleEvent.DragStarted("c1", G1))
+                expectNoEvents()
+
+                // Новый жест той же карточки — новая сессия и ровно одна новая отдача.
+                viewModel.onEvent(PuzzleEvent.DragStarted("c1", G2))
+                assertEquals(grabbed(), awaitItem())
+                expectNoEvents()
+                cancelAndIgnoreRemainingEvents()
+            }
+
+            // Новый `startIndex`: жест g2 начат с позиции 0, и возврат на неё не объявляется.
+            viewModel.effects.test {
+                viewModel.onEvent(PuzzleEvent.DragMovedTo("c1", targetIndex = 1, gesture = G2))
+                assertEquals(moved(), awaitItem())
+                viewModel.onEvent(PuzzleEvent.DragMovedTo("c1", targetIndex = 0, gesture = G2))
+                assertEquals(moved(), awaitItem())
+                viewModel.onEvent(PuzzleEvent.DragFinished("c1", G2))
+
+                assertEquals(0, cancelAndConsumeRemainingEvents().size)
+            }
+
+            // Вибрация выключена и настройки ещё не прочитаны — эффекта захвата нет вовсе.
+            val silent = listOf(
+                feedbackSettings(sound = true, vibration = false),
+                ControllablePreferences(initial = null),
+            )
+            silent.forEach { preferences ->
+                setUp()
+                val quiet = playingViewModel(order = listOf("c1", "c2", "c3", "c4"), feedback = preferences)
+
+                quiet.effects.test {
+                    quiet.onEvent(PuzzleEvent.DragStarted("c1", G1))
+
+                    expectNoEvents()
+                    cancelAndIgnoreRemainingEvents()
+                }
+            }
+        }
+
+    /** `I6-V6`. Вне `Playing` события жеста не меняют ни состояние, ни ключи, ни эффекты. */
+    @Test
+    fun `I6-V6 drag events outside playing change nothing`() = runTest(dispatcher) {
+        val enabled = feedbackSettings(sound = true, vibration = true)
+
+        // Loading: головоломка ещё не пришла.
+        val loadingHandle = routeHandle()
+        val loading = createViewModel(loadingHandle, enabled)
+        assertEquals(PuzzleUiState.Loading, loading.uiState.value)
+        loading.effects.test {
+            dragSequence().forEach(loading::onEvent)
+
+            assertEquals(PuzzleUiState.Loading, loading.uiState.value)
+            assertNull(loadingHandle.get<String>(KEY_CURRENT_ORDER))
+            expectNoEvents()
+            cancelAndIgnoreRemainingEvents()
+        }
+        advanceUntilIdle()
+
+        // Submitting.Answer: ответ уже отправляется.
+        setUp()
+        val handle = orderedHandle(listOf("c1", "c2", "c3", "c4"))
+        val viewModel = createViewModel(handle, enabled)
+        advanceUntilIdle()
+        progress.blockRecording()
+        viewModel.onEvent(PuzzleEvent.Submit)
+        runCurrent()
+        val submitting = viewModel.uiState.value as PuzzleUiState.Submitting.Answer
+
+        viewModel.effects.test {
+            dragSequence().forEach(viewModel::onEvent)
+
+            assertEquals(submitting, viewModel.uiState.value)
+            assertEquals("c1,c2,c3,c4", handle.get<String>(KEY_CURRENT_ORDER))
+            expectNoEvents()
+            cancelAndIgnoreRemainingEvents()
+        }
+        progress.release()
+        advanceUntilIdle()
+
+        // Error: «стола» нет.
+        setUp()
+        assignments.failWith = { IllegalStateException("база недоступна") }
+        val failed = createViewModel(routeHandle(), enabled)
+        advanceUntilIdle()
+        val error = failed.uiState.value as PuzzleUiState.Error
+        failed.effects.test {
+            dragSequence().forEach(failed::onEvent)
+
+            assertEquals(error, failed.uiState.value)
+            expectNoEvents()
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    /**
+     * `I6-V7`. Три эквивалентных намерения — кнопка, custom action и жест — из одинакового
+     * исходного состояния дают одинаковый порядок, одинаковую строку `puzzle.currentOrder`
+     * и по одному `CardMoved`: путь один (`CardOrder.move`).
+     */
+    @Test
+    fun `I6-V7 button, custom action and drag are the same single path`() = runTest(dispatcher) {
+        // Карточка на позиции 2: «вверх», «в начало» и абсолютная цель 0 — одно и то же.
+        val intents = listOf<(PuzzleViewModel) -> Unit>(
+            { it.onEvent(PuzzleEvent.MoveUp("c2")) },
+            { it.onEvent(PuzzleEvent.MoveToTop("c2")) },
+            {
+                it.onEvent(PuzzleEvent.DragStarted("c2", G1))
+                it.onEvent(PuzzleEvent.DragMovedTo("c2", targetIndex = 0, gesture = G1))
+            },
+        )
+
+        val results = intents.map { intent ->
+            setUp()
+            val handle = orderedHandle(listOf("c1", "c2", "c3", "c4"))
+            val viewModel = createViewModel(handle, feedbackSettings(sound = true, vibration = true))
+            advanceUntilIdle()
+
+            var moves = 0
+            viewModel.effects.test {
+                intent(viewModel)
+                cancelAndConsumeRemainingEvents().forEach { event ->
+                    val effect = (event as app.cash.turbine.Event.Item).value
+                    if (effect == moved()) moves++
+                }
+            }
+
+            Triple(viewModel.orderOrNull(), handle.get<String>(KEY_CURRENT_ORDER), moves)
+        }
+
+        assertEquals("все три намерения дают один результат", 1, results.toSet().size)
+        assertEquals(
+            Triple(listOf("c2", "c1", "c3", "c4"), "c2,c1,c3,c4", 1),
+            results.first(),
+        )
+    }
+
+    /**
+     * `I6-V8`. `Submit` при открытой сессии отправляет последний подтверждённый порядок,
+     * а запоздалое завершение жеста после него уже ничего не делает.
+     */
+    @Test
+    fun `I6-V8 submit during a drag sends the confirmed order`() = runTest(dispatcher) {
+        val viewModel = draggingViewModel("c1", order = listOf("c1", "c2", "c3", "c4"))
+
+        viewModel.effects.test {
+            assertEquals(grabbed(), awaitItem())
+            viewModel.onEvent(PuzzleEvent.DragMovedTo("c1", targetIndex = 1, gesture = G1))
+            assertEquals(moved(), awaitItem())
+            viewModel.onEvent(PuzzleEvent.DragMovedTo("c1", targetIndex = 2, gesture = G1))
+            assertEquals(moved(), awaitItem())
+
+            viewModel.onEvent(PuzzleEvent.Submit)
+            advanceUntilIdle()
+            assertEquals(
+                PuzzleEffect.Feedback(
+                    FeedbackRequest(FeedbackCue.AnswerAccepted, playSound = true, performHaptic = true),
+                ),
+                awaitItem(),
+            )
+            assertEquals(PuzzleEffect.NavigateToResult(0), awaitItem())
+
+            // Запоздалое завершение жеста после отправки: сессия уже закрыта `onSubmit`.
+            viewModel.onEvent(PuzzleEvent.DragFinished("c1", G1))
+            expectNoEvents()
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        assertEquals(
+            listOf("c2", "c3", "c1", "c4"),
+            progress.recorded.single().submittedOrder,
+        )
+    }
+
+    /**
+     * `I6-V9` (а). Пересоздание UI без `DragFinished`: новый жест той же карточки
+     * полностью заменяет висящую сессию — одна новая отдача, новый `startIndex`, — а
+     * запоздалое завершение прежнего жеста не объявляет и не меняет ничего.
+     */
+    @Test
+    fun `I6-V9 a new gesture replaces a session left open by a destroyed UI`() =
+        runTest(dispatcher) {
+            val viewModel = draggingViewModel("c1", order = listOf("c1", "c2", "c3", "c4"))
+            viewModel.onEvent(PuzzleEvent.DragMovedTo("c1", targetIndex = 2, gesture = G1))
+            assertEquals(listOf("c2", "c3", "c1", "c4"), viewModel.orderOrNull())
+
+            // UI уничтожен без `DragFinished`; новый экран начинает свой жест.
+            viewModel.effects.test {
+                assertEquals(grabbed(), awaitItem())
+                assertEquals(moved(), awaitItem())
+
+                viewModel.onEvent(PuzzleEvent.DragStarted("c1", G2))
+                assertEquals("ровно одна отдача захвата", grabbed(), awaitItem())
+
+                viewModel.onEvent(PuzzleEvent.DragMovedTo("c1", targetIndex = 0, gesture = G2))
+                assertEquals(moved(), awaitItem())
+
+                viewModel.onEvent(PuzzleEvent.DragFinished("c1", G2))
+                val announcement = awaitItem() as PuzzleEffect.AnnounceCardMoved
+                // Сравнение с позицией на начало g2 (была 2), а не с началом g1 (было 0).
+                assertEquals(1, announcement.position)
+
+                // Запоздалое завершение старого жеста: ни объявления, ни изменений.
+                viewModel.onEvent(PuzzleEvent.DragFinished("c1", G1))
+                expectNoEvents()
+                cancelAndIgnoreRemainingEvents()
+            }
+            assertEquals(listOf("c1", "c2", "c3", "c4"), viewModel.orderOrNull())
+        }
+
+    /**
+     * `I6-V9` (б). Новый ViewModel на том же `SavedStateHandle` — восстановление после
+     * смерти процесса: порядок восстановлен, отдачи и объявления нет, а событие жеста без
+     * своего `DragStarted` игнорируется.
+     */
+    @Test
+    fun `I6-V9 a restored view model has no session and no feedback`() = runTest(dispatcher) {
+        val handle = orderedHandle(listOf("c1", "c2", "c3", "c4"))
+        val first = createViewModel(handle, feedbackSettings(sound = true, vibration = true))
+        advanceUntilIdle()
+        first.onEvent(PuzzleEvent.DragStarted("c1", G1))
+        first.onEvent(PuzzleEvent.DragMovedTo("c1", targetIndex = 2, gesture = G1))
+
+        val restored = createViewModel(handle, feedbackSettings(sound = true, vibration = true))
+        advanceUntilIdle()
+
+        assertEquals(listOf("c2", "c3", "c1", "c4"), restored.orderOrNull())
+        restored.effects.test {
+            restored.onEvent(PuzzleEvent.DragMovedTo("c1", targetIndex = 1, gesture = G2))
+
+            assertEquals(
+                "сессии нет — событие жеста игнорируется",
+                listOf("c2", "c3", "c1", "c4"),
+                restored.orderOrNull(),
+            )
+            expectNoEvents()
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    /**
+     * `I6-V10`. Устаревшие и чужие события не делают ничего: неизвестный `cardId`,
+     * завершение без сессии, верный `cardId` с чужим жестом и верный жест с чужим
+     * `cardId`.
+     */
+    @Test
+    fun `I6-V10 stale and foreign gesture events are ignored`() = runTest(dispatcher) {
+        val handle = orderedHandle(listOf("c1", "c2", "c3", "c4"))
+        val viewModel = createViewModel(handle, feedbackSettings(sound = true, vibration = true))
+        advanceUntilIdle()
+        // Ключ порядка поставил маршрут; дальше любая запись видна как его появление.
+        handle.remove<String>(KEY_CURRENT_ORDER)
+
+        viewModel.effects.test {
+            // Завершение без сессии и неизвестная карточка.
+            viewModel.onEvent(PuzzleEvent.DragFinished("c1", G1))
+            viewModel.onEvent(PuzzleEvent.DragStarted("c9", G1))
+            viewModel.onEvent(PuzzleEvent.DragMovedTo("c9", targetIndex = 0, gesture = G1))
+            expectNoEvents()
+
+            // Сессия есть; события с чужим жестом и с чужой карточкой не проходят.
+            viewModel.onEvent(PuzzleEvent.DragStarted("c1", G1))
+            assertEquals(grabbed(), awaitItem())
+
+            viewModel.onEvent(PuzzleEvent.DragMovedTo("c1", targetIndex = 2, gesture = G2))
+            viewModel.onEvent(PuzzleEvent.DragMovedTo("c2", targetIndex = 2, gesture = G1))
+            viewModel.onEvent(PuzzleEvent.DragFinished("c1", G2))
+            viewModel.onEvent(PuzzleEvent.DragFinished("c2", G1))
+            expectNoEvents()
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        assertEquals(listOf("c1", "c2", "c3", "c4"), viewModel.orderOrNull())
+        assertNull("ни одной записи порядка", handle.get<String>(KEY_CURRENT_ORDER))
+
+        // Сессия по-прежнему открыта: своё событие проходит.
+        viewModel.onEvent(PuzzleEvent.DragMovedTo("c1", targetIndex = 1, gesture = G1))
+        assertEquals(listOf("c2", "c1", "c3", "c4"), viewModel.orderOrNull())
+    }
+
+    /**
+     * `I6-V11`. Кнопка при открытой сессии: одна кнопочная перестановка со своим
+     * объявлением, сессия закрыта молча, следующее событие прежнего жеста игнорируется.
+     */
+    @Test
+    fun `I6-V11 a button press silently closes an open drag session`() = runTest(dispatcher) {
+        val viewModel = draggingViewModel("c1", order = listOf("c1", "c2", "c3", "c4"))
+
+        viewModel.effects.test {
+            assertEquals(grabbed(), awaitItem())
+            viewModel.onEvent(PuzzleEvent.MoveDown("c3"))
+
+            assertEquals(moved(), awaitItem())
+            val announcement = awaitItem() as PuzzleEffect.AnnounceCardMoved
+            assertEquals("Килиманджаро", announcement.cardTitle)
+            assertEquals(4, announcement.position)
+
+            // Сессия закрыта: событие жеста, начатого до кнопки, больше не принимается.
+            viewModel.onEvent(PuzzleEvent.DragMovedTo("c1", targetIndex = 3, gesture = G1))
+            viewModel.onEvent(PuzzleEvent.DragFinished("c1", G1))
+            expectNoEvents()
+            cancelAndIgnoreRemainingEvents()
+        }
+        assertEquals(listOf("c1", "c2", "c4", "c3"), viewModel.orderOrNull())
+    }
+
+    /**
+     * `I6-V12`. Кнопочный контракт итерации 5 не изменился: `Feedback(CardMoved)`, затем
+     * `AnnounceCardMoved`; на краю — ничего.
+     */
+    @Test
+    fun `I6-V12 the button contract of iteration 5 is unchanged`() = runTest(dispatcher) {
+        val viewModel = playingViewModel(
+            order = listOf("c1", "c2", "c3", "c4"),
+            feedback = feedbackSettings(sound = true, vibration = true),
+        )
+
+        viewModel.effects.test {
+            viewModel.onEvent(PuzzleEvent.MoveUp("c2"))
+
+            assertEquals(moved(), awaitItem())
+            assertTrue(awaitItem() is PuzzleEffect.AnnounceCardMoved)
+
+            // Край списка: ни отдачи, ни объявления.
+            viewModel.onEvent(PuzzleEvent.MoveUp("c2"))
+            viewModel.onEvent(PuzzleEvent.MoveDown("c4"))
+            expectNoEvents()
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
     // --- Инфраструктура ----------------------------------------------------------------
 
     /**
@@ -922,6 +1392,40 @@ class PuzzleViewModelTest {
         ControllablePreferences.defaults(soundEnabled = sound, vibrationEnabled = vibration),
     )
 
+    /** `SavedStateHandle` маршрута с заранее заданным порядком карточек. */
+    private fun orderedHandle(order: List<String>) = routeHandle(
+        KEY_CURRENT_ORDER to order.joinToString(","),
+        KEY_ORDER_PUZZLE_ID to PuzzleFixtures.PUZZLE_ID,
+    )
+
+    /** ViewModel в `Playing` с уже принятым жестом [G1] над карточкой [cardId]. */
+    private fun kotlinx.coroutines.test.TestScope.draggingViewModel(
+        cardId: String,
+        order: List<String>,
+    ): PuzzleViewModel {
+        val viewModel = playingViewModel(
+            order = order,
+            feedback = feedbackSettings(sound = true, vibration = true),
+        )
+        viewModel.onEvent(PuzzleEvent.DragStarted(cardId, G1))
+        return viewModel
+    }
+
+    /** Полная последовательность событий одного жеста — для проверок «ничего не произошло». */
+    private fun dragSequence(): List<PuzzleEvent> = listOf(
+        PuzzleEvent.DragStarted("c1", G1),
+        PuzzleEvent.DragMovedTo("c1", targetIndex = 3, gesture = G1),
+        PuzzleEvent.DragFinished("c1", G1),
+    )
+
+    private fun grabbed() = PuzzleEffect.Feedback(
+        FeedbackRequest(FeedbackCue.CardGrabbed, playSound = false, performHaptic = true),
+    )
+
+    private fun moved() = PuzzleEffect.Feedback(
+        FeedbackRequest(FeedbackCue.CardMoved, playSound = true, performHaptic = true),
+    )
+
     private fun routeHandle(
         vararg extras: Pair<String, Any?>,
         slotIndex: Int = 0,
@@ -947,5 +1451,12 @@ class PuzzleViewModelTest {
     private companion object {
         /** Окно, за которое реплей проявился бы, будь он у механизма эффектов. */
         const val REPLAY_PROBE_MS = 100L
+
+        /** Два разных жеста: идентификаторы сравниваются, а не пересоздаются генератором. */
+        val G1 = DragGestureId(1)
+        val G2 = DragGestureId(2)
+
+        /** Сколько раз повторяется заведомо пустая операция. */
+        const val REPEATS = 3
     }
 }

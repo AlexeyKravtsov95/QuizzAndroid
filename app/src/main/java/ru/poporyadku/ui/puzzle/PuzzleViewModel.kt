@@ -39,6 +39,15 @@ private const val ORDER_SEPARATOR = ","
 private const val LAST_SLOT_INDEX = SLOTS_PER_DAY - 1
 
 /**
+ * Откуда пришло намерение перестановки (ITERATION_6_DESIGN.md, §4.4).
+ *
+ * Различие нужно ровно для двух вещей: кнопка и custom action закрывают висящую сессию
+ * жеста и объявляют результат сразу, жест — только при завершении. Алгоритм перестановки
+ * от источника не зависит.
+ */
+private enum class MoveOrigin { Button, Drag }
+
+/**
  * ViewModel игрового экрана (ITERATION_3_DESIGN.md, раздел 11).
  *
  * Инъекции ограничены тремя use cases и `SavedStateHandle` — третий появился в
@@ -51,7 +60,13 @@ private const val LAST_SLOT_INDEX = SLOTS_PER_DAY - 1
  * они не названы и в комментарии).
  *
  * Порядок карточек — единственное, что ViewModel держит сама; он живёт в состоянии и
- * дублируется в `SavedStateHandle` строкой идентификаторов. UI список не переставляет.
+ * дублируется в `SavedStateHandle` строкой идентификаторов. UI список не переставляет —
+ * в том числе во время жеста: он присылает намерение, а не готовый порядок
+ * (ITERATION_6_DESIGN.md, §4.4, I6-D6).
+ *
+ * Все три источника перестановки — кнопки ↑/↓, custom actions и перетаскивание — идут
+ * одним путём: `PuzzleEvent` → [reorder] → `CardOrder.move` → состояние →
+ * `SavedStateHandle` → отдача (проверка `I6-K6`).
  *
  * Отдача решается здесь, а исполняется в route-контейнере: звуковой пул, `View` и
  * `HapticFeedbackConstants` во ViewModel не появляются, поэтому все комбинации настроек
@@ -99,25 +114,43 @@ class PuzzleViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Сессия перетаскивания (ITERATION_6_DESIGN.md, §4.5, I6-D9).
+     *
+     * Только в памяти и никогда в `SavedStateHandle`: после поворота, пересоздания
+     * Activity или смерти процесса пальца на экране нет.
+     *
+     * Нужна ровно для двух вещей: не отдать `CardGrabbed` дважды за **один** жест и
+     * объявить результат **этого** жеста один раз.
+     */
+    private data class DragSession(
+        val cardId: String,
+        val gesture: DragGestureId,
+        val startIndex: Int,
+    )
+
+    private var dragSession: DragSession? = null
+
     fun onEvent(event: PuzzleEvent) {
         when (event) {
-            is PuzzleEvent.MoveUp -> move(event.cardId) { index, _ -> index - 1 }
-            is PuzzleEvent.MoveDown -> move(event.cardId) { index, _ -> index + 1 }
-            is PuzzleEvent.MoveToTop -> move(event.cardId) { _, _ -> 0 }
-            is PuzzleEvent.MoveToBottom -> move(event.cardId) { _, last -> last }
+            is PuzzleEvent.MoveUp -> reorder(event.cardId, MoveTarget.Up, MoveOrigin.Button)
+            is PuzzleEvent.MoveDown -> reorder(event.cardId, MoveTarget.Down, MoveOrigin.Button)
+            is PuzzleEvent.MoveToTop -> reorder(event.cardId, MoveTarget.First, MoveOrigin.Button)
+            is PuzzleEvent.MoveToBottom -> reorder(event.cardId, MoveTarget.Last, MoveOrigin.Button)
+
+            is PuzzleEvent.DragStarted -> onDragStarted(event.cardId, event.gesture)
+            is PuzzleEvent.DragMovedTo ->
+                onDragMovedTo(event.cardId, event.targetIndex, event.gesture)
+            is PuzzleEvent.DragFinished -> onDragFinished(event.cardId, event.gesture)
 
             PuzzleEvent.Submit -> onSubmit()
             PuzzleEvent.SkipClicked -> onSkip()
             PuzzleEvent.RetryClicked -> onRetry()
             PuzzleEvent.BackPressed -> onBackPressed()
 
-            // I3-D24: жеста в итерации 3 нет, и события эти не отправляет ни один
-            // компонент. Ветка существует ровно для исчерпывающего `when`.
-            is PuzzleEvent.DragStarted,
-            is PuzzleEvent.DragMoved,
-            PuzzleEvent.DragEnded,
-            PuzzleEvent.DragHintDismissed,
-            -> Unit
+            // Подсказка перетаскивания заполняется в 6C; ветка существует ровно для
+            // исчерпывающего `when`.
+            PuzzleEvent.DragHintDismissed -> Unit
         }
     }
 
@@ -219,34 +252,40 @@ class PuzzleViewModel @Inject constructor(
                     canMoveDown = index < order.lastIndex,
                 )
             },
-            draggedCardId = null,
         )
     }
 
     /**
-     * Перестановка принимается только из `Playing`: в `Submitting` и `Error` двигать
-     * нечего, и «блокировка управления» — свойство состояния, а не флаг.
+     * **Единственная** точка изменения порядка (ITERATION_6_DESIGN.md, §4.4, I6-D4).
      *
-     * [targetIndex] получает текущий индекс карточки и индекс последней; выход за
-     * границы означает «действие неприменимо» и не меняет состояние.
+     * Кнопки ↑/↓, custom actions TalkBack и жест приходят сюда одним и тем же намерением
+     * и проходят один и тот же алгоритм [CardOrder.move] — поэтому разойтись в поведении
+     * они не могут, а «недоступная перестановка молчит» остаётся свойством потока
+     * управления, а не отдельной проверкой в каждом источнике.
+     *
+     * Принимается только из `Playing`: в `Submitting` и `Error` двигать нечего, и
+     * «блокировка управления» — свойство состояния, а не флаг.
+     *
+     * @return `true`, если порядок изменился.
      */
-    private fun move(cardId: String, targetIndex: (index: Int, lastIndex: Int) -> Int) {
-        val playing = state.value as? PuzzleUiState.Playing ?: return
+    private fun reorder(cardId: String, target: MoveTarget, origin: MoveOrigin): Boolean {
+        val playing = state.value as? PuzzleUiState.Playing ?: return false
+
+        // Кнопка и custom action закрывают висящую сессию жеста молча: подтверждённый
+        // порядок уже в состоянии, и жест, начатый до них, больше ничего не объявляет.
+        if (origin == MoveOrigin.Button) dragSession = null
+
         val cards = playing.board.cards
-        val index = cards.indexOfFirst { it.cardId == cardId }
-        if (index < 0) return
+        val order = cards.map { it.cardId }
+        val next = CardOrder.move(order, cardId, target) ?: return false
 
-        val target = targetIndex(index, cards.lastIndex)
-        if (target == index || target !in cards.indices) return
-
-        val reordered = cards.toMutableList().apply { add(target, removeAt(index)) }
-        val order = reordered.map { it.cardId }
+        val byId = cards.associateBy { it.cardId }
         val board = playing.board.copy(
-            cards = reordered.mapIndexed { position, card ->
-                card.copy(
+            cards = next.mapIndexed { position, id ->
+                requireNotNull(byId[id]) { "порядок содержит чужой cardId: $id" }.copy(
                     position = position + 1,
                     canMoveUp = position > 0,
-                    canMoveDown = position < reordered.lastIndex,
+                    canMoveDown = position < next.lastIndex,
                 )
             },
         )
@@ -254,21 +293,79 @@ class PuzzleViewModel @Inject constructor(
 
         // Немедленно, оба ключа сразу: после смерти процесса восстанавливается ровно то,
         // что пользователь видел.
-        savedStateHandle[KEY_CURRENT_ORDER] = order.joinToString(ORDER_SEPARATOR)
+        savedStateHandle[KEY_CURRENT_ORDER] = next.joinToString(ORDER_SEPARATOR)
         savedStateHandle[KEY_ORDER_PUZZLE_ID] = board.puzzleId
 
-        // Только здесь — после фактического изменения порядка: ранние выходы выше
-        // (не `Playing`, чужой cardId, край списка) отдачу не порождают, и «недоступная
-        // перестановка молчит» — свойство потока управления, а не отдельная проверка.
+        // Не больше одной отдачи на подтверждённую перестановку: сюда попадают только
+        // ненулевые результаты `CardOrder.move`.
         emitFeedback(FeedbackCue.CardMoved)
 
+        // Во время жеста объявлений нет: TalkBack прочитал бы каждое пересечение порога.
+        // Жест объявляет один раз, при завершении (I6-D16).
+        if (origin == MoveOrigin.Button) announce(cardId, next)
+        return true
+    }
+
+    /** «{Название} перемещён на позицию N из 4» — структурой, текст собирает route (I3-D25). */
+    private fun announce(cardId: String, order: List<String>) {
+        val board = (state.value as? PuzzleUiState.Playing)?.board ?: return
+        val card = board.cards.firstOrNull { it.cardId == cardId } ?: return
         emitEffect(
             PuzzleEffect.AnnounceCardMoved(
-                cardTitle = cards[index].title,
-                position = target + 1,
-                totalPositions = reordered.size,
+                cardTitle = card.title,
+                position = order.indexOf(cardId) + 1,
+                totalPositions = order.size,
             ),
         )
+    }
+
+    // --- Жест перетаскивания -----------------------------------------------------------
+
+    /**
+     * Начало жеста (I6-D9, I6-D14).
+     *
+     * Повтор начала **того же** жеста игнорируется — второй отдачи захвата не будет.
+     * Любая другая сессия, в том числе жест той же карточки из уничтоженного UI,
+     * заменяется целиком: `startIndex` берётся заново, а прежний идентификатор больше
+     * ничего не закроет и не объявит.
+     */
+    private fun onDragStarted(cardId: String, gesture: DragGestureId) {
+        val playing = state.value as? PuzzleUiState.Playing ?: return
+        val index = playing.board.cards.indexOfFirst { it.cardId == cardId }
+        if (index < 0) return
+        if (dragSession?.gesture == gesture) return
+
+        dragSession = DragSession(cardId, gesture, index)
+        emitFeedback(FeedbackCue.CardGrabbed)
+    }
+
+    /**
+     * Пересечён порог перестановки. Цель абсолютная, поэтому повтор той же цели — пустая
+     * операция: `CardOrder.move` вернёт `null`, и ни состояние, ни `SavedStateHandle`, ни
+     * отдача не тронуты (I6-D3).
+     */
+    private fun onDragMovedTo(cardId: String, targetIndex: Int, gesture: DragGestureId) {
+        val session = dragSession ?: return
+        if (session.gesture != gesture || session.cardId != cardId) return
+        reorder(cardId, MoveTarget.Index(targetIndex), MoveOrigin.Drag)
+    }
+
+    /**
+     * Завершение жеста: отпускание, отмена и потеря указателя — одинаково (I6-D8).
+     *
+     * Событие чужого или устаревшего жеста не закрывает текущую сессию и не объявляет
+     * её результат: сравнивается пара `cardId` + [DragGestureId].
+     */
+    private fun onDragFinished(cardId: String, gesture: DragGestureId) {
+        val session = dragSession ?: return
+        if (session.gesture != gesture || session.cardId != cardId) return
+        dragSession = null
+
+        val playing = state.value as? PuzzleUiState.Playing ?: return
+        val order = playing.board.cards.map { it.cardId }
+        // Ровно одно объявление и только если позиция отличается от начала ЭТОГО жеста:
+        // вернувшаяся на место карточка сообщать не о чем.
+        if (order.indexOf(cardId) != session.startIndex) announce(cardId, order)
     }
 
     // --- Отправка --------------------------------------------------------------------
@@ -280,6 +377,9 @@ class PuzzleViewModel @Inject constructor(
      */
     private fun onSubmit() {
         val playing = state.value as? PuzzleUiState.Playing ?: return
+        // Открытая сессия закрывается молча: отправляется последний подтверждённый
+        // порядок, а запоздалое завершение жеста уже ничего не объявит.
+        dragSession = null
         val submission = Submission.Answer(playing.board.cards.map { it.cardId })
         state.value = PuzzleUiState.Submitting.Answer(playing.board, submission)
         submit(submission, playing.board)

@@ -30,6 +30,20 @@ class AndroidFeedbackPlayer(
     }
 
     private fun hapticFor(cue: FeedbackCue): Int = when (cue) {
+        // Захват (ITERATION_6_DESIGN.md, §6.1, I6-D14): системные константы начала
+        // перетаскивания и начала жеста, сверено по api-versions.xml compileSdk 37 —
+        // DRAG_START since="34", GESTURE_START since="30". Ниже 30 ближайший системный
+        // отклик «взял» — VIRTUAL_KEY. Своей длительности вибрации нет нигде.
+        FeedbackCue.CardGrabbed -> when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE ->
+                HapticFeedbackConstants.DRAG_START
+
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.R ->
+                HapticFeedbackConstants.GESTURE_START
+
+            else -> HapticFeedbackConstants.VIRTUAL_KEY
+        }
+
         // Щелчок «шага» — ровно то, чем система озвучивает перемещение в списке.
         FeedbackCue.CardMoved -> HapticFeedbackConstants.CLOCK_TICK
 

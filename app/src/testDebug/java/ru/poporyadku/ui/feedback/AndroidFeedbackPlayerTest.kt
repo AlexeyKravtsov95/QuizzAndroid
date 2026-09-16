@@ -51,6 +51,69 @@ class AndroidFeedbackPlayerTest {
         assertEquals(HapticFeedbackConstants.CLOCK_TICK, shadowOf(view).lastHapticFeedbackPerformed())
     }
 
+    /**
+     * `I6-F2`. Захват на API 34+ — `DRAG_START`: константа начала перетаскивания появилась
+     * ровно там (api-versions.xml, `since="34"`).
+     */
+    @Test
+    @Config(sdk = [Build.VERSION_CODES.UPSIDE_DOWN_CAKE])
+    fun `I6-F2 card grabbed performs drag start on api 34`() {
+        player.play(FeedbackRequest(FeedbackCue.CardGrabbed, playSound = false, performHaptic = true))
+
+        assertEquals(HapticFeedbackConstants.DRAG_START, shadowOf(view).lastHapticFeedbackPerformed())
+    }
+
+    /** `I6-F2`. На API 30–33 `DRAG_START` ещё нет: ближайшее — `GESTURE_START` (`since="30"`). */
+    @Test
+    @Config(sdk = [Build.VERSION_CODES.R])
+    fun `I6-F2 card grabbed performs gesture start on api 30`() {
+        player.play(FeedbackRequest(FeedbackCue.CardGrabbed, playSound = false, performHaptic = true))
+
+        assertEquals(
+            HapticFeedbackConstants.GESTURE_START,
+            shadowOf(view).lastHapticFeedbackPerformed(),
+        )
+    }
+
+    /** `I6-F2`. На API 26–29 нет ни того, ни другого: системный отклик «взял» — `VIRTUAL_KEY`. */
+    @Test
+    @Config(sdk = [Build.VERSION_CODES.Q])
+    fun `I6-F2 card grabbed performs virtual key on api 29`() {
+        player.play(FeedbackRequest(FeedbackCue.CardGrabbed, playSound = false, performHaptic = true))
+
+        assertEquals(
+            HapticFeedbackConstants.VIRTUAL_KEY,
+            shadowOf(view).lastHapticFeedbackPerformed(),
+        )
+    }
+
+    /**
+     * `I6-F2`. У захвата звука нет, и звуковой канал его не получает даже тогда, когда
+     * исполнителю передали `playSound = true` (такого запроса `FeedbackPolicy` не создаёт,
+     * но исполнитель не должен ронять его в звук по ошибке вызова).
+     */
+    @Test
+    fun `I6-F2 card grabbed never reaches the sound channel through the policy`() {
+        player.play(FeedbackRequest(FeedbackCue.CardGrabbed, playSound = false, performHaptic = true))
+
+        assertTrue("захват не звучит", sounds.played.isEmpty())
+    }
+
+    /**
+     * `I6-F2`. `SoundCueBank.play(CardGrabbed)` без звукового ресурса завершается молча:
+     * ни исключения, ни воспроизведения. Карта звуков ради беззвучного повода не
+     * расширяется — третий OGG-файл в проекте не появляется.
+     */
+    @Test
+    fun `I6-F2 playing a cue without a sound resource is safe`() {
+        val engine = FakeSoundEngine()
+        val bank = loadedBank(engine)
+
+        bank.play(FeedbackCue.CardGrabbed)
+
+        assertTrue("беззвучный cue ничего не проигрывает", engine.played.isEmpty())
+    }
+
     /** `CONFIRM` существует с API 30 — на 30 и выше используется он. */
     @Test
     @Config(sdk = [Build.VERSION_CODES.R])
