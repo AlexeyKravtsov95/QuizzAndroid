@@ -283,58 +283,76 @@ class PuzzleDragTest {
      */
     @Test
     @Config(qualifiers = "w320dp-h400dp")
-    fun `I6-C6 holding the card at the bottom edge auto scrolls and keeps it under the finger`() {
+    fun `I6-C6 holding the card at the bottom edge auto scrolls frame by frame`() {
         val harness = Harness()
+        // Часы остановлены: кадры выдаёт тест, поэтому наблюдаются промежуточные кадры
+        // цикла авто-прокрутки, а не только его итог.
+        rule.mainClock.autoAdvance = false
         rule.setContent { harness.Content() }
+        rule.waitForIdle()
 
         val topBeforeDrag = cardTop("c1")
         val scrollBefore = scrollOffset()
         val fingerDelta = with(rule.density) { BOTTOM_EDGE_DRAG.toPx() }
 
-        // Палец уходит в нижнюю краевую зону и **останавливается**: всё дальнейшее
-        // движение списка выполняет кадровый цикл авто-прокрутки, а не жест.
+        // Палец уходит в нижнюю краевую зону и **останавливается**: всё движение списка
+        // ниже выполняет кадровый цикл, а не жест.
         rule.onNodeWithTag(PuzzleTestTags.dragHandle("c1"), useUnmergedTree = true)
             .performTouchInput {
                 down(center)
                 moveBy(Offset(0f, fingerDelta))
             }
-        // Цикл крутится на часах теста и сам останавливается, когда список упирается в
-        // конец: покадровая подача здесь не используется — при остановленных часах
-        // Robolectric жест стартует, но цикл авто-прокрутки не запускается вовсе, и
-        // проверка стала бы проверкой окружения. Настоящая покадровая динамика закрыта
-        // `I6-N1`…`I6-N3` и ручной `I6-M1` на эмуляторе.
+        // Единственное ожидание за весь жест. Оно нужно ровно для запуска цикла: цикл
+        // открывается `snapshotFlow`, а уведомления снапшота в этом окружении доставляет
+        // `waitForIdle`, не кадр — проверено изолированно (пустой цикл `withFrameNanos`
+        // кадрами идёт, тот же цикл за `snapshotFlow` без `waitForIdle` не стартует).
+        // Само движение списка дальше — только кадрами.
         rule.waitForIdle()
 
-        val scrolled = scrollOffset()
-        val scrolledToEnd = canScrollForward()
+        // Замеры между пачками кадров: прокрутка и положение поднятой карточки.
+        val samples = List(CHECKPOINTS) {
+            repeat(FRAMES_PER_CHECKPOINT) { rule.mainClock.advanceTimeByFrame() }
+            scrollOffset() to cardTop("c1")
+        }
         val orderWhileHeld = harness.order()
-        val topWhileHeld = cardTop("c1")
+        val reachedEnd = !canScrollForward()
 
+        // Жест отпускается ДО утверждений: незакрытый жест оставил бы кадровый цикл
+        // работать на время разбора теста.
         rule.onNodeWithTag(PuzzleTestTags.dragHandle("c1"), useUnmergedTree = true)
             .performTouchInput { up() }
         rule.waitForIdle()
         val afterRelease = scrollOffset()
-        rule.mainClock.advanceTimeBy(IDLE_WINDOW_MS)
-        rule.waitForIdle()
-        val afterIdle = scrollOffset()
+        repeat(FRAMES_PER_CHECKPOINT) { rule.mainClock.advanceTimeByFrame() }
+        val afterIdleFrames = scrollOffset()
 
-        // Прокрутка действительно потреблена списком.
-        assertTrue("авто-прокрутка не сдвинула список: $scrollBefore → $scrolled", scrolled > scrollBefore)
-        // И она компенсирована в тех же кадрах: карточка стоит ровно там, куда её привёл
-        // палец. Некомпенсированный кадр прокрутки сместил бы её на свою долю пути, а за
-        // всю прокрутку — на её полную величину.
-        assertEquals(
-            "карточка ушла из-под пальца (прокручено $scrolled)",
-            topBeforeDrag + fingerDelta,
-            topWhileHeld,
-            with(rule.density) { DRAG_MARGIN.toPx() },
+        // 1. Прокрутка растёт от кадра к кадру и никогда не идёт назад.
+        assertTrue(
+            "первая же пачка кадров обязана прокрутить список: $scrollBefore → ${samples.first().first}",
+            samples.first().first > scrollBefore,
         )
-        // Последняя пройденная карточка подтверждена **до** остановки цикла у конца
-        // списка: поднятая карточка стоит последней.
-        assertFalse("список обязан дойти до конца", scrolledToEnd)
+        samples.zipWithNext { (previous, _), (next, _) ->
+            assertTrue("прокрутка пошла назад: ${samples.map { it.first }}", next >= previous)
+        }
+        assertTrue(
+            "прокрутка обязана продолжаться между кадрами: ${samples.map { it.first }}",
+            samples.last().first > samples.first().first,
+        )
+
+        // 2. Потреблённая прокрутка компенсируется в тех же кадрах: карточка стоит под
+        // пальцем всё время удержания, а не отстаёт от него на кадр.
+        val expectedTop = topBeforeDrag + fingerDelta
+        val tolerance = with(rule.density) { DRAG_MARGIN.toPx() }
+        samples.forEach { (scroll, top) ->
+            assertEquals("карточка ушла из-под пальца на прокрутке $scroll", expectedTop, top, tolerance)
+        }
+
+        // 3. Последняя цель подтверждена — у конца списка, до остановки цикла.
+        assertTrue("список обязан дойти до конца", reachedEnd)
         assertEquals(listOf("c2", "c3", "c4", "c1"), orderWhileHeld)
-        // После отпускания цикл остановлен: время идёт, список стоит.
-        assertEquals("после отпускания цикл остановлен", afterRelease, afterIdle, CARD_TOLERANCE_PX)
+
+        // 4. После отпускания новые кадры ничего не меняют.
+        assertEquals("после отпускания цикл остановлен", afterRelease, afterIdleFrames, CARD_TOLERANCE_PX)
     }
 
     // --- I6-C7 -------------------------------------------------------------------------
@@ -500,6 +518,16 @@ class PuzzleDragTest {
         const val SECOND_POINTER = 1
 
         const val FONT_SCALE_200 = 2.0f
+
+        /** Замеров за время удержания; между ними — по [FRAMES_PER_CHECKPOINT] кадров. */
+        const val CHECKPOINTS = 8
+
+        /**
+         * Кадров между замерами. Пачками, а не покадрово: запрос семантики стоит ожидания,
+         * а доказывается неподвижность карточки на протяжении прокрутки и рост самой
+         * прокрутки, а не поведение каждого отдельного кадра.
+         */
+        const val FRAMES_PER_CHECKPOINT = 30
 
         /** Окно времени, за которое остановленный цикл проявил бы себя прокруткой. */
         const val IDLE_WINDOW_MS = 500L
