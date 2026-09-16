@@ -47,6 +47,19 @@ class UserPreferencesRepositoryImpl @Inject constructor(
         dataStore.edit { it[PreferenceKeys.REMINDER_MINUTE_OF_DAY] = minutes }
     }
 
+    // ITERATION_6_DESIGN.md, I6-D2/I6-D40: три значения согласия пишутся ОДНИМ edit, по
+    // образцу setInstalledContent и updateStreakCache. Промежуточной эмиссии с частью
+    // значений не существует: DataStore применяет трансформацию целиком или не применяет.
+    override suspend fun acceptReminderPrompt(time: LocalTime) {
+        val minutes = time.hour * 60 + time.minute
+        require(minutes in 0..MAX_MINUTE_OF_DAY) { "время напоминания вне 0..$MAX_MINUTE_OF_DAY: $minutes" }
+        dataStore.edit { prefs ->
+            prefs[PreferenceKeys.NOTIFICATION_PROMPT_SHOWN] = true
+            prefs[PreferenceKeys.REMINDER_MINUTE_OF_DAY] = minutes
+            prefs[PreferenceKeys.REMINDER_ENABLED] = true
+        }
+    }
+
     override suspend fun setThemeMode(mode: ThemeMode) {
         dataStore.edit { it[PreferenceKeys.THEME_MODE] = mode.name }
     }

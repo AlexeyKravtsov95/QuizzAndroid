@@ -1,5 +1,6 @@
 package ru.poporyadku.ui.platform
 
+import ru.poporyadku.domain.reminder.NotificationSettingsTarget
 import ru.poporyadku.ui.report.MailDraft
 
 /**
@@ -40,6 +41,19 @@ interface ExternalApps {
      * @param chooserTitle заголовок системного выбора.
      */
     fun shareText(text: String, chooserTitle: String): LaunchResult
+
+    /**
+     * Открыть системные настройки уведомлений (ITERATION_6_DESIGN.md, §8.2, I6-D36).
+     *
+     * Доступности не спрашивается: оба системных действия существуют с API 26, а
+     * `<queries>` для системных настроек не нужны. Цель выбирается по причине отказа —
+     * при заглушённом канале настройки приложения показали бы включённые уведомления и
+     * запутали бы пользователя.
+     *
+     * @param target `App` — экран уведомлений приложения; `Channel` — экран канала
+     *  напоминания.
+     */
+    fun openNotificationSettings(target: NotificationSettingsTarget): LaunchResult
 }
 
 /** Исход запуска внешнего действия. Ни один исход не роняет экран. */

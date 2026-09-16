@@ -200,6 +200,25 @@
     <string name="settings_group_sound">Звук и вибрация</string>
     <string name="settings_sound">Звук</string>
     <string name="settings_vibration">Вибрация</string>
+    <!--
+      Напоминание (ITERATION_6_DESIGN.md, §8.1, §8.6, PR 6B). Группа стоит между «Звук и
+      вибрация» и «Тема» — порядок DESIGN_PRINCIPLES.md §3. Тексты подтверждены
+      владельцем 2026-09-15: O6-3 (группа, «Сохранить»/«Отмена»), O6-4 (единая подсказка
+      недоступности и действие). Три строки времени — предложения таблицы 8.6.
+    -->
+    <string name="settings_group_reminder">Напоминание</string>
+    <string name="settings_reminder">Напоминание</string>
+    <string name="settings_reminder_time">Время</string>
+    <!-- Формат H:mm, 24 часа: часы без ведущего нуля, минуты всегда двумя цифрами. -->
+    <string name="settings_reminder_time_value">%1$d:%2$02d</string>
+    <string name="cd_settings_reminder_time">Время напоминания, %1$s</string>
+    <!-- Единый текст для всех трёх причин недоступности (O6-4): пользователю не нужно
+         различать разрешение, уведомления приложения и канал. -->
+    <string name="settings_reminder_permission_hint">Разрешите уведомления в настройках системы</string>
+    <string name="settings_reminder_open_system">Открыть настройки уведомлений</string>
+    <string name="reminder_time_confirm">Сохранить</string>
+    <string name="reminder_time_cancel">Отмена</string>
+
     <string name="settings_group_theme">Тема</string>
     <string name="settings_theme_system">Как в системе</string>
     <string name="settings_theme_light">Светлая</string>
@@ -243,6 +262,19 @@
     <!-- Формат счёта: «N из 18» (день) и «N из 6» (одно задание) -->
     <string name="score_of_day">%1$d из 18</string>
     <string name="score_of_slot">%1$d из 6</string>
+
+    <!--
+      Предложение включить напоминание на итоге дня и само уведомление
+      (ITERATION_6_DESIGN.md, §8.3, §8.4, §8.6, PR 6B). Вопрос и обе кнопки — дословно из
+      UX_FLOW.md §2; тексты канала и уведомления подтверждены владельцем 2026-09-15 (O6-2).
+      Заголовок уведомления — app_name, отдельной строки не заводится.
+    -->
+    <string name="reminder_prompt_question">Напоминать о новом задании?</string>
+    <string name="reminder_prompt_accept">Да, в 9:00</string>
+    <string name="reminder_prompt_decline">Не нужно</string>
+    <string name="reminder_channel_name">Напоминание о заданиях</string>
+    <string name="reminder_channel_description">Одно напоминание в день в выбранное время</string>
+    <string name="reminder_notification_text">Три новых задания готовы</string>
 
     <!--
       Склонение выбирается по правилам ЛОКАЛИ УСТРОЙСТВА, а не по языку самих строк.

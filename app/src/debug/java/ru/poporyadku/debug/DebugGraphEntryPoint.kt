@@ -9,6 +9,7 @@ import ru.poporyadku.domain.repository.DailySetRepository
 import ru.poporyadku.domain.repository.DayAssignmentRepository
 import ru.poporyadku.domain.repository.ProgressRepository
 import ru.poporyadku.domain.repository.PuzzleRepository
+import ru.poporyadku.domain.repository.UserPreferencesRepository
 
 /**
  * Доступ к продуктовым синглтонам графа приложения из debug-сборки.
@@ -44,4 +45,10 @@ interface DebugGraphEntryPoint {
     fun progress(): ProgressRepository
     fun puzzles(): PuzzleRepository
     fun sets(): DailySetRepository
+
+    /** Настройки — подготовка состояния напоминания в `I6-N6` (ITERATION_6_DESIGN.md, §14.4). */
+    fun preferences(): UserPreferencesRepository
+
+    /** Путь напоминания: приёмник и единственная операция синхронизации. */
+    fun reminderHooks(): ReminderTestHooks
 }

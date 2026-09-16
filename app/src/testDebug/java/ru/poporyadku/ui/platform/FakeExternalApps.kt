@@ -1,5 +1,6 @@
 package ru.poporyadku.ui.platform
 
+import ru.poporyadku.domain.reminder.NotificationSettingsTarget
 import ru.poporyadku.ui.report.MailDraft
 
 /**
@@ -22,6 +23,9 @@ class FakeExternalApps(
     /** Каждый шеринг: текст карточки и заголовок системного выбора. */
     val sharedTexts = mutableListOf<Pair<String, String>>()
 
+    /** Каждый переход в системные настройки уведомлений — в порядке вызова (I6-D36). */
+    val notificationSettingsTargets = mutableListOf<NotificationSettingsTarget>()
+
     override fun canViewUrl(url: String): Boolean {
         viewQueries += url
         return canView(url)
@@ -42,6 +46,12 @@ class FakeExternalApps(
     /** Системный выбор доступен всегда: доступность у шеринга не спрашивается. */
     override fun shareText(text: String, chooserTitle: String): LaunchResult {
         sharedTexts += text to chooserTitle
+        return LaunchResult.Launched
+    }
+
+    /** Системные настройки доступны всегда: доступность у них не спрашивается. */
+    override fun openNotificationSettings(target: NotificationSettingsTarget): LaunchResult {
+        notificationSettingsTargets += target
         return LaunchResult.Launched
     }
 }

@@ -1,5 +1,6 @@
 package ru.poporyadku.ui.settings
 
+import ru.poporyadku.domain.reminder.NotificationSettingsTarget
 import ru.poporyadku.ui.report.ReportContext
 
 /**
@@ -13,4 +14,14 @@ sealed interface SettingsEffect {
 
     /** Общий канал без привязки к головоломке: `context.puzzleId == null`. */
     data class ComposeReport(val context: ReportContext) : SettingsEffect
+
+    /**
+     * Запустить системный запрос `POST_NOTIFICATIONS` (ITERATION_6_DESIGN.md, §8.2).
+     * Создаётся **только** при `RuntimePermissionMissing`: при выключенных уведомлениях
+     * приложения или заглушённом канале запрос ничего не изменил бы.
+     */
+    data object RequestNotificationPermission : SettingsEffect
+
+    /** Открыть системные настройки уведомлений приложения или канала. */
+    data class OpenNotificationSettings(val target: NotificationSettingsTarget) : SettingsEffect
 }

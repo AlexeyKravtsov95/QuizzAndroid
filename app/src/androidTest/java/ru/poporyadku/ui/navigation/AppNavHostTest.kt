@@ -8,6 +8,7 @@ import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
@@ -43,6 +44,7 @@ import ru.poporyadku.core.model.puzzleIdAt
 import ru.poporyadku.data.db.entity.DayAssignmentEntity
 import ru.poporyadku.debug.DebugGraphEntryPoint
 import ru.poporyadku.ui.archive.ArchiveTestTags
+import ru.poporyadku.ui.components.NotificationOptInTestTags
 import ru.poporyadku.ui.home.HomeTestTags
 import ru.poporyadku.ui.puzzle.PuzzleTestTags
 import ru.poporyadku.ui.puzzleresult.PuzzleResultTestTags
@@ -237,6 +239,27 @@ class AppNavHostTest {
      * появления кнопки: при крупном системном шрифте первый кадр приходит заметно позже,
      * а на чистой базе первый расчёт включает полный импорт пакета.
      */
+    /**
+     * Закрыть предложение напоминания, если оно показано (PR 6B, `I6-D40`). Ответ —
+     * «Не нужно»: напоминание не включается и системное разрешение не запрашивается,
+     * поэтому навигационный тест остаётся про навигацию.
+     */
+    private fun dismissReminderPromptIfShown() {
+        val shown = composeTestRule
+            .onAllNodesWithTag(NotificationOptInTestTags.DECLINE)
+            .fetchSemanticsNodes()
+            .isNotEmpty()
+        if (!shown) return
+
+        composeTestRule.onNodeWithTag(NotificationOptInTestTags.DECLINE).performClick()
+        composeTestRule.waitUntil(ROUTE_TIMEOUT_MS) {
+            composeTestRule
+                .onAllNodesWithTag(NotificationOptInTestTags.DIALOG)
+                .fetchSemanticsNodes()
+                .isEmpty()
+        }
+    }
+
     private fun awaitHomeCta() {
         composeTestRule.waitUntil(HOME_TIMEOUT_MS) {
             composeTestRule.onAllNodes(hasTestTag(HomeTestTags.PRIMARY_BUTTON))
@@ -390,6 +413,13 @@ class AppNavHostTest {
         assertNull("сессионный итог — без origin", currentOrigin())
         composeTestRule.onNodeWithTag(DayRecapTestTags.SCORE_BADGE).assertExists()
         assertEquals("день закрыт ровно тремя попытками", SLOTS_PER_DAY, attemptCount())
+
+        // PR 6B: над сессионным итогом ПЕРВОГО завершённого дня появляется предложение
+        // напоминания (ITERATION_6_DESIGN.md, I6-D40). Диалог модальный, и системная
+        // «назад» закрывает сначала его, а не экран, — поэтому здесь он закрывается явно.
+        // Утверждение самого теста не ослаблено: «назад» с итога по-прежнему обязана
+        // привести на существующий Home.
+        dismissReminderPromptIfShown()
 
         Espresso.pressBackUnconditionally()
         awaitRoute(Destinations.HOME)

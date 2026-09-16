@@ -30,6 +30,22 @@ interface UserPreferencesRepository {
      */
     suspend fun setInstalledContent(contentVersion: Int, fingerprint: String)
 
+    /**
+     * Согласие на напоминание с итога дня (ITERATION_6_DESIGN.md, §8.3, I6-D2, I6-D40).
+     *
+     * Один `edit`, три значения: `notificationPromptShown = true`, `reminderTime = time`,
+     * `reminderEnabled = true`. Ключи DataStore не добавляются — все три существуют.
+     *
+     * Отдельных вызовов трёх сеттеров нет намеренно: частично записанное согласие
+     * («отметка есть, напоминание выключено») означало бы состояние, которое пришлось бы
+     * восстанавливать отдельной веткой после смерти процесса. Возвращается **после**
+     * записи — только тогда согласие считается данным и только тогда вызывающий имеет
+     * право создавать внешний эффект (системный запрос разрешения).
+     *
+     * @param time время напоминания; диапазон проверяется реализацией, как у [setReminderTime].
+     */
+    suspend fun acceptReminderPrompt(time: LocalTime)
+
     suspend fun setHasSeenDragHint(seen: Boolean)
     suspend fun setHasSeenScoringHint(seen: Boolean)
     suspend fun setHasCompletedFirstDay(completed: Boolean)

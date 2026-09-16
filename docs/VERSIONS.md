@@ -25,14 +25,14 @@
 | Robolectric | 4.16.1, подключено с итерации 2 | [github.com/robolectric/robolectric](https://github.com/robolectric/robolectric) | 2026-08-31 | Последний стабильный на 2026-08-31 (21.01.2026); ветка 4.17 существует только как `4.17-beta-4` — нестабильные версии не пинуются. `targetSdk = 37` неизвестен Robolectric 4.16.1, поэтому `app/src/test/resources/robolectric.properties` фиксирует `sdk=35` явно (`ITERATION_2_DESIGN.md`, D-2) |
 | `org.jetbrains.kotlinx:kotlinx-coroutines-test` | 1.11.0, подключено с итерации 2 | Maven Central `maven-metadata.xml` | 2026-08-31 | Последний стабильный релиз; используется в тестах Room/DAO на корутинах |
 | `androidx.test:core` | 1.7.0, подключено с итерации 2 | [developer.android.com/jetpack/androidx/releases/test](https://developer.android.com/jetpack/androidx/releases/test) | 2026-08-31 | Стабильный релиз; нужен для `ApplicationProvider` в Robolectric-тестах |
-| DataStore (Preferences) | 1.2.1 (в version catalog, не подключено) | [developer.android.com/jetpack/androidx/releases/datastore](https://developer.android.com/jetpack/androidx/releases/datastore) | 2026-08-30 | Последний стабильный релиз (11.03.2026); более новые 1.3.0-alpha* — не стабильны, не пинуются |
-| WorkManager | 2.11.2 (в version catalog, не подключено) | [developer.android.com/jetpack/androidx/releases/work](https://developer.android.com/jetpack/androidx/releases/work) | 2026-08-30 | Последний стабильный релиз (25.03.2026). WorkManager 2.11+ поднял минимальный `minSdk` до API 23 — совместимо с `minSdk = 26` проекта |
+| DataStore (Preferences) | 1.2.1, **подключено** с итерации 2 (PR 2C) | [developer.android.com/jetpack/androidx/releases/datastore](https://developer.android.com/jetpack/androidx/releases/datastore) | 2026-08-30 | Последний стабильный релиз (11.03.2026); более новые 1.3.0-alpha* — не стабильны, не пинуются |
+| WorkManager (`work-runtime-ktx`) | 2.11.2, **подключено** с итерации 6 (PR 6B) | [developer.android.com/jetpack/androidx/releases/work](https://developer.android.com/jetpack/androidx/releases/work) | **2026-09-16** (повторная сверка перед подключением) | Последний стабильный релиз — по-прежнему 2.11.2 (25.03.2026): версия итерации 0 **пересмотра не потребовала** и не менялась. На странице релизов существует более новая линия 2.12.0 (`rc01` от 12.08.2026), но она не стабильна и не пинуется — правило итерации 0 без изменений. WorkManager 2.11+ поднял минимальный `minSdk` до API 23 — совместимо с `minSdk = 26` проекта. Подключён ровно один артефакт: `hilt-work` не нужен (зависимости worker'ов приходят через `EntryPointAccessors` уже подключённого `hilt-android`, **I6-D25**), `work-testing` не нужен (логика проверяется на чистых объектах и на настоящем WorkManager в `androidTest`, `I6-N6`) |
 | kotlinx-serialization (`kotlinx-serialization-json`) | 1.11.0, **подключено** с итерации 4 (PR 4B) | [github.com/Kotlin/kotlinx.serialization/releases](https://github.com/Kotlin/kotlinx.serialization/releases) | 2026-09-03 | Релиз 09.04.2026, собран на Kotlin 2.3.20. **Совместимость с Kotlin 2.4.10 проекта подтверждена эмпирически** в PR 4B: `./gradlew :app:assembleDebug` и `./gradlew :app:assembleRelease` зелёные, `@Serializable`-классы `data/content/dto/**` и `data/db/json/**` компилируются и работают под R8 в release. Потребители — только `data/content` и `data/db`; в `domain` библиотека не попадает (`ITERATION_4_DESIGN.md` §8.2) |
 | Kotlin Serialization compiler plugin (`org.jetbrains.kotlin.plugin.serialization`) | 2.4.10, **подключено** с итерации 4 (PR 4B) | [kotlinlang.org/docs/serialization.html](https://kotlinlang.org/docs/serialization.html) — плагин публикуется вместе с компилятором Kotlin и версионируется его версией | 2026-09-03 | Версия **следует версии Kotlin проекта** (`version.ref = "kotlin"`), иначе плагин компилятора и компилятор разойдутся. **Совместимость со встроенным Kotlin AGP 9.3.2 проверена эмпирически** в PR 4B: плагин применяется рядом с `org.jetbrains.kotlin.plugin.compose` и `com.android.legacy-kapt`, обе сборки (`assembleDebug`, `assembleRelease`) проходят, ручные сериализаторы как fallback не понадобились |
 | JUnit | 4.13.2 | [github.com/junit-team/junit4/releases](https://github.com/junit-team/junit4/releases) — официальный репозиторий сопровождающих JUnit 4 | 2026-08-30 | Подключено (`testImplementation`), актуальная стабильная версия линии JUnit 4 (JUnit 5 не используется — не требуется для текущей стратегии тестирования `ARCHITECTURE.md`) |
 | AndroidX Test (core/runner/ext.junit) | core/runner 1.7.0, ext.junit 1.3.0 | [developer.android.com/jetpack/androidx/releases/test](https://developer.android.com/jetpack/androidx/releases/test) | 2026-08-30 | `androidx-test-ext-junit` (1.3.0) уже подключено и совпадает; core/runner 1.7.0 в проект напрямую не подключены отдельными записями (транзитивно достаточно для текущих тестов) |
 | Espresso | 3.7.0 | [developer.android.com/jetpack/androidx/releases/test](https://developer.android.com/jetpack/androidx/releases/test) | 2026-08-30 | Подключено (`androidTestImplementation`), используется в `AppNavHostTest` через `Espresso.pressBackUnconditionally()` |
-| Turbine | 1.2.1 (в version catalog, не подключено) | [github.com/cashapp/turbine/releases](https://github.com/cashapp/turbine/releases) | 2026-08-30 | Релиз 11.06.2026; понадобится для тестирования `Flow` в итерации 2+ |
+| Turbine | 1.2.1, **подключено** с итерации 2 (PR 2C) | [github.com/cashapp/turbine/releases](https://github.com/cashapp/turbine/releases) | 2026-08-30 | Релиз 11.06.2026; используется для тестирования `Flow` с итерации 2 |
 | compileSdk | 37 | [developer.android.com/about/versions/17/setup-sdk](https://developer.android.com/about/versions/17/setup-sdk) | 2026-08-30 | Совпадает с требованием Compose 1.12 (минимум compileSdk 37) |
 | targetSdk | 37 | Соответствует `compileSdk` — рекомендация Google target latest | 2026-08-30 | RuStore не публикует отдельного обязательного минимума `targetSdk` (см. ниже) |
 | minSdk | 26 | `ARCHITECTURE.md`, ADR-009 | 2026-08-30 | Подтверждено без изменений: `java.time` без десугаринга, каналы уведомлений и адаптивные иконки нативно; RuStore-специфичная статистика распределения версий Android недоступна публично на момент проверки (см. ниже) |
@@ -112,6 +112,26 @@ feedback_accept.ogg  949cf38fb518fe95ff294e4b497951c68588608f44e51271fbf7418ed2f
 SHA-256 фиксируются, чтобы «те же файлы» было утверждением, а не воспоминанием: подмена или случайное перекодирование обнаруживаются сверкой, а не на слух.
 
 Параметры подтверждены эмпирически 2026-09-12: контейнер, кодек, число каналов и частота — `afinfo`; длительность, размер и пик — декодированием в PCM 16 бит и измерением максимальной амплитуды. Дополнительно проверена работа на Android 15 (эмулятор Pixel 9a): при запуске приложения оба файла загружаются в `SoundPool`, системный декодер `c2.android.vorbis.decoder` создаётся дважды и не сообщает ни одной ошибки.
+
+---
+
+## Графические ресурсы
+
+Итерация 6, PR 6B. Иконка приложения (адаптивная) — итерация 6, PR 6D; на момент 6B не создаётся.
+
+### Иконка уведомления `ic_stat_reminder`
+
+| Поле | Значение |
+| --- | --- |
+| Файл | `app/src/main/res/drawable/ic_stat_reminder.xml` |
+| Происхождение | **original project asset, created for PoPoRyadku** — векторный `pathData`, нарисованный для этого проекта в PR 6B |
+| Внешний источник | отсутствует |
+| Лицензия | отсутствует: сторонний материал не использован, права принадлежат проекту |
+| Формат | `VectorDrawable`, 24 × 24 dp, `viewport` 24 × 24 |
+| Цвет | одноцветный `#FFFFFFFF`, фон прозрачный — система рисует малую иконку силуэтом по альфа-каналу и цвет игнорирует |
+| Проверка | `I6-K8` (единственный `fillColor` — белый), `I6-P2` (иконка уведомления разрешается в ресурс приложения) |
+
+Дата создания — 2026-09-16. Текста и мелких деталей в фигуре нет: колокол состоит из купола с основанием и отдельного язычка, различимых в статус-баре при 24 dp.
 
 ---
 

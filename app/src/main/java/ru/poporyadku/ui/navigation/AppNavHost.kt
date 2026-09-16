@@ -25,12 +25,14 @@ import ru.poporyadku.R
 import ru.poporyadku.ui.archive.ArchiveEffect
 import ru.poporyadku.ui.archive.ArchiveScreen
 import ru.poporyadku.ui.archive.ArchiveViewModel
+import ru.poporyadku.ui.components.NotificationOptInDialog
 import ru.poporyadku.ui.components.rememberReportAvailability
 import ru.poporyadku.ui.feedback.rememberFeedbackPlayer
 import ru.poporyadku.ui.home.HomeEffect
 import ru.poporyadku.ui.home.HomeScreen
 import ru.poporyadku.ui.home.HomeViewModel
 import ru.poporyadku.ui.platform.rememberExternalApps
+import ru.poporyadku.ui.platform.rememberNotificationPermissionRequest
 import ru.poporyadku.ui.puzzle.PuzzleEffect
 import ru.poporyadku.ui.puzzle.PuzzleScreen
 import ru.poporyadku.ui.puzzle.PuzzleViewModel
@@ -40,8 +42,11 @@ import ru.poporyadku.ui.puzzleresult.PuzzleResultViewModel
 import ru.poporyadku.ui.recap.DayRecapEffect
 import ru.poporyadku.ui.recap.DayRecapScreen
 import ru.poporyadku.ui.recap.DayRecapViewModel
+import ru.poporyadku.ui.recap.ReminderPromptEffect
+import ru.poporyadku.ui.recap.ReminderPromptViewModel
 import ru.poporyadku.ui.report.reportDraft
 import ru.poporyadku.ui.settings.SettingsEffect
+import ru.poporyadku.ui.settings.SettingsEvent
 import ru.poporyadku.ui.settings.SettingsScreen
 import ru.poporyadku.ui.settings.SettingsViewModel
 import ru.poporyadku.ui.share.shareCardText
@@ -268,6 +273,29 @@ private fun DayRecapRoute(navController: NavHostController, entry: NavBackStackE
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
     val externalApps = rememberExternalApps()
+    // Предложение напоминания — ОТДЕЛЬНАЯ ViewModel того же route-контейнера
+    // (ITERATION_6_DESIGN.md, I6-D40): DayRecapViewModel настроек не инжектирует и
+    // DataStore не пишет (I5-D31).
+    val promptViewModel: ReminderPromptViewModel = hiltViewModel()
+    val isPromptVisible by promptViewModel.isVisible.collectAsStateWithLifecycle()
+    val requestNotificationPermission = rememberNotificationPermissionRequest(
+        onResult = promptViewModel::onPermissionResult,
+    )
+
+    LaunchedEffect(promptViewModel, lifecycleOwner, requestNotificationPermission) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            promptViewModel.effects.collect { effect ->
+                when (effect) {
+                    // Согласие к этому моменту уже записано в DataStore: эффект
+                    // создаётся только после успешного перехода (§8.3).
+                    ReminderPromptEffect.RequestNotificationPermission -> {
+                        promptViewModel.onPermissionRequestLaunched()
+                        requestNotificationPermission()
+                    }
+                }
+            }
+        }
+    }
     // Ресурсы карточки читает контейнер, а не ViewModel; `resources` в ключах — чтобы
     // коллектор пересоздался при смене конфигурации, как у PuzzleRoute.
     val resources = LocalResources.current
@@ -303,6 +331,14 @@ private fun DayRecapRoute(navController: NavHostController, entry: NavBackStackE
     }
 
     DayRecapScreen(state = state, onEvent = viewModel::onEvent)
+
+    // Диалог поверх экрана итога: сам экран о нём не знает и от него не зависит.
+    if (isPromptVisible) {
+        NotificationOptInDialog(
+            onAccept = promptViewModel::onAccept,
+            onDecline = promptViewModel::onDecline,
+        )
+    }
 }
 
 // --- Puzzle ----------------------------------------------------------------
@@ -505,8 +541,22 @@ private fun SettingsRoute(navController: NavHostController, entry: NavBackStackE
     val externalApps = rememberExternalApps()
     val resources = LocalResources.current
     val isReportAvailable = rememberReportAvailability()
+    val requestNotificationPermission = rememberNotificationPermissionRequest(
+        onResult = { viewModel.onEvent(SettingsEvent.NotificationPermissionResult) },
+    )
 
-    LaunchedEffect(viewModel, lifecycleOwner, externalApps, resources) {
+    // Статус доступа к уведомлениям система менять не сообщает, поэтому он
+    // перечитывается на каждом ON_START: и после системного диалога, и после возврата
+    // из настроек, и после отзыва разрешения вне приложения (I6-D37).
+    DisposableEffect(viewModel, lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_START) viewModel.onScreenStarted()
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+
+    LaunchedEffect(viewModel, lifecycleOwner, externalApps, resources, requestNotificationPermission) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.effects.collect { effect ->
                 if (!navController.isCurrent(entry)) return@collect
@@ -518,6 +568,12 @@ private fun SettingsRoute(navController: NavHostController, entry: NavBackStackE
 
                     is SettingsEffect.ComposeReport ->
                         externalApps.composeEmail(resources.reportDraft(effect.context))
+
+                    SettingsEffect.RequestNotificationPermission -> requestNotificationPermission()
+
+                    // Отказ запуска экран не роняет: статус перечитается на ON_START.
+                    is SettingsEffect.OpenNotificationSettings ->
+                        externalApps.openNotificationSettings(effect.target)
                 }
             }
         }

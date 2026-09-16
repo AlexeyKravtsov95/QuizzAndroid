@@ -65,6 +65,21 @@ app/
         GetInstalledContentVersionUseCase.kt  // отметка установленного контента из DataStore
         GetPlayedSourcesUseCase.kt    // источники сыгранных головоломок одним списком
         SourceCatalog.kt              // дедупликация по url | (reference, title), русская коллация
+        AcceptReminderPromptUseCase.kt    // согласие на итоге дня: ОДИН edit DataStore (I6-D40)
+        MarkReminderPromptShownUseCase.kt // подтверждаемая отметка «Не нужно»
+      reminder/                   // напоминание: чистый Kotlin, без android.*, androidx.work.* и ru.poporyadku.di (PR 6B)
+        ReminderTrigger.kt            // цель: дата, минута суток, момент
+        NextReminderTrigger.kt        // ближайшее вхождение времени через ZonedDateTime (DST, зона)
+        ReminderEligibility.kt        // состояние дня → можно ли обещать «новые задания» (O6-1)
+        ReminderScheduler.kt          // интерфейс + ScheduleMode (Replace | AfterCurrent)
+        ReminderScheduleLock.kt       // один Mutex на все записи планировщика в процессе
+        ReminderNotifier.kt           // интерфейс показа и снятия
+        NotificationAccess.kt         // NotificationAvailability, NotificationSettingsTarget, REMINDER_CHANNEL_ID
+        ReminderVerdict.kt            // Show | Skip(reason) + следующая цель
+        EvaluateReminderUseCase.kt    // проверки перед показом, ТОЛЬКО чтение (I6-D32)
+        SyncReminderScheduleUseCase.kt// ЕДИНСТВЕННАЯ операция синхронизации расписания (I6-D29)
+        ReminderRun.kt                // оркестрация срабатывания: оценка → показ → ensureActive → перепланирование
+        GetReminderPromptEligibilityUseCase.kt  // условие диалога на DayRecap
       scoring/
         PairwiseScoreCalculator.kt
         StreakCalculator.kt
@@ -101,13 +116,23 @@ app/
       puzzleresult/             // + ResultRoute: date, slotIndex и origin маршрута результата
       recap/                    // один экран, сессионный и архивный варианты по origin
       archive/                  // ArchiveScreen, ArchiveViewModel (keyset-пагинация), State/Event/Effect, ArchiveFormat
-      settings/                 // SettingsScreen, SettingsViewModel, строки настроек, «О приложении»
+      settings/                 // SettingsScreen, SettingsViewModel, ReminderRows (группа «Напоминание», O6-3)
       sources/                  // SourcesScreen, SourcesViewModel — источники сыгранных головоломок
       share/                    // ShareCardBuilder (чистый Kotlin) + ShareCardResources; шеринг через ExternalApps.shareText
-    notifications/
-      DailyReminderScheduler.kt
-      ReminderWorker.kt
-      NotificationChannels.kt
+    notifications/            // Android-реализации напоминания и оркестрация процесса (PR 6B)
+      WorkManagerReminderScheduler.kt  // ReminderScheduler над уникальной работой daily_reminder
+      UniqueWorkOperations.kt          // узкая граница над WorkManager; каждая операция ожидается
+      ReminderScheduleObserver.kt      // @Singleton, @ApplicationScope: настройки → SyncReminderScheduleUseCase
+      ReminderBroadcastHandler.kt      // долговечная запись события времени; finish() только после неё
+      ReminderResyncRequests.kt        // enqueueDurably(): уникальная reminder_resync
+      ReminderResyncWorker.kt          // CoroutineWorker → та же SyncReminderScheduleUseCase
+      ResyncAttemptPolicy.kt           // чистое решение Done/Retry/GiveUp (I6-P8)
+      ReminderTimeChangeReceiver.kt    // тонкий BroadcastReceiver: goAsync() → handler
+      ReminderWorker.kt                // CoroutineWorker → ReminderRun
+      ReminderEntryPoint.kt            // @EntryPoint: граф для worker'ов и приёмника (без hilt-work)
+      ReminderWorkNames.kt             // имена уникальных работ и ключи их данных
+      AndroidReminderNotifier.kt       // канал daily_reminder, показ, снятие
+      AndroidNotificationAccess.kt     // NotificationAvailability по таблице 8.2
     analytics/
       AnalyticsTracker.kt       // интерфейс
       NoOpAnalyticsTracker.kt   // реализация MVP
@@ -540,6 +565,7 @@ object SetAssignmentPolicy {
 | Room-запросы для экранов | `Flow<T>` из DAO |
 | Разовые записи (submit) | `suspend fun` |
 | Настройки | `Flow<UserPreferences>` из DataStore |
+| Синхронизация напоминания | постоянный коллектор `ReminderScheduleObserver` в `@ApplicationScope`: `preferences.map { enabled to time }.distinctUntilChanged().collect { sync() }`; старт из `MainActivity.onCreate`, идемпотентный; `Failed` сбор не останавливает. WorkManager — две уникальные работы (`daily_reminder`, `reminder_resync`), политики `REPLACE` для синхронизации и `APPEND_OR_REPLACE` для перепланирования из worker'а; каждая операция ожидается `Operation.await()` под общим `ReminderScheduleLock` (ADR-020) |
 | Запись настроек с экрана | команды `SettingMutation` в application-scoped очереди `SettingsWriteQueue`: `Channel(UNLIMITED)`, один worker в `@ApplicationScope CoroutineScope(SupervisorJob() + Dispatchers.Default)`, строго в порядке `submit`; атомарная граница — один `edit` DataStore одного ключа; ошибки — множество ключей `failedKeys`; `NonCancellable` не используется (ADR-018) |
 | Тема корня | `AppThemeViewModel.themeMode: StateFlow<ThemeMode?>`, `SharingStarted.Eagerly`; до первой эмиссии корень экраны не компонует |
 | Состояние экрана | `stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), Initial)` |
@@ -554,12 +580,23 @@ object SetAssignmentPolicy {
 
 ## 6. Уведомления
 
+Реализовано в PR 6B итерации 6 (`ITERATION_6_DESIGN.md`, разделы 8–10, ADR-020).
+
 - Одно ежедневное напоминание, время настраивается, по умолчанию 9:00.
-- Реализация — `WorkManager` с `OneTimeWorkRequest`, перепланируемым после каждого срабатывания. Причина выбора против `AlarmManager`: точная минута не важна, а `WorkManager` переживает перезагрузку и не требует `SCHEDULE_EXACT_ALARM` (разрешение, которое на современных версиях Android приходится выпрашивать и которое неуместно для напоминания об игре).
-- Worker перед показом проверяет: включено ли напоминание, не завершён ли сегодняшний день, есть ли контент на сегодня. Если день уже пройден — уведомление не показывается.
-- Канал уведомлений создаётся при первом запуске, важность `DEFAULT`, без звука по умолчанию.
-- Текст нейтральный: «Новые три задания готовы». Без «вы теряете серию».
-- Перепланирование при: изменении настройки, завершении дня, `BOOT_COMPLETED` (через `WorkManager` это происходит автоматически).
+- Реализация — `WorkManager` с `OneTimeWorkRequest`, перепланируемым после каждого срабатывания. Причина выбора против `AlarmManager`: точная минута не важна, а `WorkManager` переживает перезагрузку и не требует `SCHEDULE_EXACT_ALARM` (разрешение, которое на современных версиях Android приходится выпрашивать и которое неуместно для напоминания об игре). Периодическая работа не используется: период 24 часа не следует местному времени через смену зоны и DST.
+- **Одна операция синхронизации.** `SyncReminderScheduleUseCase` — единственный путь «настройка изменилась → расписание обновилось». Её вызывают постоянный коллектор `ReminderScheduleObserver` (`@ApplicationScope`, старт из `MainActivity.onCreate`), `ReminderResyncWorker`, запасной путь приёмника и `ReminderWorker` с неразбираемыми данными. `SettingsViewModel` и `ReminderPromptViewModel` о WorkManager не знают: они пишут DataStore (**I6-D29**).
+- **Каждая операция планировщика ожидается** (`Operation.await()`): `schedule`/`cancel` возвращаются только после записи в базу WorkManager и бросают при отказе. Все записи в процессе сериализует один `ReminderScheduleLock`. Исход — `Scheduled`/`Cancelled`/`Failed`, и `Failed` успехом не считается (**I6-D26**, **I6-D49**).
+- **Доступ к уведомлениям — доменный статус**, а не `Boolean`: `NotificationAvailability` = `Allowed` | `RuntimePermissionMissing` | `AppNotificationsDisabled` | `ChannelDisabled`. `POST_NOTIFICATIONS` запрашивается только при `RuntimePermissionMissing` (API 33+); при выключенных уведомлениях приложения или заглушённом канале запрос бесполезен, и экран сразу ведёт в системные настройки нужной цели. Решение после callback и после возврата принимается по **перечитанному** статусу (**I6-D36**).
+- **Переключатель показывает `reminderEnabled && Allowed`** (**I6-D37**): отзыв доступа вне приложения выключает его визуально и ничего не пишет — пользователь напоминание не выключал.
+- Worker перед показом проверяет строго по порядку: включено ли напоминание; совпадает ли минута работы с настройкой; сегодняшняя ли дата работы; наступил ли момент; разрешён ли доступ; позволяет ли состояние дня. Показ разрешён при `NewSet`/`CarryOver` и при `Assigned` без единого закрытого слота; день в процессе (1–2 слота), завершённый день, `AwaitingNextDay` и `ContentExhausted` показа не дают (**O6-1**, **I6-D33**). Ошибка чтения — закрытый отказ: лучше пропустить напоминание, чем соврать.
+- **Worker ничего не мутирует**: не назначает набор, не импортирует контент, не пишет прогресс и настройки (**I6-D32**, проверяется `I6-W2` и `I6-K3`). Перепланирования «при завершении дня» нет — проверка при срабатывании делает его лишним.
+- Канал `daily_reminder` создаётся идемпотентно в `MainActivity.onCreate` и перед каждым показом; важность `IMPORTANCE_DEFAULT`, **без звука и вибрации**, без значка на иконке. Уведомление — `REMINDER_NOTIFICATION_ID = 1001`, `CATEGORY_REMINDER`, `autoCancel`, `onlyAlertOnce`, `VISIBILITY_PUBLIC`, `timeoutAfter` до начала следующей локальной даты (**I6-D34**).
+- Текст нейтральный: заголовок «По порядку!», текст «Три новых задания готовы» (**O6-2**, грамматически естественнее прежней формулировки «Новые три задания готовы»). Без «вы теряете серию».
+- Нажатие ведёт себя как значок приложения: `ACTION_MAIN`/`CATEGORY_LAUNCHER`, `FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT`, постоянный `requestCode`. Deep link не вводится: задание зависит от даты и назначения, и ссылка, построенная вчера, открыла бы чужой день. Живая задача выводится на передний план как есть; `MainActivity.onStart` снимает показанное напоминание (**I6-D35**).
+- **Согласие с итога дня атомарно**: «Да, в 9:00» — один подтверждаемый переход DataStore `acceptReminderPrompt` (`notificationPromptShown`, 09:00, `reminderEnabled`), и только после его успеха создаётся системный запрос разрешения. Недоступность уведомлений согласие не отбрасывает (**I6-D40**).
+- Перепланирование при: изменении настройки (коллектор), срабатывании работы (`AfterCurrent`), смене часового пояса и ручном переводе часов (приёмник → долговечная `reminder_resync` → та же операция синхронизации), старте `MainActivity`. `BOOT_COMPLETED` обрабатывает сам `WorkManager` — собственного приёмника загрузки нет.
+- **Force stop** — ограничение платформы, а не обещание приложения: система не доставляет broadcast до следующего ручного запуска, и первый старт `MainActivity` перепланирует.
+- Сеть: ни `INTERNET`, ни локальных сетевых разрешений. `ACCESS_NETWORK_STATE`, влитый WorkManager манифестным слиянием, **остаётся** — это normal-разрешение на чтение состояния сети, доступа в сеть оно не даёт (**I6-D41**, проверяется `I6-P5`).
 
 ---
 
@@ -1045,6 +1082,25 @@ Python-половина сверки с векторами выполнена в
 **Альтернативы.** (а) `LIMIT/OFFSET` — новая строка сверху между подгрузками сдвигает смещения, и последняя строка страницы k приходит ещё раз в странице k + 1 (дубль); стоимость запроса растёт со смещением, а в конце списка нужен лишний пустой запрос. (б) Наблюдаемый префикс с растущим `LIMIT 50·k + 1` — новая строка сверху выталкивает самую старую загруженную строку из списка до следующей подгрузки (пропуск). (в) Paging 3 — новая зависимость, `PagingSource` и адаптер для Compose ради списка в сотни строк; `UX_FLOW.md` §7 прямо говорит, что пагинация в смысле библиотеки не нужна.
 
 **Последствия.** Плюс: ни дублей, ни пропусков, когда день сыгран между подгрузками; пустого запроса в конце нет — на 50 строках одна разведка, на 100 две; повтор после ошибки помнит только нижнюю границу, уже показанное не сбрасывается; оба запроса идут по первичным ключам `local_date`, без новых индексов и без миграции (схема версии 1). Минус: пока экран подписан, окно перечитывается целиком при каждой записи в любую из двух таблиц — за год это соединение ~365 строк по первичным ключам, доли миллисекунды. Закреплено тестами `I5-A6`, `I5-A7`; `rg -n "LIMIT.*OFFSET" app/src/main/java/ru/poporyadku/data/db/dao` пуст.
+
+### ADR-020. Напоминание: проверка при срабатывании, WorkManager без hilt-work, приёмник смены времени
+
+**Контекст.** Напоминание — единственная часть продукта, которая работает, когда приложения нет на экране, а иногда и когда процесса нет вовсе. Здесь сходятся три независимых источника «пора обновить расписание» (пользователь изменил настройку, работа сработала, система сменила время или зону), два хранилища (DataStore и база WorkManager) и платформенные ограничения: процесс приёмника живёт секунды, а `POST_NOTIFICATIONS` может быть отозвано в любой момент. Наивная реализация раскладывает это в четыре копии логики планирования и в набор гонок, каждая из которых проявляется редко и не воспроизводится.
+
+**Решение** (`ITERATION_6_DESIGN.md`, разделы 8–10, I6-D24…I6-D41, I6-D49).
+
+1. **Одна операция синхронизации.** `SyncReminderScheduleUseCase` — единственный бизнес-путь: перечитывает настройки, берёт **один** снимок часов (момент и зона из одного `Clock`), ожидает подтверждённую запись планировщика, возвращает `Scheduled`/`Cancelled`/`Failed`. Её зовут все четверо вызывающих; собственных копий нет. Все записи в процессе сериализует один `ReminderScheduleLock`.
+2. **Проверка при срабатывании вместо перепланирования по событиям.** Worker решает, показывать ли, **в момент показа** — по настройкам, часам, доступу и состоянию дня. Поэтому «перепланировать при завершении дня» не нужно: устаревшая работа сама обнаружит, что обещать нечего, и просто поставит следующую.
+3. **Worker только читает.** `GetTodayStateUseCase`, `StartDailySessionUseCase`, `ContentInstaller`, запись попыток и сеттеры настроек в этом пути запрещены: фоновое срабатывание не имеет права менять состояние дня, который пользователь не открывал. Фейки в тестах бросают на любую запись, `rg`-проверка не находит этих имён.
+4. **`hilt-work` не подключается.** `ReminderWorker` и `ReminderResyncWorker` берут зависимости через `EntryPointAccessors` уже подключённого `hilt-android`. Новая зависимость, свой `WorkerFactory` и свой инициализатор WorkManager ради двух worker'ов без параметров не окупаются.
+5. **Приёмник делает событие долговечным, а не обрабатывает его.** `ReminderTimeChangeReceiver` через `goAsync()` сохраняет уникальную работу `reminder_resync` и вызывает `finish()` **только после подтверждённой записи**; отменяющего таймаута нет. Процесс разрешено уничтожить сразу после `finish()` — работу выполнит WorkManager в любом следующем процессе, `MainActivity` для этого не нужна. Запасной путь при отказе записи — прямая синхронизация с подтверждённым исходом; единственный случай, когда сохранить событие нечем (`NotPersisted`), зафиксирован явно.
+6. **Отмена ничего не планирует.** В `ReminderRun` нет блока, выполняемого при отмене, и перед `schedule()` стоит `ensureActive()`: отменяет worker'а ровно тот, кто уже поставил работу со свежими настройками, и «уборка» поверх неё была бы порчей расписания. Ошибки оценки и планировщика лежат в разных полях отчёта и наружу не выходят.
+7. **Доступ — доменный статус, а не `Boolean`.** `NotificationAvailability` различает отсутствующее разрешение, выключенные уведомления приложения и заглушённый канал, потому что путь пользователя в этих трёх случаях разный; решение всегда принимается перечитанным статусом, а не булевым результатом системного callback'а.
+8. **Согласие — один атомарный переход DataStore** (`acceptReminderPrompt`), и только после его успеха создаётся системный запрос разрешения.
+
+**Альтернативы.** (а) `AlarmManager` с точным будильником — требует `SCHEDULE_EXACT_ALARM`, неуместного для напоминания об игре, и не переживает перезагрузку сам. (б) `PeriodicWorkRequest` на 24 часа — период не следует местному времени: после смены зоны и перехода на летнее время напоминание уезжает относительно настенных часов, а пользователь выбирал «9:00». (в) Приёмник, синхронизирующий расписание прямо в `goAsync()` под таймаутом, — таймаут, вызывающий `finish()` «на всякий случай», теряет событие вместе с процессом; именно этот исход и удалён из решения. (г) Сигнал в `MutableSharedFlow`, собираемый после старта `MainActivity`, — при холодном событии не собирает никто. (д) `Boolean isAllowed` плюс `shouldShowRequestPermissionRationale` — не отличает трёх причин и заставляет угадывать «постоянный отказ», которого система честно не сообщает. (е) Отдельный pending-ключ согласия — лишнее состояние: включённое, но недоступное напоминание уже имеет определённое поведение.
+
+**Последствия.** Расписание всегда соответствует последней записанной настройке, потому что источник намерения один — DataStore, а не память процесса. Событие смены времени переживает смерть процесса. Остаётся сознательно принятый риск: при смерти процесса worker'а между показом и `Result` уведомление может повториться в тот же день — ключ «последний показ» ради этого окна не заводится (**I6-D2**); и `ACCESS_NETWORK_STATE` от WorkManager остаётся в итоговом манифесте, что документировано как normal-разрешение без сетевого доступа.
 
 ### ADR-019. Единый путь перестановки и подтверждение жеста на пересечениях
 

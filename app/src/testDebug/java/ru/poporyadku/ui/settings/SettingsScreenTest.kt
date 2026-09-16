@@ -13,6 +13,8 @@ import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.assertContentDescriptionEquals
+import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertHeightIsAtLeast
 import androidx.compose.ui.test.assertIsDisplayed
@@ -40,9 +42,11 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import java.time.LocalTime
 import ru.poporyadku.core.model.ThemeMode
 import ru.poporyadku.domain.model.InstalledContentVersion
 import ru.poporyadku.domain.model.SettingKey
+import ru.poporyadku.domain.reminder.NotificationAvailability
 import ru.poporyadku.ui.components.rememberReportAvailability
 import ru.poporyadku.ui.platform.FakeExternalApps
 import ru.poporyadku.ui.platform.LocalExternalApps
@@ -75,15 +79,16 @@ class SettingsScreenTest {
     fun `I5-C12 switch rows and the theme group expose one target per row`() {
         rule.setContent { Settings(state(sound = true, vibration = false, theme = ThemeMode.DARK)) }
 
+        // С PR 6B строк-переключателей три: звук, вибрация и напоминание (I6-C9).
         val switches = rule.onAllNodes(hasRole(Role.Switch)).fetchSemanticsNodes()
-        assertEquals("ровно две строки-переключателя", 2, switches.size)
+        assertEquals("ровно три строки-переключателя", 3, switches.size)
         assertEquals(
-            listOf(ToggleableState.On, ToggleableState.Off),
+            listOf(ToggleableState.On, ToggleableState.Off, ToggleableState.Off),
             switches.map { it.config[SemanticsProperties.ToggleableState] },
         )
         assertEquals(
-            "состояние переключения есть только у двух строк — у Switch внутри своей цели нет",
-            2,
+            "состояние переключения есть только у трёх строк — у Switch внутри своей цели нет",
+            3,
             rule.onAllNodes(SemanticsMatcher.keyIsDefined(SemanticsProperties.ToggleableState), useUnmergedTree = true)
                 .fetchSemanticsNodes().size,
         )
@@ -149,14 +154,24 @@ class SettingsScreenTest {
         )
     }
 
-    /** `I5-C12`. Строки «Напоминание» нет ни визуально, ни в дереве семантики. */
+    /**
+     * `I6-C9`. Заменяет утверждение `I5-C12` «строки „Напоминание" нет»: в PR 6B группа
+     * появилась (ITERATION_6_DESIGN.md, §8.1). Само утверждение итерации 5 не ослаблено,
+     * а исполнено — строка существует ровно в оговорённом виде.
+     */
     @Test
-    fun `I5-C12 there is no reminder row`() {
+    fun `I6-C9 reminder group is a heading with a switch row`() {
         rule.setContent { Settings(state(), isReportAvailable = true) }
 
-        assertTrue(rule.onAllNodes(hasText("Напоминание", substring = true, ignoreCase = true), useUnmergedTree = true).fetchSemanticsNodes().isEmpty())
-        assertTrue(rule.onAllNodes(hasContentDescription("Напоминание", substring = true, ignoreCase = true), useUnmergedTree = true).fetchSemanticsNodes().isEmpty())
-        assertEquals("переключателей ровно два: звук и вибрация", 2, rule.onAllNodes(hasRole(Role.Switch)).fetchSemanticsNodes().size)
+        rule.onNode(hasText("Напоминание") and isHeading()).assertExists()
+        rule.onNodeWithTag(SettingsTestTags.ROW_REMINDER)
+            .assertHasClickAction()
+            .assertHeightIsAtLeast(Sizing.touchTargetMin)
+        assertEquals(
+            Role.Switch,
+            rule.onNodeWithTag(SettingsTestTags.ROW_REMINDER).fetchSemanticsNode().config[SemanticsProperties.Role],
+        )
+        assertEquals("переключателей ровно три: звук, вибрация и напоминание", 3, rule.onAllNodes(hasRole(Role.Switch)).fetchSemanticsNodes().size)
     }
 
     /**
@@ -209,13 +224,15 @@ class SettingsScreenTest {
             Settings(
                 SettingsState(
                     preferences = null,
+                    reminder = null,
                     about = AboutUi("1.0.0", 1, contentVersion = null),
                     writeFailures = emptySet(),
                 ),
             )
         }
 
-        assertEquals(5, rule.onAllNodesWithTag(SettingsTestTags.ROW_SKELETON).fetchSemanticsNodes().size)
+        // Две строки звука, одна напоминания и три темы (I6-C9).
+        assertEquals(6, rule.onAllNodesWithTag(SettingsTestTags.ROW_SKELETON).fetchSemanticsNodes().size)
         assertTrue(rule.onAllNodes(hasRole(Role.Switch)).fetchSemanticsNodes().isEmpty())
         assertTrue(rule.onAllNodes(hasRole(Role.RadioButton)).fetchSemanticsNodes().isEmpty())
         rule.onNodeWithTag(SettingsTestTags.CONTENT_VERSION_SKELETON).assertExists()
@@ -409,11 +426,32 @@ class SettingsScreenTest {
         state: SettingsState,
         isReportAvailable: Boolean = false,
         onEvent: (SettingsEvent) -> Unit = {},
+        darkTheme: Boolean = false,
+        fontScale: Float = 1f,
     ) {
-        PoPoRyadkuTheme(darkTheme = false) {
-            SettingsScreen(state = state, isReportAvailable = isReportAvailable, onEvent = onEvent)
+        val density = Density(
+            density = LocalDensity.current.density,
+            fontScale = fontScale,
+        )
+        CompositionLocalProvider(LocalDensity provides density) {
+            PoPoRyadkuTheme(darkTheme = darkTheme) {
+                SettingsScreen(state = state, isReportAvailable = isReportAvailable, onEvent = onEvent)
+            }
         }
     }
+
+    /** Строки напоминания для экранных тестов (ITERATION_6_DESIGN.md, §8.1). */
+    private fun reminderUi(
+        enabledShown: Boolean,
+        time: LocalTime = LocalTime.of(9, 0),
+        unavailability: NotificationAvailability? = null,
+        showPermissionHint: Boolean = false,
+    ) = ReminderUi(
+        enabledShown = enabledShown,
+        time = time,
+        unavailability = unavailability,
+        showPermissionHint = showPermissionHint,
+    )
 
     /** Доступность — настоящим `rememberReportAvailability()` поверх фейка, как у route. */
     @Composable
@@ -451,14 +489,205 @@ class SettingsScreenTest {
         theme: ThemeMode = ThemeMode.SYSTEM,
         content: InstalledContentVersion? = InstalledContentVersion.Known(1),
         failures: Set<SettingKey> = emptySet(),
+        reminder: ReminderUi? = ReminderUi(
+            enabledShown = false,
+            time = LocalTime.of(9, 0),
+            unavailability = null,
+            showPermissionHint = false,
+        ),
     ) = SettingsState(
         preferences = PreferencesUi(soundEnabled = sound, vibrationEnabled = vibration, themeMode = theme),
+        reminder = reminder,
         about = AboutUi(versionName = "1.0.0", versionCode = 1, contentVersion = content),
         writeFailures = failures,
     )
 
+    // --- I6-C9 / I6-C11: напоминание ------------------------------------------------------
+
+    /**
+     * `I6-C9`. Строка времени видна **только** при визуально включённом напоминании: без
+     * доступа её быть не должно, иначе экран обещал бы то, чего не будет.
+     */
+    @Test
+    fun `I6-C9 the time row is absent while the reminder is shown disabled`() {
+        rule.setContent { Settings(state(reminder = reminderUi(enabledShown = false))) }
+
+        rule.onNodeWithTag(SettingsTestTags.ROW_REMINDER_TIME).assertDoesNotExist()
+    }
+
+    /** `I6-C9`. …и появляется, как только напоминание показано включённым. */
+    @Test
+    fun `I6-C9 the time row appears when the reminder is shown enabled`() {
+        rule.setContent { Settings(state(reminder = reminderUi(enabledShown = true))) }
+
+        rule.onNodeWithTag(SettingsTestTags.ROW_REMINDER_TIME).assertExists()
+    }
+
+    /**
+     * `I6-C9`. Для **каждой** недоступности под строкой — одна и та же подсказка и
+     * действие (**O6-4**); нажатие отправляет `OpenNotificationSettingsClicked`.
+     */
+    @Test
+    fun `I6-C9 every unavailability shows the same hint and action`() {
+        // Причина недоступности меняется состоянием: setContent в одном тесте — один раз.
+        var status by mutableStateOf(NotificationAvailability.RuntimePermissionMissing)
+        val events = mutableListOf<SettingsEvent>()
+        rule.setContent {
+            Settings(
+                state(
+                    reminder = reminderUi(
+                        enabledShown = false,
+                        unavailability = status,
+                        showPermissionHint = true,
+                    ),
+                ),
+                onEvent = { events += it },
+            )
+        }
+
+        listOf(
+            NotificationAvailability.RuntimePermissionMissing,
+            NotificationAvailability.AppNotificationsDisabled,
+            NotificationAvailability.ChannelDisabled,
+        ).forEachIndexed { index, value ->
+            status = value
+            rule.waitForIdle()
+
+            rule.onNodeWithText(PERMISSION_HINT).assertExists()
+            rule.onNodeWithTag(SettingsTestTags.REMINDER_OPEN_SYSTEM)
+                .performScrollTo()
+                .assertHeightIsAtLeast(Sizing.touchTargetMin)
+                .performClick()
+
+            assertEquals("$value", index + 1, events.size)
+            assertEquals("$value", SettingsEvent.OpenNotificationSettingsClicked, events.last())
+        }
+    }
+
+    /** `I6-C9`. При доступе подсказки нет. */
+    @Test
+    fun `I6-C9 there is no hint when notifications are allowed`() {
+        rule.setContent { Settings(state(reminder = reminderUi(enabledShown = true))) }
+
+        rule.onNodeWithTag(SettingsTestTags.REMINDER_HINT).assertDoesNotExist()
+        rule.onNodeWithText(PERMISSION_HINT).assertDoesNotExist()
+    }
+
+    /** `I6-C9`. Ошибка записи — под своей строкой, отдельно для переключателя и времени. */
+    @Test
+    fun `I6-C9 reminder write failures appear under their own rows`() {
+        rule.setContent {
+            Settings(
+                state(
+                    reminder = reminderUi(enabledShown = true),
+                    failures = setOf(SettingKey.Reminder, SettingKey.ReminderTime),
+                ),
+            )
+        }
+
+        rule.onNodeWithTag(SettingsTestTags.writeFailure(SettingKey.Reminder)).assertExists()
+        rule.onNodeWithTag(SettingsTestTags.writeFailure(SettingKey.ReminderTime)).assertExists()
+    }
+
+    /**
+     * `I6-C9`. На 320 dp при 200 % строки напоминания видны, цели не меньше минимума и
+     * горизонтальной прокрутки нет.
+     */
+    @Test
+    @Config(qualifiers = "w320dp-h844dp")
+    fun `I6-C9 the reminder rows survive 320 dp at 200 percent`() {
+        rule.setContent {
+            Settings(state(reminder = reminderUi(enabledShown = true)), fontScale = FONT_SCALE_200)
+        }
+
+        rule.onNodeWithTag(SettingsTestTags.ROW_REMINDER)
+            .performScrollTo()
+            .assertIsDisplayed()
+            .assertHeightIsAtLeast(Sizing.touchTargetMin)
+        rule.onNodeWithTag(SettingsTestTags.ROW_REMINDER_TIME)
+            .performScrollTo()
+            .assertIsDisplayed()
+            .assertHeightIsAtLeast(Sizing.touchTargetMin)
+    }
+
+    /** `I6-C9`. Тёмная тема: строки напоминания на месте. */
+    @Test
+    fun `I6-C9 the reminder rows render in the dark theme`() {
+        rule.setContent {
+            Settings(state(reminder = reminderUi(enabledShown = true)), darkTheme = true)
+        }
+
+        rule.onNodeWithTag(SettingsTestTags.ROW_REMINDER).assertExists()
+        rule.onNodeWithTag(SettingsTestTags.ROW_REMINDER_TIME).assertExists()
+    }
+
+    /**
+     * `I6-C11`. Описание строки времени для TalkBack — «Время напоминания, 9:00»: подпись
+     * и значение одним узлом.
+     */
+    @Test
+    fun `I6-C11 the time row is announced with its value`() {
+        rule.setContent { Settings(state(reminder = reminderUi(enabledShown = true))) }
+
+        rule.onNodeWithTag(SettingsTestTags.ROW_REMINDER_TIME)
+            .assertContentDescriptionEquals("Время напоминания, 9:00")
+    }
+
+    /**
+     * `I6-C11`. Выбор времени раскрывается **внутри списка** (**O6-3**): диалога нет,
+     * встроенный `TimeInput` появляется под строкой.
+     */
+    @Test
+    fun `I6-C11 the time picker is inline and not a dialog`() {
+        rule.setContent { Settings(state(reminder = reminderUi(enabledShown = true))) }
+
+        rule.onNodeWithTag(SettingsTestTags.REMINDER_TIME_INPUT).assertDoesNotExist()
+        rule.onNodeWithTag(SettingsTestTags.ROW_REMINDER_TIME).performScrollTo().performClick()
+
+        rule.onNodeWithTag(SettingsTestTags.REMINDER_TIME_INPUT).assertExists()
+        assertTrue("диалога быть не должно", rule.onAllNodes(isDialog()).fetchSemanticsNodes().isEmpty())
+        rule.onNodeWithText(CONFIRM).assertExists()
+        rule.onNodeWithText(CANCEL).assertExists()
+    }
+
+    /** `I6-C11`. «Отмена» закрывает выбор и **не** шлёт ни одного события записи. */
+    @Test
+    fun `I6-C11 cancel closes the picker without any event`() {
+        val events = mutableListOf<SettingsEvent>()
+        rule.setContent {
+            Settings(state(reminder = reminderUi(enabledShown = true)), onEvent = { events += it })
+        }
+
+        rule.onNodeWithTag(SettingsTestTags.ROW_REMINDER_TIME).performScrollTo().performClick()
+        rule.onNodeWithTag(SettingsTestTags.REMINDER_TIME_CANCEL).performScrollTo().performClick()
+
+        rule.onNodeWithTag(SettingsTestTags.REMINDER_TIME_INPUT).assertDoesNotExist()
+        assertTrue("событий записи нет", events.isEmpty())
+    }
+
+    /** `I6-C11`. «Сохранить» отправляет ровно одно `ReminderTimeChosen` с текущим значением. */
+    @Test
+    fun `I6-C11 confirming sends exactly one ReminderTimeChosen`() {
+        val events = mutableListOf<SettingsEvent>()
+        rule.setContent {
+            Settings(
+                state(reminder = reminderUi(enabledShown = true, time = LocalTime.of(10, 30))),
+                onEvent = { events += it },
+            )
+        }
+
+        rule.onNodeWithTag(SettingsTestTags.ROW_REMINDER_TIME).performScrollTo().performClick()
+        rule.onNodeWithTag(SettingsTestTags.REMINDER_TIME_CONFIRM).performScrollTo().performClick()
+
+        assertEquals(listOf(SettingsEvent.ReminderTimeChosen(LocalTime.of(10, 30))), events)
+        rule.onNodeWithTag(SettingsTestTags.REMINDER_TIME_INPUT).assertDoesNotExist()
+    }
+
     private companion object {
         const val FONT_SCALE_200 = 2f
+        const val PERMISSION_HINT = "Разрешите уведомления в настройках системы"
+        const val CONFIRM = "Сохранить"
+        const val CANCEL = "Отмена"
         const val TITLE = "Настройки"
         const val BACK = "Назад"
         const val REPORT = "Сообщить о неточности"
@@ -467,6 +696,7 @@ class SettingsScreenTest {
         const val WRITE_FAILED = "Не удалось сохранить настройку"
         const val SCORING_RULE = "Баллы даются за каждую пару карточек в правильном порядке: " +
             "у четырёх карточек шесть пар, максимум 6 баллов за задание и 18 за день"
-        val GROUPS = listOf("Звук и вибрация", "Тема", "О приложении", "Обратная связь")
+        // «Напоминание» — между звуком и темой (DESIGN_PRINCIPLES.md §3, O6-3).
+        val GROUPS = listOf("Звук и вибрация", "Напоминание", "Тема", "О приложении", "Обратная связь")
     }
 }
