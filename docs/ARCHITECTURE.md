@@ -76,7 +76,9 @@ app/
         DeterministicShuffler.kt
     ui/
       theme/                    // Color, Type, Shape, PoPoRyadkuTheme, AppThemeViewModel, resolveDark
-      components/               // OrderableCard, DragHandle, MoveButtons, ScoreBadge,
+      components/               // OrderableCard (+ слот DragHandle и состояние dragging),
+                                // DragHandle (48 dp зона захвата, pointerInput, без семантики),
+                                // MoveButtons, ScoreBadge,
                                 // ArchiveRow, DayResultRow (notPlayed), RetiredNotice,
                                 // SourceRow (через ExternalApps), ReportInaccuracyAction
       navigation/               // AppNavHost, Destinations (+ sources), RouteOrigin (Session | Archive)
@@ -90,7 +92,12 @@ app/
                                 // SoundCueBank (порядок listener -> load, однократный release),
                                 // SoundCues (@ActivityRetainedScoped), LocalFeedback (LocalSoundCues)
       home/                     // HomeScreen, HomeViewModel, HomeUiState
-      puzzle/                   // PuzzleScreen, PuzzleViewModel, PuzzleUiState, PuzzleEvent
+      puzzle/                   // PuzzleScreen, PuzzleViewModel, PuzzleUiState, PuzzleEvent,
+                                // CardOrder + MoveTarget — единственный алгоритм перестановки (чистый Kotlin),
+                                // DragTargetResolver — порог «центр пересёк центр соседа» (чистый),
+                                // DragAutoScroll — скорость авто-прокрутки (чистый),
+                                // DragGestureIds — процессный счётчик DragGestureId,
+                                // ReorderDragState — локальное состояние жеста, не saveable
       puzzleresult/             // + ResultRoute: date, slotIndex и origin маршрута результата
       recap/                    // один экран, сессионный и архивный варианты по origin
       archive/                  // ArchiveScreen, ArchiveViewModel (keyset-пагинация), State/Event/Effect, ArchiveFormat
@@ -324,7 +331,6 @@ sealed interface PuzzleUiState {
         val prompt: String,
         val directionLabel: String,
         val cards: List<CardUi>,         // текущий порядок пользователя
-        val draggedCardId: String?,      // null, если ничего не тащат
         val isSubmitEnabled: Boolean,
         val showDragHint: Boolean
     ) : PuzzleUiState
@@ -343,11 +349,19 @@ data class CardUi(
     val canMoveDown: Boolean
 )
 
-// События от UI
+// Идентификатор одного жеста: процессный счётчик, переживает пересоздание Activity
+@JvmInline value class DragGestureId(val value: Long)
+
+// События от UI (итерация 6, PR 6A: I6-D3, I6-D5)
 sealed interface PuzzleEvent {
-    data class DragStarted(val cardId: String) : PuzzleEvent
-    data class DragMoved(val fromIndex: Int, val toIndex: Int) : PuzzleEvent
-    data object DragEnded : PuzzleEvent
+    data class DragStarted(val cardId: String, val gesture: DragGestureId) : PuzzleEvent
+    data class DragMovedTo(
+        val cardId: String,
+        val targetIndex: Int,            // абсолютная цель: повтор безвреден
+        val gesture: DragGestureId,
+    ) : PuzzleEvent
+    // Отпускание, отмена и потеря указателя — одно и то же событие
+    data class DragFinished(val cardId: String, val gesture: DragGestureId) : PuzzleEvent
     data class MoveUp(val cardId: String) : PuzzleEvent
     data class MoveDown(val cardId: String) : PuzzleEvent
     data class MoveToTop(val cardId: String) : PuzzleEvent      // accessibility action
@@ -378,10 +392,14 @@ sealed interface PuzzleEffect {
 Заметки:
 
 - перестановка карточек — операция над `List<String>` идентификаторов в ViewModel; UI ничего не переставляет сам;
+- **единый путь перестановки** (`ITERATION_6_DESIGN.md`, §4, I6-D3, I6-D4, ADR-019): кнопки ↑/↓, custom actions TalkBack и жест выражают одно намерение «карточку `cardId` поставить на цель» (`MoveTarget`: `Up`, `Down`, `First`, `Last`, `Index`) и проходят через **один** метод `PuzzleViewModel.reorder(cardId, target, origin)` → чистую `CardOrder.move(order, cardId, target): List<String>?` (`ui/puzzle/CardOrder.kt`, без `android.*`/`androidx.compose.*`). `null` означает «действие неприменимо» (неизвестный `cardId`, цель вне диапазона, цель равна текущему индексу) — состояние, `SavedStateHandle` и отдача при этом не трогаются. Второй реализации перестановки в продукте нет: `rg -l 'CardOrder\.move' app/src/main` находит ровно `PuzzleViewModel.kt` (`I6-K6`);
+- **сессия жеста — только в памяти ViewModel** (I6-D9): `DragSession(cardId, gesture, startIndex)`. Поля `PuzzleBoard.draggedCardId` больше нет: «поднятость» — локальное состояние экрана (`ui/puzzle/ReorderDragState`, не `rememberSaveable`), потому что состояние ViewModel переживает поворот, а палец на экране — нет. Начало жеста с другим `DragGestureId` заменяет сессию целиком и берёт новый `startIndex`; события с чужим `DragGestureId` или чужим `cardId` игнорируются, поэтому запоздалое завершение уничтоженного UI не закрывает новую сессию и не объявляет чужой результат. Кнопка, custom action и `Submit` закрывают сессию молча;
+- **подтверждение на каждом пересечении порога** (I6-D6, I6-D7): во время жеста UI держит только визуальное смещение пальца, а порядок подтверждает ViewModel — на каждом пересечении. Единственный порог — визуальный центр поднятой карточки **строго** пересёк центр соседней (`ui/puzzle/DragTargetResolver`, чистая функция); фиксированного расстояния в dp нет. Авто-прокрутка у краёв списка — чистая `ui/puzzle/DragAutoScroll.velocity` на токенах `dragAutoScroll.*`;
+- **объявления**: кнопка и custom action объявляют перестановку сразу, жест — один раз при `DragFinished` и только если позиция отличается от начала этого жеста (I6-D16);
 - текущий порядок хранится в `SavedStateHandle` (`currentOrder: String`), поэтому переживает смерть процесса;
 - `Submit` вызывает `SubmitAnswerUseCase`, который **сначала** пишет `PuzzleAttempt` и обновляет `day_results`, и только потом ViewModel отправляет `NavigateToResult`. Порядок обратный ломает гарантию «попытка зафиксирована»;
 - повторный `Submit` во время `Submitting` игнорируется по состоянию, не по флагу-костылю;
-- **граница отдачи** (`ITERATION_5_DESIGN.md`, §3.14, §8.2, I5-D22, I5-D23): **решение — в ViewModel, исполнение — в route-контейнере**. `PuzzleViewModel` читает настройки через `ObserveFeedbackSettingsUseCase` (`stateIn(Eagerly, FeedbackSettings.Unknown)`) и вызывает чистую `FeedbackPolicy.requestFor(cue, settings)`: `Unknown` и «оба канала выключены» дают `null` — эффекта нет вовсе. Android-типов (`SoundPool`, `View`, `HapticFeedbackConstants`) во ViewModel нет, поэтому все комбинации настроек проверяются JVM-тестами по содержимому эффекта. `PuzzleRoute` исполняет `PuzzleEffect.Feedback` тем же **единственным** lifecycle-aware коллектором, что и навигацию, — второго коллектора отдача не добавляет; `Feedback(AnswerAccepted)` лежит в канале **перед** `NavigateToResult`, поэтому исполняется до ухода с экрана. Отдача — одноразовый эффект в `Channel` и в `PuzzleUiState` её нет: поворот, перекомпозиция, повторная подписка и восстановление состояния её не повторяют;
+- **граница отдачи** (`ITERATION_5_DESIGN.md`, §3.14, §8.2, I5-D22, I5-D23; `FeedbackCue.CardGrabbed` — `ITERATION_6_DESIGN.md`, §6, I6-D14): **решение — в ViewModel, исполнение — в route-контейнере**. Поводов три: `CardGrabbed` (захват карточки за ручку — **только тактильно**, звука нет никогда и звукового ресурса у него не существует), `CardMoved` и `AnswerAccepted`. Вся отдача создаётся только `PuzzleViewModel.emitFeedback`: прямые вызовы `performHapticFeedback`/`LocalHapticFeedback` в `ui/puzzle` и `ui/components` запрещены и проверяются `I6-K4`. `PuzzleViewModel` читает настройки через `ObserveFeedbackSettingsUseCase` (`stateIn(Eagerly, FeedbackSettings.Unknown)`) и вызывает чистую `FeedbackPolicy.requestFor(cue, settings)`: `Unknown` и «оба канала выключены» дают `null` — эффекта нет вовсе. Android-типов (`SoundPool`, `View`, `HapticFeedbackConstants`) во ViewModel нет, поэтому все комбинации настроек проверяются JVM-тестами по содержимому эффекта. `PuzzleRoute` исполняет `PuzzleEffect.Feedback` тем же **единственным** lifecycle-aware коллектором, что и навигацию, — второго коллектора отдача не добавляет; `Feedback(AnswerAccepted)` лежит в канале **перед** `NavigateToResult`, поэтому исполняется до ухода с экрана. Отдача — одноразовый эффект в `Channel` и в `PuzzleUiState` её нет: поворот, перекомпозиция, повторная подписка и восстановление состояния её не повторяют;
 - **`SoundCues` — в `ActivityRetainedComponent`** (`@ActivityRetainedScoped`, полевая инъекция в `MainActivity`, экранам отдаётся через `LocalSoundCues`): один экземпляр на Activity, переживающий поворот, `release()` ровно один раз из `ActivityRetainedLifecycle.addOnClearedListener`. Процессный `@Singleton` отклонён — держал бы нативные ресурсы и в фоне без точки освобождения; экранный пул отклонён — `release()` в `onDispose` оборвал бы `AnswerAccepted`, который звучит в момент ухода с `Puzzle`. Порядок «создать движок → коллекция загруженных ID → зарегистрировать listener → только потом `load()` обоих файлов → играть только ID с `status == 0`» живёт в `SoundCueBank` над узкой границей `SoundEngine` и проверяется фейком без Android (`I5-F2`). Звук не играет при `AudioManager.ringerMode != RINGER_MODE_NORMAL`; тактильная отдача — только `View.performHapticFeedback` без `FLAG_IGNORE_GLOBAL_SETTING`, поэтому системное отключение отключает и нашу, а разрешения на вибрацию не требуется.
 
 ### Подсчёт баллов и серия
@@ -712,12 +730,13 @@ interface EntitlementsRepository {
 
 - миграции Room (`MigrationTestHelper`) — начиная с первой реальной миграции. **Итерация 4 её не приносит** (`ITERATION_4_DESIGN.md`, **I4-D1**): схема версии 1 уже содержит всю модель контента, версия не повышается, пустая миграция 1→2 «чтобы завести хелпер» запрещена — она была бы подписью под ложным утверждением «схема изменилась». Вместе с первым реальным изменением схемы подключается и `androidx.room:room-testing`;
 - импорт контента из настоящих assets: все головоломки разобраны, все наборы на месте, ссылочная целостность цела;
-- один сквозной Compose-тест «полный день»: пройти три задания, увидеть итог 18/18 (порядок задаётся программно через кнопки перемещения, не жестами);
-- accessibility-проверка: у каждой карточки есть `contentDescription` и custom actions; экран проходится без единого жеста перетаскивания.
+- один сквозной Compose-тест «полный день»: пройти три задания, увидеть итог 18/18 (порядок задаётся программно через кнопки перемещения);
+- accessibility-проверка: у каждой карточки есть `contentDescription` и custom actions; экран проходится без единого жеста перетаскивания;
+- **перетаскивание настоящим жестом** (итерация 6, PR 6A): `PuzzleDragFlowTest` — жест на одну и на три позиции со сверкой записанной отдачи (`I6-N1`), пересоздание Activity посреди жеста (`I6-N2`), полный день только жестами с итогом 18/18 (`I6-N3`). Как и прочие инструментальные тесты, в CI они **компилируются**, а выполняются вручную на эмуляторе с записью AVD, API и результата.
 
 ### Чего не тестируем
 
-Пиксельную вёрстку, анимации, поведение перетаскивания жестами (проверяется вручную на устройстве), no-op-реализации монетизации.
+Пиксельную вёрстку, анимации, no-op-реализации монетизации. Плавность перетаскивания на слабом устройстве по-прежнему проверяется только вручную (`I6-M2`, итерация 7) — но сама механика жеста с итерации 6 закрыта автоматически: чистые функции порога и скорости (`I6-R3`, `I6-R4`), Compose-тесты жеста (`I6-C1`…`I6-C7`) и инструментальные `I6-N1`…`I6-N3`.
 
 ### CI
 
@@ -1026,6 +1045,22 @@ Python-половина сверки с векторами выполнена в
 **Альтернативы.** (а) `LIMIT/OFFSET` — новая строка сверху между подгрузками сдвигает смещения, и последняя строка страницы k приходит ещё раз в странице k + 1 (дубль); стоимость запроса растёт со смещением, а в конце списка нужен лишний пустой запрос. (б) Наблюдаемый префикс с растущим `LIMIT 50·k + 1` — новая строка сверху выталкивает самую старую загруженную строку из списка до следующей подгрузки (пропуск). (в) Paging 3 — новая зависимость, `PagingSource` и адаптер для Compose ради списка в сотни строк; `UX_FLOW.md` §7 прямо говорит, что пагинация в смысле библиотеки не нужна.
 
 **Последствия.** Плюс: ни дублей, ни пропусков, когда день сыгран между подгрузками; пустого запроса в конце нет — на 50 строках одна разведка, на 100 две; повтор после ошибки помнит только нижнюю границу, уже показанное не сбрасывается; оба запроса идут по первичным ключам `local_date`, без новых индексов и без миграции (схема версии 1). Минус: пока экран подписан, окно перечитывается целиком при каждой записи в любую из двух таблиц — за год это соединение ~365 строк по первичным ключам, доли миллисекунды. Закреплено тестами `I5-A6`, `I5-A7`; `rg -n "LIMIT.*OFFSET" app/src/main/java/ru/poporyadku/data/db/dao` пуст.
+
+### ADR-019. Единый путь перестановки и подтверждение жеста на пересечениях
+
+**Контекст.** До итерации 6 порядок меняли только кнопки ↑/↓ и custom actions, а жест перетаскивания существовал лишь как зарезервированные события (`I3-D24`). Добавляя жест, легко получить вторую реализацию перестановки: библиотеки drag-and-drop обычно ведут собственный список в UI и сообщают результат «откуда → куда». Тогда у продукта появилось бы два алгоритма порядка (в UI для жеста и во ViewModel для кнопок), а индексы «откуда», посчитанные в кадре N, применялись бы к списку кадра N + 1.
+
+**Решение** (`ITERATION_6_DESIGN.md`, §4–5, I6-D3…I6-D9).
+
+1. **Одно намерение.** Каждый источник говорит «карточку `cardId` поставить на цель» (`MoveTarget`), а не «поменять индексы»; цель жеста — **абсолютный** индекс, поэтому повторная доставка той же цели идемпотентна.
+2. **Один алгоритм.** Чистая `CardOrder.move(order, cardId, target): List<String>?` в `ui/puzzle` — единственная перестановка в продукте; её зовёт единственный метод `PuzzleViewModel.reorder`. `null` = «неприменимо»: ни состояния, ни записи, ни отдачи.
+3. **Источник истины во время жеста — ViewModel.** UI держит только визуальное смещение пальца (`ReorderDragState`, не saveable) и подтверждает перестановку на каждом пересечении порога; `SavedStateHandle` пишется на каждое подтверждение, поэтому смерть процесса посреди жеста теряет максимум незавершённое движение пальца.
+4. **Идентичность жеста.** `DragGestureId` из процессного счётчика отличает продолжение текущего жеста от запоздалого события уничтоженного UI; сессия ViewModel — только в памяти, `PuzzleBoard.draggedCardId` удалён.
+5. **Единственный порог** — визуальный центр поднятой карточки строго пересёк центр соседней (чистый `DragTargetResolver`), а не попадание в прямоугольник и не расстояние в dp: карточки бывают разной высоты, и на них «половина шага списка» не определена.
+
+**Альтернативы.** (а) Библиотечная drag-and-drop абстракция с собственным списком в UI — второй алгоритм порядка, расхождение с кнопками и потеря/дубль карточки при гонке подтверждений. (б) Коммит одной операцией при отпускании (перестановка живёт в UI до `up`) — порядок в `SavedStateHandle` отставал бы от увиденного, а отмена жеста требовала бы отката. (в) Отличать жесты по `cardId` — не отличает законный повторный захват той же карточки от запоздалого события прежнего жеста. (г) Порог по фиксированному расстоянию в dp — на высокой карточке перестановка срабатывала бы раньше её середины.
+
+**Последствия.** Плюс: одно место, где меняется порядок (`rg -l 'CardOrder\.move' app/src/main` = `PuzzleViewModel.kt`, `I6-K6`); потеря и дублирование карточек невозможны по построению; кнопочный контракт итерации 5 не изменился (`I5-V29`…`I5-V34` зелёные без правки утверждений); отдача и объявление остаются однократными на подтверждённую перестановку. Минус: UI обязан компенсировать сдвиг слота после каждого подтверждения (`offsetY -= newSlotTop - oldSlotTop`), иначе карточка «прыгнет» под пальцем, — это одна операция в одном месте (`ReorderDragState.syncSlotTop`), закрытая доказательством отсутствия дребезга (§5.3) и тестом `I6-R3`.
 
 ### ADR-018. Граница внешних Android-действий и очередь записи настроек
 

@@ -2,6 +2,7 @@ package ru.poporyadku.ui.puzzle
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.LiveRegionMode
@@ -151,14 +152,38 @@ class PuzzleScreenTest {
         rule.onNodeWithTag(PuzzleTestTags.SUBMIT_BUTTON).assertIsNotEnabled()
     }
 
-    // --- I3-C6 -------------------------------------------------------------------------
+    // --- I6-C5 (заменяет I3-C6) ----------------------------------------------------------
 
-    /** `I3-C6`. `DragHandle` отсутствует в дереве семантики — его нет и в коде (I3-D24). */
+    /**
+     * `I6-C5`. Ручка появилась у каждой карточки «стола» и в `Playing`, и в
+     * `Submitting.Answer` — тем же видом (I6-D11). При этом она не читается TalkBack: ни
+     * описания, ни отдельного узла в объединённом дереве (I6-D19).
+     *
+     * Заменяет `I3-C6` («ручки нет в дереве»), утверждение которого итерация 6 отменила.
+     */
     @Test
-    fun `I3-C6 there is no drag handle anywhere in the tree`() {
-        rule.setContent { Puzzle(playing()) }
+    fun `I6-C5 every card has a silent drag handle in playing and submitting`() {
+        val state = mutableStateOf<PuzzleUiState>(playing())
+        rule.setContent { Puzzle(state.value) }
 
+        assertSilentHandles()
+
+        // Тот же вид в `Submitting.Answer`: ручка не прячется и не получает отдельного
+        // disabled-вида — блокировку уже показывают «Проверить» и кнопки перемещения.
+        rule.runOnIdle { state.value = submitting() }
+        assertSilentHandles()
+    }
+
+    private fun assertSilentHandles() {
+        cards.forEach { cardId ->
+            rule.onNodeWithTag(PuzzleTestTags.dragHandle(cardId), useUnmergedTree = true)
+                .assertExists()
+            // Ручка не создаёт собственного узла семантики: в объединённом дереве её нет.
+            rule.onNodeWithTag(PuzzleTestTags.dragHandle(cardId)).assertDoesNotExist()
+        }
         rule.onNodeWithContentDescription(DRAG_HANDLE).assertDoesNotExist()
+
+        // `DragEducationHint` — PR 6C: её по-прежнему нет.
         rule.onNodeWithText(DRAG_HINT, substring = true).assertDoesNotExist()
     }
 
@@ -365,7 +390,6 @@ class PuzzleScreenTest {
                     canMoveDown = index < cards.lastIndex,
                 )
             },
-            draggedCardId = null,
         )
 
         fun playing() = PuzzleUiState.Playing(board, isSubmitEnabled = true, showDragHint = false)

@@ -9,6 +9,9 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToNode
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -147,13 +150,13 @@ internal class DayFlowDriver(
     }
 
     /**
-     * Home (CTA уже виден) → три головоломки, каждая доведена кнопками до правильного
-     * порядка → три `PuzzleResult` «6 из 6» → `DayRecap` «18 из 18». Ни одна попытка не
+     * Home (CTA уже виден) → три головоломки, каждая доведена до правильного
+     * порядка ([byDragging] — жестами за ручку, иначе кнопками) → три `PuzzleResult` «6 из 6» → `DayRecap` «18 из 18». Ни одна попытка не
      * создаётся напрямую: каждая появляется от нажатия «Проверить» на настоящем экране.
      *
      * @return индекс сыгранного набора — из назначения, которое создало приложение.
      */
-    fun playTodayThroughTheUi(): Int {
+    fun playTodayThroughTheUi(byDragging: Boolean = false): Int {
         rule.onNodeWithTag(HomeTestTags.PRIMARY_BUTTON).performClick()
         awaitRoute(Destinations.PUZZLE)
         val (setIndex, puzzles) = importedDay(LocalDate.parse(requireNotNull(currentDate())))
@@ -164,7 +167,9 @@ internal class DayFlowDriver(
             // На экране — именно эта импортированная головоломка.
             rule.onNodeWithText(puzzle.prompt).assertExists()
 
-            sortIntoCorrectOrder(puzzle)
+            // Один и тот же день собирается либо кнопками, либо жестами — и в обоих
+            // случаях одним путём перестановки во ViewModel (`I6-N3`).
+            if (byDragging) sortIntoCorrectOrderByDragging(puzzle) else sortIntoCorrectOrder(puzzle)
             rule.onNodeWithTag(PuzzleTestTags.SUBMIT_BUTTON).performClick()
 
             awaitRoute(Destinations.PUZZLE_RESULT)
@@ -211,6 +216,60 @@ internal class DayFlowDriver(
     }
 
     /**
+     * Доводит текущую головоломку до правильного порядка **настоящим жестом** за ручку
+     * (ITERATION_6_DESIGN.md, `I6-N1`, `I6-N3`).
+     *
+     * Ни одного `PuzzleEvent` напрямую: тест касается ручки, ведёт палец и отпускает —
+     * всё остальное делают `DragHandle`, `ReorderDragState` и ViewModel. Модель списка
+     * здесь та же, что у `sortIntoCorrectOrder`: каждое перемещение адресуется `cardId`.
+     *
+     * Шаг ведётся по фактической геометрии карточек на экране, а не по токену высоты:
+     * карточки бывают разной высоты, и порог перестановки — центр соседки.
+     *
+     * @return сколько перестановок обязан подтвердить ViewModel.
+     */
+    fun sortIntoCorrectOrderByDragging(puzzle: Puzzle): Int {
+        val current = DeterministicShuffler
+            .shuffle(puzzle.puzzleId, puzzle.cards.map { it.cardId })
+            .toMutableList()
+        var confirmedReorders = 0
+
+        puzzle.correctOrder.forEachIndexed { targetIndex, cardId ->
+            while (current.indexOf(cardId) > targetIndex) {
+                val from = current.indexOf(cardId)
+                dragOnePositionUp(cardId)
+                current[from] = current[from - 1]
+                current[from - 1] = cardId
+                confirmedReorders++
+                performedReorders++
+            }
+        }
+        assertEquals("жесты обязаны привести список к правильному порядку", puzzle.correctOrder, current)
+        return confirmedReorders
+    }
+
+    /**
+     * Один жест вверх на одну позицию: центр карточки обязан **строго** пересечь центр
+     * соседки сверху, поэтому палец проходит её высоту с зазором плюс запас на touch slop.
+     */
+    private fun dragOnePositionUp(cardId: String) {
+        rule.onNodeWithTag(PuzzleTestTags.CARD_LIST)
+            .performScrollToNode(hasTestTag(OrderableCardTestTags.card(cardId)))
+        rule.waitForIdle()
+
+        val card = rule.onNodeWithTag(OrderableCardTestTags.card(cardId)).fetchSemanticsNode()
+        val step = card.size.height + with(rule.density) { DRAG_SLOP_MARGIN_DP.dp.toPx() }
+
+        rule.onNodeWithTag(PuzzleTestTags.dragHandle(cardId), useUnmergedTree = true)
+            .performTouchInput {
+                down(center)
+                moveBy(Offset(0f, -step))
+                up()
+            }
+        rule.waitForIdle()
+    }
+
+    /**
      * Исполнитель отдачи, который только записывает запросы (`I5-N8`).
      *
      * Ни `SoundPool`, ни `performHapticFeedback`: тест утверждает, сколько раз и что
@@ -233,6 +292,12 @@ internal class DayFlowDriver(
 
         /** Первый расчёт Home на чистой базе включает полный импорт пакета. */
         const val HOME_TIMEOUT_MS = 20_000L
+
+        /**
+         * Запас на системный `touch slop` и зазор списка: жест обязан пройти его до
+         * первого `onDrag`, иначе центр карточки не дойдёт до центра соседки.
+         */
+        const val DRAG_SLOP_MARGIN_DP = 40
 
         const val PERFECT_SLOT_SCORE = "6 из 6"
         const val PERFECT_DAY_SCORE = "18 из 18"

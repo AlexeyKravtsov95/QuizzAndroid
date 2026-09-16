@@ -58,6 +58,9 @@ class SoundCueBank(
 
     override fun play(cue: FeedbackCue) {
         if (released.get()) return
+        // Cue без звукового ресурса (`CardGrabbed`, I6-D14) завершается здесь молча:
+        // `getValue` бросил бы, а карта звуков ради беззвучного повода не расширяется
+        // (`I6-F2`).
         val sampleId = sampleIds[cue] ?: return
         // Шаг 5: `load()` вернул 0 — загрузка не начата, сэмпла не существует;
         // отсутствие в `loaded` — callback со status == 0 ещё не приходил.
